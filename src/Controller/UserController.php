@@ -36,7 +36,7 @@ class UserController extends AbstractController
             $form->handleRequest($request);
     
             if ($form->isSubmitted() && $form->isValid()) {
-                $user->setDate(new \DateTime());
+                // $user->setDate(new \DateTime());
             
                 $this->getDoctrine()->getManager()->flush();
     
@@ -80,7 +80,7 @@ class UserController extends AbstractController
             if(!$password) $password="123456";
             $user->setPassword($userPasswordEncoderInterface->encodePassword($user,$password));
             $user->setRoles(['ROLE_USER']);
-            $user->setDate(new \DateTime());
+            // $user->setDate(new \DateTime());
             $user->setIsActive(true);
             $entityManager->persist($user);
             $entityManager->flush();
