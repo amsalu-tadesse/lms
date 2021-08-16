@@ -97,10 +97,20 @@ class User implements UserInterface
      */
     private $userGroup;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Student::class, mappedBy="userid", cascade={"persist", "remove"})
+     */
+    private $profile;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Instructor::class, mappedBy="userid")
+     */
+    private $instructors;
+
 
     public function __construct()
     {
-       
+        $this->instructors = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -333,6 +343,53 @@ class User implements UserInterface
     {
         if ($this->userGroup->contains($userGroup)) {
             $this->userGroup->removeElement($userGroup);
+        }
+
+        return $this;
+    }
+
+    public function getProfile(): ?Student
+    {
+        return $this->profile;
+    }
+
+    public function setProfile(Student $profile): self
+    {
+        // set the owning side of the relation if necessary
+        if ($profile->getUserid() !== $this) {
+            $profile->setUserid($this);
+        }
+
+        $this->profile = $profile;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Instructor[]
+     */
+    public function getInstructors(): Collection
+    {
+        return $this->instructors;
+    }
+
+    public function addInstructor(Instructor $instructor): self
+    {
+        if (!$this->instructors->contains($instructor)) {
+            $this->instructors[] = $instructor;
+            $instructor->setUserid($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInstructor(Instructor $instructor): self
+    {
+        if ($this->instructors->removeElement($instructor)) {
+            // set the owning side to null (unless already changed)
+            if ($instructor->getUserid() === $this) {
+                $instructor->setUserid(null);
+            }
         }
 
         return $this;
