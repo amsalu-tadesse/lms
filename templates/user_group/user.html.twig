@@ -1,0 +1,116 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User
+{% endblock %}
+{% block stylesheets %}
+	<link rel="stylesheet" href="{{asset('assets/plugins/multi-select/jquery.lwMultiSelect.css')}}"/>
+{% endblock %}
+{% block body %}
+<form action="{{path('user_group_permission1',{id: user_group.id})}}" method="post">
+	<div class="card ">
+		<div class="card-header">
+			<h3 class="card-title">
+				{{ user_group.name }}
+			</h3>
+
+			<div class="card-tools">
+				<a href="{{ path('user_group_index') }}" class="btn btn-primary btn-sm">back</a>
+			</div>
+			<!-- /.card-tools -->
+		</div>
+		<!-- /.card-header -->
+		<div class="card-body upper">
+			<div class="row">
+				<h5>Users in a group</h5>
+				<div class="col-12">
+					<select class="users_list" multiple name="user[]" style="display:none">
+						{% for user in users %}
+							{% if(user.id in users_exist)%}
+								<option value="{{user.id}}" selected>{{ user.firstName }} {{ user.middleName }} {{ user.LastName }} - {{ user.id }}</option>
+							{% else %}
+								<option value="{{user.id}}">{{ user.firstName }} {{ user.middleName }} {{ user.LastName }} - {{ user.id }}</option>
+							{% endif %}
+							{# <option value="{{user.id}}" >{{ user.firstName }} {{ user.middleName }} {{ user.LastName }} - {{ user.id }}</option> #}
+						{% endfor %}
+					</select>
+				</div><br><br>
+			</div>
+		</div>
+		<input type="hidden" value="{{user_group.id}}"/>
+
+		<div class="card-body lower">
+			<div class="row">
+				<h5>Permissions for group</h5>
+				<div class="col-12">
+					<select class="permission_list" multiple="multiple" name="permission[]" style="display:none">
+						{% for permission in permission %}
+							{% if(permission.id in perm_exist)%}
+								<option selected value="{{permission.id}}" > {{ permission.name }} </option>
+							{% else %}
+								<option value="{{permission.id}}" > {{ permission.name }} </option>
+							{% endif %}
+						{% endfor %}
+					</select>
+				</div>
+			</div>
+		</div>
+		<!-- /.card-body -->
+		<div class="card-footer float-right">
+			<div class="float-right">
+				<a href="{{path('user_group_index')}}" class="btn btn-primary">Cancel</a>
+				<button class="btn btn-info " type="submit">Save</button>
+			</div>
+		</div>
+	</div>
+</form>
+	<!-- /.card -->
+
+{% endblock %}
+{% block javascripts %}
+<script type="text/javascript" charset="utf-8">
+	var users = {
+		user_id : [],
+		users_name: [],
+	};
+
+	var users_temp = {
+		temp_name: [],
+		temp_id: [],
+	};
+
+	var permission = {
+		perm_id : [],
+		perm_name: [],
+	};
+
+	var permission_temp = {
+		temp_name: [],
+		temp_id: [],
+	};
+</script>
+<script src="{{asset('assets/plugins/multi-select/jquery.lwMultiSelect.js')}}"></script>
+<script src="{{asset('assets/plugins/multi-select/jquery.lwMultiSelectWithoutSearch.js')}}"></script>
+<script>
+	$('.users_list').lwMultiSelect();
+	$('.permission_list').lwMultiSelectWithoutSearch();
+    $("#user_search").on("keyup",function(){
+      $count = users_temp.temp_name.length;
+	  console.log($count);
+      for(i = 0; i < $count; i++)
+      {
+      	if(users_temp.temp_name[i].includes($(this).val())){
+      		// var first = jQuery.attr('class').split(" ")[0];
+      		if($(".lwms-available:first li[data-value="+users_temp.temp_id[i]+"]").hasClass("choosen")){}
+      		else
+	      	 	$(".lwms-available:first li[data-value="+users_temp.temp_id[i]+"]").removeClass("lwms-selected");
+      	 }
+      	else
+      	{
+      	   if($(".lwms-available:first li[data-value="+users_temp.temp_id[i]+"]").hasClass("choosen")){}
+      	   else
+      	   	   $(".lwms-available:first li[data-value="+users_temp.temp_id[i]+"]").addClass("lwms-selected");
+      	}
+      }
+    });
+	</script>
+{% endblock %}

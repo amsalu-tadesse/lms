@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}UserType index{% endblock %}
+
+{% block body %}
+
+
+    <a href="{{ path('user_type_new') }}" class="btn btn-success">Create new</a>
+
+<div class="card card-info mt-3">
+<div class="card card-header">
+    <h3>User Type list</h3>
+</div>
+<div class="card card-body">
+ <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user_type in user_types %}
+            <tr>
+                <td>{{ user_type.id }}</td>
+                <td>{{ user_type.name }}</td>
+                <td>{{ user_type.description }}</td>
+                <td>
+                    <a href="{{ path('user_type_show', {'id': user_type.id}) }}" class="btn btn-info">show</a>
+                    <a href="{{ path('user_type_edit', {'id': user_type.id}) }}" class="btn btn-warning" >edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+</div>
+   
+
+{% endblock %}

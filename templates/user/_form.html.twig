@@ -1,0 +1,73 @@
+{{ form_start(form) }}
+{{ form_errors(form) }}
+
+<div class="row ">
+	<div class="form-group mt-2 col-md-4 col-sm-6 ">
+		{{form_label(form.firstName)}}
+		{{ form_widget(form.firstName,{'attr':{'class':form_errors(form.firstName)? 'form-control is-invalid':'form-control','placeholder':"Enter first name"}}) }}
+		<div class="help-block text-danger">{{form_errors(form.firstName)}}</div>
+	</div>
+	<div class="form-group mt-2 col-md-4 col-sm-6 ">
+		{{form_label(form.middleName)}}
+		{{ form_widget(form.middleName,{'attr':{'class':form_errors(form.middleName)? 'form-control is-invalid':'form-control','placeholder':"Enter middle name"}}) }}
+		<div class="help-block text-danger">{{form_errors(form.middleName)}}</div>
+	</div>
+	<div class="form-group mt-2 col-md-4 col-sm-6 ">
+		{{form_label(form.lastName)}}
+		{{ form_widget(form.lastName,{'attr':{'class':form_errors(form.lastName)? 'form-control is-invalid':'form-control','placeholder':"Enter last name"}}) }}
+		<div class="help-block text-danger">{{form_errors(form.lastName)}}</div>
+	</div>
+	 
+		<div
+		class="col-md-6"> 
+		<div class="form-group mt-2 ">
+			{{form_label(form.username)}}
+			{{ form_widget(form.username,{'attr':{'class':form_errors(form.username)? 'form-control  is-invalid':'form-control ','placeholder':"Enter username"}}) }}
+			<div class="help-block text-danger">{{form_errors(form.username)}}</div>
+		</div>
+	</div>
+	<div class="col-md-6"></div>
+	<div class="col-md-6">
+		<div class="form-group mt-2">
+			{{form_label(form.userType)}}
+			{{ form_widget(form.userType,{'attr':{'class':form_errors(form.userType)? 'form-control  is-invalid':'form-control ','placeholder':"Enter..."}}) }}
+			<div class="help-block text-danger">{{form_errors(form.userType)}}</div>
+		</div>
+
+		<div class="form-group mt-2 store" style="display: block;">
+			{{form_label(form.store)}}
+			{{ form_widget(form.store,{'attr':{'class':form_errors(form.store)? 'form-control  is-invalid':'form-control ','placeholder':"Enter..."}}) }}
+			<div class="help-block text-danger">{{form_errors(form.store)}}</div>
+		</div>
+
+		<div class="form-group mt-2 ">
+			{{form_label(form.department)}}
+			{{ form_widget(form.department,{'attr':{'class':form_errors(form.department)? 'form-control  is-invalid':'form-control ','placeholder':"Enter..."}}) }}
+			<div class="help-block text-danger">{{form_errors(form.department)}}</div>
+		</div>
+
+		<input type="hidden" name="userid" value="{{edit}}">
+	</div>
+
+	<div class="col-md-6"></div>
+	<div class="card-footer float-right">
+		<a href="{{app.request.headers.get('referer')}}" class="btn btn-info ">back</a>
+		<button class="btn  btn-success ">{{ button_label|default('Save') }}</button>
+	</div>
+</div>
+{{ form_end(form) }}
+
+<script>
+	$(document).ready(function () {
+$("#user_userType").change(function () {
+$(this).find("option:selected").each(function () {
+var optionValue = $(this).attr("value");
+if (optionValue == 4) {
+$('.store').show();
+} else {
+$('.store').hide();
+}
+});
+}).change();
+});
+</script>

@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}UserGroup
+{% endblock %}
+{% block stylesheets %}
+
+	<link rel="stylesheet" href="{{asset('assets/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css')}}">
+{% endblock %}
+{% block body %}
+
+
+	<div class="card ">
+
+		<div class="card-header">
+			<h3 class="card-title">
+				{{ user_group.name }}
+			</h3>
+
+			<div class="card-tools">
+				<a href="{{ path('user_group_index') }}" class="btn btn-primary btn-sm">back</a>
+
+			</div>
+			<!-- /.card-tools -->
+		</div>
+		<!-- /.card-header -->
+		<form method="POST">
+		<div class="card-body">
+
+
+			<div class="row">
+				<div class="col-12">
+					
+						
+						<div class="form-group">
+							<label>Permissions List</label>
+							<label class="float-right">User Group Permissions </label>
+							<input hidden value="{{ user_group.id}}" name="usergrouppermission">
+							<select class="duallistbox" multiple="multiple" name="permission[]">
+								{% for permission in user_group.permission %}
+									<option selected value="{{permission.id}}" title="{{permission.description}}">{{ permission.name }}</option>
+								{% endfor %}
+								{% for permission in permissions %}
+									<option value="{{permission.id}}" title="{{permission.description}}">{{ permission.name }}</option>
+								{% endfor %}
+
+
+							</select>
+						</div>
+						<!-- /.form-group -->
+					
+				</div>
+				<!-- /.col -->
+			</div>
+			<!-- /.row -->
+		</div>
+		<!-- /.card-body -->
+		<div class="card-footer">
+			<div class="float-right">
+				<a href="{{path('user_group_index')}}" class="btn btn-primary">Cancel</a>
+				<button class="btn btn-info  ">Save</button>
+
+
+			</div>
+		</div></form>
+	</div>
+	<!-- /.card -->
+
+{% endblock %}
+{% block javascripts %}
+
+	<script src="{{asset('assets/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js')}}"></script>
+	<script>
+		$(function () {
+$('.duallistbox').bootstrapDualListbox();
+})
+	</script>
+{% endblock %}
