@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ContentType index{% endblock %}
+
+{% block body %}
+    <h1>ContentType index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for content_type in content_types %}
+            <tr>
+                <td>{{ content_type.id }}</td>
+                <td>{{ content_type.name }}</td>
+                <td>{{ content_type.description }}</td>
+                <td>
+                    <a href="{{ path('content_type_show', {'id': content_type.id}) }}">show</a>
+                    <a href="{{ path('content_type_edit', {'id': content_type.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('content_type_new') }}">Create new</a>
+{% endblock %}
