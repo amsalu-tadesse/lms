@@ -36,21 +36,22 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->flush();
     }
 
-    public function filterUser($fname, $mname, $lname, $userType, $dep)
+    public function filterUser($fname, $mname, $lname, $userType)
     {
+ 
         return  $this->createQueryBuilder('u')
-            // ->join('u.userType','ut')
-            ->innerJoin('u.department','dt')
+            ->join('u.userType','ut')
+            // ->innerJoin('u.department','dt')
             ->Where('u.firstName LIKE :firstName')
             ->andWhere('u.middleName LIKE :middleName')
             ->andWhere('u.lastName LIKE :lastName')
             ->andWhere('u.username LIKE :username')
-            ->andWhere('dt.id LIKE :department')
+            // ->andWhere('dt.id LIKE :department')
             ->setParameter('firstName', '%'.$fname.'%')
             ->setParameter('middleName', '%'.$mname.'%')
             ->setParameter('lastName', '%'.$lname.'%')
             ->setParameter('username', '%'.$userType.'%')
-            ->setParameter('department', '%'.$dep.'%')
+            // ->setParameter('department', '%'.$dep.'%')
             ->orderBy('u.id', 'ASC')
             ->getQuery()
             ->getResult()

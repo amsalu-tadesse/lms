@@ -37,17 +37,6 @@ class User implements UserInterface
     private $password;
 
     /**
-     * @ORM\OneToMany(targetEntity=Transfer::class, mappedBy="toId")
-     */
-    private $transfers;
-
- 
-    /**
-     * @ORM\ManyToOne(targetEntity=Department::class, inversedBy="users")
-     */
-    private $department;
-
-    /**
      * @ORM\ManyToOne(targetEntity=UserType::class, inversedBy="users")
      */
     private $userType;
@@ -67,10 +56,7 @@ class User implements UserInterface
      */
     private $lastName;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Orders::class, mappedBy="receiver")
-     */
-    private $orders;
+   
 
 
     /**
@@ -87,11 +73,7 @@ class User implements UserInterface
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $lastLogin;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $date;
+ 
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
@@ -108,38 +90,17 @@ class User implements UserInterface
      */
     private $role;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Requests::class, mappedBy="requester")
-     */
-    private $requests;
+    
 
       /**
      * @ORM\ManyToMany(targetEntity="App\Entity\UserGroup", inversedBy="users")
      */
     private $userGroup;
 
-    /**
-     * @ORM\OneToMany(targetEntity=ApprovalLog::class, mappedBy="approver")
-     */
-    private $approvalLogs;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Store::class, inversedBy="users")
-     */
-    private $store;
- 
-
- 
- 
-
 
     public function __construct()
     {
-        $this->transfers = new ArrayCollection();
-        $this->orders = new ArrayCollection();
-        $this->requests = new ArrayCollection();
-        $this->approvalLogs = new ArrayCollection();
-   
+       
     }
 
     public function getId(): ?int
@@ -164,18 +125,8 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getDate(): ?\DateTimeInterface
-    {
-        return $this->date;
-    }
-
-    public function setDate(?\DateTimeInterface $date): self
-    {
-        $this->date = $date;
-
-        return $this;
-    }
-
+   
+    
     /**
      * @see UserInterface
      */
@@ -227,50 +178,11 @@ class User implements UserInterface
         // $this->plainPassword = null;
     }
 
-    /**
-     * @return Collection|Transfer[]
-     */
-    public function getTransfers(): Collection
-    {
-        return $this->transfers;
-    }
-
-    public function addTransfer(Transfer $transfer): self
-    {
-        if (!$this->transfers->contains($transfer)) {
-            $this->transfers[] = $transfer;
-            $transfer->setToId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTransfer(Transfer $transfer): self
-    {
-        if ($this->transfers->contains($transfer)) {
-            $this->transfers->removeElement($transfer);
-            // set the owning side to null (unless already changed)
-            if ($transfer->getToId() === $this) {
-                $transfer->setToId(null);
-            }
-        }
-
-        return $this;
-    }
+   
 
    
     
-    public function getDepartment(): ?Department
-    {
-        return $this->department;
-    }
-
-    public function setDepartment(?Department $department): self
-    {
-        $this->department = $department;
-
-        return $this;
-    }
+    
 
     public function getUserType(): ?UserType
     {
@@ -320,37 +232,7 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return Collection|Orders[]
-     */
-    public function getOrders(): Collection
-    {
-        return $this->orders;
-    }
-
-    public function addOrder(Orders $order): self
-    {
-        if (!$this->orders->contains($order)) {
-            $this->orders[] = $order;
-            $order->setReceiver($this);
-        }
-
-        return $this;
-    }
-
-    public function removeOrder(Orders $order): self
-    {
-        if ($this->orders->contains($order)) {
-            $this->orders->removeElement($order);
-            // set the owning side to null (unless already changed)
-            if ($order->getReceiver() === $this) {
-                $order->setReceiver(null);
-            }
-        }
-
-        return $this;
-    }
-
+     
     public function __toString()
     {
         return $this->firstName." ".$this->middleName." ".$this->lastName;
@@ -428,36 +310,7 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return Collection|Requests[]
-     */
-    public function getRequests(): Collection
-    {
-        return $this->requests;
-    }
-
-    public function addRequest(Requests $request): self
-    {
-        if (!$this->requests->contains($request)) {
-            $this->requests[] = $request;
-            $request->setRequester($this);
-        }
-
-        return $this;
-    }
-
-    public function removeRequest(Requests $request): self
-    {
-        if ($this->requests->contains($request)) {
-            $this->requests->removeElement($request);
-            // set the owning side to null (unless already changed)
-            if ($request->getRequester() === $this) {
-                $request->setRequester(null);
-            }
-        }
-
-        return $this;
-    }
+     
 
      /**
      * @return Collection|UserGroup[]
@@ -485,54 +338,6 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return Collection|ApprovalLog[]
-     */
-    public function getApprovalLogs(): Collection
-    {
-        return $this->approvalLogs;
-    }
-
-    public function addApprovalLog(ApprovalLog $approvalLog): self
-    {
-        if (!$this->approvalLogs->contains($approvalLog)) {
-            $this->approvalLogs[] = $approvalLog;
-            $approvalLog->setApprover($this);
-        }
-
-        return $this;
-    }
-
-    public function removeApprovalLog(ApprovalLog $approvalLog): self
-    {
-        if ($this->approvalLogs->removeElement($approvalLog)) {
-            // set the owning side to null (unless already changed)
-            if ($approvalLog->getApprover() === $this) {
-                $approvalLog->setApprover(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getStore(): ?Store
-    {
-        return $this->store;
-    }
-
-    public function setStore(?Store $store): self
-    {
-        $this->store = $store;
-
-        return $this;
-    }
-
- 
-
-  
-
-
-
-
+     
 
 }
