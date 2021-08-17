@@ -19,6 +19,22 @@ class ContentRepository extends ServiceEntityRepository
         parent::__construct($registry, Content::class);
     }
 
+
+    public function findContent($search=null)
+    {
+        $qb=$this->createQueryBuilder('c');
+        if($search)
+            $qb->andWhere("c.title  LIKE '%".$search."%'");
+
+            return 
+            $qb->orderBy('c.id', 'ASC')
+            ->getQuery()
+     
+            
+        ;
+    }
+
+
     // /**
     //  * @return Content[] Returns an array of Content objects
     //  */

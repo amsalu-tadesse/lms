@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/content/type")
+ * @Route("/contenttype")
  */
 class ContentTypeController extends AbstractController
 {
