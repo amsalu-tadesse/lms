@@ -32,10 +32,10 @@ class Content
      */
     private $content;
 
-    /**
-     * @ORM\Column(type="integer", nullable=true)
+     /**
+     * @ORM\Column(type="string", nullable=true)
      */
-    private $file;
+    private $filename;
 
     /**
      * @ORM\Column(type="boolean")
@@ -47,10 +47,27 @@ class Content
      */
     private $instructorCourse;
 
+
+   
+
     public function getId(): ?int
     {
         return $this->id;
     }
+
+    public function getFilename()
+    {
+        return $this->filename;
+    }
+
+    public function setFilename($filename)
+    {
+        $this->filename = $filename;
+
+        return $this;
+    }
+
+  
 
     public function getChapter(): ?string
     {
@@ -88,17 +105,7 @@ class Content
         return $this;
     }
 
-    public function getFile(): ?int
-    {
-        return $this->file;
-    }
-
-    public function setFile(?int $file): self
-    {
-        $this->file = $file;
-
-        return $this;
-    }
+   
 
     public function getIsrenderable(): ?bool
     {
