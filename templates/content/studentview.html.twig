@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Content index
+{% endblock %}
+
+{% block body %}
+	<div class="containter">
+		<div class="row">
+			<div class="col-md-8">
+				<div class="card card-info">
+					<div class="card card-header">
+						<h4>Content list
+						</h4>
+					</div>
+					<div class="card card-body">
+						<span id="placeholder">
+							gggg
+						</span>
+
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-4">
+				<div class="card card-info">
+					<div class="card card-header">
+						<h4>Outline
+						</h4>
+					</div>
+					<div class="card card-body">
+						{% for content in contents %}
+							<a href="{{path('studentview',{id:content.id})}}">{{content.title}}</a>
+						{% endfor %}
+					</div>
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+
+
+	{# <a href="{{ path('content_new') }}">Create new</a> #}
+{% endblock %}
+{% block javascripts %}
+	<script>
+
+		$(document).ready(function () {
+$("#placeholder").html("hhhhhhhhhhhhh");
+});
+	</script>
+{% endblock %}
