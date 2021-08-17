@@ -22,9 +22,27 @@ class ContentController extends AbstractController
 {
    
      /**
-     * @Route("/lessons/{id}", name="studentview", methods={"GET"})
+     * @Route("/lessons", name="studentview", methods={"GET"})
      */
     public function studentview(ContentRepository $contentRepository,Request $request, PaginatorInterface $paginator): Response
+    {
+        $queryBuilder=$contentRepository->findContent($request->query->get('search'));
+        $data=$paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page', 1),
+            18
+        );
+        return $this->render('content/studentview.html.twig', [
+             'contents' => $data,
+            // 'form' => $form->createView(),
+            'edit'=>false
+        ]);
+    }
+   
+     /**
+     * @Route("/studentlesson", name="studentlesson", methods={"GET"})
+     */
+    public function studentviewtwo(ContentRepository $contentRepository,Request $request, PaginatorInterface $paginator): Response
     {
         $queryBuilder=$contentRepository->findContent($request->query->get('search'));
         $data=$paginator->paginate(
@@ -32,7 +50,7 @@ class ContentController extends AbstractController
             $request->query->getInt('page',1),
             18
         );
-        return $this->render('content/studentview.html.twig', [
+        return $this->render('content/studentviewtwo.html.twig', [
              'contents' => $data,
             // 'form' => $form->createView(),
             'edit'=>false

@@ -3,9 +3,13 @@
 {% block title %}Content{% endblock %}
 
 {% block body %}
-    <h1>Content</h1>
+<div class="card card-info">
+<div class="card card-header">
+      <h1>Content</h1>
 
-    <table class="table">
+</div>
+<div class="card card-body">
+<table class="table">
         <tbody>
             <tr>
                 <th>Id</th>
@@ -25,7 +29,7 @@
             </tr>
             <tr>
                 <th>File</th>
-                <td><a href="{{ asset('uploads/resources/' ~ content.filename) }}">View brochure (PDF)</a></td>
+                <td><a href="{{ asset('uploads/resources/' ~ content.filename) }}">View file</a></td>
             </tr>
             <tr>
                 <th>Isrenderable</th>
@@ -34,6 +38,9 @@
         </tbody>
     </table>
 
+</div>
+</div>
+    
     <a href="{{ path('content_index') }}">back to list</a>
 
     <a href="{{ path('content_edit', {'id': content.id}) }}">edit</a>
