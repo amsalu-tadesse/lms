@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ContentRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -46,6 +48,16 @@ class Content
      * @ORM\ManyToOne(targetEntity=InstructorCourse::class, inversedBy="contents")
      */
     private $instructorCourse;
+
+    /**
+     * @ORM\OneToMany(targetEntity=StudentContentReaction::class, mappedBy="content")
+     */
+    private $studentContentReactions;
+
+    public function __construct()
+    {
+        $this->studentContentReactions = new ArrayCollection();
+    }
 
 
    
@@ -127,6 +139,36 @@ class Content
     public function setInstructorCourse(?InstructorCourse $instructorCourse): self
     {
         $this->instructorCourse = $instructorCourse;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|StudentContentReaction[]
+     */
+    public function getStudentContentReactions(): Collection
+    {
+        return $this->studentContentReactions;
+    }
+
+    public function addStudentContentReaction(StudentContentReaction $studentContentReaction): self
+    {
+        if (!$this->studentContentReactions->contains($studentContentReaction)) {
+            $this->studentContentReactions[] = $studentContentReaction;
+            $studentContentReaction->setContent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStudentContentReaction(StudentContentReaction $studentContentReaction): self
+    {
+        if ($this->studentContentReactions->removeElement($studentContentReaction)) {
+            // set the owning side to null (unless already changed)
+            if ($studentContentReaction->getContent() === $this) {
+                $studentContentReaction->setContent(null);
+            }
+        }
 
         return $this;
     }

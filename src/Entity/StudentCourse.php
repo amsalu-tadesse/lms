@@ -43,6 +43,11 @@ class StudentCourse
      */
     private $instructorCourse;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $isAtPage;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -104,6 +109,18 @@ class StudentCourse
     public function setInstructorCourse(?InstructorCourse $instructorCourse): self
     {
         $this->instructorCourse = $instructorCourse;
+
+        return $this;
+    }
+
+    public function getIsAtPage(): ?int
+    {
+        return $this->isAtPage;
+    }
+
+    public function setIsAtPage(?int $isAtPage): self
+    {
+        $this->isAtPage = $isAtPage;
 
         return $this;
     }

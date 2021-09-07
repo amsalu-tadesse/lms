@@ -35,9 +35,15 @@ class Student
      */
     private $studentCourses;
 
+    /**
+     * @ORM\OneToMany(targetEntity=StudentContentReaction::class, mappedBy="student")
+     */
+    private $studentContentReactions;
+
     public function __construct()
     {
         $this->studentCourses = new ArrayCollection();
+        $this->studentContentReactions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -93,6 +99,36 @@ class Student
             // set the owning side to null (unless already changed)
             if ($studentCourse->getStudent() === $this) {
                 $studentCourse->setStudent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|StudentContentReaction[]
+     */
+    public function getStudentContentReactions(): Collection
+    {
+        return $this->studentContentReactions;
+    }
+
+    public function addStudentContentReaction(StudentContentReaction $studentContentReaction): self
+    {
+        if (!$this->studentContentReactions->contains($studentContentReaction)) {
+            $this->studentContentReactions[] = $studentContentReaction;
+            $studentContentReaction->setStudent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStudentContentReaction(StudentContentReaction $studentContentReaction): self
+    {
+        if ($this->studentContentReactions->removeElement($studentContentReaction)) {
+            // set the owning side to null (unless already changed)
+            if ($studentContentReaction->getStudent() === $this) {
+                $studentContentReaction->setStudent(null);
             }
         }
 
