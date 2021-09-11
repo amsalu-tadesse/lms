@@ -44,22 +44,54 @@ class ContentController extends AbstractController
      */
     public function studentviewtwo(ContentRepository $contentRepository,Request $request, PaginatorInterface $paginator): Response
     {
-        //dd( $request->query->getInt('dana',1));
-          $nextId = $request->get('id');
-        //$queryBuilder=$contentRepository->findContent($request->query->get('search'));
-        $data=$contentRepository->find($nextId);
-        // dd($data);
-        /*$data=$paginator->paginate(
+        //$nextId = $request->get('id');
+        //$data=$contentRepository->find($nextId);
+
+        $queryBuilder=$contentRepository->findContent($request->query->get('search'));
+        $data=$paginator->paginate(
             $queryBuilder,
-            $request->query->getInt('page',1),
+            $request->query->getInt('page', 1),
             1
-        );*/
+        );
+
         return $this->render('content/studentviewtwo.html.twig', [
              'contents' => $data,
-            //  'form' => $form->createView(),
             'edit'=>false
         ]);
     }
+   
+     /**
+     * @Route("/studentlesson/prev/{id}", name="prevpage", methods={"GET","POST"})
+     */
+    // public function prevPage(ContentRepository $contentRepository,Request $request, PaginatorInterface $paginator): Response
+    // {
+    //     $prevId = $request->get('id');
+    //     $data=$contentRepository->find($prevId);
+    //     while (!$data ||  $prevId < 1) {
+    //         $data=$contentRepository->find($prevId -1);
+    //     }
+    //     return $this->render('content/studentviewtwo.html.twig', [
+    //          'contents' => $data,
+    //         'edit'=>false
+    //     ]);
+    // }
+   
+     /**
+     * @Route("/studentlesson/next/{id}", name="nextpage", methods={"GET","POST"})
+     */
+    // public function nextPage(ContentRepository $contentRepository,Request $request, PaginatorInterface $paginator): Response
+    // {
+    //     $nextId = $request->get('id');
+    //     $data=$contentRepository->find($nextId);
+    //     while (!$data) {
+    //         $data=$contentRepository->find($nextId + 1);
+    //     }
+
+    //     return $this->render('content/studentviewtwo.html.twig', [
+    //          'contents' => $data,
+    //         'edit'=>false
+    //     ]);
+    // }
 
     /**
      * @Route("/", name="content_index", methods={"GET"})
