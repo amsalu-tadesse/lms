@@ -9,32 +9,34 @@
 	<div class="card card-info">
 		<div class="card card-header">Video Tutorial
 		</div>
-		<div
-			class="card card-body">
+		<div class="card card-body">
 			{# <iframe width="990" height="557" src="https://www.youtube.com/embed/zTv0UFkAKFA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> #}
 
-			{# {% for content in contents %} #}
-				 
-					 {{ contents.content }}
+				{% for content in contents %}
 
-					  
+				 
+				{{ content.content }}
+			 
+			{%  endfor %}
+				<div class="  pagination justify-content-center " id="main-pagination"> {{ knp_pagination_render(contents) }}</div>
+
+
 			<div class="row">
 				<div class="col-md-3">
- 					<a href="{{ path('studentlesson', {'id': contents.id - 1}) }}" class="btn  btn-primary float-left ">
+					<a href="/" class="btn  btn-primary float-left " id="prev">
 						<span class=" fa fa-arrow-alt-circle-left"></span>
 						Previous</a>
- 				</div>
+				</div>
 				<div class="col-md-6"></div>
 				<div class="col-md-3">
-					<a href="{{ path('studentlesson', {'id': contents.id + 1}) }}" class="btn btn-primary float-right">Next
+					<a href="/" class="btn btn-primary float-right" id="next">Next
 						<span class=" fa fa-arrow-alt-circle-right"></span>
 					</a>
 				</div>
 			</div>
- 
-{# {%  endfor %}   #}
 
 
+			{# <div class="float-left pl-2"><b> Total result: {{ students.getTotalItemCount }}</b></div> #}
 
 
 		</div>
@@ -45,9 +47,9 @@
 	<div class="card card-primary card-outline">
 		<div
 			class="card-header">{# <h3 class="card-title">
-								<i class="fas fa-edit"></i>
-								Tabs Custom Content Examples
-							</h3> #}
+																								<i class="fas fa-edit"></i>
+																								Tabs Custom Content Examples
+																							</h3> #}
 		</div>
 		<div
 			class="card-body">
@@ -70,12 +72,6 @@
 					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin malesuada lacus ullamcorper dui molestie, sit amet congue quam finibus. Etiam ultricies nunc non magna feugiat commodo. Etiam odio magna, mollis auctor felis vitae, ullamcorper ornare ligula. Proin pellentesque tincidunt nisi, vitae ullamcorper felis aliquam id. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin id orci eu lectus blandit suscipit. Phasellus porta, ante et varius ornare, sem enim sollicitudin eros, at commodo leo est vitae lacus. Etiam ut porta sem. Proin porttitor porta nisl, id tempor risus rhoncus quis. In in quam a nibh cursus pulvinar non consequat neque. Mauris lacus elit, condimentum ac condimentum at, semper vitae lectus. Cras lacinia erat eget sapien porta consectetur.</p>
 
 					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin malesuada lacus ullamcorper dui molestie, sit amet congue quam finibus. Etiam ultricies nunc non magna feugiat commodo. Etiam odio magna, mollis auctor felis vitae, ullamcorper ornare ligula. Proin pellentesque tincidunt nisi, vitae ullamcorper felis aliquam id. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin id orci eu lectus blandit suscipit. Phasellus porta, ante et varius ornare, sem enim sollicitudin eros, at commodo leo est vitae lacus. Etiam ut porta sem. Proin porttitor porta nisl, id tempor risus rhoncus quis. In in quam a nibh cursus pulvinar non consequat neque. Mauris lacus elit, condimentum ac condimentum at, semper vitae lectus. Cras lacinia erat eget sapien porta consectetur.</p>
-
-					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin malesuada lacus ullamcorper dui molestie, sit amet congue quam finibus. Etiam ultricies nunc non magna feugiat commodo. Etiam odio magna, mollis auctor felis vitae, ullamcorper ornare ligula. Proin pellentesque tincidunt nisi, vitae ullamcorper felis aliquam id. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin id orci eu lectus blandit suscipit. Phasellus porta, ante et varius ornare, sem enim sollicitudin eros, at commodo leo est vitae lacus. Etiam ut porta sem. Proin porttitor porta nisl, id tempor risus rhoncus quis. In in quam a nibh cursus pulvinar non consequat neque. Mauris lacus elit, condimentum ac condimentum at, semper vitae lectus. Cras lacinia erat eget sapien porta consectetur.</p>
-
-					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin malesuada lacus ullamcorper dui molestie, sit amet congue quam finibus. Etiam ultricies nunc non magna feugiat commodo. Etiam odio magna, mollis auctor felis vitae, ullamcorper ornare ligula. Proin pellentesque tincidunt nisi, vitae ullamcorper felis aliquam id. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin id orci eu lectus blandit suscipit. Phasellus porta, ante et varius ornare, sem enim sollicitudin eros, at commodo leo est vitae lacus. Etiam ut porta sem. Proin porttitor porta nisl, id tempor risus rhoncus quis. In in quam a nibh cursus pulvinar non consequat neque. Mauris lacus elit, condimentum ac condimentum at, semper vitae lectus. Cras lacinia erat eget sapien porta consectetur.</p>
-
-					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin malesuada lacus ullamcorper dui molestie, sit amet congue quam finibus. Etiam ultricies nunc non magna feugiat commodo. Etiam odio magna, mollis auctor felis vitae, ullamcorper ornare ligula. Proin pellentesque tincidunt nisi, vitae ullamcorper felis aliquam id. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin id orci eu lectus blandit suscipit. Phasellus porta, ante et varius ornare, sem enim sollicitudin eros, at commodo leo est vitae lacus. Etiam ut porta sem. Proin porttitor porta nisl, id tempor risus rhoncus quis. In in quam a nibh cursus pulvinar non consequat neque. Mauris lacus elit, condimentum ac condimentum at, semper vitae lectus. Cras lacinia erat eget sapien porta consectetur.</p>
 				</div>
 				<div class="tab-pane fade" id="custom-content-below-profile" role="tabpanel" aria-labelledby="custom-content-below-profile-tab">
 					Any conversation regarding courses will be here.
@@ -90,5 +86,71 @@
 
 {% endblock %}
 {% block javascripts %}
-	<script></script>
+	<script>
+		// listItems = $("#productList").find("li");
+/*var listItems = $(".main-pagination nav ul li");
+listItems.each(function (idx, li) {
+var list = $(li);
+list.style.display="none";
+
+
+$('#myUlID li').each(function() {
+  console.log($(this));
+})
+
+
+
+ });*/
+// $(".page-item").style.display="none";
+
+$(document).ready(function () {
+var pages = document.getElementsByClassName("page-item");
+var last = pages.length;
+// var lis = document.querySelectorAll('#main-pagination nav ul');
+for (var i = 0; i <= pages.length; i++) {
+if (i == 0 || i == pages.length - 1) {
+var a = pages[i].querySelector('a');
+
+/*if(a===null || a===undefined)
+{console.log(a);
+document.getElementById("next").style.display = "none;";
+}
+else 
+{
+}*/
+if (a !== null) {
+href = a.href;
+if (i == 0) {
+document.getElementById("prev").href = href;
+} else {
+
+
+document.getElementById("next").href = href;
+
+}
+} else {
+
+
+if (i == 0) {
+document.getElementById("prev").classList.add("disabled");
+} else {
+
+
+document.getElementById("next").classList.add("disabled");
+}
+
+
+}
+
+
+}
+
+pages.item(i).innerHTML = "";
+
+
+}
+
+
+});
+	</script>
 {% endblock %}
