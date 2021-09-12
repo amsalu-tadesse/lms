@@ -1,65 +1,79 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Content index{% endblock %}
+{% block title %}Content index
+{% endblock %}
 
 {% block body %}
-  
-<div class="card card-info">
-<div class="card card-header">
-  <h3>Content list </h3>
-</div>
-<div class="card card-body">
-<table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Chapter</th>
-                <th>Title</th>
-                {# <th>Content</th> #}
-                <th>Isrenderable</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for content in contents %}
-            <tr>
-                <td>{{ content.id }}</td>
-                <td>{{ content.chapter }}</td>
-                <td>{{ content.title }}</td>
-                {# <td>{{ content.content }}</td> #}
-                <td>{{ content.isrenderable ? 'Yes' : 'No' }}</td>
-                <td>
-                    <a href="{{ path('content_show', {'id': content.id}) }}">show</a>
-                    <a href="{{ path('content_edit', {'id': content.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="7">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-</div>
-</div>
-    
-<div class="btn-group">
-                    <button type="button" class="btn btn-success">Add Next Page Content</button>
-                    <button type="button" class="btn btn-success dropdown-toggle dropdown-icon" data-toggle="dropdown" aria-expanded="false">
-                      <span class="sr-only">Toggle Dropdown</span>
-                    </button>
-                    <div class="dropdown-menu" role="menu" style="">
-                      <a class="dropdown-item" href="{{ path('content_new', {'id': 1}) }}">Add Video</a>
-                      <a class="dropdown-item" href="{{ path('content_new', {'id': 2}) }}">Add Resource</a>
-                      <a class="dropdown-item" href="{{ path('content_new', {'id': 3}) }}">Add Custom Content</a>
-                    </div>
- </div>
- <div class="btn-group">
 
-  
- <a href="{{ path('studentview') }}" class="btn btn-block btn-primary">View as a Student</a>
+	<div class="card card-info">
+		<div class="card card-header">
+			<h3>Content list
+			</h3>
+		</div>
+		<div class="card card-body">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Id</th>
+						<th>Chapter</th>
+						<th>Title</th>
+						{# <th>Content</th> #}
+						<th>videoLink</th>
+						<th>actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for content in contents %}
+						<tr>
+							<td>{{ content.id }}</td>
+							<td>{{ content.chapter }}</td>
+							<td>{{ content.title }}</td>
+							{# <td>{{ content.content }}</td> #}
+							<td>{{ content.videoLink }}</td>
+							<td>
+								<a href="{{ path('content_show', {'id': content.id}) }}">show</a>
+								<a href="{{ path('content_edit', {'id': content.id}) }}">edit</a>
+							</td>
+						</tr>
+					{% else %}
+						<tr>
+							<td colspan="7">no records found</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
 
-  </div>
-                  
-    {# <a href="{{ path('content_new') }}">Create new</a> #}
+
+		</div>
+		<div class="  pagination justify-content-center ">
+			{{ knp_pagination_render(contents) }}</div>
+
+		<div class="float-right pl-5 pb-2">
+			 
+				Total result:
+				{{ contents.getTotalItemCount }} 
+		</div>
+
+
+	</div>
+
+	<div class="btn-group">
+		<button type="button" class="btn btn-success">Add Next Page Content</button>
+		<button type="button" class="btn btn-success dropdown-toggle dropdown-icon" data-toggle="dropdown" aria-expanded="false">
+			<span class="sr-only">Toggle Dropdown</span>
+		</button>
+		<div class="dropdown-menu" role="menu" style="">
+			<a class="dropdown-item" href="{{ path('content_new', {'id': 1}) }}">Add video or html content</a>
+			<a class="dropdown-item" href="{{ path('content_new', {'id': 2}) }}">Add resource files</a>
+			{# <a class="dropdown-item" href="{{ path('content_new', {'id': 3}) }}">Add Custom Content</a> #}
+		</div>
+	</div>
+	<div class="btn-group">
+
+
+		<a href="{{ path('studentlesson', {'id': 1}) }}" class="btn btn-block btn-primary">View as a Student</a>
+
+	</div>
+
+	{# <a href="{{ path('content_new') }}">Create new</a> #}
 {% endblock %}

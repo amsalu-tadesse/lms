@@ -35,10 +35,7 @@ class InstructorCourse
      */
     private $active;
 
-    /**
-     * @ORM\Column(type="smallint", nullable=true)
-     */
-    private $status;
+ 
 
     /**
      * @ORM\ManyToOne(targetEntity=Instructor::class, inversedBy="instructorCourses")
@@ -59,6 +56,11 @@ class InstructorCourse
      * @ORM\OneToMany(targetEntity=Exam::class, mappedBy="instructorCourse")
      */
     private $exams;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=InstructorCourseStatus::class)
+     */
+    private $status;
 
     public function __construct()
     {
@@ -108,17 +110,7 @@ class InstructorCourse
         return $this;
     }
 
-    public function getStatus(): ?int
-    {
-        return $this->status;
-    }
-
-    public function setStatus(?int $status): self
-    {
-        $this->status = $status;
-
-        return $this;
-    }
+ 
 
     public function getInstructor(): ?Instructor
     {
@@ -218,6 +210,18 @@ class InstructorCourse
                 $exam->setInstructorCourse(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getStatus(): ?InstructorCourseStatus
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?InstructorCourseStatus $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

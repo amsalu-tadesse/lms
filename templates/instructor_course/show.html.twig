@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}InstructorCourse{% endblock %}
+
+{% block body %}
+    <h1>InstructorCourse</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ instructor_course.id }}</td>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <td>{{ instructor_course.date ? instructor_course.date|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Active</th>
+                <td>{{ instructor_course.active ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('instructor_course_index') }}">back to list</a>
+
+    <a href="{{ path('instructor_course_edit', {'id': instructor_course.id}) }}">edit</a>
+
+    {{ include('instructor_course/_delete_form.html.twig') }}
+{% endblock %}
