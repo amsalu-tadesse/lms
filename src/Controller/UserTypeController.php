@@ -11,86 +11,78 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Knp\Component\Pager\PaginatorInterface;
 
-
 /**
  * @Route("/usertype")
  */
 class UserTypeController extends AbstractController
 {
     /**
-     * @Route("/", name="user_type_index", methods={"GET"})
+     * @Route("/", name="usertype_index", methods={"GET","POST"})
      */
-    public function index(UserTypeRepository $userTypeRepository): Response
+    public function index(UserTypeRepository $usertypeRepository,Request $request, PaginatorInterface $paginator): Response
     {
+
+        if($request->request->get('edit')){
+            $id=$request->request->get('edit');
+            $usertype=$usertypeRepository->findOneBy(['id'=>$id]);
+            $form = $this->createForm(UserTypeType::class, $usertype);
+            $form->handleRequest($request);
+    
+            if ($form->isSubmitted() && $form->isValid()) {
+                $this->getDoctrine()->getManager()->flush();
+    
+                return $this->redirectToRoute('usertype_index');
+            }
+
+            $queryBuilder=$usertypeRepository->findUserType($request->query->get('search'));
+            $data=$paginator->paginate(
+                $queryBuilder,
+                $request->query->getInt('page',1),
+                18
+            );
+            return $this->render('user_type/index.html.twig', [
+                'usertypes' => $data,
+                'form' => $form->createView(),
+                'edit'=>$id
+            ]);
+
+        }
+        $usertype = new UserType();
+        $form = $this->createForm(UserTypeType::class, $usertype);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($usertype);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('usertype_index');
+        }
+        
+        $queryBuilder=$usertypeRepository->findUserType($request->query->get('search'));
+        $data=$paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page',1),
+            18
+        );
         return $this->render('user_type/index.html.twig', [
-            'user_types' => $userTypeRepository->findAll(),
-        ]);
-    }
-
-    /**
-     * @Route("/new", name="user_type_new", methods={"GET","POST"})
-     */
-    public function new(Request $request): Response
-    {
-        $userType = new UserType();
-        $form = $this->createForm(UserTypeType::class, $userType);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($userType);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('user_type_index');
-        }
-
-        return $this->render('user_type/new.html.twig', [
-            'user_type' => $userType,
+            'usertypes' => $data,
             'form' => $form->createView(),
+            'edit'=>false
         ]);
-    }
-
+    }  
+ 
     /**
-     * @Route("/{id}", name="user_type_show", methods={"GET"})
+     * @Route("/{id}", name="usertype_delete", methods={"DELETE"})
      */
-    public function show(UserType $userType): Response
+    public function delete(Request $request, UserType $usertype): Response
     {
-        return $this->render('user_type/show.html.twig', [
-            'user_type' => $userType,
-        ]);
-    }
-
-    /**
-     * @Route("/{id}/edit", name="user_type_edit", methods={"GET","POST"})
-     */
-    public function edit(Request $request, UserType $userType): Response
-    {
-        $form = $this->createForm(UserTypeType::class, $userType);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('user_type_index');
-        }
-
-        return $this->render('user_type/edit.html.twig', [
-            'user_type' => $userType,
-            'form' => $form->createView(),
-        ]);
-    }
-
-    /**
-     * @Route("/{id}", name="user_type_delete", methods={"DELETE"})
-     */
-    public function delete(Request $request, UserType $userType): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$userType->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$usertype->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($userType);
+            $entityManager->remove($usertype);
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('user_type_index');
+        return $this->redirectToRoute('usertype_index');
     }
 }

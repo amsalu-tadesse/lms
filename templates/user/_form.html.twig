@@ -26,6 +26,14 @@
 			<div class="help-block text-danger">{{form_errors(form.username)}}</div>
 		</div>
 	</div>
+		<div
+		class="col-md-6"> 
+		<div class="form-group mt-2 ">
+			{{form_label(form.email)}}
+			{{ form_widget(form.email,{'attr':{'class':form_errors(form.email)? 'form-control  is-invalid':'form-control ','placeholder':"Enter email"}}) }}
+			<div class="help-block text-danger">{{form_errors(form.email)}}</div>
+		</div>
+	</div>
 	<div class="col-md-6"></div>
 	<div class="col-md-6">
 		<div class="form-group mt-2">

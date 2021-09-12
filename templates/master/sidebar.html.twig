@@ -41,25 +41,47 @@
    
           <li class="nav-item">
             <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-edit"></i>
+              <i class="nav-icon fas fa-user"></i>
               <p>
                 Users setting
                 <i class="fas fa-angle-left right"></i>
               </p>
             </a>
             <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="{{path('user_index')}}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Users</p>
-                </a>
-              </li>
+          
               <li class="nav-item">
                 <a href="{{path('user_group_index')}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>User groups</p>
                 </a>
               </li>
+              <li class="nav-item">
+                <a href="{{path('usertype_index')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>User Types</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{path('user_index')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Users</p>
+                </a>
+              </li>
+
+                {# <li class="nav-item">
+                <a href="{{path('instructor_index')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Instructors</p>
+                </a>
+              </li>
+
+                  <li class="nav-item">
+                <a href="{{path('student_index')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Students</p>
+                </a>
+              </li> #}
+
               <li class="nav-item">
                 <a href="{{path('permission_index')}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
@@ -69,6 +91,40 @@
           
             </ul>
           </li>
+
+
+  <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-book"></i>
+              <p>
+                Course
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{path('course_index')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Course list</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{path('instructorCourseStatus_index')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Course status</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{path('instructor_course_index')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Course Assignement</p>
+                </a>
+              </li>
+
+              </ul>
+ </li>
+
+ 
           <li class="nav-item">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-table"></i>
@@ -90,16 +146,16 @@
                   <p>Content Type</p>
                 </a>
               </li>
-              <li class="nav-item">
+              {# <li class="nav-item">
                 <a href="{{path('studentview')}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>lessons</p>
                 </a>
-              </li>
+              </li> #}
               <li class="nav-item">
                 <a href="{{ path('studentlesson', {'id': 1}) }}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>lessons Type Two</p>
+                  <p>Lessons</p>
                 </a>
               </li>
             </ul>

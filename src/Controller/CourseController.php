@@ -3,12 +3,15 @@
 namespace App\Controller;
 
 use App\Entity\Course;
+use App\Entity\InstructorCourse;
+use App\Entity\InstructorCourseStatus;
 use App\Form\CourseType;
 use App\Repository\CourseRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @Route("/course")
@@ -16,20 +19,37 @@ use Symfony\Component\Routing\Annotation\Route;
 class CourseController extends AbstractController
 {
     /**
-     * @Route("/", name="course_index", methods={"GET"})
+     * @Route("/", name="course_index", methods={"GET","POST"})
      */
-    public function index(CourseRepository $courseRepository): Response
+    public function index(CourseRepository $courseRepository,Request $request, PaginatorInterface $paginator): Response
     {
-        return $this->render('course/index.html.twig', [
-            'courses' => $courseRepository->findAll(),
-        ]);
-    }
+$em = $this->getDoctrine()->getManager();
+        if($request->request->get('edit')){
+            $id=$request->request->get('edit');
+            $course=$courseRepository->findOneBy(['id'=>$id]);
+            $form = $this->createForm(CourseType::class, $course);
+            $form->handleRequest($request);
+    
+            if ($form->isSubmitted() && $form->isValid()) {
+                //$instructorCourse = $em->getRepository(InstructorCourse::class)->findOneBy(['course'=>$course,'active'=>1]);//assumption only one inst for one active inst course.
+                $this->getDoctrine()->getManager()->flush();
+    
+                return $this->redirectToRoute('course_index');
+            }
 
-    /**
-     * @Route("/new", name="course_new", methods={"GET","POST"})
-     */
-    public function new(Request $request): Response
-    {
+            $queryBuilder=$courseRepository->findCourse($request->query->get('search'));
+            $data=$paginator->paginate(
+                $queryBuilder,
+                $request->query->getInt('page',1),
+                18
+            );
+            return $this->render('course/index.html.twig', [
+                'courses' => $data,
+                'form' => $form->createView(),
+                'edit'=>$id
+            ]);
+
+        }
         $course = new Course();
         $form = $this->createForm(CourseType::class, $course);
         $form->handleRequest($request);
@@ -38,48 +58,32 @@ class CourseController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($course);
             $entityManager->flush();
+            $instructorCourse = new InstructorCourse();
+            $instructorCourse->setCourse($course);
+            $instructorCourseStatus = $em->getRepository(InstructorCourseStatus::class)->find(1);//not assigned
+            $instructorCourse->setStatus($instructorCourseStatus);
+            $instructorCourse->setActive(true);
+            $entityManager->persist($instructorCourse);
+            $entityManager->flush();
 
-            return $this->redirectToRoute('course_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('course_index');
         }
-
-        return $this->renderForm('course/new.html.twig', [
-            'course' => $course,
-            'form' => $form,
+        
+        $queryBuilder=$courseRepository->findCourse($request->query->get('search'));
+        $data=$paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page',1),
+            18
+        );
+        return $this->render('course/index.html.twig', [
+            'courses' => $data,
+            'form' => $form->createView(),
+            'edit'=>false
         ]);
-    }
-
+    }  
+ 
     /**
-     * @Route("/{id}", name="course_show", methods={"GET"})
-     */
-    public function show(Course $course): Response
-    {
-        return $this->render('course/show.html.twig', [
-            'course' => $course,
-        ]);
-    }
-
-    /**
-     * @Route("/{id}/edit", name="course_edit", methods={"GET","POST"})
-     */
-    public function edit(Request $request, Course $course): Response
-    {
-        $form = $this->createForm(CourseType::class, $course);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('course_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->renderForm('course/edit.html.twig', [
-            'course' => $course,
-            'form' => $form,
-        ]);
-    }
-
-    /**
-     * @Route("/{id}", name="course_delete", methods={"POST"})
+     * @Route("/{id}", name="course_delete", methods={"DELETE"})
      */
     public function delete(Request $request, Course $course): Response
     {
@@ -89,6 +93,6 @@ class CourseController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('course_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('course_index');
     }
 }

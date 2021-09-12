@@ -53,45 +53,35 @@ class ContentController extends AbstractController
             $request->query->getInt('page', 1),
             1
         );
+$fileName = $data->getItems()[0]->getFileName();
+$videoTypes=["mp4","avi","ogg"];
+
+$isVideo = false;
+$fileExtenstion = '';
+if($fileName)
+{
+    $fnamToArr = explode(".",$fileName);
+    $ext = end($fnamToArr);
+    // dd($ext);
+    
+    $fileExtenstion = strtolower($ext);
+    if(in_array($fileExtenstion,$videoTypes)) {
+        $isVideo = true;
+    } 
+}
+
+
 
         return $this->render('content/studentviewtwo.html.twig', [
              'contents' => $data,
-            'edit'=>false
+            'edit'=>false,
+            'isVideo'=>$isVideo,
+            'videoExtension'=>$fileExtenstion,
+            'uploadDir'=>$this->getParameter('uploading_directory_resources'),
         ]);
     }
    
-     /**
-     * @Route("/studentlesson/prev/{id}", name="prevpage", methods={"GET","POST"})
-     */
-    // public function prevPage(ContentRepository $contentRepository,Request $request, PaginatorInterface $paginator): Response
-    // {
-    //     $prevId = $request->get('id');
-    //     $data=$contentRepository->find($prevId);
-    //     while (!$data ||  $prevId < 1) {
-    //         $data=$contentRepository->find($prevId -1);
-    //     }
-    //     return $this->render('content/studentviewtwo.html.twig', [
-    //          'contents' => $data,
-    //         'edit'=>false
-    //     ]);
-    // }
-   
-     /**
-     * @Route("/studentlesson/next/{id}", name="nextpage", methods={"GET","POST"})
-     */
-    // public function nextPage(ContentRepository $contentRepository,Request $request, PaginatorInterface $paginator): Response
-    // {
-    //     $nextId = $request->get('id');
-    //     $data=$contentRepository->find($nextId);
-    //     while (!$data) {
-    //         $data=$contentRepository->find($nextId + 1);
-    //     }
-
-    //     return $this->render('content/studentviewtwo.html.twig', [
-    //          'contents' => $data,
-    //         'edit'=>false
-    //     ]);
-    // }
+     
 
     /**
      * @Route("/", name="content_index", methods={"GET"})
@@ -140,7 +130,7 @@ class ContentController extends AbstractController
         $data=$paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page',1),
-            18
+            5
         );
         return $this->render('content/index.html.twig', [
             'contents' => $data,
@@ -169,12 +159,13 @@ class ContentController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
 
-
+// dd($form);
             $brochureFile = $form->get('filename')->getData();
+            $youtubeLink = $form->get('videoLink')->getData();
 
             // this condition is needed because the 'brochure' field is not required
             // so the PDF file must be processed only when a file is uploaded
-            if ($brochureFile) {
+            if ($brochureFile && !$youtubeLink) {
                 $originalFilename = pathinfo($brochureFile->getClientOriginalName(), PATHINFO_FILENAME);
                 // this is needed to safely include the file name as part of the URL
                 $safeFilename = $slugger->slug($originalFilename);

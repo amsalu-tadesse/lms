@@ -1,16 +1,17 @@
 {{ form_start(form) }}
-   {% set type = app.request.get('id') %}
+{% set type = app.request.get('id') %}
 <div class="card card-info">
 	<div class="card card-header">
-		Update content {{ type }}
+		Update content
+		 
 	</div>
 	<div class="card card-body">
 		{# {{ form_row(form.chapter) }}
-				 {{ form_row(form.title) }} #}
+						 {{ form_row(form.title) }} #}
 		{# {{ form_row(form.content) }} #}
 		{# {{ form_row(form.filename) }} #}
 
-     
+
 		{{ form_start(form,{'attr': {'role':'form'}}
 		) }}
 
@@ -24,7 +25,33 @@
 		<div class="form-group ">
 			<label class="control-label no-padding-right">{{ form_label(form.title) }}</label>
 			{{ form_widget(form.title,{'attr':{'class':'form-control'}}) }}
+			<div class="help-block with-errors">
+			  {# <div class="form-error">
+        {{ form_errors(form.title) }}
+    </div> #}
+			</div>
+		</div>
+
+
+
+    
+
+
+
+		<div class="form-group ">
+		<div class="form-group " id="upload">
+		<input type="radio" id="videoFileRadio" name="contact" value="videoFileRadio" checked>
+			<label class="control-label no-padding-right" id="filename">{{ form_label(form.filename) }}</label>
+			{{ form_widget(form.filename,{'attr':{'class':''}}) }}
 			<div class="help-block with-errors"></div>
+		</div>
+
+		<div class="form-group " id="videoLink" >
+		 <input type="radio" id="videoLinkRadio"name="contact" value="videoLinkRadio">
+			<label class="control-label no-padding-right ">{{ form_label(form.videoLink,'Youtube Link') }}</label>
+			{{ form_widget(form.videoLink,{'attr':{'class':'form-control','disabled':'disabled'}}) }}
+			<div class="help-block with-errors"></div>
+		</div>
 		</div>
 
 		<div class="form-group" id="content">
@@ -34,69 +61,64 @@
 		</div>
 
 
-		<div class="form-group " id="upload">
-			<label class="control-label no-padding-right" id="filename">{{ form_label(form.filename) }}</label>
-			{{ form_widget(form.filename,{'attr':{'class':''}}) }}
-			<div class="help-block with-errors"></div>
-		</div>
-
-		<div class="form-group " id="renderable">
-			<label class="control-label no-padding-right">{{ form_label(form.isrenderable) }}</label>
-			{{ form_widget(form.isrenderable,{'attr':{'class':''}}) }}
-			<div class="help-block with-errors"></div>
-		</div>
-
-
 		{# {% if not button_label is defined  %}
-			<div class="form-group ">
-				<button class="btn btn-info">{{ button_label|default('Save') }}</button>
-				<button class="btn  btn-warning " style="margin-right:20px;" type="reset">Reset</button>
-			</div>
-		{% else %}
-			<div class="form-group ">
-				<input type="hidden" name="edit" value="{{edit}}">
-				<a href="{{ path('permission_index') }}" class="btn btn-primary">
-					Cancel
-				</a>
- 
-				<button class="btn btn-success mr-2">{{ button_label|default('Save') }}</button>
-			</div>
-		{% endif %} #}
+					<div class="form-group ">
+						<button class="btn btn-info">{{ button_label|default('Save') }}</button>
+						<button class="btn  btn-warning " style="margin-right:20px;" type="reset">Reset</button>
+					</div>
+				{% else %}
+					<div class="form-group ">
+						<input type="hidden" name="edit" value="{{edit}}">
+						<a href="{{ path('permission_index') }}" class="btn btn-primary">
+							Cancel
+						</a>
+		 
+						<button class="btn btn-success mr-2">{{ button_label|default('Save') }}</button>
+					</div>
+				{% endif %} #}
 
-			<div class="form-group ">
-				{# <input type="hidden" name="edit" value="{{edit}}"> #}
-				<a href="{{ path('permission_index') }}" class="btn btn-primary">
-					Cancel
-				</a>
- 
-				<button class="btn btn-success mr-2">{{ button_label|default('Save') }}</button>
-			</div>
+		<div
+			class="form-group ">
+			{# <input type="hidden" name="edit" value="{{edit}}"> #}
+			<a href="{{ path('content_index') }}" class="btn btn-primary">
+				Cancel
+			</a>
+
+			<button class="btn btn-success mr-2">{{ button_label|default('Save') }}</button>
+		</div>
 
 
 		{{ form_end(form) }}
-
-
- 
-
 
 
 		{% block javascripts %}
 			<script>
 				var type = {{ type }};
 if (type == 1) {
-$("#content").hide();
-$("#renderable").hide();
+$("#content").show();
+$("#videoLink").show();
 $('#filename').find('label').html('Video');
-}
-
-else if(type == 2) {
+$('#resourcedesc').find('label').html('Video description details');
+} else if (type == 2) {
 $("#content").show();
-$("#renderable").show();
-$('#resourcedesc').find('label').html('Resource Description');
-} else {
-$("#content").show();
-$("#renderable").hide();
-$('#upload').hide();
+$("#videoLink").hide();
+$('#resourcedesc').find('label').html('Resource description details');
+} else { 
 }
 			</script>
+			<script>
+			$("#videoLinkRadio").on("click", function()
+			{
+			$("#content_videoLink").prop('disabled', false);
+			$("#content_filename").prop('disabled', true);
+			});
+			$("#videoFileRadio").on("click", function()
+			{
+			$("#content_videoLink").prop('disabled', true);
+			$("#content_filename").prop('disabled', false);
+			});
+			
+			</script>
+
+			
 		{% endblock %}

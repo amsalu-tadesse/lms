@@ -39,11 +39,7 @@ class Content
      */
     private $filename;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $isrenderable;
-
+   
     /**
      * @ORM\ManyToOne(targetEntity=InstructorCourse::class, inversedBy="contents")
      */
@@ -53,6 +49,11 @@ class Content
      * @ORM\OneToMany(targetEntity=StudentContentReaction::class, mappedBy="content")
      */
     private $studentContentReactions;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $videoLink;
 
     public function __construct()
     {
@@ -119,17 +120,7 @@ class Content
 
    
 
-    public function getIsrenderable(): ?bool
-    {
-        return $this->isrenderable;
-    }
-
-    public function setIsrenderable(bool $isrenderable): self
-    {
-        $this->isrenderable = $isrenderable;
-
-        return $this;
-    }
+ 
 
     public function getInstructorCourse(): ?InstructorCourse
     {
@@ -169,6 +160,18 @@ class Content
                 $studentContentReaction->setContent(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getVideoLink(): ?string
+    {
+        return $this->videoLink;
+    }
+
+    public function setVideoLink(?string $videoLink): self
+    {
+        $this->videoLink = $videoLink;
 
         return $this;
     }

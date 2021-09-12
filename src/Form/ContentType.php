@@ -19,7 +19,7 @@ class ContentType extends AbstractType
             ->add('title')
             ->add('content')
             // ->add('file')
-            ->add('isrenderable')
+            ->add('videoLink')
             // ->add('instructorCourse')
             ->add('filename', FileType::class, [
                 'label' => 'Resource',

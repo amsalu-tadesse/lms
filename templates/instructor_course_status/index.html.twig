@@ -1,12 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Course list
+{% block title %}Course Status index
 {% endblock %}
 {% block maintitle %}
-	Courses
+
+	Course Status
 {% endblock %}
-{% block breadcrumbcontent %}
-	Course list 
+{% block breadcrumb %}
+
+	<li class="breadcrumb-item active">Course Status</li>
 {% endblock %}
 {% block body %}
 	<div class="row">
@@ -36,7 +38,7 @@
 								{% if edit  %}
 									{% set button_label = 'Update' %}
 								{% endif %}
-								{{ include('course/_form.html.twig') }}
+								{{ include('instructor_course_status/_form.html.twig') }}
 
 
 							</div>
@@ -47,7 +49,7 @@
 					<div class="col-md-12">
 						<div class="card ">
 							<div class="card-header">
-								<h3 class="card-title">course List</h3>
+								<h3 class="card-title">Course Status List</h3>
 								<div class="card-tools">
 								
 									<form class="form-inline ml-3" >
@@ -71,39 +73,38 @@
 											<th>
 												#
 											</th>
-											<th>{{ knp_pagination_sortable(courses, 'Name', 'p.name') }}</th>
-											<th>{{ knp_pagination_sortable(courses, 'Code', 'p.code') }}</th>
+											<th>{{ knp_pagination_sortable(instructorCourseStatuss, 'Name', 'p.name') }}</th>
+										 
 
-											<th>credit</th>
+											<th>description</th>
 											<th>Action</th>
 										</tr>
 									</thead>
 									<tbody>
 										{% set i = 1 %}
-										{% for course in courses %}
+										{% for instructor_course_status in instructorCourseStatuss %}
 											<tr>
 												<td>
 													{{ i }}
 													{% set i = i+1 %}
 												</td>
-												<td>{{ course.name }}</td>
-												<td>{{ course.code }}</td>
-												<td>{{ course.credit }}</td>
+												<td>{{ instructor_course_status.name }}</td>
+ 												<td>{{ instructor_course_status.description }}</td>
 												<td>
 
 													<form class="d-inline" method="post">
 
 
-														<input type="hidden" name="edit" value="{{course.id}}">
+														<input type="hidden" name="edit" value="{{instructor_course_status.id}}">
 														<button class="btn btn-info btn-sm" title="Edit">
 															<i class="fa fa-edit"></i>
 														</button>
 													</form>
-													<form class="d-inline" method="post" action="{{ path('course_delete', {'id': course.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+													<form class="d-inline" method="post" action="{{ path('instructorCourseStatus_delete', {'id': instructor_course_status.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
 
 														<input type="hidden" name="_method" value="DELETE">
 														<input
-														type="hidden" name="_token" value="{{ csrf_token('delete' ~ course.id) }}">
+														type="hidden" name="_token" value="{{ csrf_token('delete' ~ instructor_course_status.id) }}">
 														{#  <button type="button" data-type="confirm" class="btn btn-danger js-sweetalert" title="Delete">#}
 														<button class="btn btn-danger btn-sm" title="Delete">
 															<i class="fa fa-trash"></i>
@@ -119,7 +120,7 @@
 										{% endfor %}
 									</tbody>
 								</table>
-								<div class="float-right">{{ knp_pagination_render(courses) }}</div>
+								<div class="float-right">{{ knp_pagination_render(instructorCourseStatuss) }}</div>
 
 
 							</div>

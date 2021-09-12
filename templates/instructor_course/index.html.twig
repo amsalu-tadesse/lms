@@ -1,0 +1,98 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Course assignement {% endblock %}
+{% block breadcrumbcontent %}
+Course assignement
+{% endblock %}
+{% block body %}
+    <a href="{{ path('instructor_course_new') }}" class="btn btn-success mb-4">Create new</a>
+    
+<div class="card card-info">
+<div class="card card-header">
+<h3>Course assignement</h3>
+</div>
+<div class="card card-body">
+<table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Course</th>
+                <th>Instructor</th>
+                <th>Assign date</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for instructor_course in instructor_courses %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ instructor_course.course }}</td>
+                {% if instructor_course.instructor %}
+                 <td>{{ instructor_course.instructor.userid.firstName ~ ' ' ~instructor_course.instructor.userid.middleName ~ ' ' ~instructor_course.instructor.userid.lastName }}</td>
+                 {% else %}
+                     <td></td>
+                {% endif %}
+                
+                <td>{{ instructor_course.date ? instructor_course.date|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    {# <a href="{{ path('instructor_course_show', {'id': instructor_course.id}) }}">show</a>
+                    <a href="{{ path('instructor_course_edit', {'id': instructor_course.id}) }}">edit</a> #}
+
+
+
+
+							<a href="#" data-toggle="modal" data-target="#modal-default{{instructor_course.id}}">Assign</a>
+
+							<div class="modal fade" id="modal-default{{instructor_course.id}}">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h4 class="modal-title">Assign Instructor</h4>
+											<button type="button" class="close btn btn-primary" data-dismiss="modal" aria-label="Close">
+												<span aria-hidden="true">&times;</span>
+											</button>
+										</div>
+
+										<form action="{{ path('assign_instructor',{id:instructor_course.id}) }}" class="form" method="POST">
+											<div class="modal-body">
+
+												<div class="form-group">
+													Select instructor for this course
+													<br>
+													<select class="form-control select2bs4" name="instructor" id="instructor">
+														{% for instructor in instructorsList %}
+															<option value="{{ instructor.id }}">{{ instructor.userid.firstName ~ ' '~ instructor.userid.middleName ~ ' '~ instructor.userid.lastName }}</option>
+														{% endfor %}
+													</select>
+												</div>
+
+											</div>
+											<div class="modal-footer justify-content-between">
+												<button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+
+												<button onclick="" type="submit" id="paynow" class="btn btn-success">
+													<i class="fa fa-save m-1"></i>Save
+												</button>
+											</div>
+										</form>
+									</div>
+									<!-- /.modal-content -->
+								</div>
+								<!-- /.modal-dialog -->
+							</div>
+
+
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+</div>
+    
+
+{% endblock %}

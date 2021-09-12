@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Instructor;
+use App\Entity\Student;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Form\Filter\UserFilterType;
@@ -84,6 +86,24 @@ class UserController extends AbstractController
             $user->setIsActive(true);
             $entityManager->persist($user);
             $entityManager->flush();
+
+            if($user->getUserType()->getId()==3) //instructor
+            {
+                $instructor = new Instructor();
+                $instructor->setUserid($user);
+                $entityManager->persist($instructor);
+
+            }
+            
+            else if($user->getUserType()->getId()==4) //student
+            {
+                $student = new Student();
+                $student->setUserid($user);
+                $entityManager->persist($student);
+
+            }
+            $entityManager->flush();
+            
 
             return $this->redirectToRoute('user_index');
         }
