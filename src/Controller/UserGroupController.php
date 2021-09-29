@@ -129,7 +129,7 @@ class UserGroupController extends AbstractController
         foreach($assignedPermissions as $perm ){
             $assignedPermId[] = $perm->getId();    
         }
-// dd($assignedPermId);
+// dd($permissionRepository->findAll());
         return $this->render('user_group/user.html.twig',
              [
                 'user_group' => $userGroup,

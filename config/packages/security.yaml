@@ -1,7 +1,5 @@
 security:
-    encoders:
-        App\Entity\User:
-            algorithm: auto
+    enable_authenticator_manager: true
 
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
@@ -10,16 +8,25 @@ security:
             entity:
                 class: App\Entity\User
                 property: username
+    password_hashers:
+        # use your user class name here
+        App\Entity\User:
+            # Use native password hasher, which auto-selects the best
+            # possible hashing algorithm (starting from Symfony 5.3 this is "bcrypt")
+            algorithm: auto
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
-            anonymous: lazy
             provider: app_user_provider
             guard:
                 authenticators:
                     - App\Security\UserAuthenticator
+             # configure the maximum login attempts in a custom period of time
+            login_throttling:
+                max_attempts: 3
+                interval: '15 minutes'
             logout:
                 path: app_logout
                 # where to redirect after logout

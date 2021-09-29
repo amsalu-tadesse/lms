@@ -25,6 +25,8 @@ class UserController extends AbstractController
      */
     public function index(Request $request, UserRepository $userRepository, PaginatorInterface $paginator, UserPasswordEncoderInterface $userPasswordEncoderInterface): Response 
     {
+        // $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         $pageSize=5;
 
         $user = new User();
