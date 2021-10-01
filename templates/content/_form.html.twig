@@ -1,124 +1,81 @@
-{{ form_start(form) }}
-{% set type = app.request.get('id') %}
+{{ form_start(form) }} {% set type = app.request.get('id') %}
 <div class="card card-info">
-	<div class="card card-header">
-		Update content
-		 
-	</div>
-	<div class="card card-body">
-		{# {{ form_row(form.chapter) }}
-						 {{ form_row(form.title) }} #}
-		{# {{ form_row(form.content) }} #}
-		{# {{ form_row(form.filename) }} #}
+    <div class="card card-header">
+        Update content
+    </div>
+    {{form_errors(form)}}
+    <div class="card card-body">
+        {# {{ form_row(form.chapter) }} {{ form_row(form.title) }} #} {# {{ form_row(form.content) }} #} {# {{ form_row(form.filename) }} #} {{ form_start(form,{'attr': {'role':'form'}} ) }}
+
+        <div class="form-group "> <label class="control-label no-padding-right">{{ form_label(form.chapter) }}</label> {{ form_widget(form.chapter,{'attr':{'class':'form-control'}}) }}
+            <div class="help-block with-errors"></div>
+        </div>
+
+        <div class="form-group ">
+            <label class="control-label no-padding-right">{{ form_label(form.title) }}</label> {{ form_widget(form.title,{'attr':{'class':'form-control'}}) }}
+            <div class="help-block with-errors">
+                {#
+                <div class="form-error">
+                    {{ form_errors(form.title) }}
+                </div> #}
+            </div>
+        </div>
+
+        <div class="form-group ">
+            <div class="form-group " id="upload">
+                <label class="control-label no-padding-right" id="filename">
+					<input type="radio" id="videoFileRadio" name="contact" value="videoFileRadio" checked>
+					Resource
+				</label>
+                <br> 
+                <div class="form-error">
+                    {{ form_errors(form.filename) }}
+                </div>
+                {{ form_widget(form.filename,{ 'attr':{ 'class': ''}}) }}
+                <div class="help-block with-errors"></div>
+            </div>
+            <br>
+            <div class="form-group " id="videoLink">
+                <label class="control-label no-padding-right">
+					<input type="radio" id="videoLinkRadio" name="contact" value="videoLinkRadio">
+					Youtube Link
+				</label> {{ form_widget(form.videoLink,{'attr':{'class':'form-control','disabled':'disabled'}}) }}
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
+
+        <div class="form-group" id="content">
+            <label class="control-label no-padding-right" id="resourcedesc">{{ form_label(form.content) }}</label> {{ form_widget(form.content,{'attr':{'class':'form-control'}}) }}
+            <div class="help-block with-errors"></div>
+        </div>
 
 
-		{{ form_start(form,{'attr': {'role':'form'}}
-		) }}
-
-
-			<div class="form-group "> <label class="control-label no-padding-right">{{ form_label(form.chapter) }}</label>
-			{{ form_widget(form.chapter,{'attr':{'class':'form-control'}}) }}
-			<div class="help-block with-errors"></div>
-		</div>
-
-
-		<div class="form-group ">
-			<label class="control-label no-padding-right">{{ form_label(form.title) }}</label>
-			{{ form_widget(form.title,{'attr':{'class':'form-control'}}) }}
-			<div class="help-block with-errors">
-			  {# <div class="form-error">
-        {{ form_errors(form.title) }}
-    </div> #}
-			</div>
-		</div>
-
-
-
-    
-
-
-
-		<div class="form-group ">
-		<div class="form-group " id="upload">
-		<input type="radio" id="videoFileRadio" name="contact" value="videoFileRadio" checked>
-			<label class="control-label no-padding-right" id="filename">{{ form_label(form.filename) }}</label>
-			{{ form_widget(form.filename,{'attr':{'class':''}}) }}
-			<div class="help-block with-errors"></div>
-		</div>
-
-		<div class="form-group " id="videoLink" >
-		 <input type="radio" id="videoLinkRadio"name="contact" value="videoLinkRadio">
-			<label class="control-label no-padding-right ">{{ form_label(form.videoLink,'Youtube Link') }}</label>
-			{{ form_widget(form.videoLink,{'attr':{'class':'form-control','disabled':'disabled'}}) }}
-			<div class="help-block with-errors"></div>
-		</div>
-		</div>
-
-		<div class="form-group" id="content">
-			<label class="control-label no-padding-right" id="resourcedesc">{{ form_label(form.content) }}</label>
-			{{ form_widget(form.content,{'attr':{'class':'form-control'}}) }}
-			<div class="help-block with-errors"></div>
-		</div>
-
-
-		{# {% if not button_label is defined  %}
-					<div class="form-group ">
-						<button class="btn btn-info">{{ button_label|default('Save') }}</button>
-						<button class="btn  btn-warning " style="margin-right:20px;" type="reset">Reset</button>
-					</div>
-				{% else %}
-					<div class="form-group ">
-						<input type="hidden" name="edit" value="{{edit}}">
-						<a href="{{ path('permission_index') }}" class="btn btn-primary">
+        {# {% if not button_label is defined %}
+        <div class="form-group ">
+            <button class="btn btn-info">{{ button_label|default('Save') }}</button>
+            <button class="btn  btn-warning " style="margin-right:20px;" type="reset">Reset</button>
+        </div>
+        {% else %}
+        <div class="form-group ">
+            <input type="hidden" name="edit" value="{{edit}}">
+            <a href="{{ path('permission_index') }}" class="btn btn-primary">
 							Cancel
 						</a>
-		 
-						<button class="btn btn-success mr-2">{{ button_label|default('Save') }}</button>
-					</div>
-				{% endif %} #}
 
-		<div
-			class="form-group ">
-			{# <input type="hidden" name="edit" value="{{edit}}"> #}
-			<a href="{{ path('content_index') }}" class="btn btn-primary">
+            <button class="btn btn-success mr-2">{{ button_label|default('Save') }}</button>
+        </div>
+        {% endif %} #}
+
+        <div class="form-group ">
+            {# <input type="hidden" name="edit" value="{{edit}}"> #}
+            <a href="{{ path('content_index') }}" class="btn btn-primary">
 				Cancel
 			</a>
 
-			<button class="btn btn-success mr-2">{{ button_label|default('Save') }}</button>
-		</div>
+            <button class="btn btn-success mr-2">{{ button_label|default('Save') }}</button>
+        </div>
 
 
-		{{ form_end(form) }}
-
-
-		{% block javascripts %}
-			<script>
-				var type = {{ type }};
-if (type == 1) {
-$("#content").show();
-$("#videoLink").show();
-$('#filename').find('label').html('Video');
-$('#resourcedesc').find('label').html('Video description details');
-} else if (type == 2) {
-$("#content").show();
-$("#videoLink").hide();
-$('#resourcedesc').find('label').html('Resource description details');
-} else { 
-}
-			</script>
-			<script>
-			$("#videoLinkRadio").on("click", function()
-			{
-			$("#content_videoLink").prop('disabled', false);
-			$("#content_filename").prop('disabled', true);
-			});
-			$("#videoFileRadio").on("click", function()
-			{
-			$("#content_videoLink").prop('disabled', true);
-			$("#content_filename").prop('disabled', false);
-			});
-			
-			</script>
-
-			
-		{% endblock %}
+        {{ form_end(form) }}
+    </div>
+</div>

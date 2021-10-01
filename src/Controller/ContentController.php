@@ -149,17 +149,17 @@ if($fileName)
     /**
      * @Route("/new/{id}", name="content_new", methods={"GET","POST"})
      */
-    public function new(Request $request,ContentType $contentType, SluggerInterface $slugger): Response
+    public function new(Request $request,ContentType $contentType, SluggerInterface $slugger, Content $con): Response
     {
  
         $content = new Content();
         $form = $this->createForm(ContentType::class, $content);
+        $form1 = $this->createForm(ContentType::class, $con);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
 
-// dd($form);
             $brochureFile = $form->get('filename')->getData();
             $youtubeLink = $form->get('videoLink')->getData();
 
@@ -192,7 +192,6 @@ if($fileName)
 
             return $this->redirectToRoute('content_index', [], Response::HTTP_SEE_OTHER);
         }
-
         return $this->renderForm('content/new.html.twig', [
             'content' => $content,
             'form' => $form,
