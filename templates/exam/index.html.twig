@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Exam index{% endblock %}
+{% block breadcrumbhome %}exam{% endblock %}
+{% block breadcrumbcontent %}index{% endblock %}
+
+{% block body %}
+
+<div class="card card-info">
+    <div class="card card-header">
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Exam list</h3>
+            </div>
+            <div class="col-md-6">
+               <a href="{{ path('exam_new') }}" class="btn btn-primary" style="float:right">Add new Exam</a>
+            </div>
+        </div>
+    </div>
+    <div class="card card-body">
+        <table class="table ">
+            <thead>
+                <tr>
+                                        <th>Id</th>
+                                        <th>Instruction</th>
+                                        <th>Percentage</th>
+                                        <th>Passvalue</th>
+                                        <th>Active</th>
+                                        <th>actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for exam in exams %}
+                <tr>
+                                        <td>{{ exam.id }}</td>
+                                        <td>{{ exam.instruction }}</td>
+                                        <td>{{ exam.percentage }}</td>
+                                        <td>{{ exam.passvalue }}</td>
+                                        <td>{{ exam.active ? 'Yes' : 'No' }}</td>
+                                        <td>
+                        <a
+                            href="{{ path('exam_show', {'id': exam.id}) }}">show</a>
+                        <a
+                            href="{{ path('exam_edit', {'id': exam.id}) }}">edit</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6">no records found</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="  pagination justify-content-center ">
+			{{ knp_pagination_render(exams) }}</div>
+
+		<div class="float-right pl-5 pb-2">
+			 
+				Total result:
+				{{ exams.getTotalItemCount }} 
+		</div>
+</div>
+
+{% endblock %}

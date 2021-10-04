@@ -22,11 +22,6 @@ class Content
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $chapter;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
     private $title;
 
     /**
@@ -41,11 +36,6 @@ class Content
 
    
     /**
-     * @ORM\ManyToOne(targetEntity=InstructorCourse::class, inversedBy="contents")
-     */
-    private $instructorCourse;
-
-    /**
      * @ORM\OneToMany(targetEntity=StudentContentReaction::class, mappedBy="content")
      */
     private $studentContentReactions;
@@ -54,6 +44,22 @@ class Content
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $videoLink;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=InstructorCourseChapter::class, inversedBy="contents")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $chapter;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $description;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $resource;
 
     public function __construct()
     {
@@ -76,20 +82,6 @@ class Content
     public function setFilename($filename)
     {
         $this->filename = $filename;
-
-        return $this;
-    }
-
-  
-
-    public function getChapter(): ?string
-    {
-        return $this->chapter;
-    }
-
-    public function setChapter(string $chapter): self
-    {
-        $this->chapter = $chapter;
 
         return $this;
     }
@@ -118,21 +110,8 @@ class Content
         return $this;
     }
 
-   
 
- 
 
-    public function getInstructorCourse(): ?InstructorCourse
-    {
-        return $this->instructorCourse;
-    }
-
-    public function setInstructorCourse(?InstructorCourse $instructorCourse): self
-    {
-        $this->instructorCourse = $instructorCourse;
-
-        return $this;
-    }
 
     /**
      * @return Collection|StudentContentReaction[]
@@ -172,6 +151,42 @@ class Content
     public function setVideoLink(?string $videoLink): self
     {
         $this->videoLink = $videoLink;
+
+        return $this;
+    }
+
+    public function getChapter(): ?InstructorCourseChapter
+    {
+        return $this->chapter;
+    }
+
+    public function setChapter(?InstructorCourseChapter $chapter): self
+    {
+        $this->chapter = $chapter;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getResource(): ?string
+    {
+        return $this->resource;
+    }
+
+    public function setResource(string $resource): self
+    {
+        $this->resource = $resource;
 
         return $this;
     }

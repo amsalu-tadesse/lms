@@ -1,0 +1,12 @@
+
+{% extends 'base.html.twig' %}
+
+{% block title %}New InstructorCourseChapter{% endblock %}
+
+{% block body %}
+    <h1>Create new InstructorCourseChapter</h1>
+
+    {{ include('instructor_course_chapter/_form.html.twig') }}
+
+    <a href="{{ path('instructor_course_chapter_index') }}">back to list</a>
+{% endblock %}

@@ -62,11 +62,17 @@ class InstructorCourse
      */
     private $status;
 
+    /**
+     * @ORM\OneToMany(targetEntity=InstructorCourseChapter::class, mappedBy="instructorCourse", orphanRemoval=true)
+     */
+    private $instructorCourseChapters;
+
     public function __construct()
     {
         $this->studentCourses = new ArrayCollection();
         $this->contents = new ArrayCollection();
         $this->exams = new ArrayCollection();
+        $this->instructorCourseChapters = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -222,6 +228,36 @@ class InstructorCourse
     public function setStatus(?InstructorCourseStatus $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|InstructorCourseChapter[]
+     */
+    public function getInstructorCourseChapters(): Collection
+    {
+        return $this->instructorCourseChapters;
+    }
+
+    public function addInstructorCourseChapter(InstructorCourseChapter $instructorCourseChapter): self
+    {
+        if (!$this->instructorCourseChapters->contains($instructorCourseChapter)) {
+            $this->instructorCourseChapters[] = $instructorCourseChapter;
+            $instructorCourseChapter->setInstructorCourse($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInstructorCourseChapter(InstructorCourseChapter $instructorCourseChapter): self
+    {
+        if ($this->instructorCourseChapters->removeElement($instructorCourseChapter)) {
+            // set the owning side to null (unless already changed)
+            if ($instructorCourseChapter->getInstructorCourse() === $this) {
+                $instructorCourseChapter->setInstructorCourse(null);
+            }
+        }
 
         return $this;
     }

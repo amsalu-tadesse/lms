@@ -6,13 +6,13 @@ use App\Entity\Content;
 use App\Form\ContentType;
 use App\Repository\ContentRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 
 /**
@@ -53,24 +53,23 @@ class ContentController extends AbstractController
             $request->query->getInt('page', 1),
             1
         );
-$fileName = $data->getItems()[0]->getFileName();
-$videoTypes=["mp4","avi","ogg"];
+        
+        $fileName = $data->getItems()[0]->getFileName();
+        $videoTypes=["mp4","avi","ogg"];
 
-$isVideo = false;
-$fileExtenstion = '';
-if($fileName)
-{
-    $fnamToArr = explode(".",$fileName);
-    $ext = end($fnamToArr);
-    // dd($ext);
-    
-    $fileExtenstion = strtolower($ext);
-    if(in_array($fileExtenstion,$videoTypes)) {
-        $isVideo = true;
-    } 
-}
-
-
+        $isVideo = false;
+        $fileExtenstion = '';
+        if($fileName)
+        {
+            $fnamToArr = explode(".",$fileName);
+            $ext = end($fnamToArr);
+            // dd($ext);
+            
+            $fileExtenstion = strtolower($ext);
+            if(in_array($fileExtenstion,$videoTypes)) {
+                $isVideo = true;
+            } 
+        }
 
         return $this->render('content/studentviewtwo.html.twig', [
              'contents' => $data,
@@ -149,12 +148,11 @@ if($fileName)
     /**
      * @Route("/new/{id}", name="content_new", methods={"GET","POST"})
      */
-    public function new(Request $request,ContentType $contentType, SluggerInterface $slugger, Content $con): Response
+    public function new(Request $request,ContentType $contentType, SluggerInterface $slugger): Response
     {
  
         $content = new Content();
         $form = $this->createForm(ContentType::class, $content);
-        $form1 = $this->createForm(ContentType::class, $con);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
