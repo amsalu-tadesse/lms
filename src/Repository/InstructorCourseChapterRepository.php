@@ -22,11 +22,12 @@ class InstructorCourseChapterRepository extends ServiceEntityRepository
     public function findChaptersInCourse($value)
     {
         return $this->createQueryBuilder('ch')
+            ->select('ch')
             ->join('ch.instructorCourse', 'ic')
             ->andWhere('ic.id = :val')
             ->setParameter('val', $value)
             ->getQuery()
-            ->getResult()
+            ->getArrayResult()
         ;
     }
     // /**

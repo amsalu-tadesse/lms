@@ -40,10 +40,16 @@ class Student
      */
     private $studentContentReactions;
 
+    /**
+     * @ORM\OneToMany(targetEntity=StudentChapter::class, mappedBy="student", orphanRemoval=true)
+     */
+    private $studentChapters;
+
     public function __construct()
     {
         $this->studentCourses = new ArrayCollection();
         $this->studentContentReactions = new ArrayCollection();
+        $this->studentChapters = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -129,6 +135,36 @@ class Student
             // set the owning side to null (unless already changed)
             if ($studentContentReaction->getStudent() === $this) {
                 $studentContentReaction->setStudent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|StudentChapter[]
+     */
+    public function getStudentChapters(): Collection
+    {
+        return $this->studentChapters;
+    }
+
+    public function addStudentChapter(StudentChapter $studentChapter): self
+    {
+        if (!$this->studentChapters->contains($studentChapter)) {
+            $this->studentChapters[] = $studentChapter;
+            $studentChapter->setStudent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStudentChapter(StudentChapter $studentChapter): self
+    {
+        if ($this->studentChapters->removeElement($studentChapter)) {
+            // set the owning side to null (unless already changed)
+            if ($studentChapter->getStudent() === $this) {
+                $studentChapter->setStudent(null);
             }
         }
 

@@ -91,10 +91,37 @@ class CourseController extends AbstractController
      */
     public function chapters($id, ContentRepository $contentRepository, InstructorCourseChapterRepository $chaptersRepository): Response
     {
-        $chapters = $chaptersRepository->findChaptersInCourse($id);
+        $conn = $this->getDoctrine()->getManager()
+            ->getConnection();
+        $sql = "SELECT c.*, sc.pages_completed from instructor_course_chapter c "
+              ."left join student_chapter sc on "
+              ."sc.chapter_id = c.id";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(array('instructorCourse' => $id));
+        $chapters = $stmt->fetchAll();
+
+
+
+        // $chapters = $chaptersRepository->findChaptersInCourse($id);
         $contents = $contentRepository->getContentsCount($id);
 
-        dd($contents);
+        foreach($chapters as $key => $value){
+            foreach($contents as $key1 => $value1)
+            {
+                if($value['id'] == $value1['id']){
+                    $chapters[$key]['total_video'] = $value1['total_video'];
+                    $chapters[$key]['total_content'] = $value1['con'];
+                    $total_content = $value1['total_video']+$value1['con'];
+                    $chapters[$key]['completed'] = ($value['pages_completed']/$total_content)*100;
+                }
+                else{
+                    $chapters[$key]['total_video'] = 0;
+                    $chapters[$key]['total_content'] = 0;
+                    $chpaters[$key]['completed'] = 0;
+                }
+            }
+        }
+        
         return $this->render('student_course/chapters.html.twig',[
             'chapters' => $chapters,
             'contents' => $contents,

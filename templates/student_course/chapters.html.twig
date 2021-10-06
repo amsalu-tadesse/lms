@@ -17,9 +17,8 @@
 	<h4 class="page-title">
 		Chapters in this course
 	</h4>
-	<div class="row chapter-list">
 		{% for chapter in chapters %}
-			<div class="row">
+			<div class="row chapter-list">
 				<div class="col-md-1"></div>
 				<div class="col-md-10">
 					<div class="card border-0 border-radius-0 ">
@@ -34,10 +33,10 @@
 						<div class="card-footer bg-color-grey text-1 text-uppercase">
 							<div class="row">
 								<div class="progress mb-2 col-sm-3 col-md-2">
-									<div class="progress-bar progress-bar-primary" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+									<div class="progress-bar progress-bar-primary" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: {{chapter.pages_completed}}%;"></div>
 								</div>
 								<div class="col-md-3 col-sm-6">
-									0% completed
+									{{chapter.pages_completed}}% completed
 								</div>
 							</div>
 
@@ -46,22 +45,5 @@
 				</div>
 			</div>
 		{% endfor %}
-
-
-		<div class="row chapter-list">
-			<div class="col-md-1"></div>
-			<div class="col-md-10">
-				<div class="card border-0 border-radius-0 ">
-					<div class="card-header bg-color-grey text-1 text-uppercase">
-						Progress
-					</div>
-					<div class="card-body">
-						<h4 class="card-title card-title-custom mb-1 text-4 font-weight-bold">Card Title</h4>
-						<p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur rhoncus nulla dui, in dapi.</p>
-						<a href="#" class="">See courses >>></a>
-					</div>
-				</div>
-			</div>
-		</div>
 	</div>
 {% endblock %}

@@ -45,9 +45,15 @@ class InstructorCourseChapter
      */
     private $topic;
 
+    /**
+     * @ORM\OneToMany(targetEntity=StudentChapter::class, mappedBy="chapter", orphanRemoval=true)
+     */
+    private $studentChapters;
+
     public function __construct()
     {
         $this->contents = new ArrayCollection();
+        $this->studentChapters = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -129,6 +135,36 @@ class InstructorCourseChapter
     public function setTopic(string $topic): self
     {
         $this->topic = $topic;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|StudentChapter[]
+     */
+    public function getStudentChapters(): Collection
+    {
+        return $this->studentChapters;
+    }
+
+    public function addStudentChapter(StudentChapter $studentChapter): self
+    {
+        if (!$this->studentChapters->contains($studentChapter)) {
+            $this->studentChapters[] = $studentChapter;
+            $studentChapter->setChapter($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStudentChapter(StudentChapter $studentChapter): self
+    {
+        if ($this->studentChapters->removeElement($studentChapter)) {
+            // set the owning side to null (unless already changed)
+            if ($studentChapter->getChapter() === $this) {
+                $studentChapter->setChapter(null);
+            }
+        }
 
         return $this;
     }
