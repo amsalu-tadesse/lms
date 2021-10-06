@@ -28,7 +28,7 @@ class InstructorCourse
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $date;
+    private $createdAt;
 
     /**
      * @ORM\Column(type="boolean")
@@ -67,6 +67,11 @@ class InstructorCourse
      */
     private $instructorCourseChapters;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $duration;
+
     public function __construct()
     {
         $this->studentCourses = new ArrayCollection();
@@ -92,14 +97,14 @@ class InstructorCourse
         return $this;
     }
 
-    public function getDate(): ?\DateTimeInterface
+    public function getCreatedAt(): ?\DateTimeInterface
     {
-        return $this->date;
+        return $this->createdAt;
     }
 
-    public function setDate(?\DateTimeInterface $date): self
+    public function setCreatedAt(?\DateTimeInterface $createdAt): self
     {
-        $this->date = $date;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
@@ -261,4 +266,20 @@ class InstructorCourse
 
         return $this;
     }
+
+    public function getDuration(): ?int
+    {
+        return $this->duration;
+    }
+
+    public function setDuration(?int $duration): self
+    {
+        $this->duration = $duration;
+
+        return $this;
+    }
+/*public function __toString()
+{
+    return $this->course->getName();
+}*/
 }

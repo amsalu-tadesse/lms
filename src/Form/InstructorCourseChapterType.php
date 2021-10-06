@@ -13,8 +13,8 @@ class InstructorCourseChapterType extends AbstractType
     {
         $builder
             ->add('chapter')
-            ->add('created_at')
-            ->add('instructorCourse')
+            ->add('topic')
+            // ->add('instructorCourse')
         ;
     }
 

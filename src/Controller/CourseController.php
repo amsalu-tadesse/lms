@@ -7,6 +7,7 @@ use App\Entity\InstructorCourse;
 use App\Entity\InstructorCourseStatus;
 use App\Form\CourseType;
 use App\Repository\CourseRepository;
+use DateTime;
 use App\Repository\ContentRepository;
 use App\Repository\InstructorCourseChapterRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -64,6 +65,7 @@ class CourseController extends AbstractController
             $instructorCourse->setCourse($course);
             $instructorCourseStatus = $em->getRepository(InstructorCourseStatus::class)->find(1);//not assigned
             $instructorCourse->setStatus($instructorCourseStatus);
+            $instructorCourse->setCreatedAt(new DateTime());
             $instructorCourse->setActive(true);
             $entityManager->persist($instructorCourse);
             $entityManager->flush();

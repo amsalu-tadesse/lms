@@ -12,11 +12,12 @@ class InstructorCourseType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('date')
+            // ->add('createdAt')
             ->add('active')
             ->add('course')
             ->add('instructor')
-            ->add('status')
+            // ->add('status')
+            ->add('duration')
         ;
     }
 
