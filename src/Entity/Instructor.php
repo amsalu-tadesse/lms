@@ -23,7 +23,7 @@ class Instructor
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="instructors")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $userid;
+    private $user;
 
     /**
      * @ORM\ManyToOne(targetEntity=AcademicLevel::class, inversedBy="instructors")
@@ -45,14 +45,14 @@ class Instructor
         return $this->id;
     }
 
-    public function getUserid(): ?User
+    public function getUser(): ?User
     {
-        return $this->userid;
+        return $this->user;
     }
 
-    public function setUserid(?User $userid): self
+    public function setUser(?User $user): self
     {
-        $this->userid = $userid;
+        $this->user = $user;
 
         return $this;
     }
@@ -97,6 +97,10 @@ class Instructor
         }
 
         return $this;
+    }
+    public function __toString()
+    {
+        return $this->user->getFirstName() . " ".$this->user->getLastName();
     }
 
    
