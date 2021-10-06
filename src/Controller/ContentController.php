@@ -138,7 +138,23 @@ class ContentController extends AbstractController
         ]);
     }  
 
-
+    /**
+     * @Route("/list", name="content_list", methods={"GET"})
+     */
+    public function contentList(ContentRepository $contentRepository,Request $request): Response
+    {
+        // $queryBuilder=$contentRepository->findContent($request->query->get('search'));
+        // $data=$paginator->paginate(
+        //     $queryBuilder,
+        //     $request->query->getInt('page', 1),
+        //     18
+        // );
+        return $this->render('student_course/player.html.twig', [
+            //  'contents' => $data,
+            // 'form' => $form->createView(),
+            // 'edit'=>false
+        ]);
+    }
 
 
 

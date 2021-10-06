@@ -19,6 +19,16 @@ class InstructorCourseChapterRepository extends ServiceEntityRepository
         parent::__construct($registry, InstructorCourseChapter::class);
     }
 
+    public function findChaptersInCourse($value)
+    {
+        return $this->createQueryBuilder('ch')
+            ->join('ch.instructorCourse', 'ic')
+            ->andWhere('ic.id = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
     // /**
     //  * @return InstructorCourseChapter[] Returns an array of InstructorCourseChapter objects
     //  */

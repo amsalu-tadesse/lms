@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!-- Basic -->
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>
+			course-player
+		</title>
+
+
+		<meta name="keywords" content="HTML5 Template"/>
+		<meta name="description" content="Porto - Responsive HTML5 Template">
+		<meta
+		name="author" content="okler.net">
+
+		<!-- Favicon -->
+		<link rel="shortcut icon" href="{{asset('images/eca.png')}}" type="image/x-icon"/>
+		<link
+		rel="apple-touch-icon" href="images">
+
+		<!-- Mobile Metas -->
+		<meta
+		name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, shrink-to-fit=no">
+
+		<!-- Web Fonts  -->
+		<link
+		id="googleFonts" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800%7CShadows+Into+Light&display=swap" rel="stylesheet" type="text/css">
+
+		<!-- Vendor CSS -->
+		<link rel="stylesheet" href="{{asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}">
+		<link
+		rel="stylesheet" href="{{asset('assets/plugins/fontawesome-free/css/all.min.css')}}">
+
+		<!-- Theme CSS -->
+		<link
+		rel="stylesheet" href="{{asset('student/css/theme.css')}}">
+		<!-- Theme Custom CSS -->
+		<link rel="stylesheet" href="{{asset('student/css/custom.css')}}">
+		<link rel="stylesheet" href="{{asset('student/css/default.css')}}">
+		<link rel="stylesheet" href="{{asset('student/css/theme-elements.css')}}">
+		<style>
+			.tabs {
+				padding: 16px 0;
+			}
+
+			iframe, video {
+				padding: 17px;
+				width: 100%;
+			}
+
+			p, ul{
+				color: black;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="body">
+			{% include 'master-st/navbar.html.twig' %}
+
+			<div role="main" class="main">
+				<section class="section border-0 m-0" style="min-height: 600px;">
+					<div class="container-fluid">
+						<div class="row">
+
+							<div class="col-md-8">
+								<div class="video">
+									<video controls width="100%" height="453">
+										<source src="{{asset('/images/video.mp4')}}">
+									</video>
+								</div>
+								<div class="youtube">
+									<iframe height="453" src="https://www.youtube.com/embed/_Iew7b9FyJk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+								</div>
+								<div class="document">
+									<div class="card">
+										<div class="card-body">
+											<div class="text">
+
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-4">
+
+								<div class="tabs ">
+									<ul class="nav nav-tabs tabs-primary">
+										<li class="nav-item" style="width: 100%; border-bottom: 1px solid blue">
+											<a class="nav-link active" href="#popular7" data-bs-toggle="tab">Contents</a>
+										</li>
+									</ul>
+									<div class="tab-content">
+										<ul class="list list-icons list-icons-style-1">
+											<li>
+												<i class="fas fa-check"></i>
+												Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
+											<li>
+												<i class="fas fa-play-circle"></i>
+												Fusce sit amet orci quis arcu vestibulum vestibulum sed.</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+			</div>
+			{% include 'master-st/footer.html.twig' %}
+		</div>
+
+		<!-- jquery -->
+		<script src="{{asset('assets/plugins/jquery/jquery.js')}}"></script>
+
+		<!-- Theme Base, Components and Settings -->
+		<script src="{{asset('student/js/theme.js')}}"></script>
+
+		<!-- Theme Custom -->
+		<script src="{{asset('student/js/custom.js')}}"></script>
+
+		<!-- Theme Initialization Files -->
+		<script src="{{asset('student/js/theme.init.js')}}"></script>
+	</body>
+
+</html>

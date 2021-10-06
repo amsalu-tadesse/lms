@@ -37,14 +37,30 @@ class StudentCourseRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?StudentCourse
+    public function findOneBySomeField($value)
     {
         return $this->createQueryBuilder('s')
             ->andWhere('s.exampleField = :val')
             ->setParameter('val', $value)
             ->getQuery()
-            ->getOneOrNullResult()
+            ->getResult()
         ;
     }
     */
+
+    /**
+     * @return StudentCourse[] Returns an array of Product objects
+     */
+    public function findCourses($value)
+    {
+        return $this->createQueryBuilder('s')
+            ->select('ic.id','c.name','c.description')
+            ->join('s.instructorCourse', 'ic')
+            ->join('ic.course', 'c')
+            ->andWhere('s.student = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }

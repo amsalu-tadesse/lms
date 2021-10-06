@@ -7,6 +7,8 @@ use App\Entity\InstructorCourse;
 use App\Entity\InstructorCourseStatus;
 use App\Form\CourseType;
 use App\Repository\CourseRepository;
+use App\Repository\ContentRepository;
+use App\Repository\InstructorCourseChapterRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +25,7 @@ class CourseController extends AbstractController
      */
     public function index(CourseRepository $courseRepository,Request $request, PaginatorInterface $paginator): Response
     {
-$em = $this->getDoctrine()->getManager();
+        $em = $this->getDoctrine()->getManager();
         if($request->request->get('edit')){
             $id=$request->request->get('edit');
             $course=$courseRepository->findOneBy(['id'=>$id]);
@@ -82,6 +84,21 @@ $em = $this->getDoctrine()->getManager();
         ]);
     }  
  
+    /**
+     * @Route("/{id}/chapters/", name="course_chapters", methods={"GET"})
+     */
+    public function chapters($id, ContentRepository $contentRepository, InstructorCourseChapterRepository $chaptersRepository): Response
+    {
+        $chapters = $chaptersRepository->findChaptersInCourse($id);
+        $contents = $contentRepository->getContentsCount($id);
+
+        dd($contents);
+        return $this->render('student_course/chapters.html.twig',[
+            'chapters' => $chapters,
+            'contents' => $contents,
+        ]);
+    }
+
     /**
      * @Route("/{id}", name="course_delete", methods={"DELETE"})
      */

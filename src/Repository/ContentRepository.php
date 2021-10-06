@@ -34,7 +34,19 @@ class ContentRepository extends ServiceEntityRepository
         ;
     }
 
-
+    public function getContentsCount($value)
+    {
+        return $this->createQueryBuilder('c')
+            ->select('ch.id','count(c.videoLink) + count(c.filename) as total_video', 'count(c.content) as con')
+            ->Join('c.chapter', 'ch')
+            ->join('ch.instructorCourse', 'ic')
+            ->andWhere('ic.id = :val')
+            ->setParameter('val', $value)
+            ->groupBy('ch.id')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
     // /**
     //  * @return Content[] Returns an array of Content objects
     //  */
