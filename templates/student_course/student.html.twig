@@ -7,13 +7,13 @@
 	<div class="row align-items-center">
 		{% for course in student_courses %}
 			<div class="col-md-4">
-				<div class="card border-0 border-radius-0 ">
-					<div class="card-header bg-color-grey text-1 text-uppercase">
-						Progress
-					</div>
+				<div class="card border-0 border-radius-0 " style="height: 271px";>
+					
 					<div class="card-body">
 						<h4 class="card-title mb-1 text-4 font-weight-bold">{{ course.name}}</h4>
 						<p class="card-text">{{course.description}}.</p>
+					</div>
+					<div class="card-footer">
 						<a href="/course/{{ course.id }}/chapters" class="">See Chapters >>></a>
 					</div>
 				</div>
