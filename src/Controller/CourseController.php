@@ -100,8 +100,6 @@ class CourseController extends AbstractController
         $stmt->execute(array('instructorCourse' => $id));
         $chapters = $stmt->fetchAll();
 
-
-
         // $chapters = $chaptersRepository->findChaptersInCourse($id);
         $contents = $contentRepository->getContentsCount($id);
 
@@ -117,7 +115,7 @@ class CourseController extends AbstractController
                 else{
                     $chapters[$key]['total_video'] = 0;
                     $chapters[$key]['total_content'] = 0;
-                    $chpaters[$key]['completed'] = 0;
+                    $chapters[$key]['completed'] = 0;
                 }
             }
         }

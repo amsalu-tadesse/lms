@@ -6,6 +6,7 @@
 		.progress {
 			height: 0.6rem;
 			margin-top: 7px;
+			padding: 0px;
 		}
 
 		.page-title {
@@ -23,7 +24,7 @@
 				<div class="col-md-10">
 					<div class="card border-0 border-radius-0 ">
 						<div class="card-body">
-							<a href="{{path('content_list')}}">
+							<a href="{{path('content_list',{'course':chapter.instructor_course_id,'chapter':chapter.chapter})}}">
 								<h4 class="card-title card-title-custom mb-1 text-4 font-weight-bold">{{chapter.chapter}}</h4>
 							</a>
 							<p class="card-text" style="padding: 14px 0px 0px;">videos : {{ chapter.total_video }}
@@ -33,10 +34,10 @@
 						<div class="card-footer bg-color-grey text-1 text-uppercase">
 							<div class="row">
 								<div class="progress mb-2 col-sm-3 col-md-2">
-									<div class="progress-bar progress-bar-primary" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: {{chapter.pages_completed}}%;"></div>
+									<div class="progress-bar progress-bar-primary" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: {{chapter.completed}}%;"></div>
 								</div>
 								<div class="col-md-3 col-sm-6">
-									{{chapter.pages_completed}}% completed
+									{{chapter.completed}}% completed
 								</div>
 							</div>
 

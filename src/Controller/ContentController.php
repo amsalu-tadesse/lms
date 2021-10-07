@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
-
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * @Route("/content")
@@ -139,24 +139,32 @@ class ContentController extends AbstractController
     }  
 
     /**
-     * @Route("/list", name="content_list", methods={"GET"})
+     * @Route("/{course}/{chapter}/list", name="content_list", methods={"GET"})
      */
-    public function contentList(ContentRepository $contentRepository,Request $request): Response
+    public function contentList($course, $chapter, ContentRepository $contentRepository,Request $request): Response
     {
-        // $queryBuilder=$contentRepository->findContent($request->query->get('search'));
-        // $data=$paginator->paginate(
-        //     $queryBuilder,
-        //     $request->query->getInt('page', 1),
-        //     18
-        // );
+        $contents = $contentRepository->getContentsForChapter($course, $chapter);
+
         return $this->render('student_course/player.html.twig', [
-            //  'contents' => $data,
-            // 'form' => $form->createView(),
-            // 'edit'=>false
+             'contents' => $contents,
         ]);
     }
 
-
+   /**
+     * @Route("/{course}/cont", name="content_html", methods={"GET"})
+     */
+    public function htmlContent($course, ContentRepository $contentRepository,Request $request): Response
+    {
+        $content = $contentRepository->getHtmlContent($course);
+        // dd($content);
+        $response = $content["content"];
+    
+        // Send all this stuff back to DataTables
+        $returnResponse = new JsonResponse();
+        $returnResponse->setJson($response);
+    
+        return $returnResponse;
+    }
 
 
 
