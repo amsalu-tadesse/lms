@@ -3,6 +3,9 @@
 namespace App\Form;
 
 use App\Entity\Content;
+use App\Entity\InstructorCourseChapter;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -14,8 +17,21 @@ class ContentType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+         
         $builder
-            ->add('chapter')
+            ->add('chapter'/*, EntityType::class, [
+                'class' => InstructorCourseChapter::class,
+                'required' => false,
+                'placeholder' => "",
+                // 'choice_value' => 'sectionLabel',
+                'query_builder' => function (EntityRepository $er, $options) {
+                    $res = $er->createQueryBuilder('s')
+                             ->join('s.instructorCourse', 'ic')
+                             ->andWhere('ic.id =: instcrs')
+                ->setParameter('instcrs', $options['instcrs']);
+                    return $res;
+                },
+            ]*/) 
             ->add('title')
             ->add('content')
             // ->add('file')
@@ -49,7 +65,9 @@ class ContentType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Content::class,
+            'data_class' =>  Content::class
+            // 'data_class' => ['content'=>Content::class, 'instcrs'=>null]
+            // 'data_class' => null,
         ]);
     }
 }

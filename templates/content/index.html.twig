@@ -9,7 +9,17 @@
 
 	<div class="card card-info">
 		<div class="card card-header">
-			<h3>Content list</h3>
+			 <div class="row">
+            <div class="col-md-6">
+                <h3>Content list</h3>
+            </div>
+            
+            <div class="col-md-6">
+               {# <a href="{{ path('studentlesson', {'id': 1}) }}" class="btn btn-primary" style="float:right">View as amsalu </a> #}
+               <a href="{{ path('content_new', {'id': incrsid}) }}" class="btn btn-primary" style="float:right">Add Content </a>
+            </div>
+        </div>
+
 		</div>
 		<div class="card card-body">
 			<table class="table">
@@ -32,8 +42,8 @@
 							{# <td>{{ content.content }}</td> #}
 							<td>{{ content.videoLink }}</td>
 							<td>
-								<a href="{{ path('content_show', {'id': content.id}) }}">show</a>
-								<a href="{{ path('content_edit', {'id': content.id}) }}">edit</a>
+								<a href="{{ path('content_show', {'id': content.id}) }}" class="btn btn-sm btn-primary">show</a>
+								<a href="{{ path('content_edit', {'id': content.id}) }}" class="btn btn-sm btn-warning">edit</a>
 							</td>
 						</tr>
 					{% else %}
@@ -58,7 +68,7 @@
 
 	</div>
 
-	<div class="btn-group">
+	{# <div class="btn-group">
 		<button type="button" class="btn btn-success">Add Next Page Content</button>
 		<button type="button" class="btn btn-success dropdown-toggle dropdown-icon" data-toggle="dropdown" aria-expanded="false">
 			<span class="sr-only">Toggle Dropdown</span>
@@ -66,15 +76,21 @@
 		<div class="dropdown-menu" role="menu" style="">
 			<a class="dropdown-item" href="{{ path('content_new', {'id': 1}) }}">Add video or html content</a>
 			<a class="dropdown-item" href="{{ path('content_new', {'id': 2}) }}">Add resource files</a>
-			{# <a class="dropdown-item" href="{{ path('content_new', {'id': 3}) }}">Add Custom Content</a> #}
 		</div>
-	</div>
-	<div class="btn-group">
+	</div>#}
+
+	{# <div class="btn-group">
+	<a href="{{ path('studentlesson', {'id': 1}) }}" class="btn btn-block btn-primary">Add Content </a>
+	</div> #}
+
+{# 	
+	<div class="btn-group"> 
 
 
-		<a href="{{ path('studentlesson', {'id': 1}) }}" class="btn btn-block btn-primary">View as a Student</a>
+		<a href="{{ path('studentlesson', {'id': 1}) }}" class="btn btn-block btn-primary">Add Content</a>
+		<a href="{{ path('studentlesson', {'id': 1}) }}" class="btn btn-block btn-primary">Viewasstd</a>
 
-	</div>
+	</div> #}
 
 	{# <a href="{{ path('content_new') }}">Create new</a> #}
 {% endblock %}

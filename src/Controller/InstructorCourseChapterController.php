@@ -39,7 +39,7 @@ class InstructorCourseChapterController extends AbstractController
     }
 
      /**
-     * @Route("/content/{id}", name="instructor_course_chapter_content_list", methods={"GET"})
+     * @Route("/chapters/{id}", name="instructor_course_chapter_content_list", methods={"GET"})
      */
     public function contentList(InstructorCourse $instructorCourse, Request $request): Response
     {
