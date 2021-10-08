@@ -27,17 +27,23 @@
 							<a href="{{path('content_list',{'course':chapter.instructor_course_id,'chapter':chapter.chapter})}}">
 								<h4 class="card-title card-title-custom mb-1 text-4 font-weight-bold">{{chapter.chapter}}</h4>
 							</a>
-							<p class="card-text" style="padding: 14px 0px 0px;">videos : {{ chapter.total_video }}
+							<p class="card-text" style="padding: 14px 0px 0px;">videos : 0 
+							{# {{ chapter.total_video }} #}
+
 								<span style="margin-left:30px;">PPTs : 0</span>
 							</p>
 						</div>
 						<div class="card-footer bg-color-grey text-1 text-uppercase">
 							<div class="row">
 								<div class="progress mb-2 col-sm-3 col-md-2">
-									<div class="progress-bar progress-bar-primary" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: {{chapter.completed}}%;"></div>
+									<div class="progress-bar progress-bar-primary" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 
+									{# {{chapter.completed}} #}
+									%;"></div>
 								</div>
 								<div class="col-md-3 col-sm-6">
-									{{chapter.completed}}% completed
+									{# {{chapter.completed}} #}
+									0%
+									 completed
 								</div>
 							</div>
 

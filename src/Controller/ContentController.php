@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Content;
+use App\Entity\InstructorCourse;
+use App\Entity\InstructorCourseChapter;
 use App\Form\ContentType;
 use App\Repository\ContentRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,6 +23,64 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class ContentController extends AbstractController
 {
    
+    /**
+     * @Route("/mycourse/{id}", name="content_index", methods={"GET"})
+     */
+    public function index(ContentRepository $contentRepository,Request $request, InstructorCourse $instructorCourse, PaginatorInterface $paginator): Response
+    {
+//$request->get('id')
+        if($request->request->get('edit')){
+            $id=$request->request->get('edit');
+            $content=$contentRepository->findOneBy(['id'=>$id]);
+            $form = $this->createForm(ContentType::class, $content);
+            $form->handleRequest($request);
+    
+            if ($form->isSubmitted() && $form->isValid()) {
+                $this->getDoctrine()->getManager()->flush();
+    
+                return $this->redirectToRoute('content_index',['id'=>$instructorCourse->getId()]);
+            }
+
+            $queryBuilder=$contentRepository->findContent($request->query->get('search'), $instructorCourse);
+            $data=$paginator->paginate(
+                $queryBuilder,
+                $request->query->getInt('page',1),
+                10
+            );
+            return $this->render('content/index.html.twig', [
+                'contents' => $data,
+                'form' => $form->createView(),
+                'edit'=>$id,
+                'incrsid' => $instructorCourse->getId(),
+            ]);
+
+        }
+        $content = new Content();
+        $form = $this->createForm(ContentType::class, $content);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($content);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('content_index',['id'=>$instructorCourse->getId()]);
+        }
+        
+        $queryBuilder=$contentRepository->findContent($request->query->get('search'),$instructorCourse);
+        $data=$paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page',1),
+            10
+        );
+        return $this->render('content/index.html.twig', [
+            'contents' => $data,
+            'form' => $form->createView(),
+            'edit'=>false,
+            'incrsid' => $instructorCourse->getId(),
+        ]);
+    }  
+
      /**
      * @Route("/lessons", name="studentview", methods={"GET"})
      */
@@ -42,12 +102,12 @@ class ContentController extends AbstractController
      /**
      * @Route("/studentlesson/page/{id}", name="studentlesson", methods={"GET","POST"})
      */
-    public function studentviewtwo(ContentRepository $contentRepository,Request $request, PaginatorInterface $paginator): Response
+    public function studentviewtwo(InstructorCourse $instructorCourse, ContentRepository $contentRepository,Request $request, PaginatorInterface $paginator): Response
     {
         //$nextId = $request->get('id');
         //$data=$contentRepository->find($nextId);
 
-        $queryBuilder=$contentRepository->findContent($request->query->get('search'));
+        $queryBuilder=$contentRepository->findContent($request->query->get('search'), $instructorCourse);
         $data=$paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page', 1),
@@ -82,61 +142,6 @@ class ContentController extends AbstractController
    
      
 
-    /**
-     * @Route("/", name="content_index", methods={"GET"})
-     */
-    public function index(ContentRepository $contentRepository,Request $request, PaginatorInterface $paginator): Response
-    {
-
-        if($request->request->get('edit')){
-            $id=$request->request->get('edit');
-            $content=$contentRepository->findOneBy(['id'=>$id]);
-            $form = $this->createForm(ContentType::class, $content);
-            $form->handleRequest($request);
-    
-            if ($form->isSubmitted() && $form->isValid()) {
-                $this->getDoctrine()->getManager()->flush();
-    
-                return $this->redirectToRoute('content_index');
-            }
-
-            $queryBuilder=$contentRepository->findContent($request->query->get('search'));
-            $data=$paginator->paginate(
-                $queryBuilder,
-                $request->query->getInt('page',1),
-                5
-            );
-            return $this->render('content/index.html.twig', [
-                'contents' => $data,
-                'form' => $form->createView(),
-                'edit'=>$id
-            ]);
-
-        }
-        $content = new Content();
-        $form = $this->createForm(ContentType::class, $content);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($content);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('content_index');
-        }
-        
-        $queryBuilder=$contentRepository->findContent($request->query->get('search'));
-        $data=$paginator->paginate(
-            $queryBuilder,
-            $request->query->getInt('page',1),
-            5
-        );
-        return $this->render('content/index.html.twig', [
-            'contents' => $data,
-            'form' => $form->createView(),
-            'edit'=>false
-        ]);
-    }  
 
     /**
      * @Route("/{course}/{chapter}/list", name="content_list", methods={"GET"})
@@ -172,7 +177,7 @@ class ContentController extends AbstractController
     /**
      * @Route("/new/{id}", name="content_new", methods={"GET","POST"})
      */
-    public function new(Request $request,ContentType $contentType, SluggerInterface $slugger): Response
+    public function new(Request $request,InstructorCourseChapter $instructorCourse, SluggerInterface $slugger): Response
     {
  
         $content = new Content();
@@ -212,11 +217,12 @@ class ContentController extends AbstractController
             $entityManager->persist($content);
             $entityManager->flush();
 
-            return $this->redirectToRoute('content_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('content_index', ['id'=>$instructorCourse->getId()], Response::HTTP_SEE_OTHER);
         }
         return $this->renderForm('content/new.html.twig', [
             'content' => $content,
             'form' => $form,
+            'incrsid'=> $instructorCourse->getId()
         ]);
     }
 
@@ -227,6 +233,7 @@ class ContentController extends AbstractController
     {
         return $this->render('content/show.html.twig', [
             'content' => $content,
+            'incrsid'=> $content->getChapter()->getInstructorCourse()->getId()
         ]);
     }
 
@@ -235,18 +242,19 @@ class ContentController extends AbstractController
      */
     public function edit(Request $request, Content $content): Response
     {
-        $form = $this->createForm(ContentType::class, $content);
+        $form = $this->createForm(ContentType::class,  $content);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('content_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('content_index', ['id'=>$content->getChapter()->getInstructorCourse()->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('content/edit.html.twig', [
             'content' => $content,
             'form' => $form,
+            'incrsid'=> $content->getChapter()->getInstructorCourse()->getId()
         ]);
     }
 

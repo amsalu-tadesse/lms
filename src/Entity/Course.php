@@ -45,7 +45,7 @@ class Course
     private $instructorCourses;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     private $description;
 

@@ -21,17 +21,21 @@ class ContentRepository extends ServiceEntityRepository
     }
 
 
-    public function findContent($search=null)
+    public function findContent($search=null, $instructorCourse)
     {
         $qb=$this->createQueryBuilder('c');
-        if($search)
+        if ($search) {
             $qb->andWhere("c.title  LIKE '%".$search."%'");
+        }
+        if ($instructorCourse) {
+            $qb->join('c.chapter', 'chptr')
+               ->andWhere("chptr.instructorCourse = :instcrs")
+               ->setParameter('instcrs', $instructorCourse);
+        }
 
-            return 
+        return
             $qb->orderBy('c.id', 'ASC')
             ->getQuery()
-     
-            
         ;
     }
 
@@ -52,7 +56,7 @@ class ContentRepository extends ServiceEntityRepository
     public function getContentsCount($value)
     {
         return $this->createQueryBuilder('c')
-            ->select('ch.id','count(c.videoLink) + count(c.filename) as total_video', 'count(c.content) as con')
+            ->select('ch.id', 'count(c.videoLink) + count(c.filename) as total_video', 'count(c.content) as con')
             ->Join('c.chapter', 'ch')
             ->join('ch.instructorCourse', 'ic')
             ->andWhere('ic.id = :val')
