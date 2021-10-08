@@ -27,10 +27,8 @@
 							<a href="{{path('content_list',{'course':chapter.instructor_course_id,'chapter':chapter.chapter})}}">
 								<h4 class="card-title card-title-custom mb-1 text-4 font-weight-bold">{{chapter.chapter}}</h4>
 							</a>
-							<p class="card-text" style="padding: 14px 0px 0px;">videos : 0 
-							{# {{ chapter.total_video }} #}
-
-								<span style="margin-left:30px;">PPTs : 0</span>
+							<p class="card-text" style="padding: 14px 0px 0px;">videos : {{ chapter.total_video }}
+								<span style="margin-left:30px;">Notes : {{ chapter.total_content }}</span>
 							</p>
 						</div>
 						<div class="card-footer bg-color-grey text-1 text-uppercase">

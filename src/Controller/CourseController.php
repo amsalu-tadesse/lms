@@ -102,7 +102,6 @@ class CourseController extends AbstractController
 
         // $chapters = $chaptersRepository->findChaptersInCourse($id);
         $contents = $contentRepository->getContentsCount($id);
-
         foreach($chapters as $key => $value){
             foreach($contents as $key1 => $value1)
             {
@@ -111,6 +110,8 @@ class CourseController extends AbstractController
                     $chapters[$key]['total_content'] = $value1['con'];
                     $total_content = $value1['total_video']+$value1['con'];
                     $chapters[$key]['completed'] = ($value['pages_completed']/$total_content)*100;
+                    // dd($chapters);
+                break;
                 }
                 else{
                     $chapters[$key]['total_video'] = 0;
@@ -119,7 +120,6 @@ class CourseController extends AbstractController
                 }
             }
         }
-        
         return $this->render('student_course/chapters.html.twig',[
             'chapters' => $chapters,
             'contents' => $contents,
