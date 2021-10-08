@@ -95,14 +95,15 @@ class CourseController extends AbstractController
             ->getConnection();
         $sql = "SELECT c.*, sc.pages_completed from instructor_course_chapter c "
               ."left join student_chapter sc on "
-              ."sc.chapter_id = c.id";
+              ."sc.chapter_id = c.id where c.instructor_course_id = :instructorCourse";
+    
         $stmt = $conn->prepare($sql);
         $stmt->execute(array('instructorCourse' => $id));
         $chapters = $stmt->fetchAll();
 
-        // $chapters = $chaptersRepository->findChaptersInCourse($id);
         $contents = $contentRepository->getContentsCount($id);
         foreach($chapters as $key => $value){
+            $flag = 1;
             foreach($contents as $key1 => $value1)
             {
                 if($value['id'] == $value1['id']){
@@ -110,14 +111,15 @@ class CourseController extends AbstractController
                     $chapters[$key]['total_content'] = $value1['con'];
                     $total_content = $value1['total_video']+$value1['con'];
                     $chapters[$key]['completed'] = ($value['pages_completed']/$total_content)*100;
-                    // dd($chapters);
+                    $flag = 2;
                 break;
                 }
-                else{
-                    $chapters[$key]['total_video'] = 0;
-                    $chapters[$key]['total_content'] = 0;
-                    $chapters[$key]['completed'] = 0;
-                }
+            }
+
+            if($flag == 1){
+                $chapters[$key]['total_video'] = 0;
+                $chapters[$key]['total_content'] = 0;
+                $chapters[$key]['completed'] = 0;
             }
         }
         return $this->render('student_course/chapters.html.twig',[

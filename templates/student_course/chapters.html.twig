@@ -18,33 +18,46 @@
 	<h4 class="page-title">
 		Chapters in this course
 	</h4>
-		{% for chapter in chapters %}
+		{% if chapters|length == 0 %}
 			<div class="row chapter-list">
 				<div class="col-md-1"></div>
 				<div class="col-md-10">
 					<div class="card border-0 border-radius-0 ">
 						<div class="card-body">
-							<a href="{{path('content_list',{'course':chapter.instructor_course_id,'chapter':chapter.chapter})}}">
-								<h4 class="card-title card-title-custom mb-1 text-4 font-weight-bold">{{chapter.chapter}}</h4>
-							</a>
-							<p class="card-text" style="padding: 14px 0px 0px;">videos : {{ chapter.total_video }}
-								<span style="margin-left:30px;">Notes : {{ chapter.total_content }}</span>
-							</p>
-						</div>
-						<div class="card-footer bg-color-grey text-1 text-uppercase">
-							<div class="row">
-								<div class="progress mb-2 col-sm-3 col-md-2">
-									<div class="progress-bar progress-bar-primary" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: {{chapter.completed}}%;"></div>
-								</div>
-								<div class="col-md-3 col-sm-6">
-									{{chapter.completed}}% completed
-								</div>
-							</div>
-
+							<p class="card-text">You are not participated in any course</p>
 						</div>
 					</div>
 				</div>
 			</div>
-		{% endfor %}
+		{% else %}
+			{% for chapter in chapters %}
+			<div class="row chapter-list">
+				<div class="col-md-1"></div>
+					<div class="col-md-10">
+						<div class="card border-0 border-radius-0 ">
+							<div class="card-body">
+								<a href="{{path('content_list',{'course':chapter.instructor_course_id,'chapter':chapter.chapter})}}">
+									<h4 class="card-title card-title-custom mb-1 text-4 font-weight-bold">{{chapter.chapter}}</h4>
+								</a>
+								<p class="card-text" style="padding: 14px 0px 0px;">videos : {{ chapter.total_video }}
+									<span style="margin-left:30px;">Notes : {{ chapter.total_content }}</span>
+								</p>
+							</div>
+							<div class="card-footer bg-color-grey text-1 text-uppercase">
+								<div class="row">
+									<div class="progress mb-2 col-sm-3 col-md-2">
+										<div class="progress-bar progress-bar-primary" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: {{chapter.completed}}%;"></div>
+									</div>
+									<div class="col-md-3 col-sm-6">
+										{{chapter.completed}}% completed
+									</div>
+								</div>
+
+							</div>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+		{% endif %}
 	</div>
 {% endblock %}
