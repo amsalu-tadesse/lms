@@ -7,6 +7,9 @@ use App\Entity\InstructorCourse;
 use App\Entity\InstructorCourseStatus;
 use App\Form\CourseType;
 use App\Repository\CourseRepository;
+use DateTime;
+use App\Repository\ContentRepository;
+use App\Repository\InstructorCourseChapterRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +26,7 @@ class CourseController extends AbstractController
      */
     public function index(CourseRepository $courseRepository,Request $request, PaginatorInterface $paginator): Response
     {
-$em = $this->getDoctrine()->getManager();
+        $em = $this->getDoctrine()->getManager();
         if($request->request->get('edit')){
             $id=$request->request->get('edit');
             $course=$courseRepository->findOneBy(['id'=>$id]);
@@ -62,6 +65,7 @@ $em = $this->getDoctrine()->getManager();
             $instructorCourse->setCourse($course);
             $instructorCourseStatus = $em->getRepository(InstructorCourseStatus::class)->find(1);//not assigned
             $instructorCourse->setStatus($instructorCourseStatus);
+            $instructorCourse->setCreatedAt(new DateTime());
             $instructorCourse->setActive(true);
             $entityManager->persist($instructorCourse);
             $entityManager->flush();
@@ -82,6 +86,46 @@ $em = $this->getDoctrine()->getManager();
         ]);
     }  
  
+    /**
+     * @Route("/{id}/chapters/", name="course_chapters", methods={"GET"})
+     */
+    public function chapters($id, ContentRepository $contentRepository, InstructorCourseChapterRepository $chaptersRepository): Response
+    {
+        $conn = $this->getDoctrine()->getManager()
+            ->getConnection();
+        $sql = "SELECT c.*, sc.pages_completed from instructor_course_chapter c "
+              ."left join student_chapter sc on "
+              ."sc.chapter_id = c.id";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(array('instructorCourse' => $id));
+        $chapters = $stmt->fetchAll();
+
+        // $chapters = $chaptersRepository->findChaptersInCourse($id);
+        $contents = $contentRepository->getContentsCount($id);
+        foreach($chapters as $key => $value){
+            foreach($contents as $key1 => $value1)
+            {
+                if($value['id'] == $value1['id']){
+                    $chapters[$key]['total_video'] = $value1['total_video'];
+                    $chapters[$key]['total_content'] = $value1['con'];
+                    $total_content = $value1['total_video']+$value1['con'];
+                    $chapters[$key]['completed'] = ($value['pages_completed']/$total_content)*100;
+                    // dd($chapters);
+                break;
+                }
+                else{
+                    $chapters[$key]['total_video'] = 0;
+                    $chapters[$key]['total_content'] = 0;
+                    $chapters[$key]['completed'] = 0;
+                }
+            }
+        }
+        return $this->render('student_course/chapters.html.twig',[
+            'chapters' => $chapters,
+            'contents' => $contents,
+        ]);
+    }
+
     /**
      * @Route("/{id}", name="course_delete", methods={"DELETE"})
      */

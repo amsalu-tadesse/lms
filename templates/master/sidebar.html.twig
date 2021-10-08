@@ -120,6 +120,12 @@
                                 <p>Course Assignement</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{path('instructor_course_chapter_index')}}" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>My Courses</p>
+                            </a>
+                        </li>
 
                     </ul>
                 </li>
@@ -134,12 +140,12 @@
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
-                        <li class="nav-item">
+                        {# <li class="nav-item">
                             <a href="{{path('content_index')}}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Contents</p>
                             </a>
-                        </li>
+                        </li> #}
                         <li class="nav-item">
                             <a href="{{path('content_type_index')}}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
@@ -162,6 +168,14 @@
                     </ul>
                 </li>
 
+                <li class="nav-item">
+                    <li class="nav-item">
+                        <a href="{{path('exam_index')}}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Exams</p>
+                        </a>
+                    </li>
+                </li>
 
 
 

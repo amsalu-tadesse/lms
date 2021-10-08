@@ -1,4 +1,45 @@
-{# {{ form_start(form) }}
+ {# {{ form_start(form) }}
     {{ form_widget(form) }}
     <button class="btn">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }} #}
+{{ form_end(form) }}  #}
+
+
+
+
+    <div class="card card-info">
+<div class="card card-header">
+   <h3>Assign course to Instructors</h3>
+</div>
+<div class="card card-body">
+
+{{ form_start(form) }}
+
+
+   <div class="form-group">
+                    <label for="nacourseme">Course</label>
+                      {{ form_widget(form.course,{'attr':{'class':'form-control'}}) }}
+     </div>
+
+   <div class="form-group">
+                    <label for="instructor">Instructor</label>
+                      {{ form_widget(form.instructor,{'attr':{'class':'form-control'}}) }}
+     </div>
+   <div class="form-group">
+                    <label for="duration">Duration (in hrs)</label>
+                      {{ form_widget(form.duration,{'attr':{'class':''}}) }}
+     </div>
+   <div class="form-group">
+                    <label for="duration">Active</label>
+                      {{ form_widget(form.active,{'attr':{'class':''}}) }}
+     </div>
+
+
+    {# {{ form_widget(form) }} #}
+
+
+      <button class="btn btn-primary mt-2">{{ button_label|default('Save') }}</button>
+      
+    {{ form_end(form) }}
+</div>
+</div>
+   

@@ -19,16 +19,32 @@ class ExamRepository extends ServiceEntityRepository
         parent::__construct($registry, Exam::class);
     }
 
+
+    public function findExam($search=null)
+    {
+        $qb=$this->createQueryBuilder('c');
+        if($search)
+            $qb->andWhere("c.title  LIKE '%".$search."%'");
+
+            return 
+            $qb->orderBy('c.id', 'ASC')
+            ->getQuery()
+     
+            
+        ;
+    }
+
+
     // /**
     //  * @return Exam[] Returns an array of Exam objects
     //  */
     /*
     public function findByExampleField($value)
     {
-        return $this->createQueryBuilder('e')
-            ->andWhere('e.exampleField = :val')
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.exampleField = :val')
             ->setParameter('val', $value)
-            ->orderBy('e.id', 'ASC')
+            ->orderBy('c.id', 'ASC')
             ->setMaxResults(10)
             ->getQuery()
             ->getResult()
@@ -39,8 +55,8 @@ class ExamRepository extends ServiceEntityRepository
     /*
     public function findOneBySomeField($value): ?Exam
     {
-        return $this->createQueryBuilder('e')
-            ->andWhere('e.exampleField = :val')
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.exampleField = :val')
             ->setParameter('val', $value)
             ->getQuery()
             ->getOneOrNullResult()

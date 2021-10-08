@@ -28,7 +28,7 @@ class InstructorCourse
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $date;
+    private $createdAt;
 
     /**
      * @ORM\Column(type="boolean")
@@ -62,11 +62,22 @@ class InstructorCourse
      */
     private $status;
 
+    /**
+     * @ORM\OneToMany(targetEntity=InstructorCourseChapter::class, mappedBy="instructorCourse", orphanRemoval=true)
+     */
+    private $instructorCourseChapters;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $duration;
+
     public function __construct()
     {
         $this->studentCourses = new ArrayCollection();
         $this->contents = new ArrayCollection();
         $this->exams = new ArrayCollection();
+        $this->instructorCourseChapters = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -86,14 +97,14 @@ class InstructorCourse
         return $this;
     }
 
-    public function getDate(): ?\DateTimeInterface
+    public function getCreatedAt(): ?\DateTimeInterface
     {
-        return $this->date;
+        return $this->createdAt;
     }
 
-    public function setDate(?\DateTimeInterface $date): self
+    public function setCreatedAt(?\DateTimeInterface $createdAt): self
     {
-        $this->date = $date;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
@@ -225,4 +236,50 @@ class InstructorCourse
 
         return $this;
     }
+
+    /**
+     * @return Collection|InstructorCourseChapter[]
+     */
+    public function getInstructorCourseChapters(): Collection
+    {
+        return $this->instructorCourseChapters;
+    }
+
+    public function addInstructorCourseChapter(InstructorCourseChapter $instructorCourseChapter): self
+    {
+        if (!$this->instructorCourseChapters->contains($instructorCourseChapter)) {
+            $this->instructorCourseChapters[] = $instructorCourseChapter;
+            $instructorCourseChapter->setInstructorCourse($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInstructorCourseChapter(InstructorCourseChapter $instructorCourseChapter): self
+    {
+        if ($this->instructorCourseChapters->removeElement($instructorCourseChapter)) {
+            // set the owning side to null (unless already changed)
+            if ($instructorCourseChapter->getInstructorCourse() === $this) {
+                $instructorCourseChapter->setInstructorCourse(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getDuration(): ?int
+    {
+        return $this->duration;
+    }
+
+    public function setDuration(?int $duration): self
+    {
+        $this->duration = $duration;
+
+        return $this;
+    }
+/*public function __toString()
+{
+    return $this->course->getName();
+}*/
 }

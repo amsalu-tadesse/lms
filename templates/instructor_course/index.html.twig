@@ -5,7 +5,7 @@
 Course assignement
 {% endblock %}
 {% block body %}
-    <a href="{{ path('instructor_course_new') }}" class="btn btn-success mb-4">Create new</a>
+    <a href="{{ path('instructor_course_new') }}" class="btn btn-success mb-4">Re use course</a>
     
 <div class="card card-info">
 <div class="card card-header">
@@ -19,6 +19,8 @@ Course assignement
                 <th>Course</th>
                 <th>Instructor</th>
                 <th>Assign date</th>
+                <th>Status</th>
+                <th>Active</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -28,20 +30,22 @@ Course assignement
                 <td>{{ loop.index }}</td>
                 <td>{{ instructor_course.course }}</td>
                 {% if instructor_course.instructor %}
-                 <td>{{ instructor_course.instructor.userid.firstName ~ ' ' ~instructor_course.instructor.userid.middleName ~ ' ' ~instructor_course.instructor.userid.lastName }}</td>
+                 <td>{{ instructor_course.instructor.user.firstName ~ ' ' ~ instructor_course.instructor.user.middleName ~ ' ' ~ instructor_course.instructor.user.lastName }}</td>
                  {% else %}
                      <td></td>
                 {% endif %}
                 
-                <td>{{ instructor_course.date ? instructor_course.date|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ instructor_course.createdAt ? instructor_course.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+				 <td> {{ instructor_course.status }}</td>
+				 <td> {{ instructor_course.active ? "YES" : "NO" }}</td>
                 <td>
-                    {# <a href="{{ path('instructor_course_show', {'id': instructor_course.id}) }}">show</a>
-                    <a href="{{ path('instructor_course_edit', {'id': instructor_course.id}) }}">edit</a> #}
+                    {# <a href="{{ path('instructor_course_show', {'id': instructor_course.id}) }}">show</a> #}
+                   
 
 
 
 
-							<a href="#" data-toggle="modal" data-target="#modal-default{{instructor_course.id}}">Assign</a>
+							<a class="btn btn-primary" href="#" data-toggle="modal" data-target="#modal-default{{instructor_course.id}}">Assign</a>
 
 							<div class="modal fade" id="modal-default{{instructor_course.id}}">
 								<div class="modal-dialog">
@@ -57,11 +61,11 @@ Course assignement
 											<div class="modal-body">
 
 												<div class="form-group">
-													Select instructor for this course
+													Select instructor for the course
 													<br>
 													<select class="form-control select2bs4" name="instructor" id="instructor">
 														{% for instructor in instructorsList %}
-															<option value="{{ instructor.id }}">{{ instructor.userid.firstName ~ ' '~ instructor.userid.middleName ~ ' '~ instructor.userid.lastName }}</option>
+															<option value="{{ instructor.id }}">{{ instructor.user.firstName ~ ' '~ instructor.user.middleName ~ ' '~ instructor.user.lastName }}</option>
 														{% endfor %}
 													</select>
 												</div>
@@ -70,7 +74,7 @@ Course assignement
 											<div class="modal-footer justify-content-between">
 												<button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
 
-												<button onclick="" type="submit" id="paynow" class="btn btn-success">
+												<button onclick="" type="submit" id="assignnow" class="btn btn-success">
 													<i class="fa fa-save m-1"></i>Save
 												</button>
 											</div>
@@ -81,7 +85,7 @@ Course assignement
 								<!-- /.modal-dialog -->
 							</div>
 
-
+ <a href="{{ path('instructor_course_edit', {'id': instructor_course.id}) }}" class="btn btn-warning" >edit</a> 
                 </td>
             </tr>
         {% else %}

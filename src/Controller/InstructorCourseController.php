@@ -4,9 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Instructor;
 use App\Entity\InstructorCourse;
+use App\Entity\InstructorCourseStatus;
 use App\Entity\User;
 use App\Form\InstructorCourseType;
 use App\Repository\InstructorCourseRepository;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,6 +28,7 @@ class InstructorCourseController extends AbstractController
 
         $teachersList = $em->getRepository(Instructor::class)->findAll();
     //    dd($instructorCourseRepository->findAll());
+    
         return $this->render('instructor_course/index.html.twig', [
             'instructor_courses' => $instructorCourseRepository->findAll(),
             'instructorsList' => $teachersList,
@@ -43,6 +46,9 @@ class InstructorCourseController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
+            $instructorCourseStatus = $entityManager->getRepository(InstructorCourseStatus::class)->find(2);//assigned but waiting
+            $instructorCourse->setStatus($instructorCourseStatus);
+            $instructorCourse->setCreatedAt(new DateTime());
             $entityManager->persist($instructorCourse);
             $entityManager->flush();
 
@@ -65,6 +71,8 @@ class InstructorCourseController extends AbstractController
         $instId = $request->request->get("instructor");
         $instructor = $em->getRepository(Instructor::class)->find($instId);
         $instructorCourse->setInstructor($instructor);
+        $instructorCourseStatus = $em->getRepository(InstructorCourseStatus::class)->find(2);
+        $instructorCourse->setStatus($instructorCourseStatus);
         $em->flush();
 
         return $this->redirectToRoute("instructor_course_index");
