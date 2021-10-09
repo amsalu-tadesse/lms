@@ -3,12 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\InstructorCourse;
+use App\Entity\Instructor;
 use App\Entity\InstructorCourseChapter;
 use App\Form\InstructorCourseChapterType;
 use App\Repository\InstructorCourseChapterRepository;
 use App\Repository\InstructorCourseRepository;
 use DateTime;
-use Proxies\__CG__\App\Entity\Instructor;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,17 +23,18 @@ class InstructorCourseChapterController extends AbstractController
     /**
      * @Route("/", name="instructor_course_chapter_index", methods={"GET"})
      */
-    public function index(InstructorCourseChapterRepository $instructorCourseChapterRepository, InstructorCourseRepository $instructorCourseRepository): Response
+    public function index(InstructorCourseRepository $instructorCourseRepository): Response
     {
 
         $em = $this->getDoctrine()->getManager();
 
-        $teachersList = $em->getRepository(Instructor::class)->findAll();
+        // $teachersList = $em->getRepository(Instructor::class)->findAll();
     //    dd($instructorCourseRepository->findAll());
+    $mylist = $em->getRepository(InstructorCourse::class)->findByUser($this->getUser());
     
         return $this->render('instructor_course_chapter/instructor_vew.html.twig', [
-            'instructor_courses' => $instructorCourseRepository->findAll(),
-            'instructorsList' => $teachersList,
+            'instructor_courses' => $mylist,
+            // 'instructorsList' => $teachersList,
         ]);
 
     }

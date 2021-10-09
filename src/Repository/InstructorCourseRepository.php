@@ -36,15 +36,17 @@ class InstructorCourseRepository extends ServiceEntityRepository
     }
     */
 
-    /*
-    public function findOneBySomeField($value): ?InstructorCourse
+    
+    public function findByUser($user)
     {
         return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
-            ->setParameter('val', $value)
+            ->join('i.instructor', 'inst')
+            // ->join('inst.user', 'user')
+            ->andWhere('inst.user = :usr')
+            ->setParameter('usr', $user)
             ->getQuery()
-            ->getOneOrNullResult()
+            ->getResult()
         ;
     }
-    */
+    
 }
