@@ -23,7 +23,7 @@ class Student
      * @ORM\OneToOne(targetEntity=User::class, inversedBy="profile", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
-    private $userid;
+    private $user;
 
     /**
      * @ORM\ManyToOne(targetEntity=AcademicLevel::class, inversedBy="students")
@@ -57,14 +57,14 @@ class Student
         return $this->id;
     }
 
-    public function getUserid(): ?User
+    public function getUser(): ?User
     {
-        return $this->userid;
+        return $this->user;
     }
 
-    public function setUserid(User $userid): self
+    public function setUser(User $user): self
     {
-        $this->userid = $userid;
+        $this->user = $user;
 
         return $this;
     }
@@ -169,5 +169,10 @@ class Student
         }
 
         return $this;
+    }
+    public function __toString()
+    {
+        // return $this->getUser();
+        return $this->user->getFirstName()." ".$this->user->getMiddleName()." ".$this->user->getLastName();
     }
 }

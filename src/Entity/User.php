@@ -98,12 +98,12 @@ class User implements UserInterface
     private $userGroup;
 
     /**
-     * @ORM\OneToOne(targetEntity=Student::class, mappedBy="userid", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=Student::class, mappedBy="user", cascade={"persist", "remove"})
      */
     private $profile;
 
     /**
-     * @ORM\OneToMany(targetEntity=Instructor::class, mappedBy="userid")
+     * @ORM\OneToMany(targetEntity=Instructor::class, mappedBy="user")
      */
     private $instructors;
 
@@ -133,7 +133,7 @@ class User implements UserInterface
      *
      * @see UserInterface
      */
-    public function getUserIdentifier(): string
+    public function getUserentifier(): string
     {
         return (string) $this->username;
     }
@@ -366,8 +366,8 @@ class User implements UserInterface
     public function setProfile(Student $profile): self
     {
         // set the owning side of the relation if necessary
-        if ($profile->getUserid() !== $this) {
-            $profile->setUserid($this);
+        if ($profile->getUser() !== $this) {
+            $profile->setUser($this);
         }
 
         $this->profile = $profile;
@@ -387,7 +387,7 @@ class User implements UserInterface
     {
         if (!$this->instructors->contains($instructor)) {
             $this->instructors[] = $instructor;
-            $instructor->setUserid($this);
+            $instructor->setUser($this);
         }
 
         return $this;
@@ -397,8 +397,8 @@ class User implements UserInterface
     {
         if ($this->instructors->removeElement($instructor)) {
             // set the owning side to null (unless already changed)
-            if ($instructor->getUserid() === $this) {
-                $instructor->setUserid(null);
+            if ($instructor->getUser() === $this) {
+                $instructor->setUser(null);
             }
         }
 

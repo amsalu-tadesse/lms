@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\InstructorCourse;
 use App\Entity\StudentCourse;
 use App\Form\StudentCourseType;
 use App\Repository\StudentCourseRepository;
@@ -20,7 +21,7 @@ class StudentCourseController extends AbstractController
      * @Route("/", name="student_course_index", methods={"GET"})
      */
 
-    // ******** student home page , don't touch it
+    // ******** student home page , don't touch it OK
     public function index(StudentCourseRepository $studentCourseRepository, PaginatorInterface $paginator, Request $request): Response
     {
         $queryBuilder=$studentCourseRepository->findCourses(1);
@@ -33,6 +34,52 @@ class StudentCourseController extends AbstractController
         return $this->render('student_course/student.html.twig', [
             'student_courses' => $data,
         ]);
+    }
+    /**
+     * @Route("/course/{id}", name="students_in_course", methods={"GET"})
+     */
+
+    public function listStudentUnderCourse(StudentCourseRepository $studentCourseRepository, InstructorCourse $instructorCourse, PaginatorInterface $paginator, Request $request): Response
+    {
+        $queryBuilder=$studentCourseRepository->findBy(['instructorCourse'=>$instructorCourse]);
+        $data=$paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page', 1),
+            10
+        );
+
+        return $this->render('student_course/students_in_course.html.twig', [
+            'student_courses' => $data,
+            'instructor_course' => $instructorCourse,
+        ]);
+    }
+    /**
+     * @Route("/course/diactivate/{id}", name="student_course_deactivate", methods={"GET","POST"})
+     */
+
+    public function studentCourseDeactivate(StudentCourse $studentCourse, StudentCourseRepository $studentCourseRepository,PaginatorInterface $paginator,Request $request): Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        if ($studentCourse->getActive()) {
+            $studentCourse->setActive(false);
+        } else {
+            $studentCourse->setActive(true);
+        }
+        $em->flush();
+        
+
+        $queryBuilder=$studentCourseRepository->findBy(['instructorCourse'=>$studentCourse->getInstructorCourse()]);
+        $data=$paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page', 1),
+            10
+        );
+
+        return $this->render('student_course/students_in_course.html.twig', [
+            'student_courses' => $data,
+            'instructor_course' => $studentCourse->getInstructorCourse(),
+        ]);
+        
     }
 
     /**
@@ -81,6 +128,7 @@ class StudentCourseController extends AbstractController
      */
     public function edit(Request $request, StudentCourse $studentCourse): Response
     {
+        //dont use this section, it is not usefull.
         $form = $this->createForm(StudentCourseType::class, $studentCourse);
         $form->handleRequest($request);
 

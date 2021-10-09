@@ -49,7 +49,8 @@ class InstructorCourseChapterController extends AbstractController
         $instructorCourseChapters = $em->getRepository(InstructorCourseChapter::class)->findBy(['instructorCourse'=>$instructorCourse]);
         return $this->render('instructor_course_chapter/index.html.twig', [
             'instructor_course_chapters' =>  $instructorCourseChapters,
-         'incrsid' => $request->get('id'),
+            'instructor_course' =>  $instructorCourse,
+        //  'incrsid' => $request->get('id'),
         ]);
     }
 
