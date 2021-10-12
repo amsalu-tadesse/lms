@@ -26,7 +26,7 @@ class StudentCourse
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $date;
+    private $createdAt;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -48,6 +48,11 @@ class StudentCourse
      */
     private $isAtPage;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $completedAt;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -65,14 +70,14 @@ class StudentCourse
         return $this;
     }
 
-    public function getDate(): ?\DateTimeInterface
+    public function getCreatedAt(): ?\DateTimeInterface
     {
-        return $this->date;
+        return $this->createdAt;
     }
 
-    public function setDate(?\DateTimeInterface $date): self
+    public function setCreatedAt(?\DateTimeInterface $createdAt): self
     {
-        $this->date = $date;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
@@ -121,6 +126,18 @@ class StudentCourse
     public function setIsAtPage(?int $isAtPage): self
     {
         $this->isAtPage = $isAtPage;
+
+        return $this;
+    }
+
+    public function getCompletedAt(): ?\DateTimeInterface
+    {
+        return $this->completedAt;
+    }
+
+    public function setCompletedAt(?\DateTimeInterface $completedAt): self
+    {
+        $this->completedAt = $completedAt;
 
         return $this;
     }
