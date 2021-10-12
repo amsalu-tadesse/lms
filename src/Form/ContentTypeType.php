@@ -11,6 +11,7 @@ class ContentTypeType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $project = $options['project'];
         $builder
             ->add('name')
             ->add('description')
@@ -19,6 +20,7 @@ class ContentTypeType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
+        $resolver->setRequired('project');
         $resolver->setDefaults([
             'data_class' => ContentType::class,
         ]);
