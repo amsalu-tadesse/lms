@@ -41,7 +41,7 @@
 }
 
 @media (prefers-reduced-motion:no-preference) {
-    :root {
+     :root {
         scroll-behavior: smooth
     }
 }
@@ -4633,6 +4633,7 @@ fieldset:disabled .btn {
 }
 
 .card-body {
+    overflow: auto;
     flex: 1 1 auto;
     padding: 1rem 1rem
 }
