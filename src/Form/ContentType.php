@@ -17,21 +17,22 @@ class ContentType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-         
+        $incrsid = $options['incrsid'];
         $builder
-            ->add('chapter'/*, EntityType::class, [
+            ->add('chapter', EntityType::class, [
                 'class' => InstructorCourseChapter::class,
                 'required' => false,
                 'placeholder' => "",
                 // 'choice_value' => 'sectionLabel',
-                'query_builder' => function (EntityRepository $er, $options) {
+                'query_builder' => function (EntityRepository $er) 
+                use($incrsid){
                     $res = $er->createQueryBuilder('s')
                              ->join('s.instructorCourse', 'ic')
-                             ->andWhere('ic.id =: instcrs')
-                ->setParameter('instcrs', $options['instcrs']);
+                             ->andWhere('ic.id = :incrsid')
+                ->setParameter('incrsid', $incrsid);
                     return $res;
                 },
-            ]*/) 
+            ]) 
             ->add('title')
             ->add('content')
             // ->add('file')
@@ -64,10 +65,10 @@ class ContentType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
+        $resolver->setRequired('incrsid');
         $resolver->setDefaults([
             'data_class' =>  Content::class
-            // 'data_class' => ['content'=>Content::class, 'instcrs'=>null]
-            // 'data_class' => null,
+            
         ]);
     }
 }

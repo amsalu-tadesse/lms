@@ -32,7 +32,7 @@ class ContentController extends AbstractController
         if($request->request->get('edit')){
             $id=$request->request->get('edit');
             $content=$contentRepository->findOneBy(['id'=>$id]);
-            $form = $this->createForm(ContentType::class, $content);
+            $form = $this->createForm(ContentType::class, $content, array('incrsid' => $instructorCourse->getId()));
             $form->handleRequest($request);
     
             if ($form->isSubmitted() && $form->isValid()) {
@@ -56,7 +56,7 @@ class ContentController extends AbstractController
 
         }
         $content = new Content();
-        $form = $this->createForm(ContentType::class, $content);
+        $form = $this->createForm(ContentType::class,$content, array('incrsid' => $instructorCourse->getId()));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -181,7 +181,7 @@ class ContentController extends AbstractController
     {
  
         $content = new Content();
-        $form = $this->createForm(ContentType::class, $content);
+        $form = $this->createForm(ContentType::class,$content, array('incrsid' => $instructorCourse->getId()));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -242,7 +242,7 @@ class ContentController extends AbstractController
      */
     public function edit(Request $request, Content $content): Response
     {
-        $form = $this->createForm(ContentType::class,  $content);
+        $form = $this->createForm(ContentType::class, $content, array('incrsid' => $content->getChapter()->getInstructorCourse()->getId()));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

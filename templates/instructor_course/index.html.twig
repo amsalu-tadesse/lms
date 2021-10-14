@@ -21,6 +21,7 @@ Course assignement
                 <th>Assign date</th>
                 <th>Status</th>
                 <th>Active</th>
+                <th>Students</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -38,6 +39,7 @@ Course assignement
                 <td>{{ instructor_course.createdAt ? instructor_course.createdAt|date('Y-m-d H:i:s') : '' }}</td>
 				 <td> {{ instructor_course.status }}</td>
 				 <td> {{ instructor_course.active ? "YES" : "NO" }}</td>
+				 <td> <a href="{{ path('students_in_course',{id:instructor_course.id}) }}"> <span class="badge badge-success"> &nbsp; {{ instructor_course.studentCourses | length  }} &nbsp;</span> </a> </td>
                 <td>
                     {# <a href="{{ path('instructor_course_show', {'id': instructor_course.id}) }}">show</a> #}
                    

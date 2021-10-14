@@ -6,7 +6,7 @@
 	Course assignement
 {% endblock %}
 {% block body %}
-	<a href="{{ path('instructor_course_new') }}" class="btn btn-success mb-4">Re use course</a>
+	{# <a href="{{ path('instructor_course_new') }}" class="btn btn-success mb-4">Re use course</a> #}
 
 	<div class="card card-info">
 		<div class="card card-header">
@@ -22,6 +22,8 @@
 						<th>Assign date</th>
 						<th>Status</th>
 						<th>Active</th>
+						<th>Students</th>
+						<th>Active</th>
 						<th>actions</th>
 					</tr>
 				</thead>
@@ -29,8 +31,8 @@
 					{% for instructor_course in instructor_courses %}
 						<tr>
 							<td>{{ loop.index }}</td>
-							<td>{{ instructor_course.course }}</td>
-							{% if instructor_course.instructor %} 
+							<td>{{ instructor_course.course | capitalize}}</td>
+							{% if instructor_course.instructor %}
 								<td>{{ instructor_course.instructor.user.firstName ~ ' ' ~ instructor_course.instructor.user.middleName ~ ' ' ~ instructor_course.instructor.user.lastName }}</td>
 							{% else %}
 								<td></td>
@@ -41,12 +43,26 @@
 								{{ instructor_course.status }}</td>
 							<td>
 								{{ instructor_course.active ? "YES" : "NO" }}</td>
+
 							<td>
-								{# <a href="{{ path('instructor_course_show', {'id': instructor_course.id}) }}">show</a> #}
-								{# <a href="{{ path('instructor_course_edit', {'id': instructor_course.id}) }}" class="btn btn-primary"><span class="fa fa-plus"></span> Add Content </a>
-								<a href="{{ path('instructor_course_chapter_new') }}" class="btn btn-primary"><span class="fa fa-plus"></span> nn </a> #}
-								<a href="{{ path('instructor_course_chapter_content_list', {'id': instructor_course.id})  }}" class="btn btn-primary"><span class="fa fa-plus"></span> Chapters </a>
-								<a href="{{ path('content_index', {'id': instructor_course.id})  }}" class="btn btn-success"><span class="fa fa-plus"></span> Contents </a>
+								<a href="{{ path('students_in_course',{id:instructor_course.id}) }}">
+									<span class="badge badge-success">
+										&nbsp;
+										{{ instructor_course.studentCourses | length  }}
+										&nbsp;</span>
+								</a>
+								
+
+							</td>
+							<td>
+								<a href="{{ path('instructor_course_chapter_content_list', {'id': instructor_course.id}) }}" class="btn btn-primary">
+									<span class="fa fa-plus"></span>
+									Add Chapter
+								</a>
+								<a href="{{ path('content_index', {'id': instructor_course.id}) }}" class="btn btn-success">
+									<span class="fa fa-plus"></span>
+									Add Content
+								</a>
 
 							</td>
 						</tr>
