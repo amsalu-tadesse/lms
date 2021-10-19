@@ -21,27 +21,27 @@
         <table class="table ">
             <thead>
                 <tr>
-                                        <th>Id</th>
-                                        <th>Date</th>
-                                        <th>Status</th>
-                                        <th>Active</th>
-                                        <th>IsAtPage</th>
-                                        <th>actions</th>
+                    <th>Id</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Active</th>
+                    <th>IsAtPage</th>
+                    <th>actions</th>
                 </tr> 
             </thead>
             <tbody>
                 {% for student_course in student_courses %}
                 <tr>
-                                        <td>{{ student_course.id }}</td>
-                                        <td>{{ student_course.date ? student_course.date|date('Y-m-d H:i:s') : '' }}</td>
-                                        <td>{{ student_course.status }}</td>
-                                        <td>{{ student_course.active ? 'Yes' : 'No' }}</td>
-                                        <td>{{ student_course.isAtPage }}</td>
-                                        <td>
-                        <a
-                            href="{{ path('student_course_show', {'id': student_course.id}) }}">show</a>
-                        <a
-                            href="{{ path('student_course_edit', {'id': student_course.id}) }}">edit</a>
+                    <td>{{ student_course.id }}</td>
+                    <td>{{ student_course.date ? student_course.date|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>{{ student_course.status }}</td>
+                    <td>{{ student_course.active ? 'Yes' : 'No' }}</td>
+                    <td>{{ student_course.isAtPage }}</td>
+                    <td>
+                    <a
+                        href="{{ path('student_course_show', {'id': student_course.id}) }}">show</a>
+                    <a
+                        href="{{ path('student_course_edit', {'id': student_course.id}) }}">edit</a>
                     </td>
                 </tr>
                 {% else %}

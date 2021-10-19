@@ -1,20 +1,73 @@
-.main {
-    background-color: #d3d3d3;
-}
-
-card-title {
-    color: #0078d4e6;
-}
-
-.page-title {
-    color: #0088cc;
-    padding: 26px 0px 15px;
-}
-
-.chapter-list {
-    margin-top: 15px;
-}
-
-.card-title-custom {
-    color: #0078d4e6;
-}
+    .main {
+        background-color: #d3d3d3;
+    }
+    
+    body {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+    
+    card-title {
+        color: #0078d4e6;
+    }
+    
+    .page-title {
+        color: #0088cc;
+        padding: 26px 0px 15px;
+    }
+    
+    .chapter-list {
+        margin-top: 15px;
+    }
+    
+    .card-title-custom {
+        color: #0078d4e6;
+    }
+    
+    img.logo {
+        margin-top: 10px;
+        max-width: 100%;
+    }
+    
+    img {
+        vertical-align: middle;
+    }
+    
+    .lms-name {
+        color: #234672;
+        margin-top: 20px;
+    }
+    
+    .banner {
+        padding-top: 5px;
+    }
+    
+    .login-box-msg,
+    .register-box-msg {
+        margin: 0;
+        padding: 0 20px 20px;
+        text-align: center;
+    }
+    
+    .header {
+        margin-bottom: 47px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #045493;
+    }
+    
+    .navigations {
+        margin-top: 10px;
+    }
+    
+    .navigations a {
+        margin-right: 15px;
+        color: #24467a;
+    }
+    
+    a {
+        text-decoration: none;
+    }
+    
+    .form-status {
+        width: 22px;
+        height: 22px;
+    }

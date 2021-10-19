@@ -24,7 +24,8 @@ class StudentCourseController extends AbstractController
     // ******** student home page , don't touch it OK
     public function index(StudentCourseRepository $studentCourseRepository, PaginatorInterface $paginator, Request $request): Response
     {
-        $queryBuilder=$studentCourseRepository->findCourses(1);
+        // dd($this->getUser()->getProfile());
+        $queryBuilder=$studentCourseRepository->findCourses($this->getUser()->getProfile()->getId());
         $data=$paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page', 1),
