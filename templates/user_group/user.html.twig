@@ -26,9 +26,9 @@
 					<select class="users_list" multiple name="user[]" style="display:none">
 						{% for user in users %}
 							{% if(user.id in users_exist)%}
-								<option value="{{user.id}}" selected>{{ user.firstName }} {{ user.middleName }} {{ user.LastName }} - {{ user.id }}</option>
+								<option value="{{user.id}}" selected>{{ user.firstName }} {{ user.middleName }} {{ user.LastName }} </option>
 							{% else %}
-								<option value="{{user.id}}">{{ user.firstName }} {{ user.middleName }} {{ user.LastName }} - {{ user.id }}</option>
+								<option value="{{user.id}}">{{ user.firstName }} {{ user.middleName }} {{ user.LastName }} </option>
 							{% endif %}
 							{# <option value="{{user.id}}" >{{ user.firstName }} {{ user.middleName }} {{ user.LastName }} - {{ user.id }}</option> #}
 						{% endfor %}

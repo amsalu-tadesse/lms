@@ -2,17 +2,17 @@
 {{ form_errors(form) }}
 
 <div class="row ">
-	<div class="form-group mt-2 col-md-4 col-sm-6 ">
+	<div class="form-group mt-4 col-md-4 col-sm-6 ">
 		{{form_label(form.firstName)}}
 		{{ form_widget(form.firstName,{'attr':{'class':form_errors(form.firstName)? 'form-control is-invalid':'form-control','placeholder':"Enter first name"}}) }}
 		<div class="help-block text-danger">{{form_errors(form.firstName)}}</div>
 	</div>
-	<div class="form-group mt-2 col-md-4 col-sm-6 ">
+	<div class="form-group col-md-4 col-sm-6 ">
 		{{form_label(form.middleName)}}
 		{{ form_widget(form.middleName,{'attr':{'class':form_errors(form.middleName)? 'form-control is-invalid':'form-control','placeholder':"Enter middle name"}}) }}
 		<div class="help-block text-danger">{{form_errors(form.middleName)}}</div>
 	</div>
-	<div class="form-group mt-2 col-md-4 col-sm-6 ">
+	<div class="form-group  col-md-4 col-sm-6 ">
 		{{form_label(form.lastName)}}
 		{{ form_widget(form.lastName,{'attr':{'class':form_errors(form.lastName)? 'form-control is-invalid':'form-control','placeholder':"Enter last name"}}) }}
 		<div class="help-block text-danger">{{form_errors(form.lastName)}}</div>
@@ -20,7 +20,7 @@
 	 
 		<div
 		class="col-md-6"> 
-		<div class="form-group mt-2 ">
+		<div class="form-group ">
 			{{form_label(form.username)}}
 			{{ form_widget(form.username,{'attr':{'class':form_errors(form.username)? 'form-control  is-invalid':'form-control ','placeholder':"Enter username"}}) }}
 			<div class="help-block text-danger">{{form_errors(form.username)}}</div>
@@ -28,7 +28,7 @@
 	</div>
 		<div
 		class="col-md-6"> 
-		<div class="form-group mt-2 ">
+		<div class="form-group ">
 			{{form_label(form.email)}}
 			{{ form_widget(form.email,{'attr':{'class':form_errors(form.email)? 'form-control  is-invalid':'form-control ','placeholder':"Enter email"}}) }}
 			<div class="help-block text-danger">{{form_errors(form.email)}}</div>
@@ -36,7 +36,7 @@
 	</div>
 	<div class="col-md-6"></div>
 	<div class="col-md-6">
-		<div class="form-group mt-2">
+		<div class="form-group ">
 			{{form_label(form.userType)}}
 			{{ form_widget(form.userType,{'attr':{'class':form_errors(form.userType)? 'form-control  is-invalid':'form-control ','placeholder':"Enter..."}}) }}
 			<div class="help-block text-danger">{{form_errors(form.userType)}}</div>
