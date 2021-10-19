@@ -7,6 +7,7 @@ use App\Entity\InstructorCourse;
 use App\Entity\InstructorCourseStatus;
 use App\Form\CourseType;
 use App\Repository\CourseRepository;
+use App\Repository\InstructorCourseRepository;
 use DateTime;
 use App\Repository\ContentRepository;
 use App\Repository\InstructorCourseChapterRepository;
@@ -85,7 +86,56 @@ class CourseController extends AbstractController
             'edit'=>false
         ]);
     }  
- 
+
+    /**
+     * @Route("/library", name="courses_list")
+     */
+    public function coursesOrderedByCategory(InstructorCourseRepository $course): Response
+    {
+        $courses = $course->findCoursesSortByCategory();
+        return $this->render('course/couses_list.html.twig',[
+            'courses' => $courses
+        ]);
+    }
+
+     /**
+     * @Route("/detail/{id}", name="course_description")
+     */
+    public function courseDetail($id, CourseRepository $course): Response
+    {
+        // $courses = $course->findCoursesSortByCategory();
+        return $this->render('course/description.html.twig',[
+        //     'courses' => $courses
+        ]);
+    }
+
+    /**
+     * @Route("/mycourses", name="selected_courses")
+     */
+    public function selectedCourses(Request $request, CourseRepository $course): Response
+    {
+
+        $selected_courses = $request->cookies->get("selected_courses");
+        $selected_courses = json_decode($selected_courses, true);
+
+        $em = $this->getDoctrine()->getManager();
+        $courses = $em->getRepository(Course::class)->findBy(array('id' => $selected_courses));
+        return $this->render('course/selected_courses.html.twig',[
+            'courses' => $courses
+        ]);
+    }
+
+    /**
+     * @Route("/remove", name="remove_selected")
+     */
+    public function removeSelected()
+    {
+        $response = new Response();
+        $response->headers->clearCookie('selected_courses');
+        $response->send();
+        dd("done");
+    }
+
     /**
      * @Route("/{id}/chapters/", name="course_chapters", methods={"GET"})
      */

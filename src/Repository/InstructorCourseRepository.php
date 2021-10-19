@@ -36,6 +36,20 @@ class InstructorCourseRepository extends ServiceEntityRepository
     }
     */
 
+    public function findCoursesSortByCategory()
+    {
+        return $this->createQueryBuilder('ic')
+            ->select('u.firstName','u.middleName', 'u.lastName', 'c.name','c.description', 'c.code', 'c.id', 'cc.id as category_id', 'cc.name as category_name' )
+            ->join('ic.instructor', 'i')
+            ->join('i.user','u')
+            ->join('ic.course', 'c')
+            ->join('c.category','cc')
+            ->Where('c.status = 1')
+            ->orderBy('c.category')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
     
     public function findByUser($user)
     {

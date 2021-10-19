@@ -1,0 +1,73 @@
+{% extends 'anon-base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+{% block stylesheet %}
+    <style>
+        .row{
+            padding: 20px;
+        }
+
+        input.password-field{
+            margin-bottom: 20px;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+    <div class="container">
+            {% for flashError in app.flashes('verify_email_error') %}
+                <div class="alert alert-danger" role="alert">{{ flashError }}</div>
+            {% endfor %}
+
+            <h3>Sign up to create account</h3>
+            <div class="card">
+            <div class="card-body">
+                
+                {{ form_start(registrationForm) }}
+                    <div class="row">
+                        <div class="col-sm-4">
+                            {{ form_row(registrationForm.firstName) }}
+                        </div>
+                        <div class="col-sm-4">
+                            {{ form_row(registrationForm.middleName) }}
+                        </div>
+                        <div class="col-sm-4">
+                            {{ form_row(registrationForm.lastName) }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            {{ form_row(registrationForm.username) }}
+                        </div>
+                        <div class="col-sm-4">
+                            {{ form_row(registrationForm.email) }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            {{ form_row(registrationForm.plainPassword, {
+                                label: 'Password'
+                            }) }}
+                        </div>
+                    </div>
+                    <div class="row py-0">
+                        <div class="form-group">
+                            {{ form_widget(registrationForm.agreeTerms)}}
+				            	&nbsp;&nbsp;I agree to <a href="#"> terms and conditions</a>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+                        </div>
+                    </div>
+                {{ form_end(registrationForm) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block nav %}
+    <a class="nav-item nav-item-temp btn btn-primary btn-sm" style="color:white" href="{{ path('app_login') }}">
+        Sign In
+    </a> 
+{% endblock %}

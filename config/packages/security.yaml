@@ -48,8 +48,11 @@ security:
         - { path: ^/aboutUs, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/account/passwordReset, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/forgotPassword, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/st, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/course/library, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/course/detail/*, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/course/mycourses, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/course/remove, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/*, roles: ROLE_USER }
 
       

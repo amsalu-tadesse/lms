@@ -41,7 +41,7 @@
 }
 
 @media (prefers-reduced-motion:no-preference) {
-    :root {
+     :root {
         scroll-behavior: smooth
     }
 }
@@ -114,7 +114,8 @@ h2 {
 
 .h3,
 h3 {
-    font-size: calc(1.3rem + .6vw)
+    font-size: calc(1.3rem + .6vw);
+    color: #045493;
 }
 
 @media (min-width:1200px) {
@@ -126,7 +127,8 @@ h3 {
 
 .h4,
 h4 {
-    font-size: calc(1.275rem + .3vw)
+    font-size: calc(1.275rem + .3vw);
+    color: #043c69;
 }
 
 @media (min-width:1200px) {
@@ -2941,7 +2943,7 @@ fieldset:disabled .btn {
 
 .btn-primary {
     color: #fff;
-    background-color: #0d6efd;
+    background-color: #045493;
     border-color: #0d6efd
 }
 
@@ -3168,6 +3170,11 @@ fieldset:disabled .btn {
     color: #fff;
     background-color: #dc3545;
     border-color: #dc3545
+}
+
+.btn-block {
+    display: block;
+    width: 100%;
 }
 
 .btn-danger:hover {
@@ -4633,6 +4640,7 @@ fieldset:disabled .btn {
 }
 
 .card-body {
+    overflow: auto;
     flex: 1 1 auto;
     padding: 1rem 1rem
 }
@@ -5021,6 +5029,11 @@ fieldset:disabled .btn {
     white-space: nowrap;
     vertical-align: baseline;
     border-radius: .25rem
+}
+
+.badge-secondary {
+    color: #fff;
+    background-color: #6c757d;
 }
 
 .badge:empty {

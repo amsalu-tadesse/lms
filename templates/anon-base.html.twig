@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{% block title %}{% endblock %}</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="{{asset('images/eca.png')}}" type="image/x-icon"/>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{{ asset('assets/plugins/fontawesome-free/css/all.min.css') }}">
+
+    <!-- Bootstrap -->
+    <link href="{{asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ asset('student/css/custom.css') }}">
+     <style>
+       .nav-item-temp{ 
+            width: 80px;
+        }   
+        .header{}
+    </style>
+    {% block stylesheet %}{% endblock %}
+</head>
+
+<body style="background-color: #e2e3e4;">
+
+    <div class="container-fluid  bg-white">
+        <div class="row px-5 header">
+            <div class="col-xs-7 col-sm-5 col-md-6">
+                <a href="/"><img src="{{ asset('/images/logo-en.png')}}" class="logo"></a>
+            </div>
+            <div class="col-xs-5 col-sm-7 col-md-6">
+                <div class="banner hidden-xs hidden-sm">
+                    <span class="h2 lms-name">Learning Management System</span>
+                </div>
+                <div class="navigations">
+                    <a class="nav-item" href="{{ path('courses_list') }}">Home</a>
+                    <a class="nav-item" href="{{ path('selected_courses') }}">My Courses<sup><span class="badge badge-secondary">{% block selected %}{% endblock %}</span><sup></a>
+                    {% block nav %}{% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+        {% block body %}{% endblock %}
+    {% include "master-st/footer.html.twig" %}
+    <!-- jQuery -->
+    <script src="{{ asset( 'assets/plugins/jquery/jquery.min.js') }}"></script>
+    
+    <!-- Popper -->
+    <script src="{{asset('assets/plugins/popper/popper.min.js')}}"></script>
+
+    <!-- Bootstrap 4 -->
+    <script src="{{ asset( 'assets/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    {% block javascript %}{% endblock %}    
+</body>
+
+</html>
