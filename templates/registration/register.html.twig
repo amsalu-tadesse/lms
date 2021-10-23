@@ -42,13 +42,19 @@
                             {{ form_row(registrationForm.email) }}
                         </div>
                     </div>
-                    <div class="row">
+                    {# <div class="row">
                         <div class="col-sm-4">
                             {{ form_row(registrationForm.plainPassword, {
                                 label: 'Password'
                             }) }}
                         </div>
+                    </div> #}
+                    <div class="row">
+                        <div class="col-sm-4">
+                            {{ form_row(registrationForm.academicLevel) }}
+                        </div>
                     </div>
+                    <br>
                     <div class="row py-0">
                         <div class="form-group">
                             {{ form_widget(registrationForm.agreeTerms)}}

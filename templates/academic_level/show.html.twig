@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}AcademicLevel{% endblock %}
+{% block breadcrumbhome %}academiclevel{% endblock %}
+{% block breadcrumbcontent %}show{% endblock %}
+{% block body %}
+<div class="card">
+    <div class="card-body">
+        <table class="table">
+            <tbody>
+                                                                <tr>
+                    <th>Name</th>
+                    <td>{{ academic_level.name }}</td>
+                </tr>
+                                                <tr>
+                    <th>Description</th>
+                    <td>{{ academic_level.description }}</td>
+                </tr>
+                            </tbody>
+        </table>
+        <br>
+        <div class="row">
+            <div class="col-md-2">
+                <a href="{{ path('academic_level_index') }}" class="btn btn-default btn-block">back to list</a>
+            </div>
+            <div class="col-md-2">
+                <a href="{{ path('academic_level_edit', {'id': academic_level.id}) }}"
+                    class="btn btn-primary btn-block">edit</a>
+            </div>
+            <div class="col-md-2">
+                {{ include('academic_level/_delete_form.html.twig') }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

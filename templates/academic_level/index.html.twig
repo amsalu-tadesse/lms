@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}AcademicLevel index{% endblock %}
+{% block breadcrumbhome %}academiclevel{% endblock %}
+{% block breadcrumbcontent %}index{% endblock %}
+
+{% block body %}
+
+<div class="card card-info">
+    <div class="card card-header">
+        <div class="row">
+            <div class="col-md-6">
+                <h3>AcademicLevel list</h3>
+            </div>
+            <div class="col-md-6">
+               <a href="{{ path('academic_level_new') }}" class="btn btn-primary" style="float:right">Add new AcademicLevel</a>
+            </div>
+        </div>
+    </div>
+    <div class="card card-body">
+        <table class="table ">
+            <thead>
+                <tr>
+                                        <th>Id</th>
+                                        <th>Name</th>
+                                        <th>Description</th>
+                                        <th>actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for academic_level in academiclevels %}
+                <tr>
+                                        <td>{{ academic_level.id }}</td>
+                                        <td>{{ academic_level.name }}</td>
+                                        <td>{{ academic_level.description }}</td>
+                                        <td>
+                        <a
+                            href="{{ path('academic_level_show', {'id': academic_level.id}) }}">show</a>
+                        <a
+                            href="{{ path('academic_level_edit', {'id': academic_level.id}) }}">edit</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4">no records found</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="  pagination justify-content-center ">
+			{{ knp_pagination_render(academiclevels) }}</div>
+
+		<div class="float-right pl-5 pb-2">
+			 
+				Total result:
+				{{ academiclevels.getTotalItemCount }} 
+		</div>
+</div>
+
+{% endblock %}

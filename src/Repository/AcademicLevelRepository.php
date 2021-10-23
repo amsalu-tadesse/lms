@@ -7,10 +7,10 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method AcademicLevel|null find($id, $lockMode = null, $lockVersion = null)
- * @method AcademicLevel|null findOneBy(array $criteria, array $orderBy = null)
- * @method AcademicLevel[]    findAll()
- * @method AcademicLevel[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Choices|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Choices|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Choices[]    findAll()
+ * @method Choices[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class AcademicLevelRepository extends ServiceEntityRepository
 {
@@ -19,16 +19,29 @@ class AcademicLevelRepository extends ServiceEntityRepository
         parent::__construct($registry, AcademicLevel::class);
     }
 
+    public function findAcademicLevel($search=null)
+    {
+        $qb=$this->createQueryBuilder('p');
+        if($search)
+            $qb->andWhere("p.name  LIKE '%".$search."%'");
+
+            return 
+            $qb->orderBy('p.id', 'ASC')
+            ->getQuery()
+     
+            
+        ;
+    }
     // /**
-    //  * @return AcademicLevel[] Returns an array of AcademicLevel objects
+    //  * @return Choices[] Returns an array of Choices objects
     //  */
     /*
     public function findByExampleField($value)
     {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.exampleField = :val')
             ->setParameter('val', $value)
-            ->orderBy('a.id', 'ASC')
+            ->orderBy('c.id', 'ASC')
             ->setMaxResults(10)
             ->getQuery()
             ->getResult()
@@ -37,10 +50,10 @@ class AcademicLevelRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?AcademicLevel
+    public function findOneBySomeField($value): ?Choices
     {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.exampleField = :val')
             ->setParameter('val', $value)
             ->getQuery()
             ->getOneOrNullResult()
