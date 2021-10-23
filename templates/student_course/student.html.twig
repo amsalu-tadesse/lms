@@ -1,5 +1,7 @@
 {% extends 'sBase.html.twig' %}
 {% block stylesheet %}
+<link href="{{asset('assets/plugins/owlCarousel/dist/assets/owl.carousel.min.css')}}" rel="stylesheet"/>
+<link href="{{asset('assets/plugins/owlCarousel/dist/assets/owl.theme.default.min.css')}}" rel="stylesheet"/>
 	<style>
 		a:not(.btn):hover {
 			text-decoration: none;
@@ -13,7 +15,7 @@
 {% endblock %}
 {% block body %}
 	<h3 class="page-title">
-		Course List
+		Your Courses
 	</h3>
 	<div class="row align-items-center">
 	{% if student_courses|length == 0 %}
@@ -45,4 +47,105 @@
 		{% endfor %}
 	{% endif %}
 	</div>
+	<br>
+	<h3 class="page-title">
+		Other Trending Courses
+	</h3>
+	<div class="row">
+		{% include "course/list.html.twig" %}
+	</div>
 {% endblock %}
+{% block javascript %}
+    <script src="{{asset('assets/plugins/owlCarousel/dist/owl.carousel.min.js')}}"></script>
+    <script>
+        var selected_courses = [];
+        total_selected = 0;
+        $(document).ready(function(){
+            var json_str = getCookie('selected_courses');
+            var arr = JSON.parse(json_str);
+            cookie_length = arr.length;
+            if(cookie_length > 0){
+                for(i=0; i<cookie_length; i++){
+                    $("a[course-id="+arr[i]+"]").parent().parent().addClass("selected-card");
+                    $("a[course-id="+arr[i]+"]").css("background-color", "green");
+                    $("a[course-id="+arr[i]+"]").text("Remove from my Courses");
+                    selected_courses.push(arr[i]);
+                    $("#num").html(++total_selected);
+                }
+            }
+        });
+        
+        $(document).ready(function(){
+            $('.owl-carousel').owlCarousel({
+                nav: true,
+                margin: 10,
+                items : 1, // THIS IS IMPORTANT
+                responsive : {
+                        480 : { items : 1  }, // from zero to 480 screen width 4 items
+                        768 : { items : 2  }, // from 480 screen widthto 768 6 items
+                        1024 : { items : 3   // from 768 screen width to 1024 8 items
+                        }
+                    },
+                autoWidth: false,
+                navText : ['<i class="fa fa-angle-left" aria-hidden="true"></i>','<i class="fa fa-angle-right" aria-hidden="true"></i>']
+
+            });
+        });
+
+        $(".enroll").on("click", function(){
+            course_name = $(this).attr("course-id");
+            if(selected_courses.includes(course_name)){
+                $(this).text("Added to my Courses");
+                $(this).css("background-color", "#045493");
+
+                index = selected_courses.indexOf(course_name);
+                if (index > -1) {
+                    selected_courses.splice(index, 1);
+                }
+                $("#num").html(--total_selected);
+                var json_str = JSON.stringify(selected_courses);
+                eraseCookie('selected_courses');
+                setCookie('selected_courses', json_str,1);
+                $(this).parent().parent().removeClass("selected-card");
+                var json_str = getCookie('selected_courses');
+                var arr = JSON.parse(json_str);
+            }
+            else{
+                $(this).text("Remove from my Courses");
+                $(this).css("background-color", "green");
+                selected_courses.push(course_name);
+                $("#num").html(++total_selected);
+                var json_str = JSON.stringify(selected_courses);
+                setCookie('selected_courses', json_str,1);
+                $(this).parent().parent().addClass("selected-card");
+                var json_str = getCookie('selected_courses');
+                var arr = JSON.parse(json_str);
+            }
+        });
+
+        function setCookie(c_name, value, exdays) {
+            var exdate = new Date();
+            exdate.setDate(exdate.getDate() + exdays);
+            var c_value = escape(value) + ((exdays == null) ? "" : "; expires=" + exdate.toUTCString())+"; path=/;";
+            document.cookie = c_name + "=" + c_value;
+        }
+
+        function getCookie(c_name) {
+            var i, x, y, ARRcookies = document.cookie.split(";");
+            for (i = 0; i < ARRcookies.length; i++) {
+                x = ARRcookies[i].substr(0, ARRcookies[i].indexOf("="));
+                y = ARRcookies[i].substr(ARRcookies[i].indexOf("=") + 1);
+                x = x.replace(/^\s+|\s+$/g, "");
+                if (x == c_name) {
+                    return unescape(y);
+                }
+            }
+        }
+
+        function eraseCookie(name) {   
+            document.cookie = name +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        }
+
+
+    </script>
+{% endblock %}  

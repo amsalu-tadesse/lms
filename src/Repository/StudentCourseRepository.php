@@ -65,4 +65,20 @@ class StudentCourseRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
+    public function findRequestedCourses($value)
+    {
+        return $this->createQueryBuilder('s')
+            ->select('c.name','c.description','s.id', 'c.id as course_id')
+            ->join('s.instructorCourse', 'ic')
+            ->join('ic.course', 'c')
+            ->Where('s.student = :val')
+            ->andWhere('s.active = 0')
+            ->andWhere('s.status = 0')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getResult()
+        ;
+    }    
 }
+

@@ -9,11 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-<<<<<<< HEAD
 use Knp\Component\Pager\PaginatorInterface;
-=======
->>>>>>> master
-
 /**
  * @Route("/academic/level")
  */
@@ -22,7 +18,6 @@ class AcademicLevelController extends AbstractController
     /**
      * @Route("/", name="academic_level_index", methods={"GET"})
      */
-<<<<<<< HEAD
     public function index(AcademicLevelRepository $academicLevelRepository, Request $request, PaginatorInterface $paginator): Response
     {
         // $this->denyAccessUnlessGranted('ROLE_ADMIN');
@@ -73,12 +68,6 @@ class AcademicLevelController extends AbstractController
             'academiclevels' => $data,
             'form' => $form->createView(),
             'edit'=>false
-=======
-    public function index(AcademicLevelRepository $academicLevelRepository): Response
-    {
-        return $this->render('academic_level/index.html.twig', [
-            'academic_levels' => $academicLevelRepository->findAll(),
->>>>>>> master
         ]);
     }
 

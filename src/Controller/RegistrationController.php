@@ -38,6 +38,7 @@ class RegistrationController extends AbstractController
      */
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, UserAuthenticator $authenticator): Response
     {
+        
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
@@ -60,6 +61,7 @@ class RegistrationController extends AbstractController
             $entityManager->flush();
 
             $student = new Student();
+            $student->setAcademicLevel($form->get("academicLevel")->getData());
             $student->setUser($user);
             $entityManager->persist($student);
             $entityManager->flush();
@@ -79,16 +81,13 @@ class RegistrationController extends AbstractController
                     $entityManager->persist($st_course);
                     $entityManager->flush();
                 }
-            }
-        
-            else{
-                dd($selected_courses);
+
+                $response = new Response();
+                $cookie = new Cookie('selected_courses', "",time());
+                $response->headers->setCookie($cookie);
+                $response->sendHeaders();
             }
 
-            $response = new Response();
-            $cookie = new Cookie('selected_courses', "",time());
-            $response->headers->setCookie($cookie);
-            $response->sendHeaders();
 
             // $signatureComponents = $this->emailVerifier->generateSignature(
             //     'app_verify_email',

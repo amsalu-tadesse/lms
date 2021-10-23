@@ -6,6 +6,7 @@ use App\Entity\InstructorCourse;
 use App\Entity\StudentCourse;
 use App\Form\StudentCourseType;
 use App\Repository\StudentCourseRepository;
+use App\Repository\InstructorCourseRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,9 +23,11 @@ class StudentCourseController extends AbstractController
      */
 
     // ******** student home page , don't touch it OK
-    public function index(StudentCourseRepository $studentCourseRepository, PaginatorInterface $paginator, Request $request): Response
+    public function index(StudentCourseRepository $studentCourseRepository, PaginatorInterface $paginator, Request $request, InstructorCourseRepository $course): Response
     {
         $queryBuilder=$studentCourseRepository->findCourses($this->getUser()->getProfile()->getId());
+        $courses = $course->findCoursesSortByCategory();
+
         $data=$paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page', 1),
@@ -33,6 +36,7 @@ class StudentCourseController extends AbstractController
         
         return $this->render('student_course/student.html.twig', [
             'student_courses' => $data,
+            'courses' => $courses
         ]);
     }
     /**
@@ -53,6 +57,27 @@ class StudentCourseController extends AbstractController
             'instructor_course' => $instructorCourse,
         ]);
     }
+
+     /**
+     * @Route("/request", name="requested_courses", methods={"GET"})
+     */
+
+    public function requests(StudentCourseRepository $studentCourseRepository, PaginatorInterface $paginator, Request $request): Response
+    {
+        
+        $queryBuilder=$studentCourseRepository->findRequestedCourses($this->getUser()->getProfile()->getId());
+
+        $data=$paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page', 1),
+            8
+        );
+        
+        return $this->render('course/requested_courses.html.twig', [
+            'courses' => $data,
+        ]);
+    }
+
     /**
      * @Route("/course/diactivate/{id}", name="student_course_deactivate", methods={"GET","POST"})
      */

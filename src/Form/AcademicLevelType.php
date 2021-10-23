@@ -12,17 +12,12 @@ class AcademicLevelType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-<<<<<<< HEAD
             ->add('name' ,null,[
                 'attr'=>['class'=>'form-control']
             ])
             ->add('description' ,null,[
                 'attr'=>['class'=>'form-control']
             ])
-=======
-            ->add('name')
-            ->add('description')
->>>>>>> master
         ;
     }
 
