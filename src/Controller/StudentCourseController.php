@@ -24,14 +24,13 @@ class StudentCourseController extends AbstractController
     // ******** student home page , don't touch it OK
     public function index(StudentCourseRepository $studentCourseRepository, PaginatorInterface $paginator, Request $request): Response
     {
-        // dd($this->getUser()->getProfile());
         $queryBuilder=$studentCourseRepository->findCourses($this->getUser()->getProfile()->getId());
         $data=$paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page', 1),
             9
         );
-
+        
         return $this->render('student_course/student.html.twig', [
             'student_courses' => $data,
         ]);

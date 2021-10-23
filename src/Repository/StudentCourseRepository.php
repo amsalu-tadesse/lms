@@ -54,8 +54,10 @@ class StudentCourseRepository extends ServiceEntityRepository
     public function findCourses($value)
     {
         return $this->createQueryBuilder('s')
-            ->select('ic.id','c.name','c.description')
+            ->select('ic.id','c.name','c.description', 'u.firstName', 'u.middleName', 'u.lastName')
             ->join('s.instructorCourse', 'ic')
+            ->join('ic.instructor', 'i')
+            ->join('i.user','u')
             ->join('ic.course', 'c')
             ->andWhere('s.student = :val')
             ->setParameter('val', $value)

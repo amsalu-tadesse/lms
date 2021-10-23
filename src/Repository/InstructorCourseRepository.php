@@ -36,19 +36,30 @@ class InstructorCourseRepository extends ServiceEntityRepository
     }
     */
 
-    public function findCoursesSortByCategory()
+    public function findCoursesSortByCategory($id=0)
     {
-        return $this->createQueryBuilder('ic')
-            ->select('u.firstName','u.middleName', 'u.lastName', 'c.name','c.description', 'c.code', 'c.id', 'cc.id as category_id', 'cc.name as category_name' )
+        $qb = $this->createQueryBuilder('ic')
+            ->select('ic.id','u.firstName','u.middleName', 'u.lastName', 'c.name','c.description', 'c.code', 'cc.id as category_id', 'cc.name as category_name' )
             ->join('ic.instructor', 'i')
             ->join('i.user','u')
             ->join('ic.course', 'c')
-            ->join('c.category','cc')
-            ->Where('c.status = 1')
-            ->orderBy('c.category')
+            ->join('c.category','cc');
+            
+        $id = (int)$id;
+        if($id==0){
+            return $qb->Where('c.status = 1')
+                ->orderBy('c.category')
+                ->getQuery()
+                ->getResult()
+            ;
+        }
+        else{
+            return $qb->where('ic.id = :val')
+            ->setParameter('val', $id)
             ->getQuery()
-            ->getResult()
+            ->getOneOrNullResult()
         ;
+        }
     }
     
     public function findByUser($user)
