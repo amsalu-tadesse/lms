@@ -3,9 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Student;
+use App\Entity\StudentCourse;
+use App\Entity\InstructorCourse;
 use App\Form\RegistrationFormType;
 use App\Security\EmailVerifier;
 use App\Security\UserAuthenticator;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,7 +47,7 @@ class RegistrationController extends AbstractController
             $user->setPassword(
                 $passwordEncoder->encodePassword(
                     $user,
-                    $form->get('plainPassword')->getData()
+                    "123456"
                 )
             );
 
@@ -54,17 +58,49 @@ class RegistrationController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
-            $signatureComponents = $this->emailVerifier->generateSignature(
-                'app_verify_email',
-                $user->getId(),
-                $user->getEmail()
-            );
-            $email = new TemplatedEmail();
-            $email->from(new Address('dawit120@gmail.com', 'Amsalu Tadesse'));
-            $email->to($user->getEmail());
-            $email->subject("Please Confirm Your email");
-            $email->htmlTemplate('registration/confirmation_email.html.twig');
-            $email->context(['signedUrl' => $signatureComponents->getSignedUrl()]);
+
+            $student = new Student();
+            $student->setUser($user);
+            $entityManager->persist($student);
+            $entityManager->flush();
+
+            $selected_courses = $request->cookies->get("selected_courses");
+            $selected_courses = json_decode($selected_courses, true);
+            if($selected_courses != null){
+                $selected_courses_size = sizeof($selected_courses);
+
+                foreach($selected_courses as $sel_cor)
+                {
+                    $st_course = new StudentCourse();
+                    $st_course->setStudent($student);
+                    $st_course->setInstructorCourse($entityManager->getRepository(InstructorCourse::class)->find($sel_cor));
+                    $st_course->setStatus(0);
+                    $st_course->setActive(0);
+                    $entityManager->persist($st_course);
+                    $entityManager->flush();
+                }
+            }
+        
+            else{
+                dd($selected_courses);
+            }
+
+            $response = new Response();
+            $cookie = new Cookie('selected_courses', "",time());
+            $response->headers->setCookie($cookie);
+            $response->sendHeaders();
+
+            // $signatureComponents = $this->emailVerifier->generateSignature(
+            //     'app_verify_email',
+            //     $user->getId(),
+            //     $user->getEmail()
+            // );
+            // $email = new TemplatedEmail();
+            // $email->from(new Address('dawit120@gmail.com', 'Amsalu Tadesse'));
+            // $email->to($user->getEmail());
+            // $email->subject("Please Confirm Your email");
+            // $email->htmlTemplate('registration/confirmation_email.html.twig');
+            // $email->context(['signedUrl' => $signatureComponents->getSignedUrl()]);
          
             // $this->mailer->send($email);
             

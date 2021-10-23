@@ -71,3 +71,47 @@
         width: 22px;
         height: 22px;
     }
+    
+    .card-body p a {
+        font-size: 17px;
+    }
+    
+    .card-body p span {
+        font-size: 14px;
+        padding-left: 12px;
+        color: #585555;
+    }
+    
+    .list.list-icons li {
+        position: relative;
+        padding-left: 25px;
+    }
+    
+    .list {
+        list-style: none;
+    }
+    
+    .list li {
+        margin-bottom: 13px;
+    }
+    
+    li {
+        line-height: 24px;
+    }
+    
+    .list.list-icons li>[class*="fa-"]:first-child,
+    .list.list-icons li a:first-child>[class*="fa-"]:first-child,
+    .list.list-icons li>.icons:first-child,
+    .list.list-icons li a:first-child>.icons:first-child {
+        color: #0088CC;
+        border-color: #0088CC;
+    }
+    
+    .list.list-icons li>[class*="fa-"]:first-child,
+    .list.list-icons li>.icons:first-child,
+    .list.list-icons li a:first-child>[class*="fa-"]:first-child,
+    .list.list-icons li a:first-child>.icons:first-child {
+        position: absolute;
+        left: 0;
+        top: 5px;
+    }

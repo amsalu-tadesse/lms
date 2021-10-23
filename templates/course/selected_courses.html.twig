@@ -1,22 +1,29 @@
 {% extends "anon-base.html.twig" %}
 
 {% block body %}
-    <div class="container" style="height: 450px;">
-        <div class="row mb-2">
+    <div class="container" style="min-height: 450px;">
+        <div class="row mb-2 courses_list">
             {% if courses|length == 0 %}
                 <div class="card px-5 py-2 mb-2">
                     <center><h4>no courses selected</h4></center>
                 </div>
             {% else %}
                 {% for course in courses %}
-                    <div class="card px-5 py-2 mb-2">
-                        <h4>{{course.name}}</h4>
-                        <p>{{course.description}}</p>
+                    <div class="card px-5 py-2 mb-2" course-id="{{course.id}}">
+                        <div class="row">
+                            <div class="col-sm-11">
+                                <h4>{{course.name}}</h4>
+                                <p>{{course.description}}</p>
+                            </div>
+                            <div class="col-sm-1" style="align-self:center">
+                                <button class="btn btn-danger" onclick="removeCourse({{course.id}})" title="remove" style="margin: 0px 50%;"><i class="fas fa-times-circle"></i></button>
+                            </div>
+                        </div>
                     </div>
                 {% endfor %}
-                <div class="row mt-2">
+                <div class="row mt-2 buttons">
                     <div class="col-sm-2 col-md-2">
-                        <a class="btn btn-primary btn-block">Apply</a>
+                        <a class="btn btn-primary btn-block" href="{{path('app_register')}}">Apply</a>
                     </div>
                     <div class="col-sm-2 col-md-2">
                         <a class="btn btn-danger btn-block" href="#" onclick="conf()">Remove All</a>
@@ -45,12 +52,42 @@
             }
         }
 
+        function removeCourse(name){
+            var json_str = getCookie('selected_courses');
+            var arr = JSON.parse(json_str);
+
+            newa = arr.filter(e => e !== name+"");
+
+            var json_str = JSON.stringify(newa);
+            setCookie('selected_courses', json_str,1);
+            no_of_card_left = $(".card");
+            $("div[course-id='"+name+"']").remove();
+
+            if(no_of_card_left.length == 1){
+                message = $('<div class="card px-5 py-2 mb-2">'+
+                            '<center><h4>no courses selected</h4></center></div>');
+                $(".courses_list").append(message);
+                $(".buttons").remove();
+            }
+        }
+
         function setCookie(c_name, value, exdays) {
             var exdate = new Date();
             exdate.setDate(exdate.getDate() + exdays);
             var c_value = escape(value) + ((exdays == null) ? "" : "; expires=" + exdate.toUTCString());
             document.cookie = c_name + "=" + c_value;
         }
-        
+
+        function getCookie(c_name) {
+            var i, x, y, ARRcookies = document.cookie.split(";");
+            for (i = 0; i < ARRcookies.length; i++) {
+                x = ARRcookies[i].substr(0, ARRcookies[i].indexOf("="));
+                y = ARRcookies[i].substr(ARRcookies[i].indexOf("=") + 1);
+                x = x.replace(/^\s+|\s+$/g, "");
+                if (x == c_name) {
+                    return unescape(y);
+                }
+            }
+        }
     </script>
 {% endblock %}

@@ -1,5 +1,16 @@
 {% extends 'sBase.html.twig' %}
-
+{% block stylesheet %}
+	<style>
+		a:not(.btn):hover {
+			text-decoration: none;
+		}
+		a  .card-body p 
+		{
+			text-decoration: none;
+			font-size: 19px;
+		}
+	</style>
+{% endblock %}
 {% block body %}
 	<h3 class="page-title">
 		Course List
@@ -7,7 +18,7 @@
 	<div class="row align-items-center">
 	{% if student_courses|length == 0 %}
 		<div class="col-md-4">
-				<div class="card border-0 border-radius-0 " style="height: 271px";>
+				<div class="card border-0 border-radius-0 " style="height: 150px";>
 					
 					<div class="card-body">
 						<p class="card-text">You are not selected in any course</p>
@@ -19,15 +30,16 @@
 	{% else %}
 		{% for course in student_courses %}
 			<div class="col-md-4">
-				<div class="card border-0 border-radius-0 " style="height: 271px";>
-					
+				<div class="card border-0 border-radius-0 " style="height: 150px";>
+					<a href="/course/{{ course.id }}/chapters">
 					<div class="card-body">
-						<h4 class="card-title mb-1 text-4 font-weight-bold">{{ course.name}}</h4>
-						<p class="card-text">{{course.description}}.</p>
+						<p>
+							{{ course.name }}
+							<br>
+							<span>By: {{ course.firstName|capitalize }} {{ course.middleName|capitalize}} </span>
+						<p>
 					</div>
-					<div class="card-footer">
-						<a href="/course/{{ course.id }}/chapters" class="">See Chapters >>></a>
-					</div>
+					</a>
 				</div>
 			</div>
 		{% endfor %}

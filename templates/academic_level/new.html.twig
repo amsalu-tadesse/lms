@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New AcademicLevel{% endblock %}
+
+{% block body %}
+    <h1>Create new AcademicLevel</h1>
+
+    {{ include('academic_level/_form.html.twig') }}
+
+    <a href="{{ path('academic_level_index') }}">back to list</a>
+{% endblock %}

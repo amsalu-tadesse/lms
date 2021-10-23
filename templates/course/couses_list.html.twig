@@ -54,7 +54,14 @@
         .owl-next { right: -20px; }
         .owl-prev i, .owl-next i {transform : scale(2,2); color: #045493;}
 
-
+        .card-body p a{
+            font-size: 17px;
+        }
+        .card-body p span{
+            font-size: 14px;
+            padding-left: 12px;
+            color: #585555;
+        }
     </style>
 {% endblock %}
 {% block selected %}<span id="num"></span>{% endblock %}
@@ -64,7 +71,7 @@
         </div>
     </div>
     <br>
-    <div class="container" style="min-height: 490px";>
+    <div class="container" style="min-height: 490px">
         {% set flag = 0 %}
         
         {% for course in courses %}
@@ -72,9 +79,11 @@
                     <div class="card" style="height: 150px; margin: 0px 10px";>
                         <div class="card-body">
                             <p>
-                                <a href="{{ path('course_description',{'id': course.name}) }}">
+                                <a href="{{ path('course_description',{'id': course.id}) }}">
                                 {{ course.name }}
                                 </a>
+                                <br>
+                                <span>by {{ course.firstName|capitalize }} {{ course.middleName|capitalize}} </span>
                             <p>
                         </div>
                         <div class="card-footer">
@@ -89,9 +98,12 @@
                         <div class="card" style="height: 150px;";>
                             <div class="card-body">
                                 <p>
-                                    <a href="{{ path('course_description',{'id': course.name}) }}">
+                                    <a href="{{ path('course_description',{'id': course.id}) }}">
                                     {{ course.name }}
+                                    <br>
+                                    <span>by {{ course.firstName|capitalize }} {{ course.middleName|capitalize}} </span>
                                     </a>
+                                
                                 <p>
                             </div>
                             <div class="card-footer">
@@ -107,9 +119,11 @@
                         <div class="card" style="height: 150px";>
                             <div class="card-body">
                                 <p>
-                                    <a href="{{ path('course_description',{'id': course.name}) }}">
+                                    <a href="{{ path('course_description',{'id': course.id}) }}">
                                     {{ course.name }}
                                     </a>
+                                    <br>
+                                    <span>By {{ course.firstName|capitalize }} {{ course.middleName|capitalize}} </span>
                                 <p>
                             </div>
                             <div class="card-footer">
@@ -185,7 +199,6 @@
                 $(this).parent().parent().removeClass("selected-card");
                 var json_str = getCookie('selected_courses');
                 var arr = JSON.parse(json_str);
-                console.log(arr);
             }
             else{
                 $(this).text("Remove from my Courses");
@@ -197,14 +210,13 @@
                 $(this).parent().parent().addClass("selected-card");
                 var json_str = getCookie('selected_courses');
                 var arr = JSON.parse(json_str);
-                console.log(arr);
             }
         });
 
         function setCookie(c_name, value, exdays) {
             var exdate = new Date();
             exdate.setDate(exdate.getDate() + exdays);
-            var c_value = escape(value) + ((exdays == null) ? "" : "; expires=" + exdate.toUTCString());
+            var c_value = escape(value) + ((exdays == null) ? "" : "; expires=" + exdate.toUTCString())+"; path=/;";
             document.cookie = c_name + "=" + c_value;
         }
 
