@@ -34,7 +34,7 @@ class InstructorCourse
      * @ORM\Column(type="boolean")
      */
     private $active;
-
+ 
  
 
     /**

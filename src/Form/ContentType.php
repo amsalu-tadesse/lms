@@ -23,7 +23,7 @@ class ContentType extends AbstractType
                 'class' => InstructorCourseChapter::class,
                 'required' => false,
                 'placeholder' => "",
-                // 'choice_value' => 'sectionLabel',
+                // 'choice_value' => 'title',
                 'query_builder' => function (EntityRepository $er) 
                 use($incrsid){
                     $res = $er->createQueryBuilder('s')

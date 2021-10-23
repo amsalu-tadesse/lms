@@ -212,7 +212,7 @@ class ContentController extends AbstractController
                 // instead of its contents
                 $content->setFilename($newFilename);
             }
-
+ 
 
             $entityManager->persist($content);
             $entityManager->flush();

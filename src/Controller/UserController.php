@@ -27,7 +27,7 @@ class UserController extends AbstractController
     {
         // $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        $pageSize=5;
+        $pageSize=15;
 
         $user = new User();
         $searchForm = $this->createForm(userFilterType::class,$user);
@@ -93,7 +93,7 @@ class UserController extends AbstractController
             if($user->getUserType()->getId()==3) //instructor
             {
                 $instructor = new Instructor();
-                $instructor->setUserid($user);
+                $instructor->setUser($user);
                 $entityManager->persist($instructor);
 
             }
@@ -101,7 +101,7 @@ class UserController extends AbstractController
             else if($user->getUserType()->getId()==4) //student
             {
                 $student = new Student();
-                $student->setUserid($user);
+                $student->setUser($user);
                 $entityManager->persist($student);
 
             }
