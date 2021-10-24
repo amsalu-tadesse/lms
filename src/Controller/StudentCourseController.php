@@ -26,6 +26,11 @@ class StudentCourseController extends AbstractController
     // ******** student home page , don't touch it OK
     public function index(StudentCourseRepository $studentCourseRepository, PaginatorInterface $paginator, Request $request, InstructorCourseRepository $course): Response
     {
+        if($this->getUser()->getProfile() == null)
+        {
+            return $this->redirectToRoute('app_login');
+        }
+
         $queryBuilder=$studentCourseRepository->findCourses($this->getUser()->getProfile()->getId());
         $courses = $course->findCoursesSortByCategory();
 
@@ -40,7 +45,6 @@ class StudentCourseController extends AbstractController
             'courses' => $courses
         ]);
     }
-
 
     /**
      * @Route("/course/{id}", name="students_in_course", methods={"GET"})

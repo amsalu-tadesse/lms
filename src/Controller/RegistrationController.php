@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Entity\Student;
 use App\Entity\StudentCourse;
 use App\Entity\InstructorCourse;
+use App\Entity\UserType;
 use App\Form\RegistrationFormType;
 use App\Security\EmailVerifier;
 use App\Security\UserAuthenticator;
@@ -16,6 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mailer\MailerInterface;
+use DateTime;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
@@ -44,7 +46,6 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
             $user->setPassword(
                 $passwordEncoder->encodePassword(
                     $user,
@@ -54,8 +55,10 @@ class RegistrationController extends AbstractController
 
             // handle the user registration form and persist the new user...
         
+            $em = $this->getDoctrine()->getManager();
             $user->setRoles(['ROLE_STUDENT']);
             $user->setIsActive(true);
+            $user->setUserType($em->getRepository(UserType::class)->find(4));
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
@@ -78,6 +81,7 @@ class RegistrationController extends AbstractController
                     $st_course->setInstructorCourse($entityManager->getRepository(InstructorCourse::class)->find($sel_cor));
                     $st_course->setStatus(0);
                     $st_course->setActive(0);
+                    $st_course->setCreatedAt(new DateTime());
                     $entityManager->persist($st_course);
                     $entityManager->flush();
                 }
