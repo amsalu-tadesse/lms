@@ -16,13 +16,7 @@ class HomeController extends AbstractController
      */
     public function index()
     {
-      /*  $date = date('Y-m-d H:i', time());
-        $newtimestamp = strtotime("$date + 3 hours");
-       
-        echo date('Y-m-d H:i:s', $newtimestamp);
-        */
-        // $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
+      
         return $this->redirectToRoute("courses_list");
     }
 }
