@@ -49,10 +49,11 @@
                                  
                             </ol>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-4 float-right">
                         </div>
                         <div class="col-sm-2 float-right-end mr-0">
                          {% block backbtn %}{% endblock %}
+                        
                         </div>
                     </div>
                 </div>
@@ -118,22 +119,17 @@
         </script>
 
         <script>
-            $(function() {
-                var url = window.location;
-                // for single sidebar menu
-                $('ul.nav-sideba
-        {#
-        <script src="{{asset('assets/dist/js/demo.js')}}"></cript> #}r a').filter(function() {
-                    return this.href == url;
-                }).addClass('active');
-
-                // for sidebar menu and treeview
-                $('ul.nav-treeview a').filter(function() {
-                    return this.href == url;
-                }).parentsUntil(".nav-sidebar > .nav-treeview").css({
-                    'display': 'block'
-                }).addClass('menu-open').prev('a').addClass('active');
-            });
+      $(function () {
+var url = window.location;
+// for single sidebar menu
+$('ul.nav-sidebar a').filter(function () {
+return this.href == url;
+}).addClass('active');
+// for sidebar menu and treeview
+$('ul.nav-treeview a').filter(function () {
+return this.href == url;
+}).parentsUntil(".nav-sidebar > .nav-treeview").css({'display': 'block'}).addClass('menu-open').prev('a').addClass('active');
+});
         </script>
 		{% block javascripts %}
         {% endblock %}

@@ -28,10 +28,11 @@
 				<thead>
 					<tr>
 						<th>Id</th>
-						<th>Chapter</th>
+					
 						<th>Title</th>
 						{# <th>Content</th> #}
-						<th>videoLink</th>
+						{# <th>videoLink</th> #}
+							<th>Chapter</th>
 						<th>actions</th>
 					</tr>
 				</thead>
@@ -39,10 +40,11 @@
 					{% for content in contents %}
 						<tr>
 							<td>{{ content.id }}</td>
-							<td>{{ content.chapter }}</td>
+						
 							<td>{{ content.title }}</td>
 							{# <td>{{ content.content }}</td> #}
-							<td>{{ content.videoLink }}</td>
+							{# <td>{{ content.videoLink }}</td> #}
+								<td>{{ content.chapter }}</td>
 							<td>
 								<a href="{{ path('content_show', {'id': content.id}) }}" class="btn btn-sm btn-primary">show</a>
 								<a href="{{ path('content_edit', {'id': content.id}) }}" class="btn btn-sm btn-warning">edit</a>

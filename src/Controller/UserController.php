@@ -34,18 +34,21 @@ class UserController extends AbstractController
         $searchForm->handleRequest($request);
         
         if($request->request->get('edit')){
+            
             $id=$request->request->get('edit');
             $user=$userRepository->findOneBy(['id'=>$id]);
             $form = $this->createForm(userType::class, $user);
-            $form->handleRequest($request);
-    
+           $form->handleRequest($request);
+             
+     
             if ($form->isSubmitted() && $form->isValid()) {
-                // $user->setDate(new \DateTime());
-            
+                // $user->setRoles([$role]);
                 $this->getDoctrine()->getManager()->flush();
-    
                 return $this->redirectToRoute('user_index');
             }
+
+
+
             $queryBuilder=$userRepository->filterUser($request->query->get('firstName'),$request->query->get('middleName'),$request->query->get('lastName'),$request->query->get('userName'));
             $data=$paginator->paginate(
                 $queryBuilder,
@@ -62,12 +65,15 @@ class UserController extends AbstractController
        
         if($request->request->get("userid"))
         {
+           
             $entityManager = $this->getDoctrine()->getManager();
 
             $user = $entityManager->getRepository(User::class)->find($request->request->get("userid")) ;
             $form = $this->createForm(userType::class, $user);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
+                  $role = $this->getCustomRoleNames($form->getData()->getUserType()->getId());
+             $user->setRoles([$role]);
                 $entityManager->persist($user);
                 $entityManager->flush();
                 return $this->redirectToRoute('user_index');
@@ -81,11 +87,13 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
             $password =$user->getPassword();
-            
+            dd(999999999);
             if(!$password) $password="123456";
             $user->setPassword($userPasswordEncoderInterface->encodePassword($user,$password));
-            $user->setRoles(['ROLE_USER']);
-            // $user->setDate(new \DateTime());
+            
+            $role = $this->getCustomRoleNames($user->getUserType()->getId());
+             
+            $user->setRoles([$role]);
             $user->setIsActive(true);
             $entityManager->persist($user);
             $entityManager->flush();
@@ -130,6 +138,38 @@ class UserController extends AbstractController
 
     }
 
+
+    public function getCustomRoleNames($id)
+    {
+
+        $role = "";
+           
+        switch ($id) {
+            case '1':
+                # code...
+                 $role = "ROLE_ADMIN";
+
+                break;
+            case '2':
+                # code...
+                 $role = "ROLE_DIRECTOR";
+                break;
+            case '3':
+                # code...
+                 $role = "ROLE_INSTRUCTOR";
+                break;
+            case '4':
+                # code...
+                 $role = "ROLE_STUDENT";
+                break;
+                          
+            default:
+                # code...
+                 $role = "ROLE_USER";
+                break;
+        }
+        return $role;
+    }
     /**
      * @Route("/new", name="user_new", methods={"GET","POST"})
      */
@@ -177,6 +217,7 @@ class UserController extends AbstractController
      */
     public function edit(Request $request, User $user): Response
     {
+        
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
