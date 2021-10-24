@@ -30,10 +30,10 @@ INSERT INTO `course` (`id`, `category_id`, `name`, `code`, `credit`, `descriptio
 (2, 2, 'Programming Languages\n', NULL, NULL, 'this is management desccription', 1),
 (3, 1, 'Electronics', NULL, NULL, 'Definition: Software engineering is a detailed study of engineering to the design, development and maintenance of software. Software engineering was introduced to address the issues of low-quality software projects. Problems arise when a software generally exceeds timelines, budgets, and reduced levels of quality.\r\n', 1),
 (4, 2, 'Introduction Communication', NULL, NULL, 'Mechanical engineering is an engineering branch that combines engineering physics and mathematics principles with materials science to design, analyze, manufacture, and maintain mechanical systems. ... It is the branch of engineering that involves the design, production, and operation of machinery.', 1),
-(5, 1, 'Electro Magnetic Field', NULL, NULL, 'An incentive is something that motivates individuals to do something. Economic incentives provide good value for money while also contributing to the societal organization. Restaurants, for example, offer discounts and buy one, get one promotion to persuade customers to dine at their establishments.\r\n\r\nA tradeoff occurs when one element or quality of something is traded in exchange for another aspect or quality of the same thing. In economics, a tradeoff is defined as the loss of the most desirable alternative, or the opportunity cost of a given option. The best illustration of a trade-off to choosing the most favored alternative is the relationship between unemployment and inflation.\r\n\r\nOpportunity cost is what everyone must give up acquiring something, and the benefit or value that was given up might pertain to decisions made in personal life, in the economy, or at the level of government. ', 1)
+(5, 1, 'Electro Magnetic Field', NULL, NULL, 'An incentive is something that motivates individuals to do something. Economic incentives provide good value for money while also contributing to the societal organization. Restaurants, for example, offer discounts and buy one, get one promotion to persuade customers to dine at their establishments.\r\n\r\nA tradeoff occurs when one element or quality of something is traded in exchange for another aspect or quality of the same thing. In economics, a tradeoff is defined as the loss of the most desirable alternative, or the opportunity cost of a given option. The best illustration of a trade-off to choosing the most favored alternative is the relationship between unemployment and inflation.\r\n\r\nOpportunity cost is what everyone must give up acquiring something, and the benefit or value that was given up might pertain to decisions made in personal life, in the economy, or at the level of government. ', 1);
 
 
-
+/*
 
 INSERT INTO `country` (`id`, `name`, `description`) VALUES
 (2, 'Afghanistan', 'description'),
@@ -230,3 +230,4 @@ INSERT INTO `country` (`id`, `name`, `description`) VALUES
 (193, 'Zambia', 'description'),
 (194, 'Zimbabwe', 'description');
 
+*/

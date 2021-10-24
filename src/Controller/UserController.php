@@ -87,7 +87,7 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
             $password =$user->getPassword();
-            dd(999999999);
+            
             if(!$password) $password="123456";
             $user->setPassword($userPasswordEncoderInterface->encodePassword($user,$password));
             
@@ -118,14 +118,14 @@ class UserController extends AbstractController
 
             return $this->redirectToRoute('user_index');
         }
-
+ 
         $queryBuilder = $userRepository->filterUser($request->query->get('firstName'),$request->query->get('middleName'),$request->query->get('lastName'),$request->query->get('userName'));
         $data=$paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page',1),
             $pageSize
         );
-
+ 
         return $this->render('user/index.html.twig', [
             'users' => $data,
             'form' => $form->createView(),

@@ -39,23 +39,47 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     public function filterUser($fname, $mname, $lname, $userType)
     {
  
-        return  $this->createQueryBuilder('u')
-            ->join('u.userType','ut')
+        $q =  $this->createQueryBuilder('u');
+            
             // ->innerJoin('u.department','dt')
-            ->Where('u.firstName LIKE :firstName')
-            ->andWhere('u.middleName LIKE :middleName')
-            ->andWhere('u.lastName LIKE :lastName')
-            ->andWhere('u.username LIKE :username')
+            
+            
+            
+            
+            if($fname !="")
+            {
+                $q->Where('u.firstName LIKE :firstName')
+                  ->setParameter('firstName', '%'.$fname.'%');
+            }
+            if($mname !="")
+            {
+                $q-->andWhere('u.middleName LIKE :middleName')
+                ->setParameter('middleName', '%'.$mname.'%');
+            }
+            
+            if($lname !="")
+            {
+                $q->andWhere('u.lastName LIKE :lastName')
+                  ->setParameter('lastName', '%'.$lname.'%');
+            }
+
+            if($userType !="")
+            {
+                $q->join('u.userType','ut');
+                andWhere('u.username LIKE :username')
+                ->setParameter('username', '%'.$userType.'%');
+            }
             // ->andWhere('dt.id LIKE :department')
-            ->setParameter('firstName', '%'.$fname.'%')
-            ->setParameter('middleName', '%'.$mname.'%')
-            ->setParameter('lastName', '%'.$lname.'%')
-            ->setParameter('username', '%'.$userType.'%')
+            
+            
+            
+            
             // ->setParameter('department', '%'.$dep.'%')
-            ->orderBy('u.id', 'ASC')
+            $q->orderBy('u.id', 'ASC')
             ->getQuery()
             ->getResult()
         ;
+        return $q;
     }
     // /**
     //  * @return User[] Returns an array of User objects
