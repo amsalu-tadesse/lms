@@ -34,6 +34,9 @@
             <tbody>
                 {% for student_course in student_courses %}
                 <tr>
+                {# <pre>
+                    {{ dump(student_course.instructorCourse.instructorCourseChapters | length) }}
+                </pre> #}
                                         <td>{{ loop.index }}</td>
                                         <td>{{ student_course.student.user }}</td>
                                         <td>{{ student_course.createdAt ? student_course.createdAt| date('Y-m-d H:i:s') : '' }}</td>
