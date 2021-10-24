@@ -131,15 +131,6 @@
         text-align: center;
     }
     
-    .card-footer {
-        padding: .3rem 1rem;
-        display: none;
-    }
-    
-    .card:hover .card-footer {
-        display: contents;
-    }
-    
     .owl-prev,
     .owl-next {
         width: 15px;

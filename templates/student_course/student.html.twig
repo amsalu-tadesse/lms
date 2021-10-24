@@ -11,25 +11,24 @@
 			text-decoration: none;
 			font-size: 19px;
 		}
+        .card-footer {
+            padding: .3rem 1rem;
+            display: none;
+        }
+
+        .card:hover .card-footer {
+            display: contents;
+        }
 	</style>
 {% endblock %}
 {% block body %}
-	<h3 class="page-title">
-		Your Courses
-	</h3>
 	<div class="row align-items-center">
 	{% if student_courses|length == 0 %}
-		<div class="col-md-4">
-				<div class="card border-0 border-radius-0 " style="height: 150px";>
-					
-					<div class="card-body">
-						<p class="card-text">You are not selected in any course</p>
-					</div>
-					<div class="card-footer">
-					</div>
-				</div>
-			</div>
+		
 	{% else %}
+        <h3 class="page-title">
+            Your Courses
+        </h3>
 		{% for course in student_courses %}
 			<div class="col-md-4">
 				<div class="card border-0 border-radius-0 " style="height: 150px";>
@@ -48,8 +47,19 @@
 	{% endif %}
 	</div>
 	<br>
+
+    {# <button type="button" class="btn btn-primary" id="myBtn">Show Toast</button>
+
+  <div class="toast" style="position: absolute;">
+
+    <div class="toast-body">
+      Some text inside the toast body
+    </div>
+  </div> #}
+
+  
 	<h3 class="page-title">
-		Other Trending Courses
+		Trending Courses
 	</h3>
 	<div class="row">
 		{% include "course/list.html.twig" %}
@@ -58,10 +68,10 @@
 {% block javascript %}
     <script src="{{asset('assets/plugins/owlCarousel/dist/owl.carousel.min.js')}}"></script>
     <script>
-        var selected_courses = [];
+        var selected_courses_login = [];
         total_selected = 0;
         $(document).ready(function(){
-            var json_str = getCookie('selected_courses');
+            var json_str = getCookie('selected_courses_login');
             var arr = JSON.parse(json_str);
             cookie_length = arr.length;
             if(cookie_length > 0){
@@ -69,7 +79,7 @@
                     $("a[course-id="+arr[i]+"]").parent().parent().addClass("selected-card");
                     $("a[course-id="+arr[i]+"]").css("background-color", "green");
                     $("a[course-id="+arr[i]+"]").text("Remove from my Courses");
-                    selected_courses.push(arr[i]);
+                    selected_courses_login.push(arr[i]);
                     $("#num").html(++total_selected);
                 }
             }
@@ -94,31 +104,31 @@
 
         $(".enroll").on("click", function(){
             course_name = $(this).attr("course-id");
-            if(selected_courses.includes(course_name)){
+            if(selected_courses_login.includes(course_name)){
                 $(this).text("Added to my Courses");
                 $(this).css("background-color", "#045493");
 
-                index = selected_courses.indexOf(course_name);
+                index = selected_courses_login.indexOf(course_name);
                 if (index > -1) {
-                    selected_courses.splice(index, 1);
+                    selected_courses_login.splice(index, 1);
                 }
                 $("#num").html(--total_selected);
-                var json_str = JSON.stringify(selected_courses);
-                eraseCookie('selected_courses');
-                setCookie('selected_courses', json_str,1);
+                var json_str = JSON.stringify(selected_courses_login);
+                eraseCookie('selected_courses_login');
+                setCookie('selected_courses_login', json_str,1);
                 $(this).parent().parent().removeClass("selected-card");
-                var json_str = getCookie('selected_courses');
+                var json_str = getCookie('selected_courses_login');
                 var arr = JSON.parse(json_str);
             }
             else{
                 $(this).text("Remove from my Courses");
                 $(this).css("background-color", "green");
-                selected_courses.push(course_name);
+                selected_courses_login.push(course_name);
                 $("#num").html(++total_selected);
-                var json_str = JSON.stringify(selected_courses);
-                setCookie('selected_courses', json_str,1);
+                var json_str = JSON.stringify(selected_courses_login);
+                setCookie('selected_courses_login', json_str,1);
                 $(this).parent().parent().addClass("selected-card");
-                var json_str = getCookie('selected_courses');
+                var json_str = getCookie('selected_courses_login');
                 var arr = JSON.parse(json_str);
             }
         });
