@@ -16,7 +16,7 @@
 					<h3> {{ courseName }} Course Quizzes</h3>
 				</div>
 				<div class="col-md-6">
-					<a href="{{ path('quiz_new') }}" class="btn btn-primary" style="float:right"><span class="fa fa-plus"></span> Add Quiz</a>
+					<a href="{{ path('quiz_new',{id:quizzes[0].instructorCourseChapter.instructorCourse.id}) }}" class="btn btn-primary" style="float:right"><span class="fa fa-plus"></span> Add Quiz</a>
 				</div>
 			</div>
 

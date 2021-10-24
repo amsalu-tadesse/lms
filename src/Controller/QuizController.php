@@ -40,7 +40,7 @@ class QuizController extends AbstractController
     /**
      * @Route("/new/{id}", name="quiz_new", methods={"GET","POST"})
      */
-    function new (Request $request): Response {
+    function new (Request $request, InstructorCourse $instructorCourse): Response {
 
        
         $quiz = new Quiz();
@@ -53,6 +53,8 @@ class QuizController extends AbstractController
             $entityManager->flush();
 
             return $this->redirectToRoute('quiz_index', ['id'=>$quiz->getInstructorCourseChapter()->getInstructorCourse()->getId()], Response::HTTP_SEE_OTHER);
+
+            return $this->redirectToRoute('quiz_index', ['id'=>$instructorCourse->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('quiz/new.html.twig', [
