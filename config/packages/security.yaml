@@ -52,6 +52,7 @@ security:
         - { path: ^/course/detail/*, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/course/mycourses, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/verification, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/course/remove, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/*, roles: ROLE_USER }
 

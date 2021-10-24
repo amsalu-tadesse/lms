@@ -62,7 +62,7 @@ class User implements UserInterface
 
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true, unique=true)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     private $email;
 
