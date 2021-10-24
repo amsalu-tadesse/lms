@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * @Route("/stud")
@@ -39,6 +40,8 @@ class StudentCourseController extends AbstractController
             'courses' => $courses
         ]);
     }
+
+
     /**
      * @Route("/course/{id}", name="students_in_course", methods={"GET"})
      */
@@ -138,6 +141,23 @@ class StudentCourseController extends AbstractController
         return $this->render('student_course/show.html.twig', [
             'student_course' => $studentCourse,
         ]);
+    }
+
+    /**
+     * @Route("/{id}/remove", name="request_delete")
+     */
+    public function deleteRequest(StudentCourseRepository $studentCourse, $id): Response
+    { 
+        $course = $studentCourse->find($id);
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($course);
+        $em->flush();
+    
+        // Send all this stuff back to DataTables
+        $returnResponse = new JsonResponse();
+        $returnResponse->setJson("kkd");
+    
+        return $returnResponse;
     }
 
     /**

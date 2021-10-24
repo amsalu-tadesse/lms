@@ -10,6 +10,14 @@
             margin-bottom: 0px;
         }
         
+        .card-footer {
+            padding: .3rem 1rem;
+            display: none;
+        }
+        
+        .card:hover .card-footer {
+            display: contents;
+        }
     </style>
 {% endblock %}
 {% block selected %}<span id="num"></span>{% endblock %}

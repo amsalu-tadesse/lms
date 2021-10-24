@@ -28,7 +28,6 @@ class ContentController extends AbstractController
      */
     public function index(ContentRepository $contentRepository,Request $request, InstructorCourse $instructorCourse, PaginatorInterface $paginator): Response
     {
-//$request->get('id')
         if($request->request->get('edit')){
             $id=$request->request->get('edit');
             $content=$contentRepository->findOneBy(['id'=>$id]);
