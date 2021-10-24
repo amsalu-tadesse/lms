@@ -36,15 +36,19 @@ class VerificationRepository extends ServiceEntityRepository
     }
     */
 
-    /*
-    public function findOneBySomeField($value): ?Verification
+    public function remove($email)
+    {
+
+    }
+    
+    public function findOneByEmail($value)
     {
         return $this->createQueryBuilder('v')
-            ->andWhere('v.exampleField = :val')
+            ->Where('v.email = :val')
             ->setParameter('val', $value)
+            ->orderBy('v.verificationExpiry', "desc")
             ->getQuery()
-            ->getOneOrNullResult()
+            ->getArrayResult()
         ;
     }
-    */
 }
