@@ -23,7 +23,7 @@
 						<th>Status</th>
 						<th>Active</th>
 						<th>Students</th>
-						<th>Active</th>
+						 
 						<th>actions</th>
 					</tr>
 				</thead>
@@ -55,14 +55,20 @@
 
 							</td>
 							<td>
-								<a href="{{ path('instructor_course_chapter_content_list', {'id': instructor_course.id}) }}" class="btn btn-primary">
+								<a href="{{ path('instructor_course_chapter_content_list', {'id': instructor_course.id}) }}" class="btn btn-primary btn-sm">
 									<span class="fa fa-plus"></span>
-									Add Chapter
+									Chapters
 								</a>
-								<a href="{{ path('content_index', {'id': instructor_course.id}) }}" class="btn btn-success">
+								<a href="{{ path('content_index', {'id': instructor_course.id}) }}" class="btn btn-success btn-sm">
 									<span class="fa fa-plus"></span>
-									Add Content
+									Contents
 								</a>
+							 
+								<a href="{{ path('quiz_index', {'id': instructor_course.id}) }}" class="btn btn-success btn-sm">
+									<span class="fa fa-plus"></span>
+									Quiz
+								</a>
+							 
 
 							</td>
 						</tr>

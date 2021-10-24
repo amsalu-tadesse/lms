@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}QuizQuestions index{% endblock %}
+
+{% block body %}
+    <h1>QuizQuestions index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Question</th>
+                <th>Answer</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for quiz_question in quiz_questions %}
+            <tr>
+                <td>{{ quiz_question.id }}</td>
+                <td>{{ quiz_question.question }}</td>
+                <td>{{ quiz_question.answer }}</td>
+                <td>
+                    <a href="{{ path('quiz_questions_show', {'id': quiz_question.id}) }}">show</a>
+                    <a href="{{ path('quiz_questions_edit', {'id': quiz_question.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('quiz_questions_new') }}">Create new</a>
+{% endblock %}

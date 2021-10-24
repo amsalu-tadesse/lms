@@ -31,7 +31,7 @@ class InstructorCourseChapterController extends AbstractController
         // $teachersList = $em->getRepository(Instructor::class)->findAll();
     //    dd($instructorCourseRepository->findAll());
     $mylist = $em->getRepository(InstructorCourse::class)->findByUser($this->getUser());
-    
+     
         return $this->render('instructor_course_chapter/instructor_vew.html.twig', [
             'instructor_courses' => $mylist,
             // 'instructorsList' => $teachersList,
@@ -48,6 +48,21 @@ class InstructorCourseChapterController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $instructorCourseChapters = $em->getRepository(InstructorCourseChapter::class)->findBy(['instructorCourse'=>$instructorCourse]);
         return $this->render('instructor_course_chapter/index.html.twig', [
+            'instructor_course_chapters' =>  $instructorCourseChapters,
+            'instructor_course' =>  $instructorCourse,
+        //  'incrsid' => $request->get('id'),
+        ]);
+    }
+
+     /**
+     * @Route("/quiz/{id}", name="quiz", methods={"GET"})
+     */
+    public function quiz(InstructorCourse $instructorCourse, Request $request): Response
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        $instructorCourseChapters = $em->getRepository(InstructorCourseChapter::class)->findBy(['instructorCourse'=>$instructorCourse]);
+        return $this->render('quiz/index.html.twig', [
             'instructor_course_chapters' =>  $instructorCourseChapters,
             'instructor_course' =>  $instructorCourse,
         //  'incrsid' => $request->get('id'),

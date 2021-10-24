@@ -1,0 +1,68 @@
+ {% extends 'base.html.twig' %}
+
+{% block title %}New Quiz{% endblock %}
+
+{% block body %}
+    {# <h1>Create new Quiz</h1>
+
+    {{ include('quiz/_form.html.twig') }} #}
+
+
+ 
+
+
+
+
+
+
+
+   <div class="card card-info">
+        <div class="card card-header">
+         <h3>Enter Quiz Details</h3>
+        </div>
+        <div class="card card-body">
+
+        {{ form_start(form) }}
+  <div class="form-group">
+                    <label for="other_payments_price">Chapter </label>
+                      {{ form_widget(form.instructorCourseChapter,{'attr':{'class':'form-control'}}) }}
+      </div> 
+
+   <div class="form-group">
+                    <label for="other_payments_buyer">Quiz Name</label>
+                      {{ form_widget(form.name,{'attr':{'class':'form-control'}}) }}
+      </div> 
+
+    <div class="form-group">
+                    <label for="other_payments_paymentReason">Instruction</label>
+                      {{ form_widget(form.instruction,{'attr':{'class':'form-control'}}) }}
+      </div>
+
+    <div class="form-group">
+                    <label for="other_payments_price">Percentage</label>
+                      {{ form_widget(form.percentage,{'attr':{'class':'form-control'}}) }}
+      </div>
+
+    <div class="form-group">
+                    <label for="other_payments_price">Passvalue</label>
+                      {{ form_widget(form.passvalue,{'attr':{'class':'form-control'}}) }}
+      </div> 
+
+    <div class="form-group">
+                    <label for="other_payments_price">active</label>
+                      {{ form_widget(form.active,{'attr':{'class':'form-control'}}) }}
+      </div> 
+  
+   
+
+
+   
+    <button class="btn btn-info">{{ button_label|default('Save') }}</button>
+
+
+{{ form_end(form) }}
+
+        </div>
+        </div>
+
+        {% endblock %} 

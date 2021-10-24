@@ -55,6 +55,11 @@ class Quiz
      */
     private $quizChoices;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $name;
+
     public function __construct()
     {
         $this->quizQuestions = new ArrayCollection();
@@ -182,6 +187,18 @@ class Quiz
                 $quizChoice->setQuiz(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
 
         return $this;
     }
