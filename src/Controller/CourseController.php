@@ -101,11 +101,14 @@ class CourseController extends AbstractController
      /**
      * @Route("/detail/{id}", name="course_description")
      */
-    public function courseDetail($id, CourseRepository $course): Response
+    public function courseDetail($id, InstructorCourseRepository $course, ContentRepository $content): Response
     {
-        // $courses = $course->findCoursesSortByCategory();
+        $courses = $course->findCoursesSortByCategory($id);
+        $chaptersWithContent = $content->getChaptersWithContentForCourse($id);
+
         return $this->render('course/description.html.twig',[
-        //     'courses' => $courses
+            'courses' => $courses,
+            'chapters' => $chaptersWithContent
         ]);
     }
 

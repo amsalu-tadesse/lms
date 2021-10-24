@@ -9,52 +9,7 @@
         .header{
             margin-bottom: 0px;
         }
-        .owl-prev, .owl-next{
-            display: none;
-        }
-
-        .card-footer a {
-            font-size: 16px;
-            border-radius: 1px;
-            float: right;
-            color: white;
-            padding: 4px 18px;
-            background: #045493;
-            text-align: center;
-        }
-
-        .card-footer{
-            padding: .3rem 1rem;
-            display: none;
-        }
-
-        .card:hover .card-footer{
-            display: contents;
-        }
-
-        .owl-prev, .owl-next {
-            width: 15px;
-            height: 100px;
-            position: absolute;
-            top: 38%;
-            transform: translateY(-50%);
-            border:0px solid black;
-        }
-
-        .owl-carousel:hover .owl-prev, .owl-carousel:hover .owl-next{
-            display: block;
-        }
-
-        .selected-card{
-            border: 1px solid blue;
-            background: whitesmoke;
-        }
         
-        .owl-prev { left: -20px; }
-        .owl-next { right: -20px; }
-        .owl-prev i, .owl-next i {transform : scale(2,2); color: #045493;}
-
-
     </style>
 {% endblock %}
 {% block selected %}<span id="num"></span>{% endblock %}
@@ -64,66 +19,7 @@
         </div>
     </div>
     <br>
-    <div class="container" style="min-height: 490px";>
-        {% set flag = 0 %}
-        
-        {% for course in courses %}
-            {% if flag == course.category_id %}
-                    <div class="card" style="height: 150px; margin: 0px 10px";>
-                        <div class="card-body">
-                            <p>
-                                <a href="{{ path('course_description',{'id': course.name}) }}">
-                                {{ course.name }}
-                                </a>
-                            <p>
-                        </div>
-                        <div class="card-footer">
-                            <a href="#" style="float:right" course-id={{course.id}}  class="enroll" data-toggle="popover" data-placement="top" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">Add to My Courses</a>
-                        </div>
-                    </div>
-            {% else %}
-                
-                {% if flag == 0 %}
-                    <h4> {{ course.category_name|capitalize }}</h4>
-                    <div class="owl-carousel owl-theme show-nav-hover">
-                        <div class="card" style="height: 150px;";>
-                            <div class="card-body">
-                                <p>
-                                    <a href="{{ path('course_description',{'id': course.name}) }}">
-                                    {{ course.name }}
-                                    </a>
-                                <p>
-                            </div>
-                            <div class="card-footer">
-                                <a href="#" style="float:right" course-id={{course.id}} data-toggle="tooltip" class="enroll"  data-placement="top" title="">Add to My Courses</a>
-                            </div>
-                        </div>
-                {% else %}
-
-                    </div>
-                   <br>
-                    <h4> {{ course.category_name|capitalize }}</h4>
-                    <div class="owl-carousel owl-theme show-nav-hover">
-                        <div class="card" style="height: 150px";>
-                            <div class="card-body">
-                                <p>
-                                    <a href="{{ path('course_description',{'id': course.name}) }}">
-                                    {{ course.name }}
-                                    </a>
-                                <p>
-                            </div>
-                            <div class="card-footer">
-                                <a href="#" style="float:right" course-id={{course.id}} data-toggle="tooltip" class="enroll"  data-placement="top" title="Add to My Courses list">Add to My Courses</a>
-                            </div>
-                        </div>
-                {% endif %}
-                {% set flag = course.category_id %}
-            {% endif %}
-            
-        {% endfor %}
-            
-        </div>
-    </div>
+   {% include "course/list.html.twig" %}
 {% endblock %} 
 
 {% block nav %}
@@ -185,7 +81,6 @@
                 $(this).parent().parent().removeClass("selected-card");
                 var json_str = getCookie('selected_courses');
                 var arr = JSON.parse(json_str);
-                console.log(arr);
             }
             else{
                 $(this).text("Remove from my Courses");
@@ -197,14 +92,13 @@
                 $(this).parent().parent().addClass("selected-card");
                 var json_str = getCookie('selected_courses');
                 var arr = JSON.parse(json_str);
-                console.log(arr);
             }
         });
 
         function setCookie(c_name, value, exdays) {
             var exdate = new Date();
             exdate.setDate(exdate.getDate() + exdays);
-            var c_value = escape(value) + ((exdays == null) ? "" : "; expires=" + exdate.toUTCString());
+            var c_value = escape(value) + ((exdays == null) ? "" : "; expires=" + exdate.toUTCString())+"; path=/;";
             document.cookie = c_name + "=" + c_value;
         }
 

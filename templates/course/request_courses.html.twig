@@ -1,0 +1,39 @@
+<div class="row mb-2 courses_list">
+            {% if courses|length == 0 %}
+                <div class="card px-5 py-2 mb-2">
+                    <center><h4>no courses selected</h4></center>
+                </div>
+            {% else %}
+                {% for course in courses %}
+                    <div class="card px-5 py-2 mb-2" course-id="{{course.id}}">
+                        <div class="row">
+                            <div class="col-sm-11">
+                                <h4>{{course.name}}</h4>
+                                <p>{{course.description}}</p>
+                            </div>
+                            <div class="col-sm-1" style="align-self:center">
+                                <button class="btn btn-danger" onclick="removeCourse({{course.id}})" title="remove" style="margin: 0px 50%;"><i class="fas fa-times-circle"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                <div class="row mt-2 buttons">
+                {% if is_granted("ROLE_STUDENT") %}
+                    <div class="col-sm-2 col-md-2">
+                        <a class="btn btn-danger btn-block" href="">Remove All</a>
+                    </div>
+                {% else %}     
+                    <div class="col-sm-2 col-md-2">
+                        <a class="btn btn-primary btn-block" href="{{path('app_register')}}">Apply</a>
+                    </div>
+                     <div class="col-sm-2 col-md-2">
+                        <a class="btn btn-danger btn-block" href="#" onclick="conf()">Remove All</a>
+                    </div>
+                {% endif %}
+                
+                    
+                   
+                </div>
+            {% endif %}
+            
+        </div>
