@@ -63,6 +63,24 @@
 
 				<!-- Theme Initialization Files -->
 				<script src="{{asset('student/js/theme.init.js')}}"></script>
+				<script>
+				var url = window.location.pathname;
+				var drpdwns = $("a.dropdown-item");
+				var check = true;
+				drpdwns.each(function(){
+					var compare = url.localeCompare($(this).attr("href"));
+					if(compare == 0)
+					{
+;						$(this).addClass("active");
+						return false;
+					}
+					else if(url == "/stud/")
+					{
+						$(this).addClass("active");
+						return false;
+					}
+				});
+			</script>
 				{% block javascript %}{% endblock %}
 
 			</body>

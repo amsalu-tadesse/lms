@@ -1,0 +1,85 @@
+{% extends 'sBase.html.twig' %}
+
+{% block title %}StudentCourse index{% endblock %}
+{% block breadcrumbhome %}studentcourse{% endblock %}
+{% block breadcrumbcontent %}index{% endblock %}
+
+{% block body %}
+<br>
+<div class="card card-info">
+    <div class="card card-header">
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Request list</h3>
+            </div>
+        </div>
+    </div>
+    <div class="card card-body">
+        <table class="table table-responsive">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Course</th>
+                    <th>Date Applied</th>
+                    <th>status</th>
+                    <th>actions</th>
+                </tr> 
+            </thead>
+            <tbody>
+                {% for request in requests %}
+                <tr>
+                    <td>{{ request.id }}</td>
+                    <td>{{ request.name}}
+                    <td>{{ request.createdAt ? request.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>{{ request.status ? 'Yes' : 'No' }}</td>
+                    <td>
+                    <a 
+                        href="{{ path('request_show', {'id': request.id}) }}">show
+                    </a>
+                     &nbsp;
+                    <a 
+                        href="{{ path('request_delete', {'id': request.id}) }}">cancel request
+                    </a>
+
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6">no records found</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="  pagination justify-content-center ">
+			{{ knp_pagination_render(requests) }}</div>
+
+		<div class="float-right pl-5 pb-2">
+			 
+				Total result:
+				{{ requests.getTotalItemCount }} 
+		</div>
+</div>
+
+{% endblock %}
+{% block javascript %}
+    <script>    
+       total_selected = 0;
+        var json_str = getCookie('selected_courses_login');
+        var arr = JSON.parse(json_str);
+        cookie_length = arr.length;
+        $("#num").html(cookie_length);
+
+        function getCookie(c_name) {
+            var i, x, y, ARRcookies = document.cookie.split(";");
+            for (i = 0; i < ARRcookies.length; i++) {
+                x = ARRcookies[i].substr(0, ARRcookies[i].indexOf("="));
+                y = ARRcookies[i].substr(ARRcookies[i].indexOf("=") + 1);
+                x = x.replace(/^\s+|\s+$/g, "");
+                if (x == c_name) {
+                    return unescape(y);
+                }
+            }
+        }
+    </script>
+{% endblock %}

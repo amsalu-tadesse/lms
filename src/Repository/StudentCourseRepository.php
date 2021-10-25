@@ -54,27 +54,44 @@ class StudentCourseRepository extends ServiceEntityRepository
     public function findCourses($value)
     {
         return $this->createQueryBuilder('s')
-            ->select('ic.id','c.name','c.description', 'u.firstName', 'u.middleName', 'u.lastName')
+            ->select('ic.id','c.name','c.description', 's.status', 'u.firstName', 'u.middleName', 'u.lastName')
             ->join('s.instructorCourse', 'ic')
             ->join('ic.instructor', 'i')
             ->join('i.user','u')
             ->join('ic.course', 'c')
-            ->where('s.status=1')
-            ->andWhere('s.student = :val')
+            ->Where('s.student = :val')
             ->setParameter('val', $value)
             ->getQuery()
             ->getResult()
         ;
     }
 
+    /**
+     * @return StudentCourse[] Returns an array of Product objects
+     */
+    public function findRequest($user_id, $value)
+    {
+        return $this->createQueryBuilder('s')
+            ->select('c.name','c.description','s.id', 'c.id as course_id', 'ic.id as instructor_course_id', 's.createdAt', 's.status')
+            ->join('s.instructorCourse', 'ic')
+            ->join('ic.course', 'c')
+            ->where('s.id = :id')
+            ->andWhere('s.student = :val')
+            ->andWhere('s.status = 0')
+            ->setParameter('id', $value)
+            ->setParameter('val', $user_id)
+            ->getQuery()
+            ->getOneorNullResult()
+        ;
+    }
+
     public function findRequestedCourses($value)
     {
         return $this->createQueryBuilder('s')
-            ->select('c.name','c.description','s.id', 'c.id as course_id')
+            ->select('c.name','c.description','s.id', 'c.id as course_id', 's.createdAt', 's.status')
             ->join('s.instructorCourse', 'ic')
             ->join('ic.course', 'c')
             ->Where('s.student = :val')
-            ->andWhere('s.active = 0')
             ->andWhere('s.status = 0')
             ->setParameter('val', $value)
             ->getQuery()

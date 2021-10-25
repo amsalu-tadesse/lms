@@ -19,6 +19,14 @@
         .card:hover .card-footer {
             display: contents;
         }
+
+        .enroll{
+            border: 0px;
+            border-radius: 0px;
+        }
+        .enroll:hover, .enroll:focus, .enroll:blur{
+            border: 0px;
+        }
 	</style>
 {% endblock %}
 {% block body %}
@@ -29,20 +37,25 @@
         <h3 class="page-title">
             Your Courses
         </h3>
+        {% set array = [] %}
 		{% for course in student_courses %}
-			<div class="col-md-4">
-				<div class="card border-0 border-radius-0 " style="height: 150px";>
-					<a href="/course/{{ course.id }}/chapters">
-					<div class="card-body">
-						<p>
-							{{ course.name }}
-							<br>
-							<span>By: {{ course.firstName|capitalize }} {{ course.middleName|capitalize}} </span>
-						<p>
-					</div>
-					</a>
-				</div>
-			</div>
+            {% set id = course.id %}
+            {% set array = array|merge([ id ]) %}
+            {% if course.status !=0 %}
+                <div class="col-md-4">
+                    <div class="card border-0 border-radius-0 mb-3" style="height: 150px";>
+                        <a href="/course/{{ course.id }}/chapters">
+                        <div class="card-body">
+                            <p>
+                                {{ course.name }}
+                                <br>
+                                <span>By: {{ course.firstName|capitalize }} {{ course.middleName|capitalize}} </span>
+                            <p>
+                        </div>
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
 		{% endfor %}
 	{% endif %}
 	</div>
@@ -70,6 +83,7 @@
     <script>
         var selected_courses_login = [];
         total_selected = 0;
+        $("#num").html(0);
         $(document).ready(function(){
             var json_str = getCookie('selected_courses_login');
             var arr = JSON.parse(json_str);

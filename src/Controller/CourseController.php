@@ -117,6 +117,16 @@ class CourseController extends AbstractController
      */
     public function selectedCourses(Request $request, CourseRepository $course): Response
     {
+        if($this->isGranted("ROLE_STUDENT")){
+            $selected_courses = $request->cookies->get("selected_courses_login");
+            $selected_courses = json_decode($selected_courses, true);
+
+            $em = $this->getDoctrine()->getManager();
+            $courses = $em->getRepository(Course::class)->findBy(array('id' => $selected_courses));
+            return $this->render('student_course/selected_courses_login.html.twig',[
+                'courses' => $courses
+            ]);
+        }
 
         $selected_courses = $request->cookies->get("selected_courses");
         $selected_courses = json_decode($selected_courses, true);

@@ -1,7 +1,12 @@
 <div class="row mb-2 courses_list">
             {% if courses|length == 0 %}
                 <div class="card px-5 py-2 mb-2">
-                    <center><h4>no courses selected</h4></center>
+                    {% if is_granted("ROLE_STUDENT") %}
+                        <center><h4>You do not apply to any course</h4></center>
+                    {% else %}
+                        <center><h4>no courses selected</h4></center>
+                    {% endif %}
+                    
                 </div>
             {% else %}
                 {% for course in courses %}
@@ -21,22 +26,17 @@
                         </div>
                     </div>
                 {% endfor %}
-                <div class="row mt-2 buttons">
-                {% if is_granted("ROLE_STUDENT") %}
+                <div class="row mt-2 buttons"> 
                     <div class="col-sm-2 col-md-2">
-                        <a class="btn btn-danger btn-block" href="">Remove All</a>
-                    </div>
-                {% else %}     
-                    <div class="col-sm-2 col-md-2">
-                        <a class="btn btn-primary btn-block" href="{{path('app_register')}}">Apply</a>
+                        {% if is_granted("ROLE_STUDENT") %}
+                            <a class="btn btn-primary btn-block" href="{{path('course_apply')}}">Apply</a>                    
+                        {% else %}
+                            <a class="btn btn-primary btn-block" href="{{path('app_register')}}">Apply</a>
+                        {% endif %}   
                     </div>
                      <div class="col-sm-2 col-md-2">
                         <a class="btn btn-danger btn-block" href="#" onclick="conf()">Remove All</a>
-                    </div>
-                {% endif %}
-                
-                    
-                   
+                    </div>                   
                 </div>
             {% endif %}
             

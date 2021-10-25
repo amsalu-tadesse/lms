@@ -6,6 +6,7 @@ use App\Entity\InstructorCourse;
 use App\Entity\StudentCourse;
 use App\Form\StudentCourseType;
 use App\Repository\StudentCourseRepository;
+use App\Repository\ContentRepository;
 use App\Repository\InstructorCourseRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,6 +14,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use DateTime;
+use Symfony\Component\HttpFoundation\Cookie;
 
 /**
  * @Route("/stud")
@@ -33,7 +36,6 @@ class StudentCourseController extends AbstractController
 
         $queryBuilder=$studentCourseRepository->findCourses($this->getUser()->getProfile()->getId());
         $courses = $course->findCoursesSortByCategory();
-
         $data=$paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page', 1),
@@ -65,13 +67,39 @@ class StudentCourseController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/apply", name="course_apply")
+     */
+    public function apply(Request $request): Response
+    {
+        $courses = $request->cookies->get("selected_courses_login");
+        $courses = json_decode($courses, true);
+        $em = $this->getDoctrine()->getManager();
+        foreach($courses as $course)
+        {
+            $st_course = new StudentCourse();
+            $st_course->setStudent($this->getUser()->getProfile());
+            $st_course->setInstructorCourse($em->getRepository(InstructorCourse::class)->find($course));
+            $st_course->setStatus(0);
+            $st_course->setActive(0);
+            $st_course->setCreatedAt(new DateTime());
+            $em->persist($st_course);
+            $em->flush();
+        }
+        //write form data to cookie
+        $response = new Response();
+        $cookie = new Cookie('selected_courses_login', "" ,time()*60*60);
+        $response->headers->setCookie($cookie);
+        $response->sendHeaders();
+
+        return $this->redirectToRoute("requested_courses");
+    }
+    
      /**
      * @Route("/request", name="requested_courses", methods={"GET"})
      */
-
     public function requests(StudentCourseRepository $studentCourseRepository, PaginatorInterface $paginator, Request $request): Response
     {
-        
         $queryBuilder=$studentCourseRepository->findRequestedCourses($this->getUser()->getProfile()->getId());
 
         $data=$paginator->paginate(
@@ -80,15 +108,29 @@ class StudentCourseController extends AbstractController
             8
         );
         
-        return $this->render('course/requested_courses.html.twig', [
-            'courses' => $data,
+        return $this->render('student_course/requested_courses.html.twig', [
+            'requests' => $data,
+        ]);
+    }
+
+    /**
+    * @Route("/request/{id}", name="request_show", methods={"GET"})
+    */
+    public function requestShow($id, StudentCourseRepository $studentCourseRepository, ContentRepository $content): Response
+    {
+        $request = $studentCourseRepository->findRequest($this->getUser()->getProfile()->getId(), $id);
+
+        $chaptersWithContent = $content->getChaptersWithContentForCourse($request['instructor_course_id']);
+
+        return $this->render('student_course/request_show.html.twig', [
+            'courses' => $request,
+            'chapters' => $chaptersWithContent
         ]);
     }
 
     /**
      * @Route("/course/diactivate/{id}", name="student_course_deactivate", methods={"GET","POST"})
      */
-
     public function studentCourseDeactivate(StudentCourse $studentCourse, StudentCourseRepository $studentCourseRepository,PaginatorInterface $paginator,Request $request): Response
     {
         $em = $this->getDoctrine()->getManager();
@@ -148,21 +190,34 @@ class StudentCourseController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/remove", name="request_delete")
+     *  @Route("/{id}/remove", name="request_delete")
      */
-    public function deleteRequest(StudentCourseRepository $studentCourse, $id): Response
-    { 
-        $course = $studentCourse->find($id);
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($course);
-        $em->flush();
-    
-        // Send all this stuff back to DataTables
-        $returnResponse = new JsonResponse();
-        $returnResponse->setJson("kkd");
-    
-        return $returnResponse;
+    public function removeRequest(StudentCourseRepository $studentCourse, $id)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $studentCourse = $entityManager->getRepository(StudentCourse::class)->find($id);
+        $entityManager->remove($studentCourse);
+        $entityManager->flush();
+
+        return $this->redirectToRoute("requested_courses");
     }
+
+    // /**
+    //  * @Route("/{id}/remove", name="request_delete")
+    //  */
+    // public function deleteRequest(StudentCourseRepository $studentCourse, $id): Response
+    // { 
+    //     $course = $studentCourse->find($id);
+    //     $em = $this->getDoctrine()->getManager();
+    //     $em->remove($course);
+    //     $em->flush();
+    
+    //     // Send all this stuff back to DataTables
+    //     $returnResponse = new JsonResponse();
+    //     $returnResponse->setJson("kkd");
+    
+    //     return $returnResponse;
+    // }
 
     /**
      * @Route("/home", methods={"GET"})
