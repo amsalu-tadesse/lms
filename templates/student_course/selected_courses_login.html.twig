@@ -1,0 +1,92 @@
+{% extends 'sBase.html.twig' %}
+{% block title %}Requested courses
+{% endblock %}
+{% block stylesheet %}
+
+{% endblock %}
+{% block body %}
+  <div class="toast" style="position: absolute;">
+
+    <div class="toast-body">
+      Some text inside the toast body
+    </div>
+  </div>
+    <div class="pt-3">
+	    {% include "course/request_courses.html.twig" %}
+    </div>
+{% endblock %}
+{% block javascript %}
+    <script>
+        function conf()
+        {
+            selected_courses = [];
+            var approval = confirm("Do you want to remove all courses for your selection list");
+            if(approval)
+            {
+                setCookie("selected_courses_login",selected_courses,0);
+                location.reload();
+            }
+        }
+        function removeCourse(name, name2){
+            var json_str = getCookie('selected_courses_login');
+            var arr = JSON.parse(json_str);
+
+            newa = arr.filter(e => e !== name+"");
+
+            var json_str = JSON.stringify(newa);
+            setCookie('selected_courses_login', json_str,1);
+            no_of_card_left = $(".card");
+            $("div[course-id='"+name+"']").remove();
+
+            if(no_of_card_left.length == 1){
+                message = $('<div class="card px-5 py-2 mb-2">'+
+                            '<center><h4>no courses selected</h4></center></div>');
+                $(".courses_list").append(message);
+                $(".buttons").remove();
+            }
+        }
+
+        function setCookie(c_name, value, exdays) {
+            var exdate = new Date();
+            exdate.setDate(exdate.getDate() + exdays);
+            var c_value = escape(value) + ((exdays == null) ? "" : "; expires=" + exdate.toUTCString())+"; path=/";
+            document.cookie = c_name + "=" + c_value;
+        }
+
+        function getCookie(c_name) {
+            var i, x, y, ARRcookies = document.cookie.split(";");
+            for (i = 0; i < ARRcookies.length; i++) {
+                x = ARRcookies[i].substr(0, ARRcookies[i].indexOf("="));
+                y = ARRcookies[i].substr(ARRcookies[i].indexOf("=") + 1);
+                x = x.replace(/^\s+|\s+$/g, "");
+                if (x == c_name) {
+                    return unescape(y);
+                }
+            }
+        }
+        /*function removeCourse(id, name){
+            var conf = confirm("Are you sure you want to remove '"+name+"' from the list");
+            if(conf){
+                $.ajax({
+                    url: "/stud/"+id+"/remove",
+                    success: function(data){
+                        console.log("success");
+                    },
+                    error: function(data){
+                        $('.toast').toast('show');
+                        no_of_card_left = $(".card");
+                        $("div[course-id='"+name+"']").remove();
+
+                        if(no_of_card_left.length == 1){
+                            message = $('<div class="card px-5 py-2 mb-2">'+
+                                        '<center><h4>no courses selected</h4></center></div>');
+                            $(".courses_list").append(message);
+                            $(".buttons").remove();
+                        }
+                    },
+                });
+            }
+        }*/
+
+    </script>
+{% endblock %}

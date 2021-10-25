@@ -1,6 +1,11 @@
  <div class="container" style="min-height: 490px">
         {% set flag = 0 %}
+        {% if not is_granted("ROLE_STUDENT") %}
+            {% set array = [] %}
+        {% endif %}
         
+        {% set continue = true %}
+
         {% for course in courses %}
             {% if flag == course.category_id %}
                     <div class="card" style="height: 150px; margin: 0px 10px";>
@@ -62,21 +67,74 @@
                                     {{ course.name }}
                                     </a>
                                     <br>
-                                    <span>By {{ course.firstName|capitalize }} {{ course.middleName|capitalize}} </span>
+                                    <span>by {{ course.firstName|capitalize }} {{ course.middleName|capitalize}} </span>
                                 <p>
                             </div>
                             <div class="card-footer">
-                                <a href="#" style="float:right" course-id={{course.id}} data-toggle="tooltip" class="enroll"  data-placement="top" title="Add to My Courses list">
+                                <button href="" class="btn btn-primary enroll" style="float:right" course-id={{course.id}} data-toggle="popover" data-placement="top" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">
                                     {% if is_granted('ROLE_STUDENT') %}
                                         {% trans %}Click to apply{% endtrans %}
                                     {% else %}
                                         {% trans %}Add to My Courses{% endtrans %}
                                     {% endif %}
-                                </a>
+                                </button>
                             </div>
                         </div>
+                {% else %}
+                    
+                    {% if flag == 0 %}
+                        <h4> {{ course.category_name|capitalize }}</h4>
+                        <div class="owl-carousel owl-theme show-nav-hover">
+                            <div class="card" style="height: 150px;";>
+                                <div class="card-body">
+                                    <p>
+                                        <a href="{{ path('course_description',{'id': course.id}) }}">
+                                        {{ course.name }}
+                                        <br>
+                                        <span>by {{ course.firstName|capitalize }} {{ course.middleName|capitalize}} </span>
+                                        </a>
+                                    
+                                    <p>
+                                </div>
+                                <div class="card-footer">
+                                    <button href="" class="btn btn-primary enroll" style="float:right" course-id={{course.id}} data-toggle="popover" data-placement="top" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">
+                                        {% if is_granted('ROLE_STUDENT') %}
+                                            click to apply
+                                        {% else %}
+                                            Add to My Courses
+                                        {% endif %}
+                                    </button>
+                                </div>
+                            </div>
+                    {% else %}
+
+                        </div>
+                    <br>
+                        <h4> {{ course.category_name|capitalize }}</h4>
+                        <div class="owl-carousel owl-theme show-nav-hover">
+                            <div class="card" style="height: 150px";>
+                                <div class="card-body">
+                                    <p>
+                                        <a href="{{ path('course_description',{'id': course.id}) }}">
+                                        {{ course.name }}
+                                        </a>
+                                        <br>
+                                        <span>By {{ course.firstName|capitalize }} {{ course.middleName|capitalize}} </span>
+                                    <p>
+                                </div>
+                                <div class="card-footer">
+                                    <button href="" class="btn btn-primary enroll" style="float:right" course-id={{course.id}} data-toggle="popover" data-placement="top" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">
+                                        {% if is_granted('ROLE_STUDENT') %}
+                                            click to apply
+                                        {% else %}
+                                            Add to My Courses
+                                        {% endif %}
+                                    </button>
+                                </div>
+                            </div>
+                    {% endif %}
+                    {% set flag = course.category_id %}
                 {% endif %}
-                {% set flag = course.category_id %}
             {% endif %}
             
         {% endfor %}

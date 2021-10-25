@@ -18,13 +18,18 @@
 											<nav class="collapse">
 												<ul class="nav nav-pills" id="mainNav">
 													<li class="dropdown">
-														<a class="dropdown-item dropdown-toggle active" href="/stud">
+														<a class="dropdown-item dropdown-toggle" href="/stud">
 															Courses
+														</a>
+													</li>
+													<li class="dropdown">
+														<a class="dropdown-item" href="{{ path('selected_courses')}}">
+															My Courses<sup><span class="badge badge-primary" id="num"></span></sup>
 														</a>
 													</li>
 													<li class="dropdown dropdown-mega">
 														<a class="dropdown-item dropdown-toggle" href="{{path('requested_courses')}}">
-															Request
+															Requested Courses
 														</a>
 													</li>
 													<li class="dropdown">
