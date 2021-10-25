@@ -1,0 +1,32 @@
+{% extends "sBase.html.twig" %}
+{% block stylesheet %}
+    <style>
+        label{
+            margin-bottom: 10px;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+	<div class="container">
+		<div class="row">
+			<div class="card mt-3 py-4 px-4">
+				<h5>1. what is the difference between this and that</h5>
+				<br>
+				<div class="d-flex flex-column px-2">
+					<label class="d-flex align-items-center text-color-grey mb-0" for="shipping_method1">
+						<input id="shipping_method1" type="radio" class="me-2" name="shipping_method" value="free" checked="">
+						Free Shipping
+					</label>
+					<label class="d-flex align-items-center text-color-grey mb-0" for="shipping_method2">
+						<input id="shipping_method2" type="radio" class="me-2" name="shipping_method" value="local-pickup">
+						Local Pickup
+					</label>
+					<label class="d-flex align-items-center text-color-grey mb-0" for="shipping_method3">
+						<input id="shipping_method3" type="radio" class="me-2" name="shipping_method" value="flat-rate">
+						Flat Rate: $5.00
+					</label>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

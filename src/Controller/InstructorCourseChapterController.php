@@ -105,6 +105,15 @@ class InstructorCourseChapterController extends AbstractController
     }
 
     /**
+     * @Route("/{id}/quiz", name="course_quiz")
+     */
+    public function quizPage(InstructorCourseChapter $instructorCourseChapter)
+    {
+        return $this->render('instructor_course_chapter/quiz.html.twig', [
+        ]);
+    }
+
+    /**
      * @Route("/{id}/edit", name="instructor_course_chapter_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, InstructorCourseChapter $instructorCourseChapter): Response

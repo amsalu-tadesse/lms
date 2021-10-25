@@ -59,6 +59,7 @@ class CourseController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $course->setStatus(1);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($course);
             $entityManager->flush();

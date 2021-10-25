@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mailer\MailerInterface;
+use App\Services\MailerService;
 use DateTime;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -41,7 +42,7 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/register", name="app_register")
      */
-    public function register(Request $request): Response
+    public function register(Request $request, MailerInterface $mailer, MailerService $mservice): Response
     {
 
         $user = new User();
@@ -74,12 +75,8 @@ class RegistrationController extends AbstractController
             $em->persist($ver);
             $em->flush();
 
-
-
-
-            //email
-
-
+            $message = "this is text";
+            // $sent =  $mservice->sendEmail($mailer, $message, $form_data['email'], "text");
 
             return $this->render('registration/confirmation_email.html.twig', [
                 'email' => $form_data['email'],

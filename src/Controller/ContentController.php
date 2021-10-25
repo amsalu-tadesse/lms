@@ -5,8 +5,10 @@ namespace App\Controller;
 use App\Entity\Content;
 use App\Entity\InstructorCourse;
 use App\Entity\InstructorCourseChapter;
+use App\Entity\StudentChapter;
 use App\Form\ContentType;
 use App\Repository\ContentRepository;
+use App\Repository\StudentChapterRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -138,19 +140,18 @@ class ContentController extends AbstractController
             'uploadDir'=>$this->getParameter('uploading_directory_resources'),
         ]);
     }
-   
-     
-
 
     /**
      * @Route("/{course}/{chapter}/list", name="content_list", methods={"GET"})
      */
-    public function contentList($course, $chapter, ContentRepository $contentRepository,Request $request): Response
+    public function contentList($course, $chapter, StudentChapterRepository $stud_chap, ContentRepository $contentRepository,Request $request): Response
     {
         $contents = $contentRepository->getContentsForChapter($course, $chapter);
-
+        $pages_seen = $stud_chap->getProgress($chapter, $this->getUser()->getProfile()->getId());
+        
         return $this->render('student_course/player.html.twig', [
              'contents' => $contents,
+             'pages_seen' => $pages_seen
         ]);
     }
 
@@ -170,15 +171,11 @@ class ContentController extends AbstractController
         return $returnResponse;
     }
 
-
-
-
     /**
      * @Route("/new/{id}", name="content_new", methods={"GET","POST"})
      */
-    public function new(Request $request,InstructorCourseChapter $instructorCourse, SluggerInterface $slugger): Response
+    public function new(Request $request,InstructorCourse $instructorCourse, SluggerInterface $slugger): Response
     {
- 
         $content = new Content();
         $form = $this->createForm(ContentType::class,$content, array('incrsid' => $instructorCourse->getId()));
         $form->handleRequest($request);

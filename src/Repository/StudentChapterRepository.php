@@ -36,15 +36,18 @@ class StudentChapterRepository extends ServiceEntityRepository
     }
     */
 
-    /*
-    public function findOneBySomeField($value): ?StudentChapter
+    
+    public function getProgress($value, $stud_id)
     {
         return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
+            ->select('s.pagesCompleted')
+            ->join('s.chapter', 'ch')
+            ->where('s.student = :stud_id')
+            ->andWhere('ch.chapter = :val')
+            ->setParameter('stud_id', $stud_id)
             ->setParameter('val', $value)
             ->getQuery()
             ->getOneOrNullResult()
         ;
     }
-    */
 }
