@@ -19,4 +19,17 @@ class HomeController extends AbstractController
       
         return $this->redirectToRoute("courses_list");
     }
+
+    /**
+     * @Route("/admin/home", name="admin_home")
+     */
+    public function admin_index()
+    {
+      
+        return $this->render('home/admin_index.html.twig', [
+            // 'instructor_courses' => $mylist,
+            
+        ]);
+
+    }
 }

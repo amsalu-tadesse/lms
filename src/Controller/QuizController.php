@@ -42,19 +42,27 @@ class QuizController extends AbstractController
      */
     function new (Request $request, InstructorCourse $instructorCourse): Response {
 
-       
         $quiz = new Quiz();
         $form = $this->createForm(QuizType::class, $quiz);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             $entityManager = $this->getDoctrine()->getManager();
+
+            $cp = $form->getData()->getInstructorCourseChapter();
+            $chpFromDb = $entityManager->getRepository(Quiz::class)->findBy(['instructorCourseChapter' => $cp]);
+            if ($chpFromDb) {
+                $this->addFlash("warning", "Quiz has been created for this chapter.");
+                $this->redirectToRoute("exam_index");
+                return $this->redirectToRoute('quiz_index', ['id' => $instructorCourse->getId()], Response::HTTP_SEE_OTHER);
+
+            }
+
             $entityManager->persist($quiz);
             $entityManager->flush();
 
-            return $this->redirectToRoute('quiz_index', ['id'=>$quiz->getInstructorCourseChapter()->getInstructorCourse()->getId()], Response::HTTP_SEE_OTHER);
-
-            return $this->redirectToRoute('quiz_index', ['id'=>$instructorCourse->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('quiz_index', ['id' => $instructorCourse->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('quiz/new.html.twig', [
@@ -83,8 +91,8 @@ class QuizController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('quiz_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('quiz_index', ['id' => $quiz->getInstructorCourseChapter()->getInstructorCourse()->getId()], Response::HTTP_SEE_OTHER);
+           // return $this->redirectToRoute('quiz_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('quiz/edit.html.twig', [

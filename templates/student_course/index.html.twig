@@ -1,8 +1,8 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}StudentCourse index{% endblock %}
-{% block breadcrumbhome %}studentcourse{% endblock %}
-{% block breadcrumbcontent %}index{% endblock %}
+{% block title %}{% trans %}StudentCourse index{% endtrans %}{% endblock %}
+{% block breadcrumbhome %}{% trans %}sSudentcourse{% endtrans %}{% endblock %}
+{% block breadcrumbcontent %}{% trans %}index{% endtrans %}{% endblock %}
 
 {% block body %}
 
@@ -10,7 +10,7 @@
     <div class="card card-header">
         <div class="row">
             <div class="col-md-6">
-                <h3>StudentCourse list</h3>
+                <h3>{% trans %}StudentCourse list{% endtrans %}</h3>
             </div>
             <div class="col-md-6">
                <a href="{{ path('student_course_new') }}" class="btn btn-primary" style="float:right">Add new StudentCourse</a>
@@ -22,11 +22,11 @@
             <thead>
                 <tr>
                     <th>Id</th>
-                    <th>Date</th>
-                    <th>Status</th>
-                    <th>Active</th>
-                    <th>IsAtPage</th>
-                    <th>actions</th>
+                    <th>{% trans %}Date{% endtrans %}</th>
+                    <th>{% trans %}Status{% endtrans %}</th>
+                    <th>{% trans %}Active{% endtrans %}</th>
+                    <th>{% trans %}IsAtPage{% endtrans %}</th>
+                    <th>{% trans %}Actions{% endtrans %}</th>
                 </tr> 
             </thead>
             <tbody>
@@ -39,14 +39,14 @@
                     <td>{{ student_course.isAtPage }}</td>
                     <td>
                     <a
-                        href="{{ path('student_course_show', {'id': student_course.id}) }}">show</a>
+                        href="{{ path('student_course_show', {'id': student_course.id}) }}">{% trans %}Show{% endtrans %}</a>
                     <a
-                        href="{{ path('student_course_edit', {'id': student_course.id}) }}">edit</a>
+                        href="{{ path('student_course_edit', {'id': student_course.id}) }}">{% trans %}Edit{% endtrans %}</a>
                     </td>
                 </tr>
                 {% else %}
                 <tr>
-                    <td colspan="6">no records found</td>
+                    <td colspan="6">{% trans %}No records found{% endtrans %}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -57,7 +57,7 @@
 
 		<div class="float-right pl-5 pb-2">
 			 
-				Total result:
+				{% trans %}Total result{% endtrans %}:
 				{{ studentcourses.getTotalItemCount }} 
 		</div>
 </div>

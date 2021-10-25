@@ -1,14 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New AcademicLevel{% endblock %}
-{% block breadcrumbhome %}academiclevel{% endblock %}
-{% block breadcrumbcontent %}new{% endblock %}
+{% block title %}{% trans %}New AcademicLevel{% endtrans %}{% endblock %}
+{% block breadcrumbhome %}{% trans %}Academiclevel{% endtrans %}{% endblock %}
+{% block breadcrumbcontent %}{% trans %}New{% endtrans %}{% endblock %}
 {% block body %}
 <div class="card card-info">
     <div class="card card-header">
         <div class="row">
             <div class="col-md-6">
-                <h5>New AcademicLevel</h5>
+                <h5>{% trans %}New AcademicLevel{% endtrans %}</h5>
             </div>
         </div>
     </div>
@@ -17,7 +17,7 @@
         <br>
 
         <div class="col-md-2">
-            <a href="{{ path('academic_level_index') }}" class="btn btn-primary btn-block">back to list</a>
+            <a href="{{ path('academic_level_index') }}" class="btn btn-primary btn-block">{% trans %}Back to list{% endtrans %}</a>
         </div>
     </div>
 </div>

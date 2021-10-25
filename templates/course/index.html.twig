@@ -1,12 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Course list
+{% block title %}{% trans %}Course list{% endtrans %}
 {% endblock %}
 {% block maintitle %}
-	Courses
+	{% trans %}Courses{% endtrans %}
 {% endblock %}
 {% block breadcrumbcontent %}
-	Course list 
+	{% trans %}Course list {% endtrans %}
 {% endblock %}
 {% block body %}
 	<div class="row">
@@ -18,9 +18,9 @@
 						<div class="card card-info collapsed-card">
 							<div class="card-header">
 								<h3 class="card-title">
-									{% if edit  %}Edit
+									{% if edit  %}{% trans %}Edit{% endtrans %}
 									{% else %}
-										Add New
+										{% trans %}Add New{% endtrans %}
 									{% endif %}
 								</h3>
 
@@ -47,7 +47,7 @@
 					<div class="col-md-12">
 						<div class="card ">
 							<div class="card-header">
-								<h3 class="card-title">course List</h3>
+								<h3 class="card-title">{% trans %}Course List{% endtrans %}</h3>
 								<div class="card-tools">
 								
 									<form class="form-inline ml-3" >
@@ -74,8 +74,8 @@
 											<th>{{ knp_pagination_sortable(courses, 'Name', 'p.name') }}</th>
 											<th>{{ knp_pagination_sortable(courses, 'Code', 'p.code') }}</th>
 
-											<th>credit</th>
-											<th>Action</th>
+											<th>{% trans %}Credit{% endtrans %}</th>
+											<th>{% trans %}Action{% endtrans %}</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -114,7 +114,7 @@
 											</tr>
 										{% else %}
 											<tr>
-												<td colspan="5">no records found</td>
+												<td colspan="5">{% trans %}No records found{% endtrans %}</td>
 											</tr>
 										{% endfor %}
 									</tbody>

@@ -16,9 +16,9 @@
                         <div class="card-footer">
                             <a href="#" style="float:right" course-id={{course.id}}  class="enroll" data-toggle="popover" data-placement="top" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">
                                 {% if is_granted('ROLE_STUDENT') %}
-                                    click to apply
+                                    {% trans %}Click to apply{% endtrans %}
                                 {% else %}
-                                     Add to My Courses
+                                     {% trans %}Add to My Courses{% endtrans %}
                                 {% endif %}
                             </a>
                         </div>
@@ -42,9 +42,9 @@
                             <div class="card-footer">
                                 <a href="#" style="float:right" course-id={{course.id}} data-toggle="tooltip" class="enroll"  data-placement="top" title="">
                                     {% if is_granted('ROLE_STUDENT') %}
-                                    click to apply
+                                    {% trans %}Click to apply{% endtrans %}
                                 {% else %}
-                                     Add to My Courses
+                                     {% trans %}Add to My Courses{% endtrans %}
                                 {% endif %}
                                 </a>
                             </div>
@@ -68,9 +68,9 @@
                             <div class="card-footer">
                                 <a href="#" style="float:right" course-id={{course.id}} data-toggle="tooltip" class="enroll"  data-placement="top" title="Add to My Courses list">
                                     {% if is_granted('ROLE_STUDENT') %}
-                                        click to apply
+                                        {% trans %}Click to apply{% endtrans %}
                                     {% else %}
-                                        Add to My Courses
+                                        {% trans %}Add to My Courses{% endtrans %}
                                     {% endif %}
                                 </a>
                             </div>

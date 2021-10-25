@@ -2,7 +2,7 @@
 <html lang="en">
 
 	<head>
-		<title>:: Print ::</title>
+		<title>:: {% trans %}Print{% endtrans %} ::</title>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -30,7 +30,7 @@
 						<div class="top"></div>
 						<div class="card">
 							<div class="header">
-								<p class="lead">Credentials</p>
+								<p class="lead">{% trans %}Credentials{% endtrans %}</p>
                                 <ul class="header-dropdown">
 				<li>
 					<a href="javascript:void(0);" onclick="window.print();">
@@ -47,7 +47,7 @@
 									 
 									<hr>
 									<small class="text-muted">Password:
-									</small>
+								{% trans %}{% endtrans %}</small>
 									<p>
 										{{ password }}</p>
 									<hr>

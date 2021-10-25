@@ -18,10 +18,10 @@
 				<!-- Nav tabs -->
 				<ul class="nav nav-tabs" role="tablist" >
 					<li class="nav-item">
-						<a class="nav-link active" href="#tab1" role="tab" data-toggle="tab">Chapters</a>
+						<a class="nav-link active" href="#tab1" role="tab" data-toggle="tab">{% trans %}Chapters{% endtrans %}</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="#tab2" role="tab" data-toggle="tab">Instructor</a>
+						<a class="nav-link" href="#tab2" role="tab" data-toggle="tab">{% trans %}Instructor{% endtrans %}</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="#tab3" role="tab" data-toggle="tab">Q&A</a>
@@ -103,7 +103,7 @@
 
 
 	</div>
-	<div role="tabpanel" class="tab-pane fade show" id="tab2">Instructor .....</div>
+	<div role="tabpanel" class="tab-pane fade show" id="tab2">{% trans %}Instructor{% endtrans %} .....</div>
 	<div role="tabpanel" class="tab-pane fade show" id="tab3"></div></div></div>
 </div></div>{% endblock %}
 {% block javascript %}
@@ -114,6 +114,6 @@
 {% endblock %}
 {% block nav %}
     <a class="nav-item nav-item-temp btn btn-primary btn-sm" style="color:white" href="{{ path('app_login') }}">
-        Sign In
+        {% trans %}Sign In{% endtrans %}
     </a> 
 {% endblock %}

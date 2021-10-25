@@ -145,7 +145,7 @@ class UserAuthenticator extends AbstractFormLoginAuthenticator implements Passwo
         }
         else 
         {
-            return new RedirectResponse($this->urlGenerator->generate('home'));
+            return new RedirectResponse($this->urlGenerator->generate('admin_home'));
         }
      //   else if($role == "ROLE_ADMIN")
            

@@ -74,15 +74,11 @@
 								<td> {{ quiz.active }}
 								</td>
 								<td>
-									<a href="{{ path('quiz_show', {'id': quiz.id}) }}">
+									<a class="btn btn-success"  href="{{ path('quiz_show', {'id': quiz.id}) }}">
 										show
-
-
 									</a>
-									<a href="{{ path('quiz_edit', {'id': quiz.id}) }}">
+									<a class="btn btn-warning" href="{{ path('quiz_edit', {'id': quiz.id}) }}">
 										edit
-
-
 									</a>
 								</td>
 							</tr>
@@ -92,8 +88,6 @@
 						<tr>
 							<td colspan="6">
 								no records found
-
-
 							</td>
 						</tr>
 

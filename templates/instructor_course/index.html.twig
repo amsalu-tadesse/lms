@@ -1,28 +1,28 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Course assignement {% endblock %}
+{% block title %}{% trans %}Course assignement{% endtrans %} {% endblock %}
 {% block breadcrumbcontent %}
-Course assignement
+{% trans %}Course assignement{% endtrans %}
 {% endblock %}
 {% block body %}
     <a href="{{ path('instructor_course_new') }}" class="btn btn-success mb-4">Re use course</a>
     
 <div class="card card-info">
 <div class="card card-header">
-<h3>Course assignement</h3>
+<h3>{% trans %}Course assignement{% endtrans %}</h3>
 </div>
 <div class="card card-body">
 <table class="table">
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Course</th>
-                <th>Instructor</th>
-                <th>Assign date</th>
-                <th>Status</th>
-                <th>Active</th>
-                <th>Students</th>
-                <th>actions</th>
+                <th>{% trans %}Course{% endtrans %}</th>
+                <th>{% trans %}Instructor{% endtrans %}</th>
+                <th>{% trans %}Assign date{% endtrans %}</th>
+                <th>{% trans %}Status{% endtrans %}</th>
+                <th>{% trans %}Active{% endtrans %}</th>
+                <th>{% trans %}Students{% endtrans %}</th>
+                <th>{% trans %}Actions{% endtrans %}</th>
             </tr>
         </thead>
         <tbody>
@@ -53,7 +53,7 @@ Course assignement
 								<div class="modal-dialog">
 									<div class="modal-content">
 										<div class="modal-header">
-											<h4 class="modal-title">Assign Instructor</h4>
+											<h4 class="modal-title">{% trans %}Assign Instructor{% endtrans %}</h4>
 											<button type="button" class="close btn btn-primary" data-dismiss="modal" aria-label="Close">
 												<span aria-hidden="true">&times;</span>
 											</button>
@@ -63,7 +63,7 @@ Course assignement
 											<div class="modal-body">
 
 												<div class="form-group">
-													Select instructor for the course
+													{% trans %}Select instructor for the course{% endtrans %}
 													<br>
 													<select class="form-control select2bs4" name="instructor" id="instructor">
 														{% for instructor in instructorsList %}
@@ -74,10 +74,10 @@ Course assignement
 
 											</div>
 											<div class="modal-footer justify-content-between">
-												<button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+												<button type="button" class="btn btn-warning" data-dismiss="modal">{% trans %}Close{% endtrans %}</button>
 
 												<button onclick="" type="submit" id="assignnow" class="btn btn-success">
-													<i class="fa fa-save m-1"></i>Save
+													<i class="fa fa-save m-1"></i>{% trans %}Save{% endtrans %}
 												</button>
 											</div>
 										</form>
@@ -87,12 +87,12 @@ Course assignement
 								<!-- /.modal-dialog -->
 							</div>
 
- <a href="{{ path('instructor_course_edit', {'id': instructor_course.id}) }}" class="btn btn-warning" >edit</a> 
+ <a href="{{ path('instructor_course_edit', {'id': instructor_course.id}) }}" class="btn btn-warning" >{% trans %}Edit{% endtrans %}</a> 
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="4">no records found</td>
+                <td colspan="4">{% trans %}No records found{% endtrans %}</td>
             </tr>
         {% endfor %}
         </tbody>
