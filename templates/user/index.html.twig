@@ -1,15 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %} user index
+{% block title %} {% trans %}user index{% endtrans %}
 {% endblock %}
 {% block maintitle %}
 
-	Manage users
+	{% trans %}Manage users{% endtrans %}
 {% endblock %}
 {% block breadcrumb %}
-	<li class="breadcrumb-item active">user
+	<li class="breadcrumb-item active">{% trans %}User{% endtrans %}
 	</li>
-	<li class="breadcrumb-item active">user</li>
+	<li class="breadcrumb-item active">{% trans %}User{% endtrans %}</li>
 {% endblock %}
 {% block body %}
 	<div class="row">
@@ -21,9 +21,9 @@
 						<div class="card card-info {{edit?'':'collapsed-card'}}"> 
 							<div class="card-header">
 								<h3 class="card-title">
-									{% if edit  %}Edit
+									{% if edit  %}{% trans %}Edit{% endtrans %}
 									{% else %}
-										Add New
+										{% trans %}Add New{% endtrans %}
 									{% endif %}
 								</h3>
 
@@ -50,67 +50,22 @@
 					<div class="col-md-12">
 						<div class="card card ">
 							<div class="card-header">
-								<h3 class="card-title">Items List</h3>
+								<h3 class="card-title">{% trans %}Items List{% endtrans %}</h3>
 							</div>
 							<div class="card-body">
 								<div class="col-xs-12 col-md-12">
-									{# {{ form_start(searchForm,{'attr': {'role':'form'}, 'method': 'GET'}) }}
-										<div class="row">
-											
-											<div class="col-sm-2">		
-												<div class="form-group">
-													<label class="col-sm-12 control-label no-padding-right">First Name</label>
-													{{ form_widget(searchForm.firstName,{'attr':{'class':'form-control'},'full_name':'firstName','value':app.request.get('firstName') })}}
-													{# <input type="text" class="form-control" name="name"/> 
-													<div class="help-block with-errors"></div>
-												</div>
-											</div>
-											<div class="col-sm-2">
-												<div class="form-group">
-													<label class="col-sm-12 control-label no-padding-right">Middle Name</label>
-													{{ form_widget(searchForm.middleName,{'attr':{'class':'form-control'},'full_name':'middleName','value': app.request.get('middleName')}) }}
-													<div class="help-block with-errors"></div>
-												</div>
-											</div>
-											<div class="col-sm-2">
-												<div class="form-group">
-													<label class="col-sm-12 control-label no-padding-right">Last Name</label>
-													{{ form_widget(searchForm.lastName,{'attr':{'class':'form-control'},'full_name':'lastName','value': app.request.get('lastName')}) }}
-													<div class="help-block with-errors"></div>
-												</div>
-											</div>
-											<div class="col-sm-2">
-												<div class="form-group">
-													<label class="col-sm-12 control-label no-padding-right">Username</label>
-													{{ form_widget(searchForm.username,{'attr':{'class':'form-control'},'full_name':'userName','value': app.request.get('userName')}) }}
-													<div class="help-block with-errors"></div>
-												</div>
-											</div>
-											<div class="col-sm-3">
-												<div class="form-group">
-													<label class="col-sm-12 control-label no-padding-right">Department</label>
-													{{ form_widget(searchForm.department,{'attr':{'class':'form-control'},'full_name':'department','value': app.request.get('department')}) }}
-													<div class="help-block with-errors"></div>
-												</div>
-											</div>
-											<div class="col-sm-1">
-												<div class="form-group">
-													<label class="col-sm-12 control-label no-padding-right"></label>
-													<button class="btn btn-info" style="margin-top: 8px;width:100%;"><i class="fas fa-search"></i></button>
-												</div>
-											</div> 
-										{{ form_end(searchForm) }} #}
+									 
 									</div>
                                         <table class="table">
                                             <thead>
                                                 <tr>
                                                     <th>Id</th>
-                                                    <th>Name</th>
-                                                    <th>Username</th>
-                                                    <th>Email</th>
-                                                    <th>User Type</th>
+                                                    <th>{% trans %}Name{% endtrans %}</th>
+                                                    <th>{% trans %}Username{% endtrans %}</th>
+                                                    <th>{% trans %}Email{% endtrans %}</th>
+                                                    <th>{% trans %}User Type{% endtrans %}</th>
                                                     {# <th>Department</th> #}
-                                                    <th>Actions</th>
+                                                    <th>{% trans %}Actions{% endtrans %}</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -147,7 +102,7 @@
                                                 </tr>
                                             {% else %}
                                                 <tr>
-                                                    <td colspan="5">no records found</td>
+                                                    <td colspan="5">{% trans %}No records found{% endtrans %}</td>
                                                 </tr>
                                             {% endfor %}
                                             </tbody>
@@ -161,7 +116,7 @@
 					</div>
 					<!-- /.card-body -->
 					<br>
-					<button id="submit" class="btn btn-primary" style="display:none">Print</button>
+					<button id="submit" class="btn btn-primary" style="display:none">{% trans %}Print{% endtrans %}</button>
 				</div>
 			</div>
 

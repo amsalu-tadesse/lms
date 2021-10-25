@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New InstructorCourse{% endblock %}
+{% block title %}{% trans %}New InstructorCourse{% endtrans %}{% endblock %}
 
 {% block body %}
 
     {{ include('instructor_course/_form.html.twig') }}
 
-    <a href="{{ path('instructor_course_index') }}">back to list</a> 
+    <a href="{{ path('instructor_course_index') }}">{% trans %}Back to list{% endtrans %}</a> 
 {% endblock %}

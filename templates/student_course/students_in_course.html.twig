@@ -1,8 +1,8 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}StudentCourse index{% endblock %}
-{% block breadcrumbhome %}studentcourse{% endblock %}
-{% block breadcrumbcontent %}index{% endblock %}
+{% block title %}{% trans %}StudentCourse index{% endtrans %}{% endblock %}
+{% block breadcrumbhome %}{% trans %}Studentcourse{% endtrans %}{% endblock %}
+{% block breadcrumbcontent %}{% trans %}index{% endtrans %}{% endblock %}
 
 {% block body %}
 
@@ -10,10 +10,10 @@
     <div class="card card-header">
         <div class="row">
             <div class="col-md-6">
-                <h3>Students registered for course {{instructor_course.course | capitalize }} </h3>
+                <h3>{% trans %}Students registered for course{% endtrans %} {{instructor_course.course | capitalize }} </h3>
             </div>
             <div class="col-md-6">
-               <a href="{{ path('student_course_new') }}" class="btn btn-primary" style="float:right">Add new StudentCourse</a>
+               <a href="{{ path('student_course_new') }}" class="btn btn-primary" style="float:right">{% trans %}Add new StudentCourse{% endtrans %}</a>
             </div>
         </div>
     </div>
@@ -22,13 +22,13 @@
             <thead>
                 <tr>
                                         <th>Id</th>
-                                        <th>Name</th>
-                                        <th>Registered Date</th>
-                                        <th>Completion (%)</th>
-                                        <th>status</th>
-                                        <th>Active</th>
+                                        <th>{% trans %}Name{% endtrans %}</th>
+                                        <th>{% trans %}Registered Date{% endtrans %}</th>
+                                        <th>{% trans %}Completion{% endtrans %} (%)</th>
+                                        <th>{% trans %}status{% endtrans %}</th>
+                                        <th>{% trans %}Active{% endtrans %}</th>
                                         {# <th>Is at page</th> #}
-                                        <th>actions</th>
+                                        <th>{% trans %}Actions{% endtrans %}</th>
                 </tr> 
             </thead>
             <tbody>
@@ -103,7 +103,7 @@
                 </tr>
                 {% else %}
                 <tr>
-                    <td colspan="6">no records found</td>
+                    <td colspan="6">{% trans %}No records found{% endtrans %}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -114,7 +114,7 @@
 
 		<div class="float-right pl-5 pb-2">
 			 
-				Total result:
+				{% trans %}Total result{% endtrans %}:
 				{{ student_courses.getTotalItemCount }} 
 		</div>
 </div>

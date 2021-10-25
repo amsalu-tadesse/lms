@@ -1,6 +1,6 @@
 {% extends "anon-base.html.twig" %} 
 
-{% block title %}LMS-home{% endblock %}
+{% block title %}{% trans %}Home{% endtrans %}{% endblock %}
 {% block stylesheet %}
 <link href="{{asset('assets/plugins/owlCarousel/dist/assets/owl.carousel.min.css')}}" rel="stylesheet"/>
 <link href="{{asset('assets/plugins/owlCarousel/dist/assets/owl.theme.default.min.css')}}" rel="stylesheet"/>
@@ -32,7 +32,7 @@
 
 {% block nav %}
     <a class="nav-item nav-item-temp btn btn-primary btn-sm" style="color:white" href="{{ path('app_login') }}">
-        Sign In
+        {% trans %}Sign In{% endtrans %}
     </a> 
 {% endblock %}
 {% block javascript %}
@@ -75,7 +75,7 @@
         $(".enroll").on("click", function(){
             course_name = $(this).attr("course-id");
             if(selected_courses.includes(course_name)){
-                $(this).text("Added to my Courses");
+                $(this).text("{% trans %}Added to my Courses{% endtrans %} ");
                 $(this).css("background-color", "#045493");
 
                 index = selected_courses.indexOf(course_name);
@@ -91,7 +91,7 @@
                 var arr = JSON.parse(json_str);
             }
             else{
-                $(this).text("Remove from my Courses");
+                $(this).text(" {% trans %}Remove from my Courses{% endtrans %} ");
                 $(this).css("background-color", "green");
                 selected_courses.push(course_name);
                 $("#num").html(++total_selected);

@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}AcademicLevel{% endblock %}
+{% block title %}{% trans %}Academic Level{% endtrans %}{% endblock %}
 
 {% block body %}
 	<div class="card">
@@ -8,11 +8,11 @@
 			<table class="table">
 				<tbody>
 					<tr>
-						<th>Name</th>
+						<th>{% trans %}Name{% endtrans %}</th>
 						<td>{{ academic_level.name }}</td>
 					</tr>
 					<tr>
-						<th>Description</th>
+						<th>{% trans %}Description{% endtrans %}</th>
 						<td>{{ academic_level.description }}</td>
 					</tr>
 				</tbody>
@@ -20,7 +20,7 @@
 			<br>
 			<div class="row">
 				<div class="col-md-2">
-					<a href="{{ path('academic_level_index') }}" class="btn btn-default btn-block">back to list</a>
+					<a href="{{ path('academic_level_index') }}" class="btn btn-default btn-block">{% trans %}Back to list{% endtrans %}</a>
 				</div>
 				<div class="col-md-2">
 					<a href="{{ path('academic_level_edit', {'id': academic_level.id}) }}" class="btn btn-primary btn-block">edit</a>

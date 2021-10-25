@@ -1,5 +1,5 @@
 {% extends 'sBase.html.twig' %}
-{% block title %}chapters
+{% block title %}{% trans %}chapters{% endtrans %}
 {% endblock %}
 {% block stylesheet %}
 	<style>
@@ -16,7 +16,7 @@
 {% endblock %}
 {% block body %}
 	<h4 class="page-title">
-		Chapters in this course
+		{% trans %}Chapters in this course{% endtrans %}
 	</h4>
 		{% if chapters|length == 0 %}
 			<div class="row chapter-list">
@@ -24,7 +24,7 @@
 				<div class="col-md-10">
 					<div class="card border-0 border-radius-0 ">
 						<div class="card-body">
-							<p class="card-text">There is no chapter in this course</p>
+							<p class="card-text">{% trans %}There is no chapter in this course{% endtrans %}</p>
 						</div>
 					</div>
 				</div>
@@ -39,8 +39,8 @@
 								<a href="{{path('content_list',{'course':chapter.instructor_course_id,'chapter':chapter.chapter})}}">
 									<h4 class="card-title card-title-custom mb-1 text-4 font-weight-bold">{{chapter.chapter}}</h4>
 								</a>
-								<p class="card-text" style="padding: 14px 0px 0px;">videos : {{ chapter.total_video }}
-									<span style="margin-left:30px;">Notes : {{ chapter.total_content }}</span>
+								<p class="card-text" style="padding: 14px 0px 0px;">{% trans %}Videos{% endtrans %} : {{ chapter.total_video }}
+									<span style="margin-left:30px;">{% trans %}Notes{% endtrans %} : {{ chapter.total_content }}</span>
 								</p>
 							</div>
 							<div class="card-footer bg-color-grey text-1 text-uppercase">
@@ -49,7 +49,7 @@
 										<div class="progress-bar progress-bar-primary" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: {{chapter.completed}}%;"></div>
 									</div>
 									<div class="col-md-3 col-sm-6">
-										{{chapter.completed}}% completed
+										{{chapter.completed}}% {% trans %}completed{% endtrans %}
 									</div>
 								</div>
 

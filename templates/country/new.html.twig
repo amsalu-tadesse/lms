@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Country{% endblock %}
+{% block title %}{% trans %}New Country{% endtrans %}{% endblock %}
 
 {% block body %}
-    <h1>Create new Country</h1>
+    <h1>{% trans %}Create new Country{% endtrans %}</h1>
 
     {{ include('country/_form.html.twig') }}
 
-    <a href="{{ path('country_index') }}">back to list</a>
+    <a href="{{ path('country_index') }}">{% trans %}Back to list{% endtrans %}</a>
 {% endblock %}

@@ -7,14 +7,60 @@
         {% set continue = true %}
 
         {% for course in courses %}
-            {% if course.id in array %}
-                {% set continue = false %}
+            {% if flag == course.category_id %}
+                    <div class="card" style="height: 150px; margin: 0px 10px";>
+                        <div class="card-body">
+                            <p>
+                                <a href="{{ path('course_description',{'id': course.id}) }}">
+                                {{ course.name }}
+                                </a>
+                                <br>
+                                <span>by {{ course.firstName|capitalize }} {{ course.middleName|capitalize}} </span>
+                            <p>
+                        </div>
+                        <div class="card-footer">
+                            <a href="#" style="float:right" course-id={{course.id}}  class="enroll" data-toggle="popover" data-placement="top" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">
+                                {% if is_granted('ROLE_STUDENT') %}
+                                    {% trans %}Click to apply{% endtrans %}
+                                {% else %}
+                                     {% trans %}Add to My Courses{% endtrans %}
+                                {% endif %}
+                            </a>
+                        </div>
+                    </div>
             {% else %}
-                {% set continue = true %}
-            {% endif %}
-            {% if continue == true %}
-                {% if flag == course.category_id %}
-                        <div class="card" style="height: 150px; margin: 0px 10px";>
+                
+                {% if flag == 0 %}
+                    <h4> {{ course.category_name|capitalize }}</h4>
+                    <div class="owl-carousel owl-theme show-nav-hover">
+                        <div class="card" style="height: 150px;";>
+                            <div class="card-body">
+                                <p>
+                                    <a href="{{ path('course_description',{'id': course.id}) }}">
+                                    {{ course.name }}
+                                    <br>
+                                    <span>by {{ course.firstName|capitalize }} {{ course.middleName|capitalize}} </span>
+                                    </a>
+                                
+                                <p>
+                            </div>
+                            <div class="card-footer">
+                                <a href="#" style="float:right" course-id={{course.id}} data-toggle="tooltip" class="enroll"  data-placement="top" title="">
+                                    {% if is_granted('ROLE_STUDENT') %}
+                                    {% trans %}Click to apply{% endtrans %}
+                                {% else %}
+                                     {% trans %}Add to My Courses{% endtrans %}
+                                {% endif %}
+                                </a>
+                            </div>
+                        </div>
+                {% else %}
+
+                    </div>
+                   <br>
+                    <h4> {{ course.category_name|capitalize }}</h4>
+                    <div class="owl-carousel owl-theme show-nav-hover">
+                        <div class="card" style="height: 150px";>
                             <div class="card-body">
                                 <p>
                                     <a href="{{ path('course_description',{'id': course.id}) }}">
@@ -27,9 +73,9 @@
                             <div class="card-footer">
                                 <button href="" class="btn btn-primary enroll" style="float:right" course-id={{course.id}} data-toggle="popover" data-placement="top" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">
                                     {% if is_granted('ROLE_STUDENT') %}
-                                        click to apply
+                                        {% trans %}Click to apply{% endtrans %}
                                     {% else %}
-                                        Add to My Courses
+                                        {% trans %}Add to My Courses{% endtrans %}
                                     {% endif %}
                                 </button>
                             </div>
