@@ -29,7 +29,8 @@ class StudentCourseController extends AbstractController
     // ******** student home page , don't touch it OK
     public function index(StudentCourseRepository $studentCourseRepository, PaginatorInterface $paginator, Request $request, InstructorCourseRepository $course): Response
     {
-        if($this->getUser()->getProfile()->getId() == null)
+       
+       if($this->getUser()->getProfile() == null)
         {
             return $this->redirectToRoute('app_login');
         }
