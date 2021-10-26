@@ -30,15 +30,22 @@
 	</style>
 {% endblock %}
 {% block body %}
+    <h3 class="page-title">
+        Your Courses
+    </h3>
+
 	<div class="row align-items-center">
     {% set array = [] %}
 	{% if student_courses|length == 0 %}
-		
+        <div class="col-md-4">
+            <div class="card border-0 border-radius-0 mb-3" style="height: 100px";>
+                <div class="card-body">
+                    <p>You are not participating in any course</p>
+                </div>
+            </div>
+        </div>
 	{% else %}
-        <h3 class="page-title">
-            Your Courses
-        </h3>
-
+ 
 		{% for course in student_courses %}
             {% set id = course.id %}
             {% set array = array|merge([ id ]) %}

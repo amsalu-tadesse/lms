@@ -107,6 +107,13 @@ class CourseController extends AbstractController
         $courses = $course->findCoursesSortByCategory($id);
         $chaptersWithContent = $content->getChaptersWithContentForCourse($id);
 
+        if($this->isGranted("ROLE_STUDENT"))
+        {
+            return $this->render('course/description_login.html.twig',[
+                'courses' => $courses,
+                'chapters' => $chaptersWithContent
+            ]);   
+        }
         return $this->render('course/description.html.twig',[
             'courses' => $courses,
             'chapters' => $chaptersWithContent
@@ -164,6 +171,7 @@ class CourseController extends AbstractController
         $stmt = $conn->prepare($sql);
         $stmt->execute(array('instructorCourse' => $id));
         $chapters = $stmt->fetchAll();
+        
 
         $contents = $contentRepository->getContentsCount($id);
         foreach($chapters as $key => $value){

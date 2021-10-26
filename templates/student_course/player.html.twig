@@ -138,6 +138,7 @@
 
                             <div class="tabs ">
                                 <ul class="nav nav-tabs tabs-primary">
+                                    <a href="{{ path('course_chapters',{'id': chapter.instructorCourse.id})}}"><h5> {{chapter.chapter}} </h5></a>
                                     <li class="nav-item" style="width: 100%; border-bottom: 1px solid blue">
                                         <a class="nav-link active" href="#popular7" data-bs-toggle="tab">Contents</a>
                                     </li>
@@ -256,12 +257,13 @@
 
     <!-- Theme Initialization Files -->
     <script src="{{asset( 'student/js/theme.init.js')}} "></script>
+   
    <script>   
     var selected_doc = 0;
-
+    console.log(control);
     $("#startQuiz").on('click', function(e){
         e.preventDefault()
-            if(parseInt(control.view_at) == control.content_id.length)
+            if(parseInt(control.view_at) == control.content_id.length &&  parseInt(control.view_at)!= 0)
             {
                 window.location = $(this).attr("href");
             }

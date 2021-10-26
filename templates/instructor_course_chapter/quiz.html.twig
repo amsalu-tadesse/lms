@@ -1,10 +1,15 @@
 {% extends "sBase.html.twig" %}
 {% block stylesheet %}
-    <style>
-        label{
-            margin-bottom: 10px;
-        }
-    </style>
+	<style>
+		label {
+			margin-bottom: 10px;
+		}
+
+		.d-flex.flex-column.px-2 {
+			font-size: 17px;
+			line-height: 37px;
+		}
+	</style>
 {% endblock %}
 {% block body %}
 	<div class="container">
@@ -25,6 +30,11 @@
 						<input id="shipping_method3" type="radio" class="me-2" name="shipping_method" value="flat-rate">
 						Flat Rate: $5.00
 					</label>
+				</div>
+				<br>
+				<div>
+					<button class="btn btn-primary" style="width: 160px;float:right;"> Next</button>
+					<button class="btn btn-primary" style="width: 160px;"> Previous</button>
 				</div>
 			</div>
 		</div>
