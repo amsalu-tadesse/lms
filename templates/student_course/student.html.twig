@@ -31,13 +31,14 @@
 {% endblock %}
 {% block body %}
 	<div class="row align-items-center">
+    {% set array = [] %}
 	{% if student_courses|length == 0 %}
 		
 	{% else %}
         <h3 class="page-title">
             Your Courses
         </h3>
-        {% set array = [] %}
+
 		{% for course in student_courses %}
             {% set id = course.id %}
             {% set array = array|merge([ id ]) %}
