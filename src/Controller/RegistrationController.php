@@ -76,7 +76,7 @@ class RegistrationController extends AbstractController
             $em->flush();
 
             $message = "this is text";
-            // $sent =  $mservice->sendEmail($mailer, $message, $form_data['email'], "text");
+            $sent =  $mservice->sendEmail($mailer, $message, $form_data['email'], "text");
 
             return $this->render('registration/confirmation_email.html.twig', [
                 'email' => $form_data['email'],

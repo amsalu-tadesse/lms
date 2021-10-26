@@ -12,6 +12,11 @@
 		.page-title {
 			margin-left: 8%;
 		}
+
+        .disabled {
+            pointer-events:none; 
+            opacity:0.6; 
+        }
 	</style>
 {% endblock %}
 {% block body %}
@@ -30,11 +35,17 @@
 				</div>
 			</div>
 		{% else %}
+			{% set flag = 0 %}
 			{% for chapter in chapters %}
 			<div class="row chapter-list">
 				<div class="col-md-1"></div>
 					<div class="col-md-10">
+					{% if flag == 1 %}
+						<div class="card border-0 border-radius-0 disabled">
+					{% else %}
 						<div class="card border-0 border-radius-0 ">
+					{% endif %}
+					
 							<div class="card-body">
 								<a href="{{path('content_list',{'course':chapter.instructor_course_id,'chapter':chapter.chapter})}}">
 									<h4 class="card-title card-title-custom mb-1 text-4 font-weight-bold">{{chapter.chapter}}</h4>
@@ -57,6 +68,10 @@
 						</div>
 					</div>
 				</div>
+				{% if chapter.completed !=100 %}
+					{% set flag = 1 %}
+				{% endif %}
+				
 			{% endfor %}
 		{% endif %}
 	</div>

@@ -30,6 +30,20 @@ class InstructorCourseChapterRepository extends ServiceEntityRepository
             ->getArrayResult()
         ;
     }
+
+    public function findChapter1($course, $chapter)
+    {
+        return $this->createQueryBuilder('ch')
+            ->select('ch')
+            ->join('ch.instructorCourse', 'ic')
+            ->where('ch.chapter = :id')
+            ->andWhere('ic.id = :val')
+            ->setParameter('id', $chapter)
+            ->setParameter('val', $course)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
     // /**
     //  * @return InstructorCourseChapter[] Returns an array of InstructorCourseChapter objects
     //  */

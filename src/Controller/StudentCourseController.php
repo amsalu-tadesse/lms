@@ -7,6 +7,7 @@ use App\Entity\StudentCourse;
 use App\Form\StudentCourseType;
 use App\Repository\StudentCourseRepository;
 use App\Repository\ContentRepository;
+use App\Repository\StudentChapterRepository;
 use App\Repository\InstructorCourseRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -112,6 +113,27 @@ class StudentCourseController extends AbstractController
         return $this->render('student_course/requested_courses.html.twig', [
             'requests' => $data,
         ]);
+    }
+
+
+    /**
+     * @Route("/udpate/{chapter}/counter", name="update_counter")
+     */
+    public function updater($chapter, StudentChapterRepository $student_chapter)
+    {
+        
+        $em = $this->getDoctrine()->getManager();
+        $stud_chap = $student_chapter->getProgress1($chapter, $this->getUser()->getProfile()->getId());
+        $conn = $this->getDoctrine()->getManager()
+            ->getConnection();
+        $sql = "update student_chapter set pages_completed = pages_completed+1 where student_id = :student and id = :chapter" ;
+        $stmt = $conn->prepare($sql);
+
+        $stmt->execute(array("student"=>$this->getUser()->getProfile()->getId(), "chapter"=>$chapter));
+        $returnResponse = new JsonResponse();
+        $returnResponse->setJson("success");
+    
+        return $returnResponse;
     }
 
     /**

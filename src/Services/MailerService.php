@@ -19,7 +19,7 @@ class MailerService
        
       
         $email = (new Email())
-            ->from('aastu_perol@aastu.edu.et')
+            ->from('dawit120@gmail.com')
             ->to($receiver)
             //->to($receiver/*, $receiver2*/)
             //->cc('ferid.bedru@gmail.com','ferid2.bedru@gmail.com')
@@ -31,7 +31,7 @@ class MailerService
             ->html($message);
 
             
-            try {
+            try { 
               
                 $mailer->send($email);
                 

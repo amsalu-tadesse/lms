@@ -36,11 +36,22 @@ class StudentChapterRepository extends ServiceEntityRepository
     }
     */
 
-    
+    public function getProgress1($value, $stud_id)
+    {
+        return $this->createQueryBuilder('s')
+            ->where('s.student = :stud_id')
+            ->andWhere('s.chapter = :val')
+            ->setParameter('stud_id', $stud_id)
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getArrayResult()
+        ;
+    }
+
     public function getProgress($value, $stud_id)
     {
         return $this->createQueryBuilder('s')
-            ->select('s.pagesCompleted')
+            ->select('s.pagesCompleted', 's.id', 's.updated_at')
             ->join('s.chapter', 'ch')
             ->where('s.student = :stud_id')
             ->andWhere('ch.chapter = :val')

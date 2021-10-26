@@ -8,6 +8,7 @@ use App\Entity\InstructorCourseChapter;
 use App\Entity\StudentChapter;
 use App\Form\ContentType;
 use App\Repository\ContentRepository;
+use App\Repository\InstructorCourseChapterRepository;
 use App\Repository\StudentChapterRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,6 +19,7 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use DateTime;
 
 /**
  * @Route("/content")
@@ -144,11 +146,31 @@ class ContentController extends AbstractController
     /**
      * @Route("/{course}/{chapter}/list", name="content_list", methods={"GET"})
      */
-    public function contentList($course, $chapter, StudentChapterRepository $stud_chap, ContentRepository $contentRepository,Request $request): Response
+    public function contentList($course, $chapter, InstructorCourseChapterRepository $course_chapter, StudentChapterRepository $stud_chap, ContentRepository $contentRepository,Request $request): Response
     {
+        $em = $this->getDoctrine()->getManager();
         $contents = $contentRepository->getContentsForChapter($course, $chapter);
         $pages_seen = $stud_chap->getProgress($chapter, $this->getUser()->getProfile()->getId());
-        
+        if($pages_seen == null){
+            $chap = $course_chapter->findChapter1($course, $chapter);
+            if($chap != null)
+            {
+                $student_chapter = new StudentChapter();
+                $student_chapter->setStudent($this->getUser()->getProfile());    
+                $student_chapter->setChapter($chap);
+                $student_chapter->setPagesCompleted(0);
+                $student_chapter->setUpdatedAt(new DateTime());
+                $em->persist($student_chapter);
+                $em->flush();
+
+                $pages_seen = array("pagesCompleted"=>0, 'id' => $student_chapter->getId());
+            }
+            else{
+                
+            }
+               
+        }
+
         return $this->render('student_course/player.html.twig', [
              'contents' => $contents,
              'pages_seen' => $pages_seen
@@ -165,6 +187,7 @@ class ContentController extends AbstractController
         $response = $content["content"];
     
         // Send all this stuff back to DataTables
+        
         $returnResponse = new JsonResponse();
         $returnResponse->setJson($response);
     
