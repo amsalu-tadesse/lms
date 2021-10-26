@@ -1,4 +1,4 @@
-{% extends "anon-base.html.twig" %}
+{% extends "sBase.html.twig" %}
 {% block stylesheet %}
 	<link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-tabs/dist/jquery.bs4-scrolling-tabs.min.css')}}">
 	<style>
@@ -9,7 +9,7 @@
 {% endblock %}
 {% block body %}
 	<div class="container-fluid mt-3" style="min-height: 490px" ;>
-		<div class="row">
+		<div class="row mt-2">
 		{% include "course/desc.html.twig" %}
 		</div>
 	</div>

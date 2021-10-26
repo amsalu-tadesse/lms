@@ -257,12 +257,13 @@
 
     <!-- Theme Initialization Files -->
     <script src="{{asset( 'student/js/theme.init.js')}} "></script>
+   
    <script>   
     var selected_doc = 0;
-
+    console.log(control);
     $("#startQuiz").on('click', function(e){
         e.preventDefault()
-            if(parseInt(control.view_at) == control.content_id.length && control.content_id.length!=0)
+            if(parseInt(control.view_at) == control.content_id.length &&  parseInt(control.view_at)!= 0)
             {
                 window.location = $(this).attr("href");
             }
