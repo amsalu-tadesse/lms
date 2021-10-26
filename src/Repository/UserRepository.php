@@ -41,11 +41,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
  
         $q =  $this->createQueryBuilder('u');
             
-            // ->innerJoin('u.department','dt')
-            
-            
-            
-            
+            // ->innerJoin('u.department','dt')  
             if($fname !="")
             {
                 $q->Where('u.firstName LIKE :firstName')
@@ -97,7 +93,15 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     //     ;
     // }
     
-
+    public function checkEmail($email)
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.email = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ; 
+    }
     /*
     public function findOneBySomeField($value): ?User
     {

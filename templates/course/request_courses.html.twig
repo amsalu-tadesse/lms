@@ -2,7 +2,7 @@
             {% if courses|length == 0 %}
                 <div class="card px-5 py-2 mb-2">
                     {% if is_granted("ROLE_STUDENT") %}
-                        <center><h4>You do not apply to any course</h4></center>
+                        <center><h4>You do not select any course</h4></center>
                     {% else %}
                         <center><h4>no courses selected</h4></center>
                     {% endif %}

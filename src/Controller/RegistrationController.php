@@ -52,40 +52,52 @@ class RegistrationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
 
-            $response = new Response();
-            $form_data = array();
-            $form_data['username'] = $form['username']->getData();
-            $form_data['firstName'] = $form['firstName']->getData();
-            $form_data['middleName'] = $form['middleName']->getData();
-            $form_data['lastName'] = $form['lastName']->getData();
-            $form_data['email'] = $form['email']->getData();
-            $form_data['academicLevel'] = $form['academicLevel']->getData()->getId();
-            
-            //write form data to cookie
-            $cookie = new Cookie('form_data', json_encode($form_data) ,time()*60*60);
-            $response->headers->setCookie($cookie);
-            $response->sendHeaders();
+            $user_valid = $em->getRepository(User::class)->findBy(array('email'=>$form['email']->getData()));
+            if($user_valid == null)
+            {
+                $response = new Response();
+                $form_data = array();
+                $form_data['username'] = $form['username']->getData();
+                $form_data['firstName'] = $form['firstName']->getData();
+                $form_data['middleName'] = $form['middleName']->getData();
+                $form_data['lastName'] = $form['lastName']->getData();
+                $form_data['email'] = $form['email']->getData();
+                $form_data['academicLevel'] = $form['academicLevel']->getData()->getId();
+                
+                //write form data to cookie
+                $cookie = new Cookie('form_data', json_encode($form_data) ,time()*60*60);
+                $response->headers->setCookie($cookie);
+                $response->sendHeaders();
 
-            $ver = new Verification();
-            $ver->setEmail($form_data['email']);
-            $ver->setVerificationCode(rand(23412,99999));
-            $date = date('Y-m-d H:i', time());
-            $date = new \DateTime('@'.strtotime("$date + 3 hours"));
-            $ver->setVerificationExpiry($date);
-            $em->persist($ver);
-            $em->flush();
+                $ver = new Verification();
+                $ver->setEmail($form_data['email']);
+                $code = rand(23412,99999);
+                $ver->setVerificationCode($code);
+                $date = date('Y-m-d H:i', time());
+                $date = new \DateTime('@'.strtotime("$date + 3 hours"));
+                $ver->setVerificationExpiry($date);
+                $em->persist($ver);
+                $em->flush();
 
-            $message = "this is text";
-            $sent =  $mservice->sendEmail($mailer, $message, $form_data['email'], "text");
+                $message = "verification code is <b>$code</b> ";
+                $sent =  $mservice->sendEmail($mailer, $message, $form_data['email'], "account");
 
-            return $this->render('registration/confirmation_email.html.twig', [
-                'email' => $form_data['email'],
-                "error" => ""
-            ]);
+                return $this->render('registration/confirmation_email.html.twig', [
+                    'email' => $form_data['email'],
+                    "error" => ""
+                ]);
+            }
+            else{
+                return $this->render('registration/register.html.twig', [
+                    'registrationForm' => $form->createView(),
+                    'message' => 'This email is already registered. please use another email'
+                ]);
+            }
         }
 
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
+            'message' => ''
         ]);
     }
 
@@ -161,7 +173,7 @@ class RegistrationController extends AbstractController
                         {
                             $st_course = new StudentCourse();
                             $st_course->setStudent($student);
-                            $st_course->setInstructorCourse($entityManager->getRepository(InstructorCourse::class)->find($sel_cor));
+                            $st_course->setInstructorCourse($em->getRepository(InstructorCourse::class)->find($sel_cor));
                             $st_course->setStatus(0);
                             $st_course->setActive(0);
                             $st_course->setCreatedAt(new DateTime());

@@ -138,6 +138,7 @@
 
                             <div class="tabs ">
                                 <ul class="nav nav-tabs tabs-primary">
+                                    <a href="{{ path('course_chapters',{'id': chapter.instructorCourse.id})}}"><h5> {{chapter.chapter}} </h5></a>
                                     <li class="nav-item" style="width: 100%; border-bottom: 1px solid blue">
                                         <a class="nav-link active" href="#popular7" data-bs-toggle="tab">Contents</a>
                                     </li>
@@ -261,7 +262,7 @@
 
     $("#startQuiz").on('click', function(e){
         e.preventDefault()
-            if(parseInt(control.view_at) == control.content_id.length)
+            if(parseInt(control.view_at) == control.content_id.length && control.content_id.length!=0)
             {
                 window.location = $(this).attr("href");
             }
