@@ -20,7 +20,7 @@ class InstructorCourseChapter
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=false)
      */
     private $chapter;
 
@@ -175,10 +175,7 @@ class InstructorCourseChapter
         return $this;
     }
 
-    public function __toString()
-    {
-        return $this->chapter;
-    }
+ 
 
     /**
      * @return Collection|Quiz[]
@@ -208,5 +205,9 @@ class InstructorCourseChapter
         }
 
         return $this;
+    }
+    public function __toString()
+    {
+        return $this->topic;
     }
 }

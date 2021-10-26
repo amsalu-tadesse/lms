@@ -34,9 +34,7 @@
             <tbody>
                 {% for student_course in student_courses %}
                 <tr>
-                {# <pre>
-                    {{ dump(student_course.instructorCourse.instructorCourseChapters | length) }}
-                </pre> #}
+                 
                                         <td>{{ loop.index }}</td>
                                         <td>{{ student_course.student.user }}</td>
                                         <td>{{ student_course.createdAt ? student_course.createdAt| date('Y-m-d H:i:s') : '' }}</td>
@@ -44,7 +42,7 @@
                                         <td>{{ student_course.status }}</td>
                                         <td>
                                         
-                                        {# {{ student_course.active ? '<span class="fa fa-check-circle" style="color:green"></span>' : '<span class="fa fa-check-circle" style="color:red"></span>' }} #}
+                                         
                                         
                                         <a href="#" data-toggle="modal" data-target="#modal-delete{{student_course.id}}">
         <i class="fas {{student_course.active ? 'fa-check-circle': 'fa-times-circle'}}" style='color: {{student_course.active ? 'green': 'red'}}'></i> </a>

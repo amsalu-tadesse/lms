@@ -19,7 +19,7 @@ use DateTime;
 use Symfony\Component\HttpFoundation\Cookie;
 
 /**
- * @Route("/stud")
+ * @Route("/student")
  */
 class StudentCourseController extends AbstractController
 {
@@ -41,7 +41,7 @@ class StudentCourseController extends AbstractController
         $data=$paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page', 1),
-            9
+            10
         );
         
         return $this->render('student_course/student.html.twig', [
@@ -49,6 +49,62 @@ class StudentCourseController extends AbstractController
             'courses' => $courses
         ]);
     }
+
+
+    /**
+     * @Route("/course/request", name="course_request", methods={"GET"})
+     */
+    public function courseRequest(Request $request, StudentCourseRepository $studentCourseRepository, PaginatorInterface $paginator): Response
+    {
+         
+        // $em = $this->getDoctrine()->getManager();
+        // $queryBuilder = $studentCourseRepository->findBy(['status'=>0, 'active'=>1]);
+        $queryBuilder = $studentCourseRepository->findAll();
+
+        $stdCrs=$paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page', 1),
+            10
+        );
+        
+        return $this->render('student_course/course_requests.html.twig', [
+            'student_courses' => $stdCrs,
+         
+        ]);
+    }
+
+    /**
+     * @Route("/course/request/{id}", name="course_request_deactivate", methods={"GET","POST"})
+     */
+    public function courseRequestDeactivate(StudentCourse $studentCourse, StudentCourseRepository $studentCourseRepository,PaginatorInterface $paginator,Request $request): Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+
+        $studentCourse->setStatus(1);//accepted
+        $em->flush();
+        
+   
+    // $queryBuilder = $studentCourseRepository->findBy(['status'=>0, 'active'=>1]);
+    $queryBuilder = $studentCourseRepository->findAll();
+
+    $stdCrs=$paginator->paginate(
+        $queryBuilder,
+        $request->query->getInt('page', 1),
+        10
+    );
+    
+    return $this->redirectToRoute('course_request');
+       
+/*
+        return $this->render('student_course/course_requests.html.twig', [
+            'student_courses' => $stdCrs,
+         ]);*/
+        
+    }
+
+
+
 
     /**
      * @Route("/course/{id}", name="students_in_course", methods={"GET"})
@@ -178,6 +234,12 @@ class StudentCourseController extends AbstractController
         ]);
         
     }
+
+
+    
+
+
+
 
     /**
      * @Route("/new", name="student_course_new", methods={"GET","POST"})

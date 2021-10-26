@@ -1,9 +1,4 @@
-{# {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
- #}
-
+ 
 
     <div class="card card-info">
 <div class="card card-header">
@@ -14,19 +9,19 @@
 {{ form_start(form) }}
 
 
-   <div class="form-group">
+   {# <div class="form-group">
                     <label for="nacourseme">Chapter</label>
                       {{ form_widget(form.chapter,{'attr':{'class':'form-control'}}) }}
-     </div>
+     </div> #}
 
    <div class="form-group">
-                    <label for="instructor">Topic</label>
-                      {{ form_widget(form.topic,{'attr':{'class':'form-control'}}) }}
+                    <label for="instructor">Chapter topic: <span style="font-size: 11px;"></span></label>
+                      {{ form_widget(form.topic,{'attr':{'class':'form-control','placeholder':"e.g Chapter1: Introduction to Computer"}}) }}
      </div>
  
 
 
-    {# {{ form_widget(form) }} #}
+ 
 
 
       <button class="btn btn-primary mt-2">{{ button_label|default('Save') }}</button>
