@@ -9,7 +9,7 @@
 }
 
 a {
-    color: #0088CC;
+    color: #093146;
 }
 
 a:hover {
@@ -1089,16 +1089,14 @@ html .overlay-color-light:not(.no-skin):before {
 }
 
 html .btn-primary {
-    background-color: #0088CC;
-    border-color: #0088CC #0088CC #006699;
-    color: #FFF;
+    background-color: #1a3b52;
+    color: #ffffff;
 }
 
 html .btn-primary:hover,
 html .btn-primary.hover {
-    background-color: #00a1f2;
-    border-color: #00aaff #00aaff #0088CC;
-    color: #FFF;
+    background-color: #1a3b52;
+    color: #ffffff;
 }
 
 html .btn-primary:focus,
@@ -3058,18 +3056,16 @@ html .inverted-light {
 .owl-carousel.show-nav-title .owl-nav button[class*="owl-"],
 .owl-carousel.show-nav-title .owl-nav button[class*="owl-"]:hover,
 .owl-carousel.show-nav-title .owl-nav button[class*="owl-"].hover {
-    color: #0088CC;
+    color: #fff;
 }
 
 .owl-carousel:not(.nav-arrows-1):not(.show-nav-title) .owl-nav button[class*="owl-"] {
-    background-color: #d3d3d3;
     border-color: #0088CC #0088CC #006699;
     color: #FFF;
 }
 
 .owl-carousel:not(.nav-arrows-1):not(.show-nav-title) .owl-nav button[class*="owl-"]:hover,
 .owl-carousel:not(.nav-arrows-1):not(.show-nav-title) .owl-nav button[class*="owl-"].hover {
-    background-color: #d3d3d3;
     border-color: #00aaff #00aaff #0088CC;
 }
 

@@ -21,8 +21,7 @@
 {% endblock %}
 {% block body %}
 	<h4 class="page-title">
-		
-		{% trans %}Chapters in this course{% endtrans %}
+		{% trans %}Chapters in {% endtrans %} {{ course.name }}
 	</h4>
 		{% if chapters|length == 0 %}
 			<div class="row chapter-list">
@@ -46,13 +45,12 @@
 					{% else %}
 						<div class="card border-0 border-radius-0 ">
 					{% endif %}
-					
 							<div class="card-body">
 								<a href="{{path('content_list',{'course':chapter.instructor_course_id,'chapter':chapter.chapter})}}">
 									<h4 class="card-title card-title-custom mb-1 text-4 font-weight-bold">{{chapter.chapter}}</h4>
 								</a>
 								<p class="card-text" style="padding: 14px 0px 0px;">{% trans %}Videos{% endtrans %} : {{ chapter.total_video }}
-									<span style="margin-left:30px;">{% trans %}Notes{% endtrans %} : {{ chapter.total_content }}</span>
+									<ff style="margin-left:30px;">{% trans %}Text{% endtrans %} : {{ chapter.total_content }}</ff>
 								</p>
 							</div>
 							<div class="card-footer bg-color-grey text-1 text-uppercase">

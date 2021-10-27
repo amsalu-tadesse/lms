@@ -38,6 +38,7 @@ class StudentCourseController extends AbstractController
 
         $queryBuilder=$studentCourseRepository->findCourses($this->getUser()->getProfile()->getId());
         $courses = $course->findCoursesSortByCategory();
+        
         $data=$paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page', 1),

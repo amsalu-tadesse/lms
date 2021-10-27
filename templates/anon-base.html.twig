@@ -20,11 +20,18 @@
             width: 80px;
         }   
         .header{}
+
+        body{
+            background: hsla(213, 77%, 14%, 1);
+            background: linear-gradient(90deg, hsla(213, 77%, 14%, 1) 0%, hsla(202, 27%, 45%, 1) 100%);
+            background: -moz-linear-gradient(90deg, hsla(213, 77%, 14%, 1) 0%, hsla(202, 27%, 45%, 1) 100%);
+            background: -webkit-linear-gradient(90deg, hsla(213, 77%, 14%, 1) 0%, hsla(202, 27%, 45%, 1) 100%);
+            filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#08203E", endColorstr="#557C93", GradientType=1);
+        }
     </style>
     {% block stylesheet %}{% endblock %}
 </head>
-
-<body style="background-color: #e2e3e4;">
+<body>
     <div class="container-fluid  bg-white">
         <div class="row px-5 header">
             <div class="col-xs-7 col-sm-5 col-md-6">
