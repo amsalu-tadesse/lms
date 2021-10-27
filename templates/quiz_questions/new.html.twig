@@ -7,5 +7,32 @@
 
     {{ include('quiz_questions/_form.html.twig') }}
 
-    <a href="{{ path('quiz_questions_index') }}">back to list</a>
+    {# <a href="{{ path('quiz_questions_index') }}">back to list</a> #}
 {% endblock %}
+
+{% block javascripts %}
+<script>
+    var counter = 1;
+    jQuery('a.add-author').click(function(event){
+        event.preventDefault();
+        counter++;
+        if(counter > 10)
+        {
+            alert("Maximum number reached");
+        }
+        else 
+        {
+        var newRow = jQuery('<tr><td>'+getChars(counter)+'</td><td><div class="form-group"> <input type="text" name="option_'+getChars(counter)+'" class="form-control" maxlenght= "255"/></div></td></tr>');
+            jQuery('table.authors-list').append(newRow);
+        }
+        
+    });
+
+    function getChars(x)
+    {
+        var arr = ['','A','B','C','D','E','F','G','H','I','J'];
+        return arr[x];
+    }
+</script>
+{% endblock %}
+

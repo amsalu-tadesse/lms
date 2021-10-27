@@ -134,8 +134,8 @@ class UserAuthenticator extends AbstractFormLoginAuthenticator implements Passwo
             "PERMISSION",
             $permissions
         );
- 
-        if($role === "ROLE_STUDENT")
+        return new RedirectResponse($this->urlGenerator->generate('home'));
+       /* if($role === "ROLE_STUDENT")
         {
             if(!$user->isVerified())
             {
@@ -146,7 +146,9 @@ class UserAuthenticator extends AbstractFormLoginAuthenticator implements Passwo
         else 
         {
             return new RedirectResponse($this->urlGenerator->generate('admin_home'));
-        }
+        }*/
+
+
      //   else if($role == "ROLE_ADMIN")
            
     

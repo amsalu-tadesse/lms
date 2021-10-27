@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\QuizQuestions;
+use App\Entity\Quiz;
 use App\Form\QuizQuestionsType;
 use App\Repository\QuizQuestionsRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,19 +17,20 @@ use Symfony\Component\Routing\Annotation\Route;
 class QuizQuestionsController extends AbstractController
 {
     /**
-     * @Route("/", name="quiz_questions_index", methods={"GET"})
+     * @Route("/{id}", name="quiz_questions_index", methods={"GET"})
      */
-    public function index(QuizQuestionsRepository $quizQuestionsRepository): Response
+    public function index(QuizQuestionsRepository $quizQuestionsRepository, Quiz $quiz): Response
     {
         return $this->render('quiz_questions/index.html.twig', [
-            'quiz_questions' => $quizQuestionsRepository->findAll(),
+            'quiz_questions' => $quizQuestionsRepository->findBy(['quiz'=>$quiz]),
+            'quiz'=>$quiz,
         ]);
-    }
+    } 
 
     /**
-     * @Route("/new", name="quiz_questions_new", methods={"GET","POST"})
+     * @Route("/new/{id}", name="quiz_questions_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    public function new(Request $request, Quiz $quiz): Response
     {
         $quizQuestion = new QuizQuestions();
         $form = $this->createForm(QuizQuestionsType::class, $quizQuestion);
@@ -36,10 +38,11 @@ class QuizQuestionsController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
+            $quizQuestion->setQuiz($quiz);
             $entityManager->persist($quizQuestion);
             $entityManager->flush();
 
-            return $this->redirectToRoute('quiz_questions_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('quiz_questions_index', ['id'=>$quiz->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('quiz_questions/new.html.twig', [

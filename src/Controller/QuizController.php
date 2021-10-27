@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/quiz")
+ * @Route("/quizzes")
  */
 class QuizController extends AbstractController
 {
@@ -28,12 +28,10 @@ class QuizController extends AbstractController
                 $quizzes[] = $chapter->getQuizzes()[0];
             }
 
-        }
-        // dd($quizzes);
-
+        } 
         return $this->render('quiz/index.html.twig', [
-            // 'quizzes' => $quizRepository->findAll(),
             'quizzes' => $quizzes,
+            'instructorCourse' => $instructorCourse,
         ]);
     }
 
@@ -92,7 +90,6 @@ class QuizController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
             return $this->redirectToRoute('quiz_index', ['id' => $quiz->getInstructorCourseChapter()->getInstructorCourse()->getId()], Response::HTTP_SEE_OTHER);
-           // return $this->redirectToRoute('quiz_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('quiz/edit.html.twig', [
@@ -102,7 +99,7 @@ class QuizController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="quiz_delete", methods={"POST"})
+     * @Route("/delete/{id}", name="quiz_delete", methods={"POST"})
      */
     public function delete(Request $request, Quiz $quiz): Response
     {
