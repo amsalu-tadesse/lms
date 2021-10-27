@@ -52,6 +52,8 @@ class RegistrationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
 
+            // if(empt)
+
             $user_valid = $em->getRepository(User::class)->findBy(array('email'=>$form['email']->getData()));
             if($user_valid == null)
             {
@@ -108,13 +110,18 @@ class RegistrationController extends AbstractController
      */
     public function registere(Request $request, VerificationRepository $ver_repo, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, UserAuthenticator $authenticator): Response
     {
+        $form_data = $request->cookies->get("form_data");
+        $form_data = json_decode($form_data, true);
+
+        if(empty($form_data))
+        {
+            return $this->redirectToRoute("app_register");
+        }
+
         $response = new Response();
         $user = new User();
         $em = $this->getDoctrine()->getManager();
         $form = $this->createForm(RegistrationFormType::class, $user);
-        
-        $form_data = $request->cookies->get("form_data");
-        $form_data = json_decode($form_data, true);
         
         $ver_validation = $ver_repo->findOneByEmail($form_data['email']);
         if(sizeof($ver_validation)>0 && sizeof($form_data)>0)
@@ -143,6 +150,7 @@ class RegistrationController extends AbstractController
                     $user->setMiddleName($form_data['middleName']);
                     $user->setLastName($form_data['lastName']);
                     $user->setUsername($form_data['username']);
+                    $user->setIsVerified(1);
                     $user->setEmail($form_data['email']);
 
                     $em->persist($user);
@@ -185,7 +193,7 @@ class RegistrationController extends AbstractController
                         $response->headers->setCookie($cookie);
                         $response->sendHeaders();
                     }
-                    return $this->redirectToRoute("app_login");
+                    return $this->render('registration/notification.html.twig');
                 }
             }
             else{

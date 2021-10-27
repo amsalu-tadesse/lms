@@ -160,18 +160,17 @@ class CourseController extends AbstractController
     /**
      * @Route("/{id}/chapters/", name="course_chapters", methods={"GET"})
      */
-    public function chapters($id, ContentRepository $contentRepository, InstructorCourseChapterRepository $chaptersRepository): Response
+    public function chapters($id, Course $course, ContentRepository $contentRepository, InstructorCourseChapterRepository $chaptersRepository): Response
     {
         $conn = $this->getDoctrine()->getManager()
             ->getConnection();
-        $sql = "SELECT c.*, sc.pages_completed from instructor_course_chapter c "
+        $sql = "SELECT c.*,sc.pages_completed from instructor_course_chapter c "
               ."left join student_chapter sc on "
               ."sc.chapter_id = c.id where c.instructor_course_id = :instructorCourse";
-    
+        
         $stmt = $conn->prepare($sql);
         $stmt->execute(array('instructorCourse' => $id));
-        $chapters = $stmt->fetchAll();
-        
+        $chapters = $stmt->fetchAll();        
 
         $contents = $contentRepository->getContentsCount($id);
         foreach($chapters as $key => $value){
@@ -194,8 +193,10 @@ class CourseController extends AbstractController
                 $chapters[$key]['completed'] = 0;
             }
         }
+
         return $this->render('student_course/chapters.html.twig',[
             'chapters' => $chapters,
+            'course' => $course,
             'contents' => $contents,
         ]);
     }

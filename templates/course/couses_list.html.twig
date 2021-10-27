@@ -4,6 +4,7 @@
 {% block stylesheet %}
 <link href="{{asset('assets/plugins/owlCarousel/dist/assets/owl.carousel.min.css')}}" rel="stylesheet"/>
 <link href="{{asset('assets/plugins/owlCarousel/dist/assets/owl.theme.default.min.css')}}" rel="stylesheet"/>
+<link href="{{asset('student/css/temp.css')}}" rel="stylesheet"/>
 
     <style>
         .header{
@@ -14,17 +15,32 @@
             padding: .3rem 1rem;
             display: none;
         }
+
+        .card-body p a{
+            color: rgb(9, 49, 70);
+        }
         
         .card:hover .card-footer {
             display: contents;
         }
+
     </style>
 {% endblock %}
 {% block selected %}<span id="num"></span>{% endblock %}
 {% block body %}
-    <div class="jumbotron jumbotron-fluid bg-white" style="height: 80px; background:blue">
-        <div class="container">
-        </div>
+    <div class="jumbotron jumbotron-fluid bg-white">
+        <section class="section section-concept section-no-border section-dark section-angled section-angled-reverse pt-5 m-0" style="background-image: url(/images/header_bg.jpg); background-size: cover; background-position: center; animation-duration: 750ms; animation-delay: 300ms; animation-fill-mode: forwards; min-height: 415px;">
+					<div class="section-angled-layer-bottom section-angled-layer-increase-angle bg-light" style="padding: 0;"></div>
+					<div class="container pt-lg-5 mt-5">
+						<div class="row pt-3 pb-lg-0 pb-xl-0">
+							<div class="col-lg-6 pt-4 mb-5 mb-lg-0">
+								
+							</div>
+
+						</div>
+					</div>
+				</section>
+                </div>
     </div>
     <br>
    {% include "course/list.html.twig" %}
@@ -46,9 +62,10 @@
             cookie_length = arr.length;
             if(cookie_length > 0){
                 for(i=0; i<cookie_length; i++){
-                    $("a[course-id="+arr[i]+"]").parent().parent().addClass("selected-card");
-                    $("a[course-id="+arr[i]+"]").css("background-color", "green");
-                    $("a[course-id="+arr[i]+"]").text("Remove from my Courses");
+                    
+                    $("button[course-id="+arr[i]+"]").parent().parent().addClass("selected-card");
+                    $("button[course-id="+arr[i]+"]").css("background-color", "#F44336");
+                    $("button[course-id="+arr[i]+"]").text("Remove from my Courses");
                     selected_courses.push(arr[i]);
                     $("#num").html(++total_selected);
                 }
@@ -76,7 +93,7 @@
             course_name = $(this).attr("course-id");
             if(selected_courses.includes(course_name)){
                 $(this).text("{% trans %}Added to my Courses{% endtrans %} ");
-                $(this).css("background-color", "#045493");
+                $(this).css("background-color", "#093146");
 
                 index = selected_courses.indexOf(course_name);
                 if (index > -1) {
@@ -92,7 +109,7 @@
             }
             else{
                 $(this).text(" {% trans %}Remove from my Courses{% endtrans %} ");
-                $(this).css("background-color", "green");
+                $(this).css("background-color", "#F44336");
                 selected_courses.push(course_name);
                 $("#num").html(++total_selected);
                 var json_str = JSON.stringify(selected_courses);

@@ -128,7 +128,7 @@ h3 {
 .h4,
 h4 {
     font-size: calc(1.275rem + .3vw);
-    color: #043c69;
+    color: #fefefe;
 }
 
 @media (min-width:1200px) {
@@ -2943,13 +2943,13 @@ fieldset:disabled .btn {
 
 .btn-primary {
     color: #fff;
-    background-color: #045493;
+    background-color: rgb(9, 49, 70);
     border-color: #0d6efd
 }
 
 .btn-primary:hover {
     color: #fff;
-    background-color: #0b5ed7;
+    background-color: rgb(9, 49, 70);
     border-color: #0a58ca
 }
 
@@ -4606,7 +4606,7 @@ fieldset:disabled .btn {
     flex-direction: column;
     min-width: 0;
     word-wrap: break-word;
-    background-color: #fff;
+    background-color: #F7F7F7;
     background-clip: border-box;
     border: 1px solid rgba(0, 0, 0, .125);
     border-radius: .25rem
@@ -5034,6 +5034,11 @@ fieldset:disabled .btn {
 .badge-secondary {
     color: #fff;
     background-color: #6c757d;
+}
+
+.badge-info {
+    color: #fff;
+    background-color: #17a2b8;
 }
 
 .badge:empty {
@@ -10614,6 +10619,9 @@ fieldset:disabled .btn {
         display: none!important
     }
 }
+
+
+/*# sourceMappingURL=bootstrap.min.css.map */
 
 
 /*# sourceMappingURL=bootstrap.min.css.map */
