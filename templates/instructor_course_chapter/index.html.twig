@@ -26,8 +26,8 @@
             <thead>
                 <tr>
                                         <th>Id</th>
+                                        {# <th>Chapter</th> #}
                                         <th>Chapter</th>
-                                        <th>Topic</th>
                                         <th>Created_at</th>
                                         <th>actions</th>
                 </tr>
@@ -36,7 +36,7 @@
                 {% for instructor_course_chapter in instructor_course_chapters %}
                 <tr>
                                         <td>{{ instructor_course_chapter.id }}</td>
-                                        <td>{{ instructor_course_chapter.chapter }}</td>
+                                        {# <td>{{ instructor_course_chapter.chapter }}</td> #}
                                         <td>{{ instructor_course_chapter.topic }}</td>
                                         <td>{{ instructor_course_chapter.createdAt ? instructor_course_chapter.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                                         <td>

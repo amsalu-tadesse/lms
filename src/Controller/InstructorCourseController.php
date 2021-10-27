@@ -35,6 +35,7 @@ class InstructorCourseController extends AbstractController
         ]);
     }
 
+
     /**
      * @Route("/new", name="instructor_course_new", methods={"GET","POST"})
      */
