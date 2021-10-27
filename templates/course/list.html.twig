@@ -1,4 +1,4 @@
- <div class="container" style="min-height: 490px">
+ <div class="container" style="min-height: 600px;">
         {% set flag = 0 %}
         {% if not is_granted("ROLE_STUDENT") %}
             {% set array = [] %}
@@ -14,7 +14,7 @@
             {% endif %}
             {% if continue == true %}
                 {% if flag == course.category_id %}
-                        <div class="card bg-color-gray" style="height: 150px; margin: 0px 10px";>
+                        <div class="card bg-color-gray" style="height: 150px; margin: 0px 10px" card-id="{{course.id}}">
                             <div class="card-body">
                                 <p>
                                     <a href="{{ path('course_description',{'id': course.id}) }}">
@@ -39,7 +39,7 @@
                     {% if flag == 0 %}
                         <h4> {{ course.category_name|capitalize }}</h4>
                         <div class="owl-carousel owl-theme show-nav-hover">
-                            <div class="card bg-color-gray" style="height: 150px;";>
+                            <div class="card bg-color-gray" style="height: 150px;" card-id="{{course.id}}">
                                 <div class="card-body">
                                     <p>
                                         <a href="{{ path('course_description',{'id': course.id}) }}">
@@ -66,7 +66,7 @@
                     <br>
                         <h4> {{ course.category_name|capitalize }}</h4>
                         <div class="owl-carousel owl-theme show-nav-hover">
-                            <div class="card bg-color-gray" style="height: 150px";>
+                            <div class="card bg-color-gray" style="height: 150px";  card-id="{{course.id}}">
                                 <div class="card-body">
                                     <p>
                                         <a href="{{ path('course_description',{'id': course.id}) }}">
@@ -90,10 +90,6 @@
                     {% set flag = course.category_id %}
                 {% endif %}
             {% endif %}
-            
-        {% endfor %}
-            
+        {% endfor %}  
         </div>
     </div>
-
-    

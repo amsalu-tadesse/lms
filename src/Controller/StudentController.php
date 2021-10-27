@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 /**
- * @Route("/student")
+ * @Route("/studentf")
  */
 class StudentController extends AbstractController
 {

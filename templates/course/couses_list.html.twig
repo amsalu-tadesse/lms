@@ -24,12 +24,26 @@
             display: contents;
         }
 
+        section.section{
+            background-image: url('/images/header_bg.jpg'); 
+            background-size: cover; 
+            background-position: center; 
+            animation-duration: 750ms; 
+            animation-delay: 300ms; 
+            animation-fill-mode: 
+            forwards; min-height: 415px; 
+        }
+
     </style>
 {% endblock %}
 {% block selected %}<span id="num"></span>{% endblock %}
 {% block body %}
+
+    <div class="test">
+        
+    </div>
     <div class="jumbotron jumbotron-fluid bg-white">
-        <section class="section section-concept section-no-border section-dark section-angled section-angled-reverse pt-5 m-0" style="background-image: url(/images/header_bg.jpg); background-size: cover; background-position: center; animation-duration: 750ms; animation-delay: 300ms; animation-fill-mode: forwards; min-height: 415px;">
+        <section class="section section-concept section-no-border section-dark section-angled section-angled-reverse pt-5 m-0">
 					<div class="section-angled-layer-bottom section-angled-layer-increase-angle bg-light" style="padding: 0;"></div>
 					<div class="container pt-lg-5 mt-5">
 						<div class="row pt-3 pb-lg-0 pb-xl-0">
@@ -67,6 +81,7 @@
                     $("button[course-id="+arr[i]+"]").css("background-color", "#F44336");
                     $("button[course-id="+arr[i]+"]").text("Remove from my Courses");
                     selected_courses.push(arr[i]);
+                    title = $(".card[card-id="+arr[i]+"]").parents().eq(5);
                     $("#num").html(++total_selected);
                 }
             }
@@ -90,6 +105,8 @@
         });
 
         $(".enroll").on("click", function(){
+            tt = $(this).parents().eq(5);
+            tt.prev().text();
             course_name = $(this).attr("course-id");
             if(selected_courses.includes(course_name)){
                 $(this).text("{% trans %}Added to my Courses{% endtrans %} ");
