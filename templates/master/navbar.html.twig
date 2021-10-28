@@ -103,7 +103,7 @@
 
 			</a>
 			<div class="dropdown-menu dropdown-menu-sm dropdown-menu-right float-right">
-				<a href="/language?lang={{code}}" class="dropdown-item">
+				<a href="/language?lang={{code}}&&curr={{app.request.attributes.get('_route')}}" class="dropdown-item">
 					{{secondlang}}
 				</a>
 			</div>
