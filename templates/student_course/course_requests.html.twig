@@ -1,55 +1,76 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	{% trans %}StudentCourse index{% endtrans %}
+	{% trans %}Course Requests{% endtrans %}
 {% endblock %}
 {% block breadcrumbhome %}
-	{% trans %}Course registration request{% endtrans %}
+	{% trans %}Requests{% endtrans %}
 {% endblock %}
 {% block breadcrumbcontent %}
-	{% trans %}list{% endtrans %}
+	{% trans %}index{% endtrans %}
 {% endblock %}
 
 {% block body %}
 
+	<div class="card card-info">
+		<div class="card card-header">
+			<div class="row">
+				<div class="col-md-6">
+					<h3>{% trans %}Request list{% endtrans %}</h3>
+				</div>
+				<div class="col-md-6">
+				</div>
+			</div>
+		</div>
+		<div class="card card-body">
+    <div class="col-xs-12 col-md-12">
+							{{ form_start(searchForm,{'attr': {'role':'form'}, 'method': 'GET'}) }}
+								<div class="row">
+									
+									<div class="col-sm-4">		
+										<div class="form-group">
+											<label class="col-sm-12 control-label">{{ form_label(searchForm.student) }}</label>
+											{{ form_widget(searchForm.student,{'attr':{'class':'form-control'},'full_name':'student','value':app.request.get('student') })}}
+											{# <input type="text" class="form-control" student="name"/> #}
+											<div class="help-block with-errors"></div>
+										</div>
+									</div>
+									<div class="col-sm-4">
+										<div class="form-group">
+											<label class="col-sm-12 control-label ">{{ form_label(searchForm.instructorCourse) }}</label>
+											{{ form_widget(searchForm.instructorCourse,{'attr':{'class':'form-control'},'full_name':'instructorCourse','value': app.request.get('instructorCourse')}) }}
+											<div class="help-block with-errors"></div>
+										</div>
+									</div>
 
-
-
-<div class="row">
-          <div class="col-md-12">
-            <div class="card card-primary card-tabs">
-              <div class="card-header p-0 pt-1">
-                <ul class="nav nav-tabs" id="custom-tabs-five-tab" role="tablist">
-                  <li class="nav-item">
-                    <a class="nav-link active" id="custom-tabs-five-overlay-tab" data-toggle="pill" href="#custom-tabs-five-overlay" role="tab" aria-controls="custom-tabs-five-overlay" aria-selected="true">New Requests</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" id="custom-tabs-five-normal-dark-tab" data-toggle="pill" href="#custom-tabs-five-overlay-dark" role="tab" aria-controls="custom-tabs-five-overlay-dark1" aria-selected="false">Approved Requests</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" id="custom-tabs-five-normal-tab" data-toggle="pill" href="#custom-tabs-five-normal" role="tab" aria-controls="custom-tabs-five-normal" aria-selected="false">Rejected Requests</a>
-                  </li>
-                </ul>
-              </div>
-              <div class="card-body">
-                <div class="tab-content" id="custom-tabs-five-tabContent">
-                  <div class="tab-pane fade active show" id="custom-tabs-five-overlay" role="tabpanel" aria-labelledby="custom-tabs-five-overlay-tab">
-                    <div class="overlay-wrapper">
-
-                      <table class="table ">
+									<div class="col-sm-2">
+										<div class="form-group">
+											<label class="col-sm-12 control-label no-padding-right"></label>
+											<button class="btn btn-info" style="margin-top:15px;width:100%;"><i class="fas fa-search"></i></button>
+										</div>
+									</div>
+                </div>
+								{{ form_end(searchForm) }}
+						
+			<table class="table ">
 				<thead>
 					<tr>
+            <th>#</th>
 						<th>Id</th>
 						<th>{% trans %}Student{% endtrans %}</th>
+            <th>{% trans %}Course{% endtrans %}</th>
 						<th>{% trans %}Date{% endtrans %}</th>
 						<th>{% trans %}Actions{% endtrans %}</th>
 					</tr>
 				</thead>
 				<tbody>
-                    {% for student_course in student_courses | filter (a=>a.status == 0) %}
+          <form action="" method="post">
+					{% for student_course in student_courses %}
 						<tr>
+              <td><input type="checkbox" name="approved_students[]"></td>
 							<td>{{ loop.index }}</td>
 							<td>{{ student_course.student }}</td>
+              <td>{{ student_course.instructorCourse.course.name }}</td>
 							<td>{{ student_course.createdAt ? student_course.createdAt|date('Y-m-d H:i:s') : '' }}</td>
 
 
@@ -73,9 +94,11 @@
 
 													<div class="form-group text-blue">
 														Are you sure you want to register
-														<u> {{student_course.student}}
+														<u>
+															{{student_course.student}}
 														</u>
-														for the course {{student_course.instructorCourse.course}}
+														for the course
+														{{student_course.instructorCourse.course}}
 														?
 													</div>
 
@@ -92,125 +115,26 @@
 										<!-- /.modal-content -->
 									</div>
 									<!-- /.modal-dialog -->
-								</div 
-
-                             
-
+								</div</td>
 							</td>
-
-
 						</tr>
 					{% else %}
 						<tr>
 							<td colspan="6">{% trans %}No records found{% endtrans %}</td>
 						</tr>
 					{% endfor %}
+          </form>
 				</tbody>
 			</table>
-        <div class="  pagination justify-content-center "> {{ knp_pagination_render(student_courses) }}</div>
+			<div class="  pagination justify-content-center ">
+				{{ knp_pagination_render(student_courses) }}</div>
 
-		<div class="float-right pl-5 pb-2">
+			<div class="float-right pl-5 pb-2">
 
-			{% trans %}Total result{% endtrans %}: {{ student_courses.getTotalItemCount }}
+				{% trans %}Total result{% endtrans %}:
+				{{ student_courses.getTotalItemCount }}
+			</div>
 		</div>
-
-
-
-
-
-
-                    </div>
-                  </div>
-                  <div class="tab-pane fade" id="custom-tabs-five-overlay-dark" role="tabpanel" aria-labelledby="custom-tabs-five-overlay-dark-tab">
-                    <div class="overlay-wrapper">
-                      
-                    <table class="table ">
-                    <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>{% trans %}Student{% endtrans %}</th>
-                            <th>{% trans %}Date{% endtrans %}</th>
-                            {# <th>{% trans %}Status{% endtrans %}</th> #}
-    
-    
-                           
-                        </tr>
-                    </thead>
-                    <tbody>
-                     
-                        {% for student_course in student_courses | filter (a=>a.status == 1) %}
-                            <tr>
-                                <td>{{ loop.index }}</td>
-                                <td>{{ student_course.student }}</td>
-                                <td>{{ student_course.createdAt ? student_course.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                            </tr>
-                        {% else %}
-                            <tr>
-                                <td colspan="6">{% trans %}No records found{% endtrans %}</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-
-           
-
-
-                    </div>
-                  </div>
-                  <div class="tab-pane fade" id="custom-tabs-five-normal" role="tabpanel" aria-labelledby="custom-tabs-five-normal-tab">
-                   
-
-
-
-
-                  <table class="table ">
-                  <thead>
-                      <tr>
-                          <th>Id</th>
-                          <th>{% trans %}Student{% endtrans %}</th>
-                          <th>{% trans %}Date{% endtrans %}</th>
-                          <th>{% trans %}Actions{% endtrans %}</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      {% for student_course in student_courses | filter (a=>a.status == 0) %}
-                          <tr>
-                              <td>{{ loop.index }}</td>
-                              <td>{{ student_course.student }}</td>
-                              <td>{{ student_course.createdAt ? student_course.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-  
-                          </tr>
-                      {% else %}
-                          <tr>
-                              <td colspan="6">{% trans %}No records found{% endtrans %}</td>
-                          </tr>
-                      {% endfor %}
-                  </tbody>
-              </table>
-
-
-
-            <div class="  pagination justify-content-center "> {{ knp_pagination_render(student_courses) }}</div>
-
-            <div class="float-right pl-5 pb-2">
-    
-                {% trans %}Total result{% endtrans %}: {{ student_courses.getTotalItemCount }}
-            </div>
-
-
-
-
-
-
-
-                  </div>
-                </div>
-              </div>
-              <!-- /.card -->
-            </div>
-          </div>
-        </div>
-
-
+	</div>
 
 {% endblock %}

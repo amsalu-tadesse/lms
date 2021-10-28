@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\InstructorCourse;
 use App\Entity\StudentCourse;
 use App\Form\StudentCourseType;
+use App\Form\Filter\RequestFilterType;
 use App\Repository\StudentCourseRepository;
 use App\Repository\ContentRepository;
 use App\Repository\StudentChapterRepository;
@@ -38,7 +39,6 @@ class StudentCourseController extends AbstractController
 
         $queryBuilder=$studentCourseRepository->findCourses($this->getUser()->getProfile()->getId());
         $courses = $course->findCoursesSortByCategory();
-        
         $data=$paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page', 1),
@@ -57,20 +57,20 @@ class StudentCourseController extends AbstractController
      */
     public function courseRequest(Request $request, StudentCourseRepository $studentCourseRepository, PaginatorInterface $paginator): Response
     {
-         
-        // $em = $this->getDoctrine()->getManager();
-        // $queryBuilder = $studentCourseRepository->findBy(['status'=>0, 'active'=>1]);
-        $queryBuilder = $studentCourseRepository->findAll();
+        $st_course = new StudentCourse();
+        $searchForm = $this->createForm(RequestFilterType::class, $st_course);
+        $searchForm->handleRequest($request);
 
+        $queryBuilder = $studentCourseRepository->findRequests($request->query->get('student'),$request->query->get('course'),$request->query->get('createdAt'));
         $stdCrs=$paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page', 1),
-            10
+            15
         );
         
         return $this->render('student_course/course_requests.html.twig', [
             'student_courses' => $stdCrs,
-         
+            'searchForm' => $searchForm->createView(),
         ]);
     }
 
