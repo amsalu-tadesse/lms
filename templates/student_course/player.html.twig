@@ -131,143 +131,161 @@
                 <div class="container-fluid">
                     <div class="row">
                         {% if pages_seen|length != 0 %}
-                            <script>
-                                control.view_at = "{{pages_seen.pagesCompleted}}";
-                            </script>
+                                <script>
+                                    control.view_at = "{{pages_seen.pagesCompleted}}";
+                                </script>
                         {% endif %}
-                        <div class="col-md-8">
-
-                            <div height="453" width="100%" class="px-4 py-5 card" id="intro">
-                                <div style="margin: 100px auto">
-                                   <h4>Select from contents on the right <i id="icons" class="fa fa-arrow-right"></i></h4>
-                                </div>          
-                            </div>
-                            <div id="video">
-                                <video autoplay controls width="100%" height="453" style="display:none">
-									<source id="video-source" src="">
-								</video>
-                            </div>
-							
-                            <div id="youtube">
-                                <iframe height="453" width="100%" src="" style="display:none" id="youtube-link" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                            </div>
-                            <div id="document">
-                                <div class="card" id="text-card" style="display:none; background: white;">
-                                    <div class="card-body">
-                                        <div id="html-text"></div>
+                        {% if contents|length == 0 %}
+                            <div class="row chapter-list">
+                                <div class="col-md-1"></div>
+                                <div class="col-md-10">
+                                    <div class="card border-0 border-radius-0 ">
+                                        <div class="card-body">
+                                            <center><p class="card-text">{% trans %}There is no content available for this chapter{% endtrans %}</p>
+                                            <a href="{{ path('course_chapters',{'id': chapter.instructorCourse.id})}}" class="btn btn-primary "><h5 class="text-light"> </i>Back to chapters list </h5></a></center>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-4">
+                        {% else %}
+                            
+                            <div class="col-md-8">
 
-                            <div class="tabs ">
-                                <ul class="nav nav-tabs tabs-primary">
-                                    <a href="{{ path('course_chapters',{'id': chapter.instructorCourse.id})}}"><h5> <i class="fa fa-arrow-left"></i>Back to chapters list </h5></a>
-                                    <li class="nav-item" style="width: 100%; border-bottom: 1px solid blue">
-                                        <a class="nav-link active" href="#popular7" data-bs-toggle="tab">
-                                            <span>{{chapter.chapter|capitalize}}</span>
-                                            <hr>
-                                            Contents
-                                        </a>
-                                    </li>
-                                </ul>
+                                <div height="453" width="100%" class="px-4 py-5 card" id="intro">
+                                    <div style="margin: 100px auto">
+                                    <h4>Select from contents on the right <i id="icons" class="fa fa-arrow-right"></i></h4>
+                                    </div>          
+                                </div>
+                                <div id="video">
+                                    <video autoplay controls width="100%" height="453" style="display:none">
+                                        <source id="video-source" src="">
+                                    </video>
+                                </div>
                                 
-                                <div class="tab-content">
-                                    <ul class="list list-icons list-icons-style-1">
-                                        {% set flag = 0 %}
-                                        {% for content in contents %} 
-                                            <script>
-                                                control.num_of_list +=1;
-                                                control.content_id.push({{content.id}});
-                                            </script>
-                                        {% if content.filename != null %}
-                                        {% if flag < pages_seen.pagesCompleted %}
-                                        <script>
-                                            control.viewed_content.push({{content.id}});
-                                        </script>
-                                        <li data-type="{{content.id}}" content="filename" class="">
-                                            <table>
-                                                <tr><td>
-                                                <input type="checkbox" name="{{content.id}}" disabled checked></td><td>
-                                        {% else %}
-                                        <li data-type="{{content.id}}" content="filename" class="disabled">
-                                            <table>
-                                                <tr><td>
-                                                <input type="checkbox" name="{{content.id}}"disabled></td><td>
-                                        {% endif %}
-                                                <i class="fas fa-play"></i></td><td> {{ content.title }}</td></tr>
-                                                </table>
+                                <div id="youtube">
+                                    <iframe height="453" width="100%" src="" style="display:none" id="youtube-link" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                </div>
+                                <div id="document">
+                                    <div class="card" id="text-card" style="display:none; background: white;">
+                                        <div class="card-body">
+                                            <div id="html-text"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+
+                                <div class="tabs ">
+                                    <ul class="nav nav-tabs tabs-primary">
+                                        <a href="{{ path('course_chapters',{'id': chapter.instructorCourse.id})}}"><h5> <i class="fa fa-arrow-left"></i>Back to chapters list </h5></a>
+                                        <li class="nav-item" style="width: 100%; border-bottom: 1px solid blue">
+                                            <a class="nav-link active" href="#popular7" data-bs-toggle="tab">
+                                                <span>{{chapter.topic|capitalize}}</span>
+                                                <hr>
+                                                Contents
+                                            </a>
                                         </li>
-                                        <script>
-                                            var id = "{{ content.id }}";
-                                            var link = "{{ content.filename }}";
-                                            var res = "{{ content.resource }}";
-                                            var de = "{{ content.description }}";
-                                            videos[id] = link;
-                                            desc[id] = de;
-                                            resource[id] = res;
-                                        </script>
-                                        {% elseif content.videoLink != null %}
+                                    </ul>
+                                    
+                                    <div class="tab-content">
+                                        <ul class="list list-icons list-icons-style-1">
+                                            {% set flag = 0 %}
+                                            {% for content in contents %} 
+                                                <script>
+                                                    control.num_of_list +=1;
+                                                    control.content_id.push({{content.id}});
+                                                </script>
+                                            {% if content.filename != null %}
                                             {% if flag < pages_seen.pagesCompleted %}
                                             <script>
                                                 control.viewed_content.push({{content.id}});
                                             </script>
-                                            <li data-type="{{content.id}}" content="youtube">
+                                            <li data-type="{{content.id}}" content="filename" class="">
                                                 <table>
                                                     <tr><td>
                                                     <input type="checkbox" name="{{content.id}}" disabled checked></td><td>
                                             {% else %}
-                                            <li data-type="{{content.id}}" content="youtube" class="disabled">
-                                                <table>
-                                                    <tr><td>
-                                                    <input type="checkbox" name="{{content.id}}"disabled></td><td>    
-                                            {% endif %}
-                                                    <img src="{{asset('/images/youtube.png')}}" style="margin: 0px 8px;width: 18px;"></td><td> {{ content.title }}</td></tr>
-                                                    </table>
-                                            </li>
-                                        <script>
-                                            var id = "{{ content.id }}";
-                                            var link = "{{ content.videoLink }}";
-                                            var res = "{{ content.resource }}";
-                                            var de = "{{ content.description }}";
-                                            videos[id] = link;
-                                            desc[id] = de;
-                                            resource[id] = res;
-                                        </script>
-                                        {% elseif content.content != "" %}
-                                            {% if flag < pages_seen.pagesCompleted %}
-                                            <script>
-                                                control.viewed_content.push({{content.id}});
-                                            </script>
-                                            <li data-type="{{content.id}}" content="doc">
-                                                <table>
-                                                    <tr><td>
-                                                    <input type="checkbox" name="{{content.id}}" disabled checked></td><td>
-                                            {% else %}
-                                            <li data-type="{{content.id}}" content="doc" class="disabled">
+                                            <li data-type="{{content.id}}" content="filename" class="disabled">
                                                 <table>
                                                     <tr><td>
                                                     <input type="checkbox" name="{{content.id}}"disabled></td><td>
                                             {% endif %}
-                                                    <i class="fas fa-book"></i></td><td> {{ content.title }}</td></tr>
+                                                    <i class="fas fa-play"></i></td><td> {{ content.title }}</td></tr>
                                                     </table>
                                             </li>
-                                        {% endif %} 
-                                            {% set flag = flag+1 %}
-                                        {% endfor %}
-                                        <li style="border-bottom: 0px;">
-                                            <a href="{{ path('course_quiz',{'id': "2"}) }}" id="startQuiz" style="color:blue;">
-												Chapter Quiz
-											</a>
-                                        </li>
-                                    </ul>
+                                            <script>
+                                                var id = "{{ content.id }}";
+                                                var link = "{{ content.filename }}";
+                                                var res = "{{ content.resource }}";
+                                                var de = "{{ content.description }}";
+                                                videos[id] = link;
+                                                desc[id] = de;
+                                                resource[id] = res;
+                                            </script>
+                                            {% elseif content.videoLink != null %}
+                                                {% if flag < pages_seen.pagesCompleted %}
+                                                <script>
+                                                    control.viewed_content.push({{content.id}});
+                                                </script>
+                                                <li data-type="{{content.id}}" content="youtube">
+                                                    <table>
+                                                        <tr><td>
+                                                        <input type="checkbox" name="{{content.id}}" disabled checked></td><td>
+                                                {% else %}
+                                                <li data-type="{{content.id}}" content="youtube" class="disabled">
+                                                    <table>
+                                                        <tr><td>
+                                                        <input type="checkbox" name="{{content.id}}"disabled></td><td>    
+                                                {% endif %}
+                                                        <img src="{{asset('/images/youtube.png')}}" style="margin: 0px 8px;width: 18px;"></td><td> {{ content.title }}</td></tr>
+                                                        </table>
+                                                </li>
+                                            <script>
+                                                var id = "{{ content.id }}";
+                                                var link = "{{ content.videoLink }}";
+                                                var res = "{{ content.resource }}";
+                                                var de = "{{ content.description }}";
+                                                videos[id] = link;
+                                                desc[id] = de;
+                                                resource[id] = res;
+                                            </script>
+                                            {% elseif content.content != "" %}
+                                                {% if flag < pages_seen.pagesCompleted %}
+                                                <script>
+                                                    control.viewed_content.push({{content.id}});
+                                                </script>
+                                                <li data-type="{{content.id}}" content="doc">
+                                                    <table>
+                                                        <tr><td>
+                                                        <input type="checkbox" name="{{content.id}}" disabled checked></td><td>
+                                                {% else %}
+                                                <li data-type="{{content.id}}" content="doc" class="disabled">
+                                                    <table>
+                                                        <tr><td>
+                                                        <input type="checkbox" name="{{content.id}}"disabled></td><td>
+                                                {% endif %}
+                                                        <i class="fas fa-book"></i></td><td> {{ content.title }}</td></tr>
+                                                        </table>
+                                                </li>
+                                            {% endif %} 
+                                                {% set flag = flag+1 %}
+                                            {% endfor %}
+                                            <li style="border-bottom: 0px;">
+                                                <a href="{{ path('course_quiz',{'id': "2"}) }}" id="startQuiz" style="color:blue;">
+                                                    Chapter Quiz
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-8" id="desc-text" style="display:none">
-                            <p id="description" style="width:100%; background-color:white;padding: 15px;"></p>
-                        </div>
+                            <div class="col-md-8" id="desc-text" style="display:none">
+                                <p id="description" style="width:100%; background-color:white;padding: 15px;"></p>
+                            </div>
+        
+
+                        {% endif %}
+                        
                     </div>
                 </div>
             </section>

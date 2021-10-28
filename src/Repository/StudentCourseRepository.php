@@ -67,24 +67,67 @@ class StudentCourseRepository extends ServiceEntityRepository
     }
 
 
-    public function findRequests($student, $course, $date)
+    public function findRequests($student, $course)
     {
-        return  $this->createQueryBuilder('sc')
+            $q = $this->createQueryBuilder('sc')
             ->innerJoin('sc.instructorCourse','ic')
             ->innerJoin('ic.course','c')
             ->join('sc.student', 's')
             ->join('s.user', 'u')
-            ->Where('c.name LIKE :course')
+            ->where('sc.status = 0')
             ->andWhere('u.email LIKE :student')
-            ->andWhere('sc.createdAt LIKE :date')
-         
-            ->setParameter('student', '%'.$student.'%')
-            ->setParameter('course', '%'.$course.'%')
-            ->setParameter('date', '%'.$date.'%')
-            
-            ->orderBy('sc.id', 'ASC')
+            ->setParameter('student', '%'.$student.'%');
+            if($course != ""){
+                $q->andWhere('ic.id = :course')
+                ->setParameter('course', $course);
+            }
+            $q->orderBy('sc.id', 'ASC')
             ->getQuery()
             ->getResult();
+
+            return $q;
+    }
+
+    public function findRequestsApproved($student, $course)
+    {
+            $q = $this->createQueryBuilder('sc')
+            ->innerJoin('sc.instructorCourse','ic')
+            ->innerJoin('ic.course','c')
+            ->join('sc.student', 's')
+            ->join('s.user', 'u')
+            ->where('sc.status = 1')
+            ->andWhere('u.email LIKE :student')
+            ->setParameter('student', '%'.$student.'%');
+            if($course != ""){
+                $q->andWhere('ic.id = :course')
+                ->setParameter('course', $course);
+            }
+            $q->orderBy('sc.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+
+            return $q;
+    }
+
+    public function findRequestsRejected($student, $course)
+    {
+            $q = $this->createQueryBuilder('sc')
+            ->innerJoin('sc.instructorCourse','ic')
+            ->innerJoin('ic.course','c')
+            ->join('sc.student', 's')
+            ->join('s.user', 'u')
+            ->where('sc.status = 2')
+            ->andWhere('u.email LIKE :student')
+            ->setParameter('student', '%'.$student.'%');
+            if($course != ""){
+                $q->andWhere('ic.id = :course')
+                ->setParameter('course', $course);
+            }
+            $q->orderBy('sc.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+
+            return $q;
     }
 
     /**

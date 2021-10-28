@@ -59,7 +59,7 @@
 					</div>
 				</div>
 				{{ form_end(searchForm) }}
-				</div>
+
 				<table class="table ">
 					<thead>
 						<tr>
@@ -72,7 +72,6 @@
 						</tr>
 					</thead>
 					<tbody>
-						<form action="" method="post">
 							{% for student_course in student_courses %}
 								<tr>
 									<td><input type="checkbox" name="approved_students[]"></td>
@@ -85,9 +84,6 @@
 									<td>
 										<a href="{{path('course_request_activate',{id:student_course.id})}}">
 											<i class="btn btn-success btn-sm">Accept</i>
-										</a>
-										<a href="{{path('course_request_deactivate',{id:student_course.id})}}">
-											<i class="btn btn-danger btn-sm">Reject</i>
 										</a>
 
 										<div class="modal fade" id="modal-delete{{student_course.id}}">
@@ -134,7 +130,6 @@
 									<td colspan="6">{% trans %}No records found{% endtrans %}</td>
 								</tr>
 							{% endfor %}
-						</form>
 					</tbody>
 				</table>
 				<div class="  pagination justify-content-center ">

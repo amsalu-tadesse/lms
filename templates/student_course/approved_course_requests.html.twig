@@ -59,7 +59,7 @@
 					</div>
 				</div>
 				{{ form_end(searchForm) }}
-				</div>
+
 				<table class="table ">
 					<thead>
 						<tr>
@@ -68,7 +68,6 @@
 							<th>{% trans %}Student{% endtrans %}</th>
 							<th>{% trans %}Course{% endtrans %}</th>
 							<th>{% trans %}Date{% endtrans %}</th>
-							<th>{% trans %}Actions{% endtrans %}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -80,54 +79,6 @@
 									<td>{{ student_course.student }}</td>
 									<td>{{ student_course.instructorCourse.course.name }}</td>
 									<td>{{ student_course.createdAt ? student_course.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-
-
-									<td>
-										<a href="{{path('course_request_activate',{id:student_course.id})}}">
-											<i class="btn btn-success btn-sm">Accept</i>
-										</a>
-										<a href="{{path('course_request_deactivate',{id:student_course.id})}}">
-											<i class="btn btn-danger btn-sm">Reject</i>
-										</a>
-
-										<div class="modal fade" id="modal-delete{{student_course.id}}">
-											<div class="modal-dialog">
-												<div class="modal-content">
-													<div class="modal-header">
-														<h4 class="modal-title text-bold text-green">Registering a student</h4>
-														<button type="button" class="close btn btn-primary" data-dismiss="modal" aria-label="Close">
-															<span aria-hidden="true">&times;</span>
-														</button>
-													</div>
-
-													<form id="undo_course_request_form{{student_course.id}}" action="{{path('course_request_deactivate',{id:student_course.id})}}" class="form" method="POST">
-														<div class="modal-body">
-
-															<div class="form-group text-blue">
-																Are you sure you want to register
-																<u>
-																	{{student_course.student}}
-																</u>
-																for the course
-																{{student_course.instructorCourse.course}}
-																?
-															</div>
-
-														</div>
-														<div class="modal-footer justify-content-between">
-															<button type="button" class="btn btn-warning" data-dismiss="modal">NO</button>
-
-															<button onclick="" type="submit" id="paynow" class="btn btn-success">
-																<i class="fa fa-arrow-alt-circle-right m-1"></i>Yes
-															</button>
-														</div>
-													</form>
-												</div>
-												<!-- /.modal-content -->
-											</div>
-											<!-- /.modal-dialog -->
-										</div</td>
-									</td>
 								</tr>
 							{% else %}
 								<tr>
