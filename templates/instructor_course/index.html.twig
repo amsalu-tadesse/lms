@@ -47,7 +47,7 @@
 
 
 
-							<a class="btn btn-primary" href="#" data-toggle="modal" data-target="#modal-default{{instructor_course.id}}">Assign</a>
+							<a class="btn btn-primary btn-sm" href="#" data-toggle="modal" data-target="#modal-default{{instructor_course.id}}">Assign</a>
 
 							<div class="modal fade" id="modal-default{{instructor_course.id}}">
 								<div class="modal-dialog">
@@ -76,7 +76,7 @@
 											<div class="modal-footer justify-content-between">
 												<button type="button" class="btn btn-warning" data-dismiss="modal">{% trans %}Close{% endtrans %}</button>
 
-												<button onclick="" type="submit" id="assignnow" class="btn btn-success">
+												<button onclick="" type="submit" id="assignnow" class="btn btn-success btn-sm">
 													<i class="fa fa-save m-1"></i>{% trans %}Save{% endtrans %}
 												</button>
 											</div>
@@ -87,7 +87,7 @@
 								<!-- /.modal-dialog -->
 							</div>
 
- <a href="{{ path('instructor_course_edit', {'id': instructor_course.id}) }}" class="btn btn-warning" >{% trans %}Edit{% endtrans %}</a> 
+ <a href="{{ path('instructor_course_edit', {'id': instructor_course.id}) }}" class="btn btn-warning btn-sm" >{% trans %}Edit{% endtrans %}</a> 
                 </td>
             </tr>
         {% else %}
