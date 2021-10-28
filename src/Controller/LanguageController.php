@@ -29,7 +29,7 @@ class LanguageController extends AbstractController
       //  $route  = $request->get('_route');
 
 
-        return $this->redirectToRoute('admin_home');
+        return $this->redirectToRoute('home');
         // return $this->redirectToRoute("home");
     }
 

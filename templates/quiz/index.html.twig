@@ -8,16 +8,16 @@
 
 	<div class="card card-info">
 		<div class="card card-header">
-			{% set courseName = quizzes[0].instructorCourseChapter.instructorCourse.course.name %}
+			{% set courseName = instructorCourse.course.name %}
 
 
 		<div class="row">
 				<div class="col-md-6">
 					<h3> {{ courseName }} Course Quizzes</h3>
 				</div>
-				<div class="col-md-6">
-					<a href="{{ path('quiz_new',{id:quizzes[0].instructorCourseChapter.instructorCourse.id}) }}" class="btn btn-primary" style="float:right"><span class="fa fa-plus"></span> Add Quiz</a>
-				</div>
+			 <div class="col-md-6">
+					<a href="{{ path('quiz_new',{id:instructorCourse.id}) }}" class="btn btn-primary" style="float:right"><span class="fa fa-plus"></span> Add Quiz</a>
+				</div> 
 			</div>
 
 		</div>
@@ -74,12 +74,14 @@
 								<td> {{ quiz.active }}
 								</td>
 								<td>
-									<a class="btn btn-success"  href="{{ path('quiz_show', {'id': quiz.id}) }}">
-										show
+								
+									<a class="btn btn-warning" href="{{ path('quiz_edit', {'id': quiz.id}) }}"> <span class="fa fa-edit"></span>
+										Edit
 									</a>
-									<a class="btn btn-warning" href="{{ path('quiz_edit', {'id': quiz.id}) }}">
-										edit
-									</a>
+									 
+								<a class="btn btn-success"  href="{{ path('quiz_questions_index', {'id': quiz.id}) }}"> <span class="fa fa-plus"></span>
+									Questions
+								</a>
 								</td>
 							</tr>
 
