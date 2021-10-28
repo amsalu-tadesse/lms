@@ -31,12 +31,12 @@ class InstructorCourseChapterRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findChapter1($course, $chapter)
+    public function findChapter2($course, $chapter)
     {
         return $this->createQueryBuilder('ch')
             ->select('ch')
-            ->join('ch.instructorCourse', 'ic')
-            ->where('ch.chapter = :id')
+            ->join('ch.instrucertorCourse', 'ic')
+            ->where('ch.topic = :id')
             ->andWhere('ic.id = :val')
             ->setParameter('id', $chapter)
             ->setParameter('val', $course)

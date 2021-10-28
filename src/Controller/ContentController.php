@@ -150,11 +150,12 @@ class ContentController extends AbstractController
     {
         $em = $this->getDoctrine()->getManager();
         $contents = $contentRepository->getContentsForChapter($course, $chapter);
+
         $chap = array();
         $pages_seen = $stud_chap->getProgress($chapter, $this->getUser()->getProfile()->getId());
         if($pages_seen == null){
-            $chap = $course_chapter->findChapter1($course, $chapter);
-            
+            $chap = $course_chapter->findChapter2($course, $chapter);
+            dd($chap);
             if($chap != null)
             {
                 $student_chapter = new StudentChapter();
@@ -168,8 +169,9 @@ class ContentController extends AbstractController
                 $pages_seen = array("pagesCompleted"=>0, 'id' => $student_chapter->getId());
             }
             else{
-                return $this->redirectToRoute("student_course_index");
-            }      
+                // return $this->redirectToRoute("student_course_index");
+            }   
+            $pages_seen = array("pagesCompleted"=>0, 'id' => 1);   
         }
         else{
             $chap = $course_chapter->findChapter1($course, $chapter);
