@@ -66,6 +66,27 @@ class StudentCourseRepository extends ServiceEntityRepository
         ;
     }
 
+
+    public function findRequests($student, $course, $date)
+    {
+        return  $this->createQueryBuilder('sc')
+            ->innerJoin('sc.instructorCourse','ic')
+            ->innerJoin('ic.course','c')
+            ->join('sc.student', 's')
+            ->join('s.user', 'u')
+            ->Where('c.name LIKE :course')
+            ->andWhere('u.email LIKE :student')
+            ->andWhere('sc.createdAt LIKE :date')
+         
+            ->setParameter('student', '%'.$student.'%')
+            ->setParameter('course', '%'.$course.'%')
+            ->setParameter('date', '%'.$date.'%')
+            
+            ->orderBy('sc.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
     /**
      * @return StudentCourse[] Returns an array of Product objects
      */
