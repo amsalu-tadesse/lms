@@ -53,7 +53,7 @@ class StudentCourseController extends AbstractController
 
 
     /**
-     * @Route("/course/request", name="course_request", methods={"GET"})
+     * @Route("/course/request", name="course_request")
      */
     public function courseRequest(Request $request, StudentCourseRepository $studentCourseRepository, PaginatorInterface $paginator): Response
     {
@@ -61,7 +61,7 @@ class StudentCourseController extends AbstractController
         $searchForm = $this->createForm(RequestFilterType::class, $st_course);
         $searchForm->handleRequest($request);
 
-        $queryBuilder = $studentCourseRepository->findRequests($request->query->get('student'),$request->query->get('course'),$request->query->get('createdAt'));
+        $queryBuilder = $studentCourseRepository->findRequests($request->query->get('student'),$request->query->get('instructorCourse'));
         $stdCrs=$paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page', 1),
@@ -75,9 +75,53 @@ class StudentCourseController extends AbstractController
     }
 
     /**
-     * @Route("/course/request/{id}", name="course_request_deactivate", methods={"GET","POST"})
+     * @Route("/course/request/approved", name="approved_course_request", methods={"GET"})
      */
-    public function courseRequestDeactivate(StudentCourse $studentCourse, StudentCourseRepository $studentCourseRepository,PaginatorInterface $paginator,Request $request): Response
+    public function approvedCourseRequest(Request $request, StudentCourseRepository $studentCourseRepository, PaginatorInterface $paginator): Response
+    {
+        $st_course = new StudentCourse();
+        $searchForm = $this->createForm(RequestFilterType::class, $st_course);
+        $searchForm->handleRequest($request);
+
+        $queryBuilder = $studentCourseRepository->findRequestsApproved($request->query->get('student'),$request->query->get('instructorCourse'));
+        $stdCrs=$paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page', 1),
+            15
+        );
+        
+        return $this->render('student_course/approved_course_requests.html.twig', [
+            'student_courses' => $stdCrs,
+            'searchForm' => $searchForm->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/course/request/rejected", name="rejected_course_request", methods={"GET"})
+     */
+    public function rejectedCourseRequest(Request $request, StudentCourseRepository $studentCourseRepository, PaginatorInterface $paginator): Response
+    {
+        $st_course = new StudentCourse();
+        $searchForm = $this->createForm(RequestFilterType::class, $st_course);
+        $searchForm->handleRequest($request);
+
+        $queryBuilder = $studentCourseRepository->findRequestsRejected($request->query->get('student'),$request->query->get('instructorCourse'));
+        $stdCrs=$paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page', 1),
+            15
+        );
+        
+        return $this->render('student_course/rejected_course_requests.html.twig', [
+            'student_courses' => $stdCrs,
+            'searchForm' => $searchForm->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/course/request/{id}", name="course_request_activate", methods={"GET","POST"})
+     */
+    public function courseRequestActivate(StudentCourse $studentCourse, StudentCourseRepository $studentCourseRepository,PaginatorInterface $paginator,Request $request): Response
     {
         $em = $this->getDoctrine()->getManager();
         
@@ -85,27 +129,23 @@ class StudentCourseController extends AbstractController
         $studentCourse->setStatus(1);//accepted
         $em->flush();
         
-   
-    // $queryBuilder = $studentCourseRepository->findBy(['status'=>0, 'active'=>1]);
-    $queryBuilder = $studentCourseRepository->findAll();
-
-    $stdCrs=$paginator->paginate(
-        $queryBuilder,
-        $request->query->getInt('page', 1),
-        10
-    );
-    
-    return $this->redirectToRoute('course_request');
-       
-/*
-        return $this->render('student_course/course_requests.html.twig', [
-            'student_courses' => $stdCrs,
-         ]);*/
-        
+        return $this->redirectToRoute('course_request');  
     }
 
 
+    /**
+     * @Route("/course/drequest/{id}", name="course_request_deactivate", methods={"GET","POST"})
+     */
+    public function courseRequestDeactivate(StudentCourse $studentCourse, StudentCourseRepository $studentCourseRepository,PaginatorInterface $paginator,Request $request): Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        
 
+        $studentCourse->setStatus(2);//accepted
+        $em->flush();
+
+        return $this->redirectToRoute('course_request'); 
+    }
 
     /**
      * @Route("/course/{id}", name="students_in_course", methods={"GET"})

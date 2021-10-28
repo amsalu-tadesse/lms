@@ -83,13 +83,13 @@
 							</a>
 						</li>
 						<li class="nav-item">
-							<a href="#" class="nav-link">
+							<a href="{{ path('approved_course_request')}}" class="nav-link">
 								<i class="far fa-circle nav-icon"></i>
 								<p>{% trans %}Approved Requests{% endtrans %}</p>
 							</a>
 						</li>
 						<li class="nav-item">
-							<a href="#" class="nav-link">
+							<a href="{{ path('rejected_course_request')}}" class="nav-link">
 								<i class="far fa-circle nav-icon"></i>
 								<p>{% trans %}Rejected Requests{% endtrans %}</p>
 							</a>
@@ -111,16 +111,6 @@
 								<i class="far fa-circle nav-icon"></i>
 								<p>
 									{% trans %}Course list
-									{% endtrans %}
-								</p>
-							</a>
-						</li>
-
-						<li class="nav-item">
-							<a href="{{ path('course_request')}} " class="nav-link">
-								<i class="far fa-circle nav-icon"></i>
-								<p>
-									{% trans %}Course requests
 									{% endtrans %}
 								</p>
 							</a>
