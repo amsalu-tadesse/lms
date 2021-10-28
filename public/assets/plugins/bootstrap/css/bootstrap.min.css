@@ -7,6 +7,19 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
 
+@font-face {
+    font-family: "Zen Antique";
+    src: url("zenantique-regular-webfont.woff") format("woff");
+}
+
+@font-face {
+    font-family: "poppins";
+    src: url("poppins-regular-webfont.woff") format("woff");
+}
+
+
+
+
 :root {
     --bs-blue: #0d6efd;
     --bs-indigo: #6610f2;

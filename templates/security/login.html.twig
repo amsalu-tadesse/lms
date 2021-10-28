@@ -1,11 +1,53 @@
 {% extends "anon-base.html.twig" %}
+{% block stylesheet %}
+    <style>
+        body{
+            background-image: url('/images/lms-login4.jpg');
+            {# -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover; #}
+        }
+
+        .login-left-text{
+            margin: 50px auto;
+        }
+
+        .login-left-text p {
+            max-width: 400px;
+            color: white;
+            font-weight: 400;
+            font-size: 17px;
+            font-family: poppins;
+        }
+
+        h2,h4 {
+            color: white;
+            line-height: 42px;
+            font-weight: 700;
+            font-family: "Zen antique"
+        }
+    </style>
+{% endblock %}
 {% block body %}
-    <div class="container" style="min-height: 550px;">
+    <div class="container" style="min-height: 500px;">
         <div style=" clear: both;"></div>
         <div class="row">
 
             <div class="col-xs-7 col-sm-5 col-md-7">
-
+                <div class="login-left-text">
+                    <h2>Welcome Back!</h2>
+                    <h4>Success together.</h4>
+                    <p>
+                        It is a long established fact that 
+                        a reader will be distracted by the readable 
+                        content of a page when looking at its layout. 
+                        The point of using Lorem Ipsum is that it has a more-or-less normal 
+                        distribution of letters, as opposed to using 
+                        'Content here, content here', 
+                        making it look like readable English.
+                    </p>
+                </div>
             </div>
             <div class="col-xs-5 col-sm-7 col-md-5">
                 <div class="row">
