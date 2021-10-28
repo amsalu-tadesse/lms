@@ -130,14 +130,23 @@
             <section class="section border-0 m-0" style="min-height: 600px;">
                 <div class="container-fluid">
                     <div class="row">
-                        {{dump(pages_seen)}}
                         {% if pages_seen|length != 0 %}
                                 <script>
                                     control.view_at = "{{pages_seen.pagesCompleted}}";
                                 </script>
                         {% endif %}
                         {% if contents|length == 0 %}
-                        
+                            <div class="row chapter-list">
+                                <div class="col-md-1"></div>
+                                <div class="col-md-10">
+                                    <div class="card border-0 border-radius-0 ">
+                                        <div class="card-body">
+                                            <center><p class="card-text">{% trans %}There is no content available for this chapter{% endtrans %}</p>
+                                            <a href="{{ path('course_chapters',{'id': chapter.instructorCourse.id})}}" class="btn btn-primary "><h5 class="text-light"> </i>Back to chapters list </h5></a></center>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         {% else %}
                             
                             <div class="col-md-8">

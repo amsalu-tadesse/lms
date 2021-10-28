@@ -36,7 +36,7 @@ class InstructorCourseChapterRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('ch')
             ->select('ch')
             ->join('ch.instructorCourse', 'ic')
-            ->where('ch.chapter = :id')
+            ->where('ch.topic = :id')
             ->andWhere('ic.id = :val')
             ->setParameter('id', $chapter)
             ->setParameter('val', $course)

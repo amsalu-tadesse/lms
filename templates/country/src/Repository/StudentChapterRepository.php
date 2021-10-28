@@ -54,7 +54,7 @@ class StudentChapterRepository extends ServiceEntityRepository
             ->select('s.pagesCompleted', 's.id', 's.updated_at')
             ->join('s.chapter', 'ch')
             ->where('s.student = :stud_id')
-            ->andWhere('ch.chapter = :val')
+            ->andWhere('ch.topic = :val')
             ->setParameter('stud_id', $stud_id)
             ->setParameter('val', $value)
             ->getQuery()
