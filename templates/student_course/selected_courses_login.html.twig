@@ -78,7 +78,7 @@
             var conf = confirm("Are you sure you want to remove '"+name+"' from the list");
             if(conf){
                 $.ajax({
-                    url: "/stud/"+id+"/remove",
+                    url: "/student/"+id+"/remove",
                     success: function(data){
                         console.log("success");
                     },
