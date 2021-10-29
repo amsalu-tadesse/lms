@@ -17,11 +17,7 @@ class QuizChoices
      */
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Quiz::class, inversedBy="quizChoices")
-     */
-    private $quiz;
-
+ 
     /**
      * @ORM\Column(type="string", length=255)
      */
@@ -32,22 +28,18 @@ class QuizChoices
      */
     private $description;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=QuizQuestions::class, inversedBy="quizChoices")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $question;
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getQuiz(): ?Quiz
-    {
-        return $this->quiz;
-    }
-
-    public function setQuiz(?Quiz $quiz): self
-    {
-        $this->quiz = $quiz;
-
-        return $this;
-    }
+ 
 
     public function getLetter(): ?string
     {
@@ -69,6 +61,18 @@ class QuizChoices
     public function setDescription(string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getQuestion(): ?QuizQuestions
+    {
+        return $this->question;
+    }
+
+    public function setQuestion(?QuizQuestions $question): self
+    {
+        $this->question = $question;
 
         return $this;
     }

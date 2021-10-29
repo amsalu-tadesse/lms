@@ -23,69 +23,88 @@
 		<div
 			class="card card-body">
 			{# <table class="table">
-					<thead>
-						<tr>
-							<th>Id</th>
-							<th>Question</th>
-							<th>Answer</th> 
-							<th>actions</th>
-						</tr>
-					</thead>
-					<tbody>
-						{% for quiz_question in quiz_questions %}
-							<tr>
-								<td>{{ quiz_question.id }}</td>
-								<td>{{ quiz_question.question }}</td>
-								<td>{{ quiz_question.answer }}</td>
-								<td>
-									<a href="{{ path('quiz_questions_show', {'id': quiz_question.id}) }}">show</a>
-									<a href="{{ path('quiz_questions_edit', {'id': quiz_question.id}) }}">edit</a>
-								</td>
-							</tr>
-						{% else %}
-							<tr>
-								<td colspan="4">no records found</td>
-							</tr>
-						{% endfor %}
-					</tbody>
-				</table> #}
+											<thead>
+												<tr>
+													<th>Id</th>
+													<th>Question</th>
+													<th>Answer</th> 
+													<th>actions</th>
+												</tr>
+											</thead>
+											<tbody>
+												{% for quiz_question in quiz_questions %}
+													<tr>
+														<td>{{ quiz_question.id }}</td>
+														<td>{{ quiz_question.question }}</td>
+														<td>{{ quiz_question.answer }}</td>
+														<td>
+															<a href="{{ path('quiz_questions_show', {'id': quiz_question.id}) }}">show</a>
+															<a href="{{ path('quiz_questions_edit', {'id': quiz_question.id}) }}">edit</a>
+														</td>
+													</tr>
+												{% else %}
+													<tr>
+														<td colspan="4">no records found</td>
+													</tr>
+												{% endfor %}
+											</tbody>
+										</table> #}
 
 
 			<div id="accordion">
-		
 
-			{% for quiz_question in quiz_questions %}
-				<div class="card card-success">
-					<div class="card-header">
-					 
-						<h4 class="card-title w-100"> 
-                        <a class="collapsed" data-toggle="collapse" href="#collapse{{quiz_question.id}}" aria-expanded="false"> 
-						{{loop.index}}.{{ quiz_question.question }}
-                        </a>
 
-                                      <a class="btn btn-sm   float-right btn-warning"
-                            href="#">	<span class="fa fa-edit"> </span>Edit</a>
+				{% for quiz_question in quiz_questions %}
 
-                      </h4>
-         
-					</div>
-					<div id="collapse{{quiz_question.id}}" class="collapse" data-parent="#accordion" style="">
-						<div class="card-body">
-				CHOICES HERE
+
+					{# <pre> {{ dump(quiz_question) }}
+									</pre> #}
+					<div class="card card-secondary11">
+						<div class="card-header">
+
+							<h4 class="card-title w-100">
+								<a class="collapsed" data-toggle="collapse" href="#collapse{{quiz_question.id}}" aria-expanded="false"> {{loop.index}}.{{ quiz_question.question }}
+								</a>
+
+								<a class="btn btn-sm   float-right btn-warning" href="#">
+									<span class="fa fa-edit"></span>Edit</a>
+
+							</h4>
+
+						</div>
+						<div id="collapse{{quiz_question.id}}" class="collapse" data-parent="#accordion" style="">
+							<div class="card-body">
+							<table class="table">
+
+								{% for choice in quiz_question.quizChoices %}
+									
+										<tr>
+											<td >
+											
+											{{choice.letter}}
+											{% if quiz_question.answer | upper == choice.letter | upper %}
+										<span class="fa fa-check" style="color:green"></span>
+										      {% endif %}
+
+											  
+											
+											</td>
+											<td> {{choice.description}}</td>
+										</tr>
+								
+								{% endfor %}
+							</table>
+							</div>
 						</div>
 					</div>
-				</div>
 
 				{% else %}
-				<tr>
-					<td colspan="4">no records found</td>
-				</tr>
-			{% endfor %}
+					<tr>
+						<td colspan="4">no records found</td>
+					</tr>
+				{% endfor %}
 
 
-
-
-				
 			</div>
 
 

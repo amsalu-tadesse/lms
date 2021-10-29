@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\QuizQuestionsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -31,6 +33,16 @@ class QuizQuestions
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $answer;
+
+    /**
+     * @ORM\OneToMany(targetEntity=QuizChoices::class, mappedBy="question")
+     */
+    private $quizChoices;
+
+    public function __construct()
+    {
+        $this->quizChoices = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -69,6 +81,36 @@ class QuizQuestions
     public function setAnswer(string $answer): self
     {
         $this->answer = $answer;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|QuizChoices[]
+     */
+    public function getQuizChoices(): Collection
+    {
+        return $this->quizChoices;
+    }
+
+    public function addQuizChoice(QuizChoices $quizChoice): self
+    {
+        if (!$this->quizChoices->contains($quizChoice)) {
+            $this->quizChoices[] = $quizChoice;
+            $quizChoice->setQuestion($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQuizChoice(QuizChoices $quizChoice): self
+    {
+        if ($this->quizChoices->removeElement($quizChoice)) {
+            // set the owning side to null (unless already changed)
+            if ($quizChoice->getQuestion() === $this) {
+                $quizChoice->setQuestion(null);
+            }
+        }
 
         return $this;
     }

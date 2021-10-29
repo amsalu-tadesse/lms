@@ -50,10 +50,7 @@ class Quiz
      */
     private $quizQuestions;
 
-    /**
-     * @ORM\OneToMany(targetEntity=QuizChoices::class, mappedBy="quiz")
-     */
-    private $quizChoices;
+  
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -63,7 +60,6 @@ class Quiz
     public function __construct()
     {
         $this->quizQuestions = new ArrayCollection();
-        $this->quizChoices = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -161,35 +157,7 @@ class Quiz
         return $this;
     }
 
-    /**
-     * @return Collection|QuizChoices[]
-     */
-    public function getQuizChoices(): Collection
-    {
-        return $this->quizChoices;
-    }
-
-    public function addQuizChoice(QuizChoices $quizChoice): self
-    {
-        if (!$this->quizChoices->contains($quizChoice)) {
-            $this->quizChoices[] = $quizChoice;
-            $quizChoice->setQuiz($this);
-        }
-
-        return $this;
-    }
-
-    public function removeQuizChoice(QuizChoices $quizChoice): self
-    {
-        if ($this->quizChoices->removeElement($quizChoice)) {
-            // set the owning side to null (unless already changed)
-            if ($quizChoice->getQuiz() === $this) {
-                $quizChoice->setQuiz(null);
-            }
-        }
-
-        return $this;
-    }
+    
 
     public function getName(): ?string
     {

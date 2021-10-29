@@ -83,21 +83,12 @@ class CourseController extends AbstractController
         );
         return $this->render('course/index.html.twig', [
             'courses' => $data,
-            'form' => $form->createView(),
+            'form' => $form->createView(), 
             'edit'=>false
         ]);
     }  
 
-    /**
-     * @Route("/library", name="courses_list")
-     */
-    public function coursesOrderedByCategory(InstructorCourseRepository $course): Response
-    {
-        $courses = $course->findCoursesSortByCategory();
-        return $this->render('course/couses_list.html.twig',[
-            'courses' => $courses
-        ]);
-    }
+
 
      /**
      * @Route("/detail/{id}", name="course_description")

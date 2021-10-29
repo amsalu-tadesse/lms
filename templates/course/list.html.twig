@@ -3,6 +3,7 @@
         {% if not is_granted("ROLE_STUDENT") %}
             {% set array = [] %}
         {% endif %}
+    
         
         {% set continue = true %}
 
@@ -13,7 +14,11 @@
                 {% set continue = true %}
             {% endif %}
             {% if continue == true %}
+          
+         
                 {% if flag == course.category_id %}
+
+            
                         <div class="card bg-color-gray" style="height: 150px; margin: 0px 10px" card-id="{{course.id}}">
                             <div class="card-body">
                                 <p>

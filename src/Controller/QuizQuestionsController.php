@@ -2,8 +2,9 @@
 
 namespace App\Controller;
 
-use App\Entity\QuizQuestions;
 use App\Entity\Quiz;
+use App\Entity\QuizQuestions;
+use App\Entity\QuizChoices;
 use App\Form\QuizQuestionsType;
 use App\Repository\QuizQuestionsRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,27 +23,48 @@ class QuizQuestionsController extends AbstractController
     public function index(QuizQuestionsRepository $quizQuestionsRepository, Quiz $quiz): Response
     {
         return $this->render('quiz_questions/index.html.twig', [
-            'quiz_questions' => $quizQuestionsRepository->findBy(['quiz'=>$quiz]),
-            'quiz'=>$quiz,
+            'quiz_questions' => $quizQuestionsRepository->findBy(['quiz' => $quiz]),
+            'quiz' => $quiz,
         ]);
-    } 
+    }
 
     /**
      * @Route("/new/{id}", name="quiz_questions_new", methods={"GET","POST"})
      */
-    public function new(Request $request, Quiz $quiz): Response
-    {
+    function new (Request $request, Quiz $quiz): Response {
+
         $quizQuestion = new QuizQuestions();
         $form = $this->createForm(QuizQuestionsType::class, $quizQuestion);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $postedData = $request->request->all();
+            unset($postedData['quiz_questions']);
+
+            if (!array_key_exists(strtoupper($form->getData()->getAnswer()), $postedData)) {
+                end($postedData); // move the internal pointer to the end of the array
+                $key = key($postedData);
+                $this->addFlash('danger', 'Please enter the correct answer ranged from A to ' . $key);
+                return $this->redirectToRoute('quiz_questions_new', ['id' => $quiz->getId()]);
+            }
+
             $entityManager = $this->getDoctrine()->getManager();
             $quizQuestion->setQuiz($quiz);
             $entityManager->persist($quizQuestion);
             $entityManager->flush();
+ 
+            foreach ($postedData as $letter => $description) {
+                $choice = new QuizChoices();
+                $choice->setLetter($letter);
+                $choice->setDescription($description);
+                $choice->setQuestion($quizQuestion);
+                $entityManager->persist($choice);
+               
+            }
+         
+            $entityManager->flush();
 
-            return $this->redirectToRoute('quiz_questions_index', ['id'=>$quiz->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('quiz_questions_index', ['id' => $quiz->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('quiz_questions/new.html.twig', [
@@ -61,6 +83,16 @@ class QuizQuestionsController extends AbstractController
         ]);
     }
 
+    /*public function numberToArrays($num)
+    {
+        if ($num > 10 || $num <= 0) {
+            return [];
+        }
+
+        $arr = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
+        return array_slice($arr, 0, $num);
+    }
+*/
     /**
      * @Route("/{id}/edit", name="quiz_questions_edit", methods={"GET","POST"})
      */
@@ -86,7 +118,7 @@ class QuizQuestionsController extends AbstractController
      */
     public function delete(Request $request, QuizQuestions $quizQuestion): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$quizQuestion->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $quizQuestion->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($quizQuestion);
             $entityManager->flush();
