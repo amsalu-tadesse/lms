@@ -45,7 +45,10 @@ class QuizQuestionsController extends AbstractController
                 end($postedData); // move the internal pointer to the end of the array
                 $key = key($postedData);
                 $this->addFlash('danger', 'Please enter the correct answer ranged from A to ' . $key);
-                return $this->redirectToRoute('quiz_questions_new', ['id' => $quiz->getId()]);
+                return $this->renderForm('quiz_questions/new.html.twig', [
+                    'quiz_question' => $quizQuestion,
+                    'form' => $form,
+                ]);
             }
 
             $entityManager = $this->getDoctrine()->getManager();
