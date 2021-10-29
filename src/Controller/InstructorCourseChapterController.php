@@ -29,8 +29,8 @@ class InstructorCourseChapterController extends AbstractController
         $em = $this->getDoctrine()->getManager();
 
         // $teachersList = $em->getRepository(Instructor::class)->findAll();
-    //    dd($instructorCourseRepository->findAll());
-    $mylist = $em->getRepository(InstructorCourse::class)->findByUser($this->getUser());
+        //    dd($instructorCourseRepository->findAll());
+        $mylist = $em->getRepository(InstructorCourse::class)->findByUser($this->getUser());
      
         return $this->render('instructor_course_chapter/instructor_vew.html.twig', [
             'instructor_courses' => $mylist,
@@ -123,8 +123,7 @@ class InstructorCourseChapterController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('instructor_course_chapter_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('instructor_course_chapter_content_list', ['id'=> $request->get("id")]);
         }
 
         return $this->renderForm('instructor_course_chapter/edit.html.twig', [
