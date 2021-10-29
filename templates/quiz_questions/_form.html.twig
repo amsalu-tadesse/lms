@@ -6,50 +6,68 @@
 	<div class="card card-header">
 		<h3>Enter Course details</h3>
 	</div>
-	<div class="card card-body"> {{ form_start(form) }}
+	<div
+		class="card card-body">
+		{# {{ form_start(form) }} #} {{ form_start(form,{'attr': {'role':'form'}}) }}
 
 
-		<div class="form-group">
-			<label for="name">Question</label> {{ form_widget(form.question,{'attr':{'class':'form-control'}}) }}
+		<div class="form-group ">
+			<label class="control-label no-padding-right">{{ form_label(form.question) }}</label> {{ form_widget(form.question,{'attr':{'class':'form-control'}}) }}
+			<div class="help-block with-errors"></div>
 		</div>
 
-		<div class="form-group">
-			<label for="nameAm">Answer</label> {{ form_widget(form.answer,{'attr':{'class':'form-control'}}) }}
-		</div>
+
+		{# 
+				<div class="form-group">
+					<label for="name">Question</label> {{ form_widget(form.question,{'attr':{'class':'form-control'}}) }}
+				</div>
+		
+				<div class="form-group">
+					<label for="nameAm">Answer</label> {{ form_widget(form.answer,{'attr':{'class':'form-control'}}) }}
+				</div> #}
 
 		{# choices here. #}
-		 <table style="width:100%" id="mytable" class="authors-list">
+		<table style="width:100%" id="mytable" class="authors-list">
 
-        <tbody>
-			<tr>
-				 <td>A</td>
-				 
-				<td>
-					<div class="form-group">
-						<input type="text" name="optiona" class="form-control" maxlenght= "255"/>
-					</div>
-				</td> 
+			<tbody>
+				<tr>
+					<td>A</td>
 
-                
-			</tr>
-        </tbody>
+					<td>
+						<div class="form-group">
+							<input type="text" name="A" class="form-control" maxlenght="255" required/>
+						</div>
+					</td>
 
-		</table> 
-	<a href="#" title="" class="add-author btn btn-info "><span class="fa fa-plus"></span></a> <br>
 
+				</tr>
+				<tr>
+					<td>B</td>
+
+					<td>
+						<div class="form-group">
+							<input type="text" name="B" class="form-control" maxlenght="255" required/>
+						</div>
+					</td>
+
+
+				</tr>
+			</tbody>
+
+		</table>
+		<a href="#" title="" class="add-author btn btn-info " id="dynamic">
+			<span class="fa fa-plus"   ></span>
+		</a>
+		<br>
+
+
+		<hr>
+		<div class="form-group ">
+			<label class="control-label no-padding-right">{{ form_label(form.answer) }}</label> {{ form_widget(form.answer,{'attr':{'class':'form-control','required':'required'}}) }}
+			<div class="help-block with-errors"></div>
+		</div>
 		<button class="btn btn-primary mt-2">{{ button_label|default('Save') }}</button> {{ form_end(form) }}
 
 
 	</div>
 </div>
- 
-
-
-
-
-
-
-
-
-
-

@@ -16,13 +16,20 @@
     jQuery('a.add-author').click(function(event){
         event.preventDefault();
         counter++;
-        if(counter > 10)
+        if(counter == 9)
         {
+            document.getElementById("dynamic").style.background='red';
+ 
+        }
+        if(counter > 9)
+        {
+            document.getElementById("dynamic").style.background='red';
+
             alert("Maximum number reached");
         }
         else 
         {
-        var newRow = jQuery('<tr><td>'+getChars(counter)+'</td><td><div class="form-group"> <input type="text" name="option_'+getChars(counter)+'" class="form-control" maxlenght= "255"/></div></td></tr>');
+        var newRow = jQuery('<tr><td>'+getChars(counter)+'</td><td><div class="form-group"> <input type="text" name="'+getChars(counter)+'" class="form-control" maxlenght= "255" required/></div></td></tr>');
             jQuery('table.authors-list').append(newRow);
         }
         
@@ -30,7 +37,7 @@
 
     function getChars(x)
     {
-        var arr = ['','A','B','C','D','E','F','G','H','I','J'];
+        var arr = ['','B','C','D','E','F','G','H','I','J'];
         return arr[x];
     }
 </script>
