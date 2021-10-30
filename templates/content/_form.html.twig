@@ -1,65 +1,67 @@
-{{ form_start(form) }} {% set type = app.request.get('id') %}
+{{ form_start(form) }}
+{% set type = app.request.get('id') %}
 <div class="card card-info">
-    <div class="card card-header">
-        {% trans %}Update content{% endtrans %}
-    </div>
-    {{form_errors(form)}}
-    <div class="card card-body">
-         {{ form_start(form,{'attr': {'role':'form'}} ) }} 
- 
-        <div class="form-group "> <label class="control-label no-padding-right">{{ form_label(form.chapter) }}</label> {{ form_widget(form.chapter,{'attr':{'class':'form-control'}}) }}
-            <div class="help-block with-errors"></div>
-        </div>
+	<div class="card card-header">
+		{% trans %}Update content{% endtrans %}
+	</div> {{form_errors(form)}}
+	<div class="card card-body"> {{ form_start(form,{'attr': {'role':'form'}}
+		) }}
 
-        <div class="form-group ">
-            <label class="control-label no-padding-right">{{ form_label(form.title) }}</label> {{ form_widget(form.title,{'attr':{'class':'form-control'}}) }}
-            <div class="help-block with-errors">
-                
-            </div>
-        </div>
+		<div class="form-group ">
+			<label class="control-label no-padding-right">{{ form_label(form.chapter) }}</label> {{ form_widget(form.chapter,{'attr':{'class':'form-control'}}) }}
+			<div class="help-block with-errors"></div>
+		</div>
 
-        <div class="form-group ">
-            <div class="form-group " id="upload">
-                <label class="control-label no-padding-right" id="filename">
+		<div class="form-group ">
+			<label class="control-label no-padding-right">{{ form_label(form.title) }}</label> {{ form_widget(form.title,{'attr':{'class':'form-control'}}) }}
+			<div class="help-block with-errors"></div>
+		</div>
+
+		<div class="form-group ">
+			<div class="form-group " id="upload">
+				<label class="control-label no-padding-right" id="filename">
 					<input type="radio" id="videoFileRadio" name="contact" value="videoFileRadio" checked>
-				{% trans %}Upload video{% endtrans %}
+					{% trans %}Upload video{% endtrans %}
 				</label>
-                <br> 
-                <div class="form-error">
-                    {{ form_errors(form.filename) }}
-                </div>
-                {{ form_widget(form.filename,{ 'attr':{ 'class': ''}}) }}
-                <div class="help-block with-errors"></div>
-            </div>
-            <br>
-            <div class="form-group " id="videoLink">
-                <label class="control-label no-padding-right">
+				<br>
+				<div class="form-error"> {{ form_errors(form.filename) }}
+				</div> {{ form_widget(form.filename,{ 'attr':{ 'class': ''}}) }}
+				<div class="help-block with-errors"></div>
+			</div>
+			<br>
+			<div class="form-group " id="videoLink">
+				<label class="control-label no-padding-right">
 					<input type="radio" id="videoLinkRadio" name="contact" value="videoLinkRadio">
 					{% trans %}Youtube Link{% endtrans %}
 				</label> {{ form_widget(form.videoLink,{'attr':{'class':'form-control','disabled':'disabled'}}) }}
-                <div class="help-block with-errors"></div>
-            </div>
-        </div>
+				<div class="help-block with-errors"></div>
+			</div>
+			<br>
 
-        <div class="form-group" id="content">
-            <label class="control-label no-padding-right" id="resourcedesc">{{ form_label(form.content) }}</label> {{ form_widget(form.content,{'attr':{'class':'form-control'}}) }}
-            <div class="help-block with-errors"></div>
-        </div>
+			{# <div class="form-group" id="content">
+				<label class="control-label no-padding-right" id="resourcedesc">
+					<input type="radio" id="ContentRadio" name="contact" value="ContentRadio"> {{ form_label(form.content) }}</label> {{ form_widget(form.content,{'attr':{'class':'form-control','disabled':'disabled'}}) }}
+				<div class="help-block with-errors"></div>
+			</div> #}
 
 
-        
+		</div>
 
-        <div class="form-group ">
-            {# <input type="hidden" name="edit" value="{{edit}}"> #}
-            <a href="{{ path('content_index',{'id': incrsid }) }}" class="btn btn-primary">
+		<div class="form-group" id="content">
+			<label class="control-label no-padding-right" id="resourcedesc">{{ form_label(form.content) }}</label> {{ form_widget(form.content,{'attr':{'class':'form-control cke-label"'}}) }}
+			<div class="help-block with-errors"></div>
+		</div>
+
+
+		<div
+			class="form-group ">
+			{# <input type="hidden" name="edit" value="{{edit}}"> #}
+			<a href="{{ path('content_index',{'id': incrsid }) }}" class="btn btn-primary">
 				{% trans %}Cancel{% endtrans %}
 			</a>
- 
-
-            <button class="btn btn-success mr-2">{{ button_label|default('Save') }}</button>
-        </div>
 
 
-        {{ form_end(form) }}
-    </div>
+			<button class="btn btn-success mr-2">{{ button_label|default('Save') }}</button>
+		</div> {{ form_end(form) }}
+	</div>
 </div>

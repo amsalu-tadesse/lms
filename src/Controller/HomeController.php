@@ -7,6 +7,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Repository\InstructorCourseRepository;
+use Ottosmops\Pdftotext\Extract;
 
 
 
@@ -41,7 +42,30 @@ class HomeController extends AbstractController
       
        
     }
+      /**
+     * @Route("/pdf", name="test")
+     */
+        public function temp()
+        {
+           /* //one
+          $txt =  \Ottosmops\Pdftotext\Extract::getText('uploads/pdf/law.pdf'); //returns the text from the pdf
 
+          //three
+         $txt = (new Extract('/usr/bin/pdftotext'))
+    ->pdf('uploads/pdf/law.pdf')
+    ->options('-enc UTF-8 -nopgbrk')
+    ->text();
+  
+
+  //two////
+  $reader = new \Asika\Pdf2text;
+$output = $reader->decode('uploads/pdf/law.pdf');
+
+          return $this->render('home/pdf.html.twig', [
+            'pdf' => $txt,
+        ]);*/
+
+        }
 
  
 }

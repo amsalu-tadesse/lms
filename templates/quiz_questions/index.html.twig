@@ -63,10 +63,10 @@
 						<div class="card-header">
 
 							<h4 class="card-title w-100">
-								<a class="collapsed" data-toggle="collapse" href="#collapse{{quiz_question.id}}" aria-expanded="false"> {{loop.index}}.{{ quiz_question.question }}
+								<a class="collapsed" data-toggle="collapse" href="#collapse{{quiz_question.id}}" aria-expanded="false"> {{loop.index}}.{{ quiz_question.question | raw }}
 								</a>
 
-								<a class="btn btn-sm   float-right btn-warning" href="#">
+								<a class="btn btn-sm   float-right btn-warning" href="{{path('quiz_questions_edit',{'id':quiz_question.id})}}">
 									<span class="fa fa-edit"></span>Edit</a>
 
 							</h4>

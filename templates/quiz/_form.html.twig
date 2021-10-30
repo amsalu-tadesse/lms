@@ -1,9 +1,3 @@
-{# {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
-
- #}
 {{ form_start(form) }}
 <div class="form-group">
 	<label for="other_payments_price">Chapter
@@ -45,13 +39,51 @@
 	</div>
 </div>
 
-<div class="form-group">
-	<label for="other_payments_price">active</label>
-	{{ form_widget(form.active,{'attr':{'class':'form-control'}}) }}
+<div class="row">
+	<div class="col-sm-6">
+		<div class="form-group">
+			<label for="other_payments_price">active</label>
+			{{ form_widget(form.active,{'attr':{'class':'form-control', 'id':'time'}}) }}
+		</div>
+	</div>
+	<div class="col-sm-6">
+		<div class="form-group">
+			<label for="other_payments_price">Duration</label>
+			{{ form_widget(form.duration,{'attr':{'class':'form-control'}}) }}
+		</div>
+	</div>
 </div>
 
 
 <button class="btn btn-info">{{ button_label|default('Save') }}</button>
+
+
+{# <div class="form-group">
+	<label for="other_payments_paymentReason">Instruction</label>
+	{{ form_widget(form.duration,{'attr':{'class':'form-control'}}) }}
+</div>
+
+<div class="form-group">
+	<label for="other_payments_price">Percentage</label>
+	{{ form_widget(form.percentage,{'attr':{'class':'form-control'}}) }}
+</div> #}
+
+{# <div class="form-group">
+	<label for="other_payments_price">Passvalue</label>
+	{{ form_widget(form.passvalue,{'attr':{'class':'form-control'}}) }}
+</div>
+<div class="form-group">
+	<label for="other_payments_price">Duration (in minutes)</label>
+	{{ form_widget(form.duration,{'attr':{'class':'form-control'}}) }}
+</div>
+
+<div class="form-group">
+	<label for="other_payments_price">active</label>
+	{{ form_widget(form.active,{'attr':{'class':''}}) }}
+</div>
+
+
+<button class="btn btn-info">{{ button_label|default('Save') }}</button> #}
 
 
 {{ form_end(form) }}

@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New QuizQuestions{% endblock %}
+{% block title %}New Quiz Questions{% endblock %}
 
 {% block body %}
-    <h1>Create new QuizQuestions</h1>
+    <h1>Create new Quiz Questions</h1>
 
     {{ include('quiz_questions/_form.html.twig') }}
 
@@ -29,7 +29,9 @@
         }
         else 
         {
-        var newRow = jQuery('<tr><td>'+getChars(counter)+'</td><td><div class="form-group"> <input type="text" name="'+getChars(counter)+'" class="form-control" maxlenght= "255" required/></div></td></tr>');
+            /*<input type="text" name="'+getChars(counter)+'" class="form-control" maxlenght= "255" /> */
+
+        var newRow = jQuery('<tr><td>'+getChars(counter)+'&nbsp;&nbsp;<input type="radio" name="answer" value="'+getChars(counter)+'"></td><td><div class="form-group"> <textarea id="'+getChars(counter)+'" name="'+getChars(counter)+'" class="form-control"  rows="3"  required></textarea></div></td></tr>');
             jQuery('table.authors-list').append(newRow);
         }
         

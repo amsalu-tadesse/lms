@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Termsandconditions index{% endblock %}
+
+{% block body %}
+    <h1>Termsandconditions index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Terms</th>
+                <th>Conditions</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for termsandcondition in termsandconditions %}
+            <tr>
+                <td>{{ termsandcondition.id }}</td>
+                <td>{{ termsandcondition.terms }}</td>
+                <td>{{ termsandcondition.conditions }}</td>
+                <td>
+                    <a href="{{ path('termsandconditions_show', {'id': termsandcondition.id}) }}">show</a>
+                    <a href="{{ path('termsandconditions_edit', {'id': termsandcondition.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('termsandconditions_new') }}">Create new</a>
+{% endblock %}

@@ -33,11 +33,7 @@ class Quiz
      * @ORM\Column(type="float", nullable=true)
      */
     private $passvalue;
-
-    /**
-     * @ORM\Column(type="smallint", nullable=true)
-     */
-    private $active;
+ 
 
     
     /**
@@ -57,9 +53,19 @@ class Quiz
     private $name;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    private $active;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $duration;
+
+    /**
      * @ORM\Column(type="integer")
      */
-    private $ActiveQuestions;
+    private $activeQuestions;
 
     public function __construct()
     {
@@ -107,17 +113,7 @@ class Quiz
         return $this;
     }
 
-    public function getActive(): ?int
-    {
-        return $this->active;
-    }
 
-    public function setActive(?int $active): self
-    {
-        $this->active = $active;
-
-        return $this;
-    }
 
     public function getInstructorCourseChapter(): ?InstructorCourseChapter
     {
@@ -179,14 +175,37 @@ class Quiz
         return $this->name;
     }
 
-    public function getActiveQuestions(): ?int
+    public function getActive(): ?bool
     {
-        return $this->ActiveQuestions;
+        return $this->active;
     }
 
-    public function setActiveQuestions(int $ActiveQuestions): self
+    public function setActive(bool $active): self
     {
-        $this->ActiveQuestions = $ActiveQuestions;
+        $this->active = $active;
+
+        return $this;
+    }
+
+    public function getDuration(): ?int
+    {
+        return $this->duration;
+    }
+
+    public function setDuration(int $duration): self
+    {
+        $this->duration = $duration;
+        return $this;
+    }
+
+    public function getActiveQuestions(): ?int
+    {
+        return $this->activeQuestions;
+    }
+
+    public function setActiveQuestions(int $activeQuestions): self
+    {
+        $this->activeQuestions = $activeQuestions;
 
         return $this;
     }

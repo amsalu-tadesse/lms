@@ -12,41 +12,49 @@
 
 
 		<div class="form-group ">
-			<label class="control-label no-padding-right">{{ form_label(form.question) }}</label> {{ form_widget(form.question,{'attr':{'class':'form-control'}}) }}
+			<label class="control-label no-padding-right">{{ form_label(form.question) }}</label> {{ form_widget(form.question,{'attr':{'class':'form-control','rows':'4'}}) }}
 			<div class="help-block with-errors"></div>
 		</div>
 
 
 		{# 
-				<div class="form-group">
-					<label for="name">Question</label> {{ form_widget(form.question,{'attr':{'class':'form-control'}}) }}
-				</div>
-		
-				<div class="form-group">
-					<label for="nameAm">Answer</label> {{ form_widget(form.answer,{'attr':{'class':'form-control'}}) }}
-				</div> #}
+						<div class="form-group">
+							<label for="name">Question</label> {{ form_widget(form.question,{'attr':{'class':'form-control'}}) }}
+						</div>
+				
+						<div class="form-group">
+							<label for="nameAm">Answer</label> {{ form_widget(form.answer,{'attr':{'class':'form-control'}}) }}
+						</div> #}
 
 		{# choices here. #}
 		<table style="width:100%" id="mytable" class="authors-list">
 
 			<tbody>
 				<tr>
-					<td>A</td>
+					<td>A  &nbsp; &nbsp;
+						<input type="radio" name="answer" value="A" checked>
+					</td>
 
 					<td>
 						<div class="form-group">
-							<input type="text" name="A" class="form-control" maxlenght="255" required/>
+							<textarea name="A" class="form-control"  rows="3" required></textarea>
+
+
+							{# <input type="text" name="A" class="form-control" maxlenght="255" required/> #}
 						</div>
 					</td>
 
 
 				</tr>
 				<tr>
-					<td>B</td>
+					<td>B   &nbsp; &nbsp;
+						<input type="radio" name="answer" value="B">
+					</td>
 
 					<td>
 						<div class="form-group">
-							<input type="text" name="B" class="form-control" maxlenght="255" required/>
+						<textarea   name="B" class="form-control"  rows="3" required></textarea>
+							{# <input type="text" name="B" class="form-control" maxlenght="255" required/> #}
 						</div>
 					</td>
 
@@ -56,16 +64,16 @@
 
 		</table>
 		<a href="#" title="" class="add-author btn btn-info " id="dynamic">
-			<span class="fa fa-plus"   ></span>
+			<span class="fa fa-plus"></span>
 		</a>
 		<br>
 
 
 		<hr>
-		<div class="form-group ">
+		{# <div class="form-group ">
 			<label class="control-label no-padding-right">{{ form_label(form.answer) }}</label> {{ form_widget(form.answer,{'attr':{'class':'form-control','required':'required'}}) }}
 			<div class="help-block with-errors"></div>
-		</div>
+		</div> #}
 		<button class="btn btn-primary mt-2">{{ button_label|default('Save') }}</button> {{ form_end(form) }}
 
 

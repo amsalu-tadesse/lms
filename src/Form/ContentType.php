@@ -11,13 +11,16 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 
 
 class ContentType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $incrsid = $options['incrsid'];
+        $incrsid = $options['incrsid']; 
+
+
         $builder
             ->add('chapter', EntityType::class, [
                 'class' => InstructorCourseChapter::class,
@@ -34,9 +37,13 @@ class ContentType extends AbstractType
                 },
             ]) 
             ->add('title')
-            ->add('content')
             // ->add('file')
             ->add('videoLink')
+            ->add('content', CKEditorType::class, array(
+            'config' => array(
+                'uiColor' => '#ffffff',
+             ),
+        ))
             // ->add('instructorCourse')
             ->add('filename', FileType::class, [
                 'label' => 'Resource',
