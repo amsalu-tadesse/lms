@@ -52,10 +52,7 @@ class Quiz
      */
     private $name;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $active;
+  
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -71,6 +68,11 @@ class Quiz
      * @ORM\Column(type="boolean")
      */
     private $isMandatory;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $active;
 
     public function __construct()
     {
@@ -180,18 +182,6 @@ class Quiz
         return $this->name;
     }
 
-    public function getActive(): ?bool
-    {
-        return $this->active;
-    }
-
-    public function setActive(bool $active): self
-    {
-        $this->active = $active;
-
-        return $this;
-    }
-
     public function getDuration(): ?int
     {
         return $this->duration;
@@ -223,6 +213,18 @@ class Quiz
     public function setIsMandatory(bool $isMandatory): self
     {
         $this->isMandatory = $isMandatory;
+
+        return $this;
+    }
+
+    public function getActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(?bool $active): self
+    {
+        $this->active = $active;
 
         return $this;
     }

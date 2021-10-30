@@ -53,7 +53,7 @@ class QuizType extends AbstractType
                         }
                     }
 
-                    // dd($chapter);
+                    // dd($chapter); 
 
                     $res = $er->createQueryBuilder('s');
                     if($chapter != '')
@@ -66,12 +66,8 @@ class QuizType extends AbstractType
                     return $res;
                 },
             ]) 
-            ->add('active', ChoiceType::class,[
-                'choices'=> [
-                    'no'=> '0',
-                    'yes'=>'1'
-                ],
-            ])
+            ->add('active')
+            ->add('isMandatory')
             ->add('activeQuestions',null, [
                 'attr' =>['placeholder' => 'total number of questions visible for the student']
             ])

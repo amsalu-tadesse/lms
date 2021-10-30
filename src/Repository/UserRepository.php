@@ -48,7 +48,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             }
             if($mname !="")
             {
-                $q-->andWhere('u.middleName LIKE :middleName')
+                $q->andWhere('u.middleName LIKE :middleName')
                 ->setParameter('middleName', '%'.$mname.'%');
             }
             

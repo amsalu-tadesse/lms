@@ -47,6 +47,7 @@ security:
         - { path: ^/$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/aboutUs, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/account/passwordReset, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/reset-password, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/course/library, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/course/detail/*, roles: IS_AUTHENTICATED_ANONYMOUSLY }

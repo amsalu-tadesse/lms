@@ -149,7 +149,25 @@ class RegistrationController extends AbstractController
                     $user->setFirstName($form_data['firstName']);
                     $user->setMiddleName($form_data['middleName']);
                     $user->setLastName($form_data['lastName']);
-                    $user->setUsername($form_data['username']);
+                    $entityManager = $this->getDoctrine()->getManager();
+
+            $username1 = $form_data['firstName'] . '.' . $form_data['middleName'];
+            $username = $username1;
+            $found = $entityManager->getRepository(User::class)->findOneBy(['username' => $username]);
+            $counter = 0;
+            while ($found) {
+                $counter++;
+                $username_new = $username1 . $counter;
+                $username = $username_new;
+                $found = $entityManager->getRepository(User::class)->findOneBy(['username' => $username_new]);
+
+            }
+         
+
+
+
+
+                    $user->setUsername($username);
                     $user->setIsVerified(1);
                     $user->setEmail($form_data['email']);
 

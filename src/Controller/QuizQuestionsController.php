@@ -50,6 +50,7 @@ class QuizQuestionsController extends AbstractController
 
             $entityManager = $this->getDoctrine()->getManager();
             $quizQuestion->setQuiz($quiz);
+            // $quiz->setQuestion($quizQuestion);
             $entityManager->persist($quizQuestion);
             $entityManager->flush();
 

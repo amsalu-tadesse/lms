@@ -14,7 +14,7 @@
 					<h3>Questions List</h3>
 				</div>
 				<div class="col-md-6">
-					<a href="{{ path('quiz_questions_new',{id:quiz.id}) }}" class="btn btn-primary" style="float:right">Add new question</a>
+					<a href="{{ path('quiz_questions_new',{id:quiz.id}) }}" class="btn btn-primary" style="float:right"><span class="fa fa-plus"></span> &nbsp; Add question</a>
 
 				</div>
 			</div>
@@ -22,35 +22,7 @@
 		</div>
 		<div
 			class="card card-body">
-			{# <table class="table">
-											<thead>
-												<tr>
-													<th>Id</th>
-													<th>Question</th>
-													<th>Answer</th> 
-													<th>actions</th>
-												</tr>
-											</thead>
-											<tbody>
-												{% for quiz_question in quiz_questions %}
-													<tr>
-														<td>{{ quiz_question.id }}</td>
-														<td>{{ quiz_question.question }}</td>
-														<td>{{ quiz_question.answer }}</td>
-														<td>
-															<a href="{{ path('quiz_questions_show', {'id': quiz_question.id}) }}">show</a>
-															<a href="{{ path('quiz_questions_edit', {'id': quiz_question.id}) }}">edit</a>
-														</td>
-													</tr>
-												{% else %}
-													<tr>
-														<td colspan="4">no records found</td>
-													</tr>
-												{% endfor %}
-											</tbody>
-										</table> #}
-
-
+	
 			<div id="accordion">
 
 
