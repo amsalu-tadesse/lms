@@ -70,9 +70,6 @@
                 opacity: 1;
             }
         }
-
-
-
     </style>
 {% endblock %}
 {% block selected %}<span id="num"></span>{% endblock %}
@@ -115,6 +112,7 @@
             var json_str = getCookie('selected_courses');
             var arr = JSON.parse(json_str);
             cookie_length = arr.length;
+            
             if(cookie_length > 0){
                 for(i=0; i<cookie_length; i++){
                     
@@ -164,6 +162,10 @@
                 $(this).parent().parent().removeClass("selected-card");
                 var json_str = getCookie('selected_courses');
                 var arr = JSON.parse(json_str);
+                if(arr.length == 0)
+                {
+                    $("#my_course").addClass("test");
+                }
             }
             else{
                 $(this).text(" {% trans %}Remove from my Courses{% endtrans %} ");
@@ -175,6 +177,7 @@
                 $(this).parent().parent().addClass("selected-card");
                 var json_str = getCookie('selected_courses');
                 var arr = JSON.parse(json_str);
+                    $("#my_course").removeClass("test");
             }
         });
 

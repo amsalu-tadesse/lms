@@ -103,7 +103,6 @@ class RegistrationController extends AbstractController
         ]);
     }
 
-
     /**
      *  @Route("/verification", name="app_register_main")
      * 
@@ -151,22 +150,17 @@ class RegistrationController extends AbstractController
                     $user->setLastName($form_data['lastName']);
                     $entityManager = $this->getDoctrine()->getManager();
 
-            $username1 = $form_data['firstName'] . '.' . $form_data['middleName'];
-            $username = $username1;
-            $found = $entityManager->getRepository(User::class)->findOneBy(['username' => $username]);
-            $counter = 0;
-            while ($found) {
-                $counter++;
-                $username_new = $username1 . $counter;
-                $username = $username_new;
-                $found = $entityManager->getRepository(User::class)->findOneBy(['username' => $username_new]);
+                    $username1 = $form_data['firstName'] . '.' . $form_data['middleName'];
+                    $username = $username1;
+                    $found = $entityManager->getRepository(User::class)->findOneBy(['username' => $username]);
+                    $counter = 0;
+                    while ($found) {
+                        $counter++;
+                        $username_new = $username1 . $counter;
+                        $username = $username_new;
+                        $found = $entityManager->getRepository(User::class)->findOneBy(['username' => $username_new]);
 
-            }
-         
-
-
-
-
+                    }
                     $user->setUsername($username);
                     $user->setIsVerified(1);
                     $user->setEmail($form_data['email']);

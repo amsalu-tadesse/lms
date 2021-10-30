@@ -158,6 +158,8 @@
                 $(this).parent().parent().removeClass("selected-card");
                 var json_str = getCookie('selected_courses_login');
                 var arr = JSON.parse(json_str);
+                if(arr.length == 0)
+                    $("#my_course").addClass("test");
             }
             else{
                 $(this).text("Remove from my Courses");
@@ -169,6 +171,8 @@
                 $(this).parent().parent().addClass("selected-card");
                 var json_str = getCookie('selected_courses_login');
                 var arr = JSON.parse(json_str);
+                $("#my_course").removeClass("test");
+
             }
         });
 

@@ -22,7 +22,7 @@
 												Courses
 											</a>
 										</li>
-										<li class="dropdown">
+										<li class="dropdown test" id="my_course">
 											<a class="dropdown-item" href="{{ path('selected_courses')}}">
 												My Courses<sup>
 													<span class="badge badge-primary" id="num"></span>
@@ -34,62 +34,57 @@
 												Requested Courses
 											</a>
 										</li>
-										
-
-
 
 										{% set activelang = app.session.get('_locale') %}
 										{% set secondlang = '' %}
 										{% set code = '' %}
 										{% if activelang =='fr' %}
 											{% set activelang = 'French' %}
-									  {% set secondlang = 'English' %}
-									  {% set code = 'en' %}
+											{% set secondlang = 'English' %}
+											{% set code = 'en' %}
 										{% else %}
 											{% set activelang = 'English' %}
-									  {% set secondlang = 'French' %}
-									  {% set code = 'fr' %}
+											{% set secondlang = 'French' %}
+											{% set code = 'fr' %}
 										{% endif %}
-
-										
 
 
 										<li class="dropdown ">
-										<a class="dropdown-item dropdown-toggle" href="#">
-											 
-											<i class="fas fa-globe fa-sm">
-												<span> {{activelang}}</span>
-											</i>
-										</a>
-										<ul class="dropdown-menu dropdown-menu-sm float-right">
+											<a class="dropdown-item dropdown-toggle" href="#">
 
-											<li>
+												<i class="fas fa-globe fa-sm"></i> &nbsp;
+												{{activelang}}
 
+											</a>
+											<ul class="dropdown-menu dropdown-menu-sm float-right">
 
-												<a href="/language?lang={{code}}&&curr={{ path(app.request.attributes.get('_route'),
-											app.request.attributes.get('_route_params')) }}" class="dropdown-item"> <b>{{secondlang}}</b>
-												</a>
-											</li>
-										</ul>
-									</li> 
- 
+												<li>
 
 
-									<li class="dropdown">
+													<a href="/language?lang={{code}}&&curr={{ path(app.request.attributes.get('_route'),
+																																							app.request.attributes.get('_route_params')) }}" class="dropdown-item">
+														<b>{{secondlang}}</b>
+													</a>
+												</li>
+											</ul>
+										</li>
+
+
+										<li class="dropdown">
 											<a class="dropdown-item dropdown-toggle" href="#">
 												{{app.user.username}}
 												<i class="fas fa-chevron-down"></i>
 											</a>
-											<ul class="dropdown-menu">
+											<ul
+												class="dropdown-menu">
 												{# <li class="dropdown-submenu">
-													<a class="dropdown-item" href="#">Profile</a>
-												</li> #}
+																																					<a class="dropdown-item" href="#">Profile</a>
+																																				</li> #}
 												<li>
 													<a class="dropdown-item" href="{{path('app_logout')}}">Logout</a>
 												</li>
 											</ul>
 										</li>
-
 
 
 									</ul>
