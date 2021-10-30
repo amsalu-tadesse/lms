@@ -1,89 +1,133 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	{% trans %}StudentCourse index{% endtrans %}
+    {% trans %}
+    StudentCourse index
+    {% endtrans %}
 {% endblock %}
 {% block breadcrumbhome %}
-	{% trans %}Studentcourse{% endtrans %}
+    {% trans %}
+    Studentcourse
+    {% endtrans %}
 {% endblock %}
 {% block breadcrumbcontent %}
-	{% trans %}index{% endtrans %}
+    {% trans %}
+    index
+    {% endtrans %}
 {% endblock %}
-{% block stylesheets %} 
-	<link href="{{asset('assets/plugins/dataTables/datatables.min.css')}}">
-{% endblock %}
-{% block body %}
- 
+{% block stylesheets %}
+    <link href="{{ asset('assets/plugins/dataTables/datatables.min.css') }}">
+    {% endblock %}
+    {% block body %}
 
-	<div class="card card-info">
-		<div class="card card-header">
-			<div class="row">
-				<div class="col-md-6">
-					<h3>{% trans %}Students registered for course{% endtrans %}
-						{{instructor_course.course | capitalize }}
-					</h3>
-				</div>
-				<div class="col-md-6">
-					<a onclick = "showdiv()" href="#" class="btn btn-primary" style="float:right">{% trans %}Report{% endtrans %}</a>
-				</div>
-			</div>
-		</div>
-		<div class="card card-body">
+        <div class="card card-info">
+            <div class="card card-header">
+                <div class="row">
+                    <div class="col-md-6" >
+                        <h3>
+                            {% trans %}
+                            Students registered for course
+                            {% endtrans %}
+                            {{ instructor_course.course | capitalize }}
+                        </h3>
+                    </div>
+                    <div class="col-md-6">
+                        <a onclick="showdiv()" href="#" class="btn btn-primary" style="float:right">
+                            {% trans %}
+                            Report
+                            {% endtrans %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="card card-body">
 
-<div class="col-md-6">
-<div id="chart">88</div>
-</div>
 
+			
 
-			<table class="table" id="table">
-				<thead>
-					<tr>
-						<th>Id</th>
-						<th>{% trans %}Name{% endtrans %}</th>
-						<th>{% trans %}Registered Date{% endtrans %}</th>
-						<th>{% trans %}Completion{% endtrans %}
-							(%)</th>
-						<th>{% trans %}is Active{% endtrans %}</th>
-						{# <th>Is at page</th> #}
-						<th>{% trans %}Actions{% endtrans %}</th>
-					</tr>
-				</thead>
-				<tbody></tbody>
-			</table>
-		</div>
-	</div>
+                <div class="  text-center" style="display:none" id="chart">
+			{# <canvas id="myChart" style="width:100%;max-width:600px"></canvas> #}
+		<div class="text-center" id="myChart" style="width:100%; max-width:800px; height:500px;"></div>
+                </div>
 
-<div class="modal fade" id="modal-delete">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 class="modal-title text-bold text-red">Deactivating Record</h4>
-				<button type="button" class="close btn btn-primary" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
+                <table class="table" id="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                Id
+                            </th>
+                            <th>
+                                {% trans %}
+                                Name
+                                {% endtrans %}
+                            </th>
+                            <th>
+                                {% trans %}
+                                Registered Date
+                                {% endtrans %}
+                            </th>
+                            <th>
+                                {% trans %}
+                                Completion
+                                {% endtrans %}
+                                (%)
+                            </th>
+                            <th>
+                                {% trans %}
+                                is Active
+                                {% endtrans %}
+                            </th>
+                            {# <th>Is at page</th> #}
+                            <th>
+                                {% trans %}
+                                Actions
+                                {% endtrans %}
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
 
-				<div class="modal-body">
+        <div class="modal fade" id="modal-delete">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title text-bold text-red">
+                            Deactivating Record
+                        </h4>
+                        <button type="button" class="close btn btn-primary" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">
+                                &times;
+                            </span>
+                        </button>
+                    </div>
 
-				</div>
-				<div class="modal-footer justify-content-between">
-					<button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+                    <div class="modal-body"></div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-warning" data-dismiss="modal">
+                            Close
+                        </button>
 
-					<button onclick="changeStatus1()" type="submit" id="paynow" class="btn btn-success">
-						<i class="fa fa-arrow-alt-circle-right m-1"></i>Yes
-					</button>
-				</div>
-			{# </form> #}
-		</div>
-		<!-- /.modal-content -->
-	</div>
-	<!-- /.modal-dialog -->
-</div
-{% endblock %}
+                        <button onclick="changeStatus1()" type="submit" id="paynow" class="btn btn-success">
+                            <i class="fa fa-arrow-alt-circle-right m-1"></i>
+                            Yes
+                            				
+                        </button>
+                    </div>
+                {# </form> #}
+                </div>
+            <!-- /.modal-content -->
+            </div>
+        <!-- /.modal-dialog -->
+        </div>
+    {% endblock %}
 
-{% block javascripts %}
-<script src="{{asset('assets/plugins/datatables/datatables.min.js')}}"></script>
-	<script>
+    {% block javascripts %}
+        <script src="{{ asset('assets/plugins/datatables/datatables.min.js') }}"></script>
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script>
 		var selected_id = {
 			id: 0
 		};
@@ -106,7 +150,7 @@
 			$("#modal-delete").modal('hide');
 			//$("#modal-delete").hide();
 			//$("#modal-delete, .modal-backdrop").removeClass("show");
-			url = "{{path('change_student_course_status')}}";
+			url = "{{ path('change_student_course_status') }}";
 			$.ajax({
 				url: url,
 				data: {'id':selected_id.id},
@@ -152,13 +196,37 @@
 		        // "order": [[2, 'asc']]
 		    });
 		});
-	</script>	
+	</script>
 
-
-	<script>
+        <script>
 		function showdiv()
 		{
-			$("#showdiv").show();
+			$("#chart").toggle();
+
+			google.charts.load('current', {'packages':['corechart']});
+			google.charts.setOnLoadCallback(drawChart);
+			
+			function drawChart() {
+			var data = google.visualization.arrayToDataTable([
+			  ['Contry', 'Mhl'],
+			  ['0%',54.8],
+			  ['1-25%',48.6],
+			  ['26-50%',44.4],
+			  ['51-75%',23.9],
+			  ['76-99%',14.5],
+			  ['100%',11.5]
+			]);
+			
+			var options = {
+			  title:'Course Completion Statistics',
+			  is3D:true
+			};
+			
+			var chart = new google.visualization.PieChart(document.getElementById('myChart'));
+			  chart.draw(data, options);
+			}
+	
 		}
-	</script>	
-{% endblock %}
+	</script>
+    {% endblock %}
+    
