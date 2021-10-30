@@ -26,7 +26,6 @@ class QuizType extends AbstractType
             ->add('activeQuestions',null, [
                 'attr' =>['placeholder' => 'total number of questions visible for the student']
             ])
-            // ->
             ->add('instructorCourseChapter')
         ;
     }
