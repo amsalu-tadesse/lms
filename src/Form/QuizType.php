@@ -7,14 +7,12 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-
 use App\Entity\InstructorCourseChapter;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
-
-
+use Symfony\Component\Form\Extension\Core\Type\TimeType;
 
 class QuizType extends AbstractType
 {
@@ -27,7 +25,11 @@ class QuizType extends AbstractType
             ->add('instruction')
             ->add('percentage')
             ->add('passvalue')
-            ->add('duration')
+            ->add('duration',null,[
+                'label' => 'Durationa(in minutes)'
+            ])
+
+
             ->add('instructorCourseChapter', EntityType::class, [
                 'class' => InstructorCourseChapter::class,
                 'required' => false,

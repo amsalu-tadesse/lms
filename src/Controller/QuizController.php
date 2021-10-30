@@ -132,9 +132,8 @@ class QuizController extends AbstractController
     /**
      * @Route("/{id}/edit", name="quiz_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Quiz $quiz): Response
-    {
-      
+    public function edit(Request $request, Quiz $quiz, InstructorCourse $instructorCourse): Response
+    {    
         $chapters = $instructorCourse->getInstructorCourseChapters();
         $registeredChaptersid = array();
         foreach ($chapters as $chapter) {

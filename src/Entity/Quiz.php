@@ -61,10 +61,11 @@ class Quiz
      * @ORM\Column(type="integer", nullable=true)
      */
     private $duration;
-    /*
+
+    /**
      * @ORM\Column(type="integer")
      */
-    private $ActiveQuestions;
+    private $activeQuestions;
 
     /**
      * @ORM\Column(type="boolean")
@@ -196,18 +197,20 @@ class Quiz
         return $this->duration;
     }
 
-    public function setDuration(?int $duration): self
+    public function setDuration(int $duration): self
     {
         $this->duration = $duration;
-    }
-    public function getActiveQuestions(): ?int
-    {
-        return $this->ActiveQuestions;
+        return $this;
     }
 
-    public function setActiveQuestions(int $ActiveQuestions): self
+    public function getActiveQuestions(): ?int
     {
-        $this->ActiveQuestions = $ActiveQuestions;
+        return $this->activeQuestions;
+    }
+
+    public function setActiveQuestions(int $activeQuestions): self
+    {
+        $this->activeQuestions = $activeQuestions;
 
         return $this;
     }
