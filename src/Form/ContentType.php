@@ -19,6 +19,8 @@ class ContentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $incrsid = $options['incrsid']; 
+        $uploadSize = $options['uploadSize']; 
+
 
 
         $builder
@@ -59,12 +61,18 @@ class ContentType extends AbstractType
                 // in the associated entity, so you can use the PHP constraint classes
                 'constraints' => [
                     new File([
-                        'maxSize' => '250M',
-                        /*'mimeTypes' => [
+                        'maxSize' => $uploadSize.'M',
+                        'mimeTypes' => [
+                            'image/*',
                             'application/pdf',
-                            'application/x-pdf',
-                        ],*/
-                        'mimeTypesMessage' => 'Please upload a valid document',
+                            'application/msword',
+                            'application/vnd.ms-excel',
+                            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                            'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                            'text/plain'
+                        ],
+                        // 'mimeTypesMessage' => 'Please upload a valid PDF',
                     ])
                 ],
             ]);
@@ -73,9 +81,9 @@ class ContentType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setRequired('incrsid');
+        $resolver->setRequired('uploadSize');
         $resolver->setDefaults([
             'data_class' =>  Content::class
-            
         ]);
     }
 }

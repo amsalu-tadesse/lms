@@ -42,7 +42,7 @@
                 <th>{% trans %}Course{% endtrans %}</th>
                 <th>{% trans %}Instructor{% endtrans %}</th>
                 <th>{% trans %}Assign date{% endtrans %}</th>
-                <th>{% trans %}Status{% endtrans %}</th>
+                {# <th>{% trans %}Status{% endtrans %}</th> #}
                 <th>{% trans %}Active{% endtrans %}</th>
                 <th>{% trans %}Students{% endtrans %}</th>
                 <th>{% trans %}Actions{% endtrans %}</th>
@@ -60,8 +60,59 @@
                 {% endif %}
                 
                 <td>{{ instructor_course.createdAt ? instructor_course.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-				 <td> {{ instructor_course.status }}</td>
-				 <td> {{ instructor_course.active ? "YES" : "NO" }}</td>
+				 {# <td> {{ instructor_course.status }}</td> #}
+				
+					<td>
+
+
+						<a href="#" data-toggle="modal" data-target="#modal-delete{{instructor_course.id}}">
+							<i class="fas {{instructor_course.active ? 'fa-check-circle': 'fa-times-circle'}}" style='color: {{instructor_course.active ? ' green': ' red'}}'></i>
+						</a>
+
+
+						<div class="modal fade" id="modal-delete{{instructor_course.id}}">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h4 class="modal-title text-bold text-red">{{instructor_course.active ? 'Deactivating a record !!': 'Activating a record !!'}}</h4>
+										<button type="button" class="close btn btn-primary" data-dismiss="modal" aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+
+									<form id="instructor_course_deactivate_form{{instructor_course.id}}" action="{{path('instructor_course_deactivate',{id:instructor_course.id})}}" class="form" method="POST">
+										<div class="modal-body">
+
+											<div class="form-group text-blue">
+												{% if instructor_course.active %}
+													Are you sure you want to diactivate
+													{{instructor_course.course}}
+													?
+												{% else %}
+													Are you sure you want to activate
+													{{instructor_course.course}}
+													?
+												{% endif %}
+
+											</div>
+
+										</div>
+										<div class="modal-footer justify-content-between">
+											<button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+
+											<button onclick="" type="submit" id="paynow" class="btn btn-success">
+												<i class="fa fa-arrow-alt-circle-right m-1"></i>Yes
+											</button>
+										</div>
+									</form>
+								</div>
+								<!-- /.modal-content -->
+							</div>
+							<!-- /.modal-dialog -->
+						</div</td>
+
+
+
 				 <td> <a href="{{ path('students_in_course',{id:instructor_course.id}) }}"> <span class="badge badge-success"> &nbsp; {{ instructor_course.studentCourses | length  }} &nbsp;</span> </a> </td>
                 <td>
                     {# <a href="{{ path('instructor_course_show', {'id': instructor_course.id}) }}">show</a> #}

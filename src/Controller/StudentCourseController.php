@@ -4,20 +4,20 @@ namespace App\Controller;
 
 use App\Entity\InstructorCourse;
 use App\Entity\StudentCourse;
-use App\Form\StudentCourseType;
 use App\Form\Filter\RequestFilterType;
-use App\Repository\StudentCourseRepository;
+use App\Form\StudentCourseType;
 use App\Repository\ContentRepository;
-use App\Repository\StudentChapterRepository;
 use App\Repository\InstructorCourseRepository;
+use App\Repository\StudentChapterRepository;
+use App\Repository\StudentCourseRepository;
+use DateTime;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use DateTime;
-use Symfony\Component\HttpFoundation\Cookie;
 
 /**
  * @Route("/student")
@@ -31,26 +31,24 @@ class StudentCourseController extends AbstractController
     // ******** student home page , don't touch it OK
     public function index(StudentCourseRepository $studentCourseRepository, PaginatorInterface $paginator, Request $request, InstructorCourseRepository $course): Response
     {
-       
-       if($this->getUser()->getProfile() == null)
-        {
+
+        if ($this->getUser()->getProfile() == null) {
             return $this->redirectToRoute('app_login');
         }
 
-        $queryBuilder=$studentCourseRepository->findCourses($this->getUser()->getProfile()->getId());
+        $queryBuilder = $studentCourseRepository->findCourses($this->getUser()->getProfile()->getId());
         $courses = $course->findCoursesSortByCategory();
-        $data=$paginator->paginate(
+        $data = $paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page', 1),
             10
         );
-        
+
         return $this->render('student_course/student.html.twig', [
             'student_courses' => $data,
-            'courses' => $courses
+            'courses' => $courses,
         ]);
     }
-
 
     /**
      * @Route("/course/request", name="course_request")
@@ -61,13 +59,13 @@ class StudentCourseController extends AbstractController
         $searchForm = $this->createForm(RequestFilterType::class, $st_course);
         $searchForm->handleRequest($request);
 
-        $queryBuilder = $studentCourseRepository->findRequests($request->query->get('student'),$request->query->get('instructorCourse'));
-        $stdCrs=$paginator->paginate(
+        $queryBuilder = $studentCourseRepository->findRequests($request->query->get('student'), $request->query->get('instructorCourse'));
+        $stdCrs = $paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page', 1),
             15
         );
-        
+
         return $this->render('student_course/course_requests.html.twig', [
             'student_courses' => $stdCrs,
             'searchForm' => $searchForm->createView(),
@@ -83,13 +81,13 @@ class StudentCourseController extends AbstractController
         $searchForm = $this->createForm(RequestFilterType::class, $st_course);
         $searchForm->handleRequest($request);
 
-        $queryBuilder = $studentCourseRepository->findRequestsApproved($request->query->get('student'),$request->query->get('instructorCourse'));
-        $stdCrs=$paginator->paginate(
+        $queryBuilder = $studentCourseRepository->findRequestsApproved($request->query->get('student'), $request->query->get('instructorCourse'));
+        $stdCrs = $paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page', 1),
             15
         );
-        
+
         return $this->render('student_course/approved_course_requests.html.twig', [
             'student_courses' => $stdCrs,
             'searchForm' => $searchForm->createView(),
@@ -105,13 +103,13 @@ class StudentCourseController extends AbstractController
         $searchForm = $this->createForm(RequestFilterType::class, $st_course);
         $searchForm->handleRequest($request);
 
-        $queryBuilder = $studentCourseRepository->findRequestsRejected($request->query->get('student'),$request->query->get('instructorCourse'));
-        $stdCrs=$paginator->paginate(
+        $queryBuilder = $studentCourseRepository->findRequestsRejected($request->query->get('student'), $request->query->get('instructorCourse'));
+        $stdCrs = $paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page', 1),
             15
         );
-        
+
         return $this->render('student_course/rejected_course_requests.html.twig', [
             'student_courses' => $stdCrs,
             'searchForm' => $searchForm->createView(),
@@ -121,30 +119,27 @@ class StudentCourseController extends AbstractController
     /**
      * @Route("/course/request/{id}", name="course_request_activate", methods={"GET","POST"})
      */
-    public function courseRequestActivate(StudentCourse $studentCourse, StudentCourseRepository $studentCourseRepository,PaginatorInterface $paginator,Request $request): Response
+    public function courseRequestActivate(StudentCourse $studentCourse, StudentCourseRepository $studentCourseRepository, PaginatorInterface $paginator, Request $request): Response
     {
         $em = $this->getDoctrine()->getManager();
-        
 
-        $studentCourse->setStatus(1);//accepted
+        $studentCourse->setStatus(1); //accepted
         $em->flush();
-        
-        return $this->redirectToRoute('course_request');  
-    }
 
+        return $this->redirectToRoute('course_request');
+    }
 
     /**
      * @Route("/course/drequest/{id}", name="course_request_deactivate", methods={"GET","POST"})
      */
-    public function courseRequestDeactivate(StudentCourse $studentCourse, StudentCourseRepository $studentCourseRepository,PaginatorInterface $paginator,Request $request): Response
+    public function courseRequestDeactivate(StudentCourse $studentCourse, StudentCourseRepository $studentCourseRepository, PaginatorInterface $paginator, Request $request): Response
     {
         $em = $this->getDoctrine()->getManager();
-        
 
-        $studentCourse->setStatus(2);//accepted
+        $studentCourse->setStatus(2); //accepted
         $em->flush();
 
-        return $this->redirectToRoute('course_request'); 
+        return $this->redirectToRoute('course_request');
     }
 
     /**
@@ -153,19 +148,19 @@ class StudentCourseController extends AbstractController
 
     public function listStudentUnderCourse(StudentCourseRepository $studentCourseRepository, InstructorCourse $instructorCourse, PaginatorInterface $paginator, Request $request): Response
     {
-        $queryBuilder=$studentCourseRepository->findBy(['instructorCourse'=>$instructorCourse]);
-        $data=$paginator->paginate(
+        $queryBuilder = $studentCourseRepository->findBy(['instructorCourse' => $instructorCourse]);
+        $data = $paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page', 1),
             10
         );
 
-        return $this->render('student_course/test.html.twig'
-        , [
-            'student_courses' => $data,
-            'instructor_course' => $instructorCourse,
-        ]
-    );
+        return $this->render('student_course/students_in_course.html.twig'
+            , [
+                'student_courses' => $data,
+                'instructor_course' => $instructorCourse,
+            ]
+        );
     }
 
     /**
@@ -175,20 +170,19 @@ class StudentCourseController extends AbstractController
     {
         // Set up required variables
         $this->entityManager = $this->getDoctrine()->getManager();
-    
-        
+
         // Get the parameters from DataTable Ajax Call
-        if ($request->getMethod() == 'POST')
-        {
+        if ($request->getMethod() == 'POST') {
             $draw = intval($request->request->get('draw'));
             $start = $request->request->get('start');
             $length = $request->request->get('length');
             $search = $request->request->get('search');
             $orders = $request->request->get('order');
             $columns = $request->request->get('columns');
-        }
-        else // If the request is not a POST one, die hard
+        } else // If the request is not a POST one, die hard
+        {
             die;
+        }
 
         // Get results from the Repository
         $results = $studentCourseRepository->getRequiredDTData($start, $length, $orders, $search, $columns);
@@ -199,24 +193,23 @@ class StudentCourseController extends AbstractController
 
         // Get total number of results
         $selected_objects_count = count($objects);
-        
+
         // Get total number of filtered data
         $filtered_objects_count = $results["countResult"];
-        
+
         $Response = array();
         $temp = array();
-        foreach($objects as $key => $value)
-        {
+        foreach ($objects as $key => $value) {
             $temp["id"] = $value['id'];
             $temp["name"] = $value["name"];
             $temp["page"] = $value['page'];
             $temp["createdAt"] = $value['createdAt']->format('Y-m-d');
-            $icon = $value['active']? "fa-check-circle": "fa-times-circle";
-            $color = $value['active'] ? ' green': ' red';
-            
-            $temp["status"] = '<a href="#" data-toggle="modal" id="'.$value['id'].'" onclick="changeStatus(\''.$value['name'].'\','.$value['id'].','.$value['active'].')" data-target="#modal-delete">'.
-            "<i class='fas $icon' style='color:$color'></i></a>";
-            $temp["actions"] = '<a href="/student/'.$value['id'].'" class="btn btn-primary">show</a>';
+            $icon = $value['active'] ? "fa-check-circle" : "fa-times-circle";
+            $color = $value['active'] ? ' green' : ' red';
+
+            $temp["status"] = '<a href="#" data-toggle="modal" id="' . $value['id'] . '" onclick="changeStatus(\'' . $value['name'] . '\',' . $value['id'] . ',' . $value['active'] . ')" data-target="#modal-delete">' .
+                "<i class='fas $icon' style='color:$color'></i></a>";
+            $temp["actions"] = '<a href="/student/' . $value['id'] . '" class="btn btn-primary">show</a>';
             $Response[] = $temp;
 
             unset($temp);
@@ -224,15 +217,15 @@ class StudentCourseController extends AbstractController
         }
         // Construct response
         $response = '{
-            "draw": '.$draw.',
-            "recordsTotal": '.$total_objects_count.',
-            "recordsFiltered": '.$filtered_objects_count.',
-            "data":'.json_encode($Response).'  }';
-    
+            "draw": ' . $draw . ',
+            "recordsTotal": ' . $total_objects_count . ',
+            "recordsFiltered": ' . $filtered_objects_count . ',
+            "data":' . json_encode($Response) . '  }';
+
         // Send all this stuff back to DataTables
         $returnResponse = new JsonResponse();
         $returnResponse->setJson($response);
-    
+
         return $returnResponse;
     }
 
@@ -244,8 +237,7 @@ class StudentCourseController extends AbstractController
         $courses = $request->cookies->get("selected_courses_login");
         $courses = json_decode($courses, true);
         $em = $this->getDoctrine()->getManager();
-        foreach($courses as $course)
-        {
+        foreach ($courses as $course) {
             $st_course = new StudentCourse();
             $st_course->setStudent($this->getUser()->getProfile());
             $st_course->setInstructorCourse($em->getRepository(InstructorCourse::class)->find($course));
@@ -257,26 +249,26 @@ class StudentCourseController extends AbstractController
         }
         //write form data to cookie
         $response = new Response();
-        $cookie = new Cookie('selected_courses_login', "" ,time()*60*60);
+        $cookie = new Cookie('selected_courses_login', "", time() * 60 * 60);
         $response->headers->setCookie($cookie);
         $response->sendHeaders();
 
         return $this->redirectToRoute("requested_courses");
     }
-    
-     /**
+
+    /**
      * @Route("/request", name="requested_courses", methods={"GET"})
      */
     public function requests(StudentCourseRepository $studentCourseRepository, PaginatorInterface $paginator, Request $request): Response
     {
-        $queryBuilder=$studentCourseRepository->findRequestedCourses($this->getUser()->getProfile()->getId());
+        $queryBuilder = $studentCourseRepository->findRequestedCourses($this->getUser()->getProfile()->getId());
 
-        $data=$paginator->paginate(
+        $data = $paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page', 1),
             8
         );
-        
+
         return $this->render('student_course/requested_courses.html.twig', [
             'requests' => $data,
         ]);
@@ -288,41 +280,41 @@ class StudentCourseController extends AbstractController
     public function studentCourseActivate(StudentCourseRepository $studentCourseRepository, PaginatorInterface $paginator, Request $request): Response
     {
         $em = $this->getDoctrine()->getManager();
-        
+
         $studentCourse = $studentCourseRepository->find($request->query->get("id"));
-        $status = $studentCourse->getActive() == false ? 1:0;
-        $studentCourse->setActive($status);//accepted
+        $status = $studentCourse->getActive() == false ? 1 : 0;
+        $studentCourse->setActive($status); //accepted
         $em->persist($studentCourse);
         $em->flush();
 
         $returnResponse = new JsonResponse();
         $returnResponse->setJson($status);
-    
-        return $returnResponse;        // return $this->redirectToRoute('course_request');     
+
+        return $returnResponse; // return $this->redirectToRoute('course_request');
     }
     /**
      * @Route("/udpate/{chapter}/counter", name="update_counter")
      */
     public function updater($chapter, StudentChapterRepository $student_chapter)
     {
-        
+
         $em = $this->getDoctrine()->getManager();
         $stud_chap = $student_chapter->getProgress1($chapter, $this->getUser()->getProfile()->getId());
         $conn = $this->getDoctrine()->getManager()
             ->getConnection();
-        $sql = "update student_chapter set pages_completed = pages_completed+1 where student_id = :student and id = :chapter" ;
+        $sql = "update student_chapter set pages_completed = pages_completed+1 where student_id = :student and id = :chapter";
         $stmt = $conn->prepare($sql);
 
-        $stmt->execute(array("student"=>$this->getUser()->getProfile()->getId(), "chapter"=>$chapter));
+        $stmt->execute(array("student" => $this->getUser()->getProfile()->getId(), "chapter" => $chapter));
         $returnResponse = new JsonResponse();
         $returnResponse->setJson("success");
-    
+
         return $returnResponse;
     }
 
     /**
-    * @Route("/request/{id}", name="request_show", methods={"GET"})
-    */
+     * @Route("/request/{id}", name="request_show", methods={"GET"})
+     */
     public function requestShow($id, StudentCourseRepository $studentCourseRepository, ContentRepository $content): Response
     {
         $request = $studentCourseRepository->findRequest($this->getUser()->getProfile()->getId(), $id);
@@ -331,14 +323,14 @@ class StudentCourseController extends AbstractController
 
         return $this->render('student_course/request_show.html.twig', [
             'courses' => $request,
-            'chapters' => $chaptersWithContent
+            'chapters' => $chaptersWithContent,
         ]);
     }
 
     /**
      * @Route("/course/diactivate/{id}", name="student_course_deactivate", methods={"GET","POST"})
      */
-    public function studentCourseDeactivate(StudentCourse $studentCourse, StudentCourseRepository $studentCourseRepository,PaginatorInterface $paginator,Request $request): Response
+    public function studentCourseDeactivate(StudentCourse $studentCourse, StudentCourseRepository $studentCourseRepository, PaginatorInterface $paginator, Request $request): Response
     {
         $em = $this->getDoctrine()->getManager();
         if ($studentCourse->getActive()) {
@@ -347,10 +339,9 @@ class StudentCourseController extends AbstractController
             $studentCourse->setActive(true);
         }
         $em->flush();
-        
 
-        $queryBuilder=$studentCourseRepository->findBy(['instructorCourse'=>$studentCourse->getInstructorCourse()]);
-        $data=$paginator->paginate(
+        $queryBuilder = $studentCourseRepository->findBy(['instructorCourse' => $studentCourse->getInstructorCourse()]);
+        $data = $paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page', 1),
             10
@@ -360,20 +351,15 @@ class StudentCourseController extends AbstractController
             'student_courses' => $data,
             'instructor_course' => $studentCourse->getInstructorCourse(),
         ]);
-        
+
     }
-
-
-    
-
 
 
 
     /**
      * @Route("/new", name="student_course_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
-    {
+    function new (Request $request): Response {
         $studentCourse = new StudentCourse();
         $form = $this->createForm(StudentCourseType::class, $studentCourse);
         $form->handleRequest($request);
@@ -419,16 +405,16 @@ class StudentCourseController extends AbstractController
     //  * @Route("/{id}/remove", name="request_delete")
     //  */
     // public function deleteRequest(StudentCourseRepository $studentCourse, $id): Response
-    // { 
+    // {
     //     $course = $studentCourse->find($id);
     //     $em = $this->getDoctrine()->getManager();
     //     $em->remove($course);
     //     $em->flush();
-    
+
     //     // Send all this stuff back to DataTables
     //     $returnResponse = new JsonResponse();
     //     $returnResponse->setJson("kkd");
-    
+
     //     return $returnResponse;
     // }
 
@@ -466,7 +452,7 @@ class StudentCourseController extends AbstractController
      */
     public function delete(Request $request, StudentCourse $studentCourse): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$studentCourse->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $studentCourse->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($studentCourse);
             $entityManager->flush();

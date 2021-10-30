@@ -6,6 +6,7 @@ use App\Entity\Content;
 use App\Entity\InstructorCourse;
 use App\Entity\InstructorCourseChapter;
 use App\Entity\StudentChapter;
+use App\Entity\SystemSetting;
 use App\Form\ContentType;
 use App\Repository\ContentRepository;
 use App\Repository\InstructorCourseChapterRepository;
@@ -21,6 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use DateTime;
 
+
 /**
  * @Route("/content") 
  */
@@ -32,6 +34,7 @@ class ContentController extends AbstractController
      */
     public function index(ContentRepository $contentRepository,Request $request, InstructorCourse $instructorCourse, PaginatorInterface $paginator): Response
     {
+        
         if($request->request->get('edit')){
             $id=$request->request->get('edit');
             $content=$contentRepository->findOneBy(['id'=>$id]);
@@ -50,6 +53,7 @@ class ContentController extends AbstractController
                 $request->query->getInt('page',1),
                 10
             );
+            
             return $this->render('content/index.html.twig', [
                 'contents' => $data,
                 'form' => $form->createView(),
@@ -58,8 +62,14 @@ class ContentController extends AbstractController
             ]);
 
         }
+
+
         $content = new Content();
-        $form = $this->createForm(ContentType::class,$content, array('incrsid' => $instructorCourse->getId()));
+        $em = $this->getDoctrine()->getManager();
+
+        $uploadSize =  $em->getRepository(SystemSetting::class)->findOneBy(['code'=>'upload_size'])->getValue();
+        if(!$uploadSize) $uploadSize = 100;//default.
+        $form = $this->createForm(ContentType::class,$content, array('uploadSize'=>$uploadSize,'incrsid' => $instructorCourse->getId()));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -205,7 +215,12 @@ class ContentController extends AbstractController
     public function new(Request $request,InstructorCourse $instructorCourse, SluggerInterface $slugger): Response
     {
         $content = new Content();
-        $form = $this->createForm(ContentType::class,$content, array('incrsid' => $instructorCourse->getId()));
+
+        $em = $this->getDoctrine()->getManager();
+
+        $uploadSize =  $em->getRepository(SystemSetting::class)->findOneBy(['code'=>'upload_size'])->getValue();
+        if(!$uploadSize) $uploadSize = 100;//default.
+        $form = $this->createForm(ContentType::class,$content, array('uploadSize'=>$uploadSize,'incrsid' => $instructorCourse->getId()));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -266,7 +281,11 @@ class ContentController extends AbstractController
      */
     public function edit(Request $request, Content $content): Response
     {
-        $form = $this->createForm(ContentType::class, $content, array('incrsid' => $content->getChapter()->getInstructorCourse()->getId()));
+        $em = $this->getDoctrine()->getManager();
+
+        $uploadSize =  $em->getRepository(SystemSetting::class)->findOneBy(['code'=>'upload_size'])->getValue();
+        if(!$uploadSize) $uploadSize = 100;
+        $form = $this->createForm(ContentType::class, $content, array('uploadSize'=>$uploadSize,'incrsid' => $content->getChapter()->getInstructorCourse()->getId()));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -287,12 +306,14 @@ class ContentController extends AbstractController
      */
     public function delete(Request $request, Content $content): Response
     {
+        $instid = $content->getChapter()->getInstructorCourse()->getId();;
+     
         if ($this->isCsrfTokenValid('delete'.$content->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($content);
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('content_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('content_index', ['id'=>$instid], Response::HTTP_SEE_OTHER);
     }
 }

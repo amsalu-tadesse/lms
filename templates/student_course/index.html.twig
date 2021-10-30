@@ -1,65 +1,67 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{% trans %}StudentCourse index{% endtrans %}{% endblock %}
-{% block breadcrumbhome %}{% trans %}sSudentcourse{% endtrans %}{% endblock %}
-{% block breadcrumbcontent %}{% trans %}index{% endtrans %}{% endblock %}
+{% block title %}
+	{% trans %}StudentCourse index{% endtrans %}
+{% endblock %}
+{% block breadcrumbhome %}
+	{% trans %}sSudentcourse{% endtrans %}
+{% endblock %}
+{% block breadcrumbcontent %}
+	{% trans %}index{% endtrans %}
+{% endblock %}
 
 {% block body %}
 
-<div class="card card-info">
-    <div class="card card-header">
-        <div class="row">
-            <div class="col-md-6">
-                <h3>{% trans %}StudentCourse list{% endtrans %}</h3>
-            </div>
-            <div class="col-md-6">
-               <a href="{{ path('student_course_new') }}" class="btn btn-primary" style="float:right">Add new StudentCourse</a>
-            </div>
-        </div>
-    </div>
-    <div class="card card-body">
-        <table class="table ">
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>{% trans %}Date{% endtrans %}</th>
-                    <th>{% trans %}Status{% endtrans %}</th>
-                    <th>{% trans %}Active{% endtrans %}</th>
-                    <th>{% trans %}IsAtPage{% endtrans %}</th>
-                    <th>{% trans %}Actions{% endtrans %}</th>
-                </tr> 
-            </thead>
-            <tbody>
-                {% for student_course in student_courses %}
-                <tr>
-                    <td>{{ student_course.id }}</td>
-                    <td>{{ student_course.date ? student_course.date|date('Y-m-d H:i:s') : '' }}</td>
-                    <td>{{ student_course.status }}</td>
-                    <td>{{ student_course.active ? 'Yes' : 'No' }}</td>
-                    <td>{{ student_course.isAtPage }}</td>
-                    <td>
-                    <a
-                        href="{{ path('student_course_show', {'id': student_course.id}) }}">{% trans %}Show{% endtrans %}</a>
-                    <a
-                        href="{{ path('student_course_edit', {'id': student_course.id}) }}">{% trans %}Edit{% endtrans %}</a>
-                    </td>
-                </tr>
-                {% else %}
-                <tr>
-                    <td colspan="6">{% trans %}No records found{% endtrans %}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    <div class="  pagination justify-content-center ">
-			{{ knp_pagination_render(studentcourses) }}</div>
+	<div class="card card-info">
+		<div class="card card-header">
+			<div class="row">
+				<div class="col-md-6">
+					<h3>{% trans %}StudentCourse list{% endtrans %}</h3>
+				</div>
+				<div class="col-md-6">
+					<a href="{{ path('student_course_new') }}" class="btn btn-primary" style="float:right">Add new StudentCourse</a>
+				</div>
+			</div>
+		</div>
+		<div class="card card-body">
+			<table class="table ">
+				<thead>
+					<tr>
+						<th>Id</th>
+						<th>{% trans %}Date{% endtrans %}</th>
+						<th>{% trans %}Status{% endtrans %}</th>
+						<th>{% trans %}Active{% endtrans %}</th>
+						<th>{% trans %}IsAtPage{% endtrans %}</th>
+						<th>{% trans %}Actions{% endtrans %}</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for student_course in student_courses %}
+						<tr>
+							<td>{{ student_course.id }}</td>
+							<td>{{ student_course.date ? student_course.date|date('Y-m-d H:i:s') : '' }}</td>
+							<td>{{ student_course.status }}</td>
+							<td>{{ student_course.active ? 'Yes' : 'No' }}</td>
+							<td>{{ student_course.isAtPage }}</td>
+							<td>
+								<a href="{{ path('student_course_show', {'id': student_course.id}) }}">{% trans %}Show{% endtrans %}</a>
+								<a href="{{ path('student_course_edit', {'id': student_course.id}) }}">{% trans %}Edit{% endtrans %}</a>
+							</td>
+						</tr>
+					{% else %}
+						<tr>
+							<td colspan="6">{% trans %}No records found{% endtrans %}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+		<div class="  pagination justify-content-center "> {{ knp_pagination_render(studentcourses) }}</div>
 
 		<div class="float-right pl-5 pb-2">
-			 
-				{% trans %}Total result{% endtrans %}:
-				{{ studentcourses.getTotalItemCount }} 
+
+			{% trans %}Total result{% endtrans %}: {{ studentcourses.getTotalItemCount }}
 		</div>
-</div>
+	</div>
 
 {% endblock %}

@@ -59,7 +59,7 @@ class RegistrationController extends AbstractController
             {
                 $response = new Response();
                 $form_data = array();
-                $form_data['username'] = $form['username']->getData();
+                // $form_data['username'] = $form['username']->getData();
                 $form_data['firstName'] = $form['firstName']->getData();
                 $form_data['middleName'] = $form['middleName']->getData();
                 $form_data['lastName'] = $form['lastName']->getData();
