@@ -6,6 +6,7 @@ use App\Entity\Quiz;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 use App\Entity\InstructorCourseChapter;
 use Doctrine\ORM\EntityRepository;
@@ -27,7 +28,6 @@ class QuizType extends AbstractType
             ->add('percentage')
             ->add('passvalue')
             ->add('duration')
-            ->add('active')
             ->add('instructorCourseChapter', EntityType::class, [
                 'class' => InstructorCourseChapter::class,
                 'required' => false,
@@ -64,6 +64,15 @@ class QuizType extends AbstractType
                     return $res;
                 },
             ]) 
+            ->add('active', ChoiceType::class,[
+                'choices'=> [
+                    'no'=> '0',
+                    'yes'=>'1'
+                ],
+            ])
+            ->add('activeQuestions',null, [
+                'attr' =>['placeholder' => 'total number of questions visible for the student']
+            ])
         ;
     }
 

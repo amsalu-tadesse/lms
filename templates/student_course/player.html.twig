@@ -271,7 +271,7 @@
                                                 {% set flag = flag+1 %}
                                             {% endfor %}
                                             <li style="border-bottom: 0px;">
-                                                <a href="{{ path('course_quiz',{'id': "2"}) }}" id="startQuiz" style="color:blue;">
+                                                <a href="{{ path('course_quiz',{'id': chapter.id}) }}" id="startQuiz" style="color:blue;">
                                                     Chapter Quiz
                                                 </a>
                                             </li>
@@ -309,6 +309,7 @@
     var selected_doc = 0;
     console.log(control);
     $("#startQuiz").on('click', function(e){
+        console.log(control.view_at, control.content_id.length);
         e.preventDefault()
             if(parseInt(control.view_at) == control.content_id.length &&  parseInt(control.view_at)!= 0)
             {

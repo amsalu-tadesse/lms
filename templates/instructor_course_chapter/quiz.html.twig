@@ -9,34 +9,119 @@
 			font-size: 17px;
 			line-height: 37px;
 		}
+
+		.card {
+			padding: 50px 100px;
+		}
+
+		body {
+			font-size: 15px;
+		}
+		.card-body {
+			background-color: white;
+			padding-left: 100px;
+			padding-bottom: 50px;
+		}
+
+		input {
+			width: 18px;
+			height: 34px;
+		}
+		.card-body label {
+			font-size: 18px;
+		}
 	</style>
 {% endblock %}
 {% block body %}
 	<div class="container">
 		<div class="row">
-			<div class="card mt-3 py-4 px-4">
-				<h5>1. what is the difference between this and that</h5>
-				<br>
-				<div class="d-flex flex-column px-2">
-					<label class="d-flex align-items-center text-color-grey mb-0" for="shipping_method1">
-						<input id="shipping_method1" type="radio" class="me-2" name="shipping_method" value="free" checked="">
-						Free Shipping
-					</label>
-					<label class="d-flex align-items-center text-color-grey mb-0" for="shipping_method2">
-						<input id="shipping_method2" type="radio" class="me-2" name="shipping_method" value="local-pickup">
-						Local Pickup
-					</label>
-					<label class="d-flex align-items-center text-color-grey mb-0" for="shipping_method3">
-						<input id="shipping_method3" type="radio" class="me-2" name="shipping_method" value="flat-rate">
-						Flat Rate: $5.00
-					</label>
+			{% set num = 1 %}
+			<div class="card mt-3 ml-5">
+				<div class="card-header">
+					<span style="float: right">
+						{{ quiz_ques.getPaginationData.firstItemNumber }}
+						out of
+						{{ quiz_ques.getTotalItemCount }}
+						questions
+					</span>
+					<h5 style="font-family: poppins; padding: 5px;"> {{chapter.topic }}</h5>
+				</div>
+				<div class="card-body">
+					{% for question in quiz_ques %}
+
+						<h5 class="py-3">
+							{{question.question}}</h5>
+							<form>
+						{% for choice in question.quizChoices %}
+							
+							<div class="d-flex flex-column px-4 py-1">
+								<label class="d-flex align-items-center text-color-grey mb-0" for="shipping_method1">
+									<input id="shipping_method1" type="radio" class="me-2" name="choice" value="{{choice.letter}}" >
+									{{ choice.description}}
+								</label>
+							</div>
+							
+						{% endfor %}
+						</form>
+					{% endfor %}
+					<div>
+						{# {% if quiz_ques.getPaginationData.firstItemNumber == quiz_ques.getTotalItemCount %}
+							<br>
+							<button class="btn btn-primary" style="width: 160px;"> Previous</button>
+						{% endif %} #}
+					</div>
 				</div>
 				<br>
-				<div>
-					<button class="btn btn-primary" style="width: 160px;float:right;"> Next</button>
-					<button class="btn btn-primary" style="width: 160px;"> Previous</button>
+				<div class="  pagination justify-content-center " id="main-pagination">
+					{{ knp_pagination_render(quiz_ques) }}</div>
+
+
+					<div class="row">
+						<div class="col-md-2">
+							<a href="/" class="btn  btn-primary float-left " id="prev">
+								<span class=" fa fa-arrow-alt-circle-left"></span>
+								Previous</a>
+						</div>
+						<div class="col"></div>
+						<div class="col-md-2">
+							<a href="/" class="btn btn-primary float-right" id="next">Next
+								<span class=" fa fa-arrow-alt-circle-right"></span>
+							</a>
+						</div>
+					</div>
 				</div>
-			</div>
+				{# <div class="  pagination justify-content-center "> #}
+					{# {{ knp_pagination_render(quiz_ques) }}</div> #}
+			{# </div> #}
 		</div>
 	</div>
+{% endblock %}
+{% block javascript %}
+<script>
+	$(document).ready(function() {
+    var pages = document.getElementsByClassName("page-item");
+    var last = pages.length;
+    for (var i = 0; i <= pages.length; i++) {
+        if (i == 0 || i == pages.length - 1) {
+            var a = pages[i].querySelector('a');
+
+            if (a !== null) {
+                href = a.href;
+                if (i == 0) {
+                    document.getElementById("prev").href = href;
+                } else {
+                    document.getElementById("next").href = href;
+                }
+            } else {
+                if (i == 0) {
+                    document.getElementById("prev").classList.add("disabled");
+                } else {
+                    document.getElementById("next").classList.add("disabled");
+                }
+            }
+        }
+        pages.item(i).innerHTML = "";
+    }
+});
+</script>
 {% endblock %}

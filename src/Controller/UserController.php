@@ -49,7 +49,7 @@ class UserController extends AbstractController
 
 
 
-            $queryBuilder=$userRepository->filterUser($request->query->get('firstName'),$request->query->get('middleName'),$request->query->get('lastName'),$request->query->get('userName'));
+            $queryBuilder=$userRepository->filterUser($request->query->get('firstName'),$request->query->get('middleName'),$request->query->get('lastName'),$request->query->get('userName'), $request->query->get('userType'));
             $data=$paginator->paginate(
                 $queryBuilder,
                 $request->query->getInt('page',1),
@@ -118,7 +118,7 @@ class UserController extends AbstractController
             return $this->redirectToRoute('user_index');
         }
  
-        $queryBuilder = $userRepository->filterUser($request->query->get('firstName'),$request->query->get('middleName'),$request->query->get('lastName'),$request->query->get('userName'));
+        $queryBuilder = $userRepository->filterUser($request->query->get('firstName'),$request->query->get('middleName'),$request->query->get('lastName'),$request->query->get('userName'), $request->query->get('userType'));
         $data=$paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page',1),
@@ -131,10 +131,6 @@ class UserController extends AbstractController
             'searchForm' => $searchForm->createView(),
             'edit'=>false
         ]);
-
-      
-
-
     }
 
 

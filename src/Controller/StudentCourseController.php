@@ -160,10 +160,80 @@ class StudentCourseController extends AbstractController
             10
         );
 
-        return $this->render('student_course/students_in_course.html.twig', [
+        return $this->render('student_course/test.html.twig'
+        , [
             'student_courses' => $data,
             'instructor_course' => $instructorCourse,
-        ]);
+        ]
+    );
+    }
+
+    /**
+     * @Route("/listProduct", name="list_student_in_course", methods={"GET","POST"})
+     */
+    public function listDatatablesAction(Request $request, StudentCourseRepository $studentCourseRepository)
+    {
+        // Set up required variables
+        $this->entityManager = $this->getDoctrine()->getManager();
+    
+        
+        // Get the parameters from DataTable Ajax Call
+        if ($request->getMethod() == 'POST')
+        {
+            $draw = intval($request->request->get('draw'));
+            $start = $request->request->get('start');
+            $length = $request->request->get('length');
+            $search = $request->request->get('search');
+            $orders = $request->request->get('order');
+            $columns = $request->request->get('columns');
+        }
+        else // If the request is not a POST one, die hard
+            die;
+
+        // Get results from the Repository
+        $results = $studentCourseRepository->getRequiredDTData($start, $length, $orders, $search, $columns);
+        // Returned objects are of type Town
+        $objects = $results["results"];
+        // Get total number of objects
+        $total_objects_count = $studentCourseRepository->count(1);
+
+        // Get total number of results
+        $selected_objects_count = count($objects);
+        
+        // Get total number of filtered data
+        $filtered_objects_count = $results["countResult"];
+        
+        $Response = array();
+        $temp = array();
+        foreach($objects as $key => $value)
+        {
+            $temp["id"] = $value['id'];
+            $temp["name"] = $value["name"];
+            $temp["page"] = $value['page'];
+            $temp["createdAt"] = $value['createdAt']->format('Y-m-d');
+            $icon = $value['active']? "fa-check-circle": "fa-times-circle";
+            $color = $value['active'] ? ' green': ' red';
+            
+            $temp["status"] = '<a href="#" data-toggle="modal" id="'.$value['id'].'" onclick="changeStatus(\''.$value['name'].'\','.$value['id'].','.$value['active'].')" data-target="#modal-delete">'.
+            "<i class='fas $icon' style='color:$color'></i></a>";
+            $temp["actions"] = '<a href="/student/'.$value['id'].'" class="btn btn-primary">show</a>';
+            $Response[] = $temp;
+
+            unset($temp);
+            $temp = array();
+        }
+        // Construct response
+        $response = '{
+            "draw": '.$draw.',
+            "recordsTotal": '.$total_objects_count.',
+            "recordsFiltered": '.$filtered_objects_count.',
+            "data":'.json_encode($Response).'  }';
+    
+        // Send all this stuff back to DataTables
+        $returnResponse = new JsonResponse();
+        $returnResponse->setJson($response);
+    
+        return $returnResponse;
     }
 
     /**
@@ -212,7 +282,24 @@ class StudentCourseController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/student/course/status", name="change_student_course_status", methods={"GET"})
+     */
+    public function studentCourseActivate(StudentCourseRepository $studentCourseRepository, PaginatorInterface $paginator, Request $request): Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+        $studentCourse = $studentCourseRepository->find($request->query->get("id"));
+        $status = $studentCourse->getActive() == false ? 1:0;
+        $studentCourse->setActive($status);//accepted
+        $em->persist($studentCourse);
+        $em->flush();
 
+        $returnResponse = new JsonResponse();
+        $returnResponse->setJson($status);
+    
+        return $returnResponse;        // return $this->redirectToRoute('course_request');     
+    }
     /**
      * @Route("/udpate/{chapter}/counter", name="update_counter")
      */

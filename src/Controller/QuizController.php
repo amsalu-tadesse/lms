@@ -3,13 +3,16 @@
 namespace App\Controller;
 
 use App\Entity\InstructorCourse;
+use App\Entity\InstructorCourseChapter;
 use App\Entity\Quiz;
 use App\Form\QuizType;
 use App\Repository\QuizRepository;
+use App\Repository\QuizQuestionsRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @Route("/quizzes")
@@ -84,6 +87,38 @@ class QuizController extends AbstractController
         ]);
     }
 
+
+    /**
+     * @Route("/{id}/quiz", name="course_quiz")
+     */
+    public function quizPage(Request $request, InstructorCourseChapter $chapter, QuizQuestionsRepository $quiz_que_rep, PaginatorInterface $paginator)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $quiz = $em->getRepository(Quiz::class)->findOneBy(array('instructorCourseChapter'=> $chapter->getId()));
+        
+        $quiz_que = $quiz_que_rep->getQ($quiz->getId());
+        // $quiz = $quiz_rep->findBy(array('instructorCourseChapter'=>$chapter->getId()));
+        
+        $quiz_size = sizeof($quiz_que);
+
+        if($quiz_size > 0)
+        {
+            $data=$paginator->paginate(
+                $quiz_que,
+                $request->query->getInt('page',1),
+                1
+            );
+            return $this->render('instructor_course_chapter/quiz.html.twig', [
+                    'quiz' => $quiz,
+                    'chapter' => $chapter,
+                    'quiz_ques' => $data
+                ]);
+        }
+
+        return $this->redirectToRoute('course_list',['course'=>$chapter->getInstructorCourse()->getId(), 'chapter'=> $chapter->getTopic()]);
+
+        
+    }
     /**
      * @Route("/{id}", name="quiz_show", methods={"GET"})
      */

@@ -35,6 +35,7 @@ class Quiz
     private $passvalue;
  
 
+    
     /**
      * @ORM\ManyToOne(targetEntity=InstructorCourseChapter::class, inversedBy="quizzes")
      * @ORM\JoinColumn(nullable=false)
@@ -45,8 +46,6 @@ class Quiz
      * @ORM\OneToMany(targetEntity=QuizQuestions::class, mappedBy="quiz")
      */
     private $quizQuestions;
-
-  
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -62,6 +61,10 @@ class Quiz
      * @ORM\Column(type="integer", nullable=true)
      */
     private $duration;
+    /*
+     * @ORM\Column(type="integer")
+     */
+    private $ActiveQuestions;
 
     public function __construct()
     {
@@ -171,6 +174,7 @@ class Quiz
         return $this->name;
     }
 
+<<<<<<< HEAD
     public function getActive(): ?bool
     {
         return $this->active;
@@ -191,6 +195,16 @@ class Quiz
     public function setDuration(?int $duration): self
     {
         $this->duration = $duration;
+=======
+    public function getActiveQuestions(): ?int
+    {
+        return $this->ActiveQuestions;
+    }
+
+    public function setActiveQuestions(int $ActiveQuestions): self
+    {
+        $this->ActiveQuestions = $ActiveQuestions;
+>>>>>>> afd6b779c272481735983486908d111047e3b6ea
 
         return $this;
     }

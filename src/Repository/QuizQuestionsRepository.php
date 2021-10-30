@@ -19,6 +19,17 @@ class QuizQuestionsRepository extends ServiceEntityRepository
         parent::__construct($registry, QuizQuestions::class);
     }
 
+    public function getQ($chpater)
+    {
+        return $this->createQueryBuilder('qq')
+            ->select('qq', 'cc')
+            ->leftJoin('qq.quizChoices','cc')
+            ->where('qq.quiz = :id')
+            ->setParameter('id', $chpater)
+            ->orderBy(' cc.id,qq.id', "desc")
+            ->getQuery()
+            ->getArrayResult();
+    }
     // /**
     //  * @return QuizQuestions[] Returns an array of QuizQuestions objects
     //  */

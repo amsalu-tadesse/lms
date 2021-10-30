@@ -12,6 +12,29 @@
 <h3>{% trans %}Course assignement{% endtrans %}</h3>
 </div>
 <div class="card card-body">
+{{ form_start(searchForm,{'attr': {'role':'form'}, 'method': 'GET'}) }}
+<div class="row">
+	<div class="col-sm-4">		
+		<div class="form-group">
+			<label class="col-sm-12 control-label no-padding-right">Course</label>
+			{{ form_widget(searchForm.course,{'attr':{'class':'form-control'},'full_name':'course','value':app.request.get('course') })}}
+			<div class="help-block with-errors"></div>
+		</div>
+	</div>
+	<div class="col-sm-2">
+		<div class="form-group">
+			<label class="col-sm-12 control-label no-padding-right">Instructor</label>
+			{{ form_widget(searchForm.instructor,{'attr':{'class':'form-control'},'full_name':'instructor','value': app.request.get('instuctor')}) }}
+			<div class="help-block with-errors"></div>
+		</div>
+	</div>
+	<div class="col-sm-1">
+		<div class="form-group">
+			<label class="col-sm-12 control-label no-padding-right"></label>
+			<button class="btn btn-info" style="margin-top: 8px;width:100%;"><i class="fas fa-search"></i></button>
+		</div>
+	</div> 
+{{ form_end(searchForm) }} 
 <table class="table">
         <thead>
             <tr>

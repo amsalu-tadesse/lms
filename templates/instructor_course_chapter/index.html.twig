@@ -1,9 +1,17 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}InstructorCourseChapter index{% endblock %}
-{% block breadcrumbhome %} <a href="{{ path('instructor_course_chapter_index') }} "> My Courses </a> {% endblock %}
-{% block breadcrumbcontent %}chapters{% endblock %}
-{% block backbtn %}<a href="{{ path('instructor_course_chapter_index') }} " class="btn btn-info">Back to cource</a>{% endblock %}
+{% block title %}InstructorCourseChapter index
+{% endblock %}
+{% block breadcrumbhome %}
+	<a href="{{ path('instructor_course_chapter_index') }} ">
+		My Courses
+	</a>
+{% endblock %}
+{% block breadcrumbcontent %}chapters
+{% endblock %}
+{% block backbtn %}
+	<a href="{{ path('instructor_course_chapter_index') }} " class="btn btn-info">Back to cource</a>
+{% endblock %}
 
 
 {% block body %}

@@ -158,7 +158,6 @@ class CourseController extends AbstractController
         $sql = "SELECT c.*,sc.pages_completed from instructor_course_chapter c "
               ."left join student_chapter sc on "
               ."sc.chapter_id = c.id where c.instructor_course_id = :instructorCourse";
-        
         $stmt = $conn->prepare($sql);
         $stmt->execute(array('instructorCourse' => $id));
         $chapters = $stmt->fetchAll();        
