@@ -66,6 +66,11 @@ class Quiz
      */
     private $ActiveQuestions;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isMandatory;
+
     public function __construct()
     {
         $this->quizQuestions = new ArrayCollection();
@@ -203,6 +208,18 @@ class Quiz
     public function setActiveQuestions(int $ActiveQuestions): self
     {
         $this->ActiveQuestions = $ActiveQuestions;
+
+        return $this;
+    }
+
+    public function getIsMandatory(): ?bool
+    {
+        return $this->isMandatory;
+    }
+
+    public function setIsMandatory(bool $isMandatory): self
+    {
+        $this->isMandatory = $isMandatory;
 
         return $this;
     }
