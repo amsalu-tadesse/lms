@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Termsandconditions;
-use App\Form\TermsandconditionsType;
+use App\Form\Termsandconditions1Type;
 use App\Repository\TermsandconditionsRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,7 +31,7 @@ class TermsandconditionsController extends AbstractController
     public function new(Request $request): Response
     {
         $termsandcondition = new Termsandconditions();
-        $form = $this->createForm(TermsandconditionsType::class, $termsandcondition);
+        $form = $this->createForm(Termsandconditions1Type::class, $termsandcondition);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -63,7 +63,7 @@ class TermsandconditionsController extends AbstractController
      */
     public function edit(Request $request, Termsandconditions $termsandcondition): Response
     {
-        $form = $this->createForm(TermsandconditionsType::class, $termsandcondition);
+        $form = $this->createForm(Termsandconditions1Type::class, $termsandcondition);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

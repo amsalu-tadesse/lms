@@ -1,17 +1,4 @@
-{{ form_start(form,{'attr': {'role':'form'}}) }}
-<div class="form-group ">
-	<label class="control-label no-padding-right">{{ form_label(form.code) }}</label> {{ form_widget(form.code,{'attr':{'class':'form-control'}}) }}
-	<div class="help-block with-errors"></div>
-</div>
-
-<div class="form-group ">
-	<label class="control-label no-padding-right">{{ form_label(form.value) }}</label> {{ form_widget(form.value,{'attr':{'class':'form-control'}}) }}
-	<div class="help-block with-errors"></div>
-</div>
-
-<div class="form-group ">
-	<label class="control-label no-padding-right">{{ form_label(form.active) }}</label> {{ form_widget(form.active,{'attr':{'class':''}}) }}
-	<div class="help-block with-errors"></div>
-</div>
-<button class="btn btn-info">{{ button_label|default('Save') }}</button>
-<button class="btn  btn-warning " style="margin-right:20px;" type="reset">Reset</button> {{ form_end(form) }}
+{{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}

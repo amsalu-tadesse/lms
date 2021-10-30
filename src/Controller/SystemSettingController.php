@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\SystemSetting;
-use App\Form\SystemSettingType;
+use App\Form\SystemSetting1Type;
 use App\Repository\SystemSettingRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/systemsetting")
+ * @Route("/system/setting")
  */
 class SystemSettingController extends AbstractController
 {
@@ -31,7 +31,7 @@ class SystemSettingController extends AbstractController
     public function new(Request $request): Response
     {
         $systemSetting = new SystemSetting();
-        $form = $this->createForm(SystemSettingType::class, $systemSetting);
+        $form = $this->createForm(SystemSetting1Type::class, $systemSetting);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -63,7 +63,7 @@ class SystemSettingController extends AbstractController
      */
     public function edit(Request $request, SystemSetting $systemSetting): Response
     {
-        $form = $this->createForm(SystemSettingType::class, $systemSetting);
+        $form = $this->createForm(SystemSetting1Type::class, $systemSetting);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
