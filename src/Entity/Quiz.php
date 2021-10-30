@@ -174,7 +174,6 @@ class Quiz
         return $this->name;
     }
 
-<<<<<<< HEAD
     public function getActive(): ?bool
     {
         return $this->active;
@@ -195,7 +194,7 @@ class Quiz
     public function setDuration(?int $duration): self
     {
         $this->duration = $duration;
-=======
+    }
     public function getActiveQuestions(): ?int
     {
         return $this->ActiveQuestions;
@@ -204,7 +203,6 @@ class Quiz
     public function setActiveQuestions(int $ActiveQuestions): self
     {
         $this->ActiveQuestions = $ActiveQuestions;
->>>>>>> afd6b779c272481735983486908d111047e3b6ea
 
         return $this;
     }
