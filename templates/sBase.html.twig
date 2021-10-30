@@ -37,6 +37,10 @@ id="googleFonts" href="https://fonts.googleapis.com/css?family=Poppins:300,400,5
 	#header .header-nav-main nav>ul>li>a{
 		font-size: 14px;
 	}
+
+	.test{
+		display: none;
+	}
 </style>
 </head>
 
@@ -68,6 +72,18 @@ id="googleFonts" href="https://fonts.googleapis.com/css?family=Poppins:300,400,5
 	<!-- Theme Initialization Files -->
 	<script src="{{asset('student/js/theme.init.js')}}"></script>
 	<script>
+		$(document).ready(function(){
+            var json_str = getCookie('selected_courses_login');
+            var arr = JSON.parse(json_str);
+            cookie_length = arr.length;
+            if(cookie_length > 0){
+                $("#my_course").removeClass("test");   
+            }
+            else{
+                $("#my_course").addClass("test");
+            }
+        });
+
 		var url = window.location.pathname;
 		var drpdwns = $("a.dropdown-item");
 		var check = true;

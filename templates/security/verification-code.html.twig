@@ -1,0 +1,45 @@
+{% extends 'anon-base.html.twig' %}
+
+{% block title %}Verification{% endblock %}
+{% block stylesheet %}
+    <style>
+        .card{
+            margin: 0px auto;
+        }
+
+        .card-body{
+            padding-top: 0px;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+   <div class="container" style="min-height:500px;">
+        <div class="row">
+            <div class="card mt-5 pb-5 pt-2" style="max-width: 430px">
+                <div class="card-body">
+                    <center><img src="{{ asset('/images/eca.png')}}" height="150px" with="150px" style="border-radius: 100%"/></center>
+                    <center><p class="pt-2">.</p></center>
+                    
+                    <p>An email with Verification code is sent to {{email}}. 
+                    please check your email and enter the verification code.</p>
+
+                    <p style="color:red">
+                        {% if error != "" %}
+                            {{error}}
+                        {% endif %}
+                    </p>
+
+                    
+                    <form action="{{path('email_verification_validation')}}" method="POST">
+                        <div class="form-group">
+                            <input type="number" class="form-control" placeholder="Enter your code" name="code">
+                            <input type="hidden" value="{{email}}" name="email">
+                            <br>
+                            <input type="submit" class="btn btn-primary" value="submit">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>  
+   </div>
+{% endblock %}
