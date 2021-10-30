@@ -31,6 +31,18 @@ class InstructorCourseChapterRepository extends ServiceEntityRepository
         ;
     }
 
+    public function findChapters($id)
+    {
+        return $this->createQueryBuilder('icc')
+            ->select('icc','sc.pagesCompleted','ic')
+            ->leftJoin('icc.studentChapters', 'sc')
+            ->join('icc.instructorCourse', 'ic')
+            ->where('ic.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getArrayResult();
+    }
+
     public function findChapter1($course, $chapter)
     {
         return $this->createQueryBuilder('ch')

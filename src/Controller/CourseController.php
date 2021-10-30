@@ -151,42 +151,38 @@ class CourseController extends AbstractController
     /**
      * @Route("/{id}/chapters/", name="course_chapters", methods={"GET"})
      */
-    public function chapters(Course $course, ContentRepository $contentRepository, InstructorCourseChapterRepository $chaptersRepository): Response
-    {
-        $conn = $this->getDoctrine()->getManager()->getConnection();
-        $sql = "SELECT c.*,sc.pages_completed from instructor_course_chapter c "
-              ."left join student_chapter sc on "
-              ."sc.chapter_id = c.id where c.instructor_course_id = :instructorCourse";
-        $stmt = $conn->prepare($sql);
-        $stmt->execute(array('instructorCourse' => $course->getId()));
-        
-        $chapters = $stmt->fetchAll();        
-
-        $contents = $contentRepository->getContentsCount($id);
+    public function chapters(InstructorCourse $course, ContentRepository $contentRepository, InstructorCourseChapterRepository $chaptersRepository): Response
+    {   
+        $chapters = $chaptersRepository->findChapters($course->getId());  
+        $contents = $contentRepository->getContentsCount($course->getId());
+        $chapter_list = array();
         foreach($chapters as $key => $value){
             $flag = 1;
+            $chapter_list[$key] = $value[0];
             foreach($contents as $key1 => $value1)
             {
-                if($value['id'] == $value1['id']){
-                    $chapters[$key]['total_video'] = $value1['total_video'];
-                    $chapters[$key]['total_content'] = $value1['con'];
+                if($value[0]['id'] == $value1['id']){
+                    // $chapters[$key] = $value
+                    $chapter_list[$key]['total_video'] = $value1['total_video'];
+                    $chapter_list[$key]['total_content'] = $value1['con'];
                     $total_content = $value1['total_video']+$value1['con'];
-                    $chapters[$key]['completed'] = ($value['pages_completed']/$total_content)*100;
+                    $chapter_list[$key]['completed'] = ($value['pagesCompleted']/$total_content)*100;
                     $flag = 2;
                 break;
                 }
             }
 
             if($flag == 1){
-                $chapters[$key]['total_video'] = 0;
-                $chapters[$key]['total_content'] = 0;
-                $chapters[$key]['completed'] = 0;
+                $chapter_list[$key]['total_video'] = 0;
+                $chapter_list[$key]['total_content'] = 0;
+                $chapter_list[$key]['completed'] = 0;
             }
+
         }
 
         return $this->render('student_course/chapters.html.twig',[
-            'chapters' => $chapters,
-            'course' => $course,
+            'chapters' => $chapter_list,
+            'course' => $course->getCourse(),
             'contents' => $contents,
         ]);
     }

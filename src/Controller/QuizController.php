@@ -5,14 +5,17 @@ namespace App\Controller;
 use App\Entity\InstructorCourse;
 use App\Entity\InstructorCourseChapter;
 use App\Entity\Quiz;
+use App\Entity\StudentQuestion;
 use App\Form\QuizType;
 use App\Repository\QuizQuestionsRepository;
 use App\Repository\QuizRepository;
 use Knp\Component\Pager\PaginatorInterface;
+use App\Repository\StudentAnswerRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use DateTime;
 
 /**
  * @Route("/quizzes")
@@ -93,19 +96,77 @@ class QuizController extends AbstractController
     public function quizPage(Request $request, InstructorCourseChapter $chapter, QuizQuestionsRepository $quiz_que_rep, PaginatorInterface $paginator)
     {
         $em = $this->getDoctrine()->getManager();
-        $quiz = $em->getRepository(Quiz::class)->findOneBy(array('instructorCourseChapter' => $chapter->getId()));
+        $quiz = $em->getRepository(Quiz::class)->findOneBy(array('instructorCourseChapter'=> $chapter->getId()));
+        $prev = $em->getRepository(StudentQuestion::class)->find1($quiz->getId(), $this->getUser()->getProfile()->getId());
+        $question = "";
+        $i = 1;
 
         $quiz_que = $quiz_que_rep->getQ($quiz->getId());
+        
+        if($prev == null){
+            if($quiz->getActiveQuestions() < sizeof($quiz_que)){
+                $question_ids = array();
+                foreach($quiz_que as $key => $value)
+                {
+                    $question_ids[] = $value['id'];
+                }
+
+                $sizof_question_ids = sizeof($question_ids);
+                $selected = array();
+                $control = $quiz->getActiveQuestions();
+
+                while($control != 0)
+                {
+                    $random_id = rand(0, $control);
+                    $selected[] = $question_ids[$random_id];
+                    array_splice($question_ids, $random_id,1);
+                    $control--;
+                }
+
+                foreach($quiz_que as $quiz_q){
+                    $studentQuestion = new StudentQuestion();
+                    if(in_array($quiz_q['id'], $selected))
+                    {
+                        $studentQuestion->setStudent($this->getUser()->getProfile());
+                        $studentQuestion->setQuestion($quiz_que_rep->find($quiz_q['id']));
+                        $studentQuestion->setAnsweredAt(new DateTime());
+                        $em->persist($studentQuestion);
+                        $em->flush();  
+                    }
+                    else{
+                        
+                    }
+                }
+
+            }
+            else{
+                foreach($quiz_que as $quiz_q){
+                    $studentQuestion = new StudentQuestion();
+                    if($i == 1)
+                    {
+                        $question = $quiz_q;
+                    }
+                    $studentQuestion->setStudent($this->getUser()->getProfile());
+                    $studentQuestion->setQuestion($quiz_que_rep->find($quiz_q['id']));
+                    $studentQuestion->setAnsweredAt(new DateTime());
+                    $em->persist($studentQuestion);
+                    $em->flush();
+                }
+            }
+        }
+        
         // $quiz = $quiz_rep->findBy(array('instructorCourseChapter'=>$chapter->getId()));
 
         $quiz_size = sizeof($quiz_que);
 
-        if ($quiz_size > 0) {
+        if($quiz_size > 0)
+        {
             $data = $paginator->paginate(
                 $quiz_que,
                 $request->query->getInt('page', 1),
                 1
             );
+
             return $this->render('instructor_course_chapter/quiz.html.twig', [
                 'quiz' => $quiz,
                 'chapter' => $chapter,
@@ -148,8 +209,8 @@ class QuizController extends AbstractController
             }
         }
 
-        $form = $this->createForm(QuizType::class, $quiz, array('registeredChaptersid' => $registeredChaptersid));
-
+        $form = $this->createForm(QuizType::class,$quiz, array('registeredChaptersid' => $registeredChaptersid));
+        
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

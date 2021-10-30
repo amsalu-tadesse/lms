@@ -36,6 +36,7 @@ class InstructorCourseRepository extends ServiceEntityRepository
     }
     */
 
+
     public function filterIC($course, $instructor)
     {
         $q =  $this->createQueryBuilder('ic')
