@@ -133,9 +133,6 @@ class QuizController extends AbstractController
                         $em->persist($studentQuestion);
                         $em->flush();  
                     }
-                    else{
-                        
-                    }
                 }
 
             }
@@ -156,13 +153,11 @@ class QuizController extends AbstractController
         }
         
         // $quiz = $quiz_rep->findBy(array('instructorCourseChapter'=>$chapter->getId()));
-
         $quiz_size = sizeof($quiz_que);
-
         if($quiz_size > 0)
         {
             $data = $paginator->paginate(
-                $quiz_que,
+                $prev,
                 $request->query->getInt('page', 1),
                 1
             );
@@ -173,6 +168,8 @@ class QuizController extends AbstractController
                 'quiz_ques' => $data,
             ]);
         }
+
+        
 
         return $this->redirectToRoute('course_list', ['course' => $chapter->getInstructorCourse()->getId(), 'chapter' => $chapter->getTopic()]);
 

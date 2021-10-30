@@ -56,17 +56,16 @@
 					</div>
 				</div>
 				<div class="card-body">
-
 					{% for question in quiz_ques %}
-
 						<h5 class="py-3">
 							{{question.question}}</h5>
-							<form>
-						{% for choice in question.quizChoices %}
+							<form >
+
+						{% for choice in question.question.quizChoices %}
 							
 							<div class="d-flex flex-column px-4 py-1">
-								<label class="d-flex align-items-center text-color-grey mb-0" for="shipping_method1">
-									<input id="shipping_method1" type="radio" class="me-2" name="choice" value="{{choice.letter}}" >
+								<label class="d-flex align-items-center text-color-grey mb-0" for="shipping_method{{choice.id}}">
+									<input id="shipping_method{{choice.id}}" type="radio" class="me-2" name="choice" value="{{choice.letter}}" >
 									{{ choice.description}}
 								</label>
 							</div>
@@ -108,6 +107,11 @@
 {% endblock %}
 {% block javascript %}
 <script>
+
+	$("input[type=radio]").on("click", function(e){
+		console.log("tesdfst";)
+	});
+
 	$(document).ready(function() {
     var pages = document.getElementsByClassName("page-item");
     var last = pages.length;
