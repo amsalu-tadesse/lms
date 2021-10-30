@@ -32,9 +32,9 @@ class RegistrationFormType extends AbstractType
             ->add('email' ,null,[
                 'attr'=>['class'=>'form-control']
             ])
-            ->add('username' ,null,[
-                'attr'=>['class'=>'form-control']
-            ])
+            // ->add('username' ,null,[
+            //     'attr'=>['class'=>'form-control']
+            // ])
             ->add('academicLevel', EntityType::class, [
                 'mapped' => false,
                 'class' => AcademicLevel::class,

@@ -19,6 +19,21 @@ class SystemSettingRepository extends ServiceEntityRepository
         parent::__construct($registry, SystemSetting::class);
     }
 
+
+    public function findSystemSetting($search=null)
+    {
+        $qb=$this->createQueryBuilder('p');
+        if($search)
+            $qb->andWhere("p.name  LIKE '%".$search."%'");
+
+            return 
+            $qb->orderBy('p.id', 'ASC')
+            ->getQuery()
+     
+            
+        ;
+    }
+
     // /**
     //  * @return SystemSetting[] Returns an array of SystemSetting objects
     //  */
@@ -33,7 +48,7 @@ class SystemSettingRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()
         ;
-    }
+    } 
     */
 
     /*

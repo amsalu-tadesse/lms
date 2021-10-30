@@ -3,92 +3,86 @@
 namespace App\Controller;
 
 use App\Entity\SystemSetting;
-use App\Form\SystemSetting1Type;
+use App\Form\SystemSettingType;
 use App\Repository\SystemSettingRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
- * @Route("/system/setting")
+ * @Route("/systemsetting")
  */
 class SystemSettingController extends AbstractController
 {
     /**
-     * @Route("/", name="system_setting_index", methods={"GET"})
+     * @Route("/", name="system_setting_index", methods={"GET","POST"})
      */
-    public function index(SystemSettingRepository $systemSettingRepository): Response
+    public function index(SystemSettingRepository $systemSettingRepository,Request $request, PaginatorInterface $paginator): Response
     {
+
+        if($request->request->get('edit')){
+            $id=$request->request->get('edit');
+            $system_setting=$systemSettingRepository->findOneBy(['id'=>$id]);
+            $form = $this->createForm(SystemSettingType::class, $system_setting);
+            $form->handleRequest($request);
+    
+            if ($form->isSubmitted() && $form->isValid()) {
+                $this->getDoctrine()->getManager()->flush();
+    
+                return $this->redirectToRoute('system_setting_index');
+            }
+
+            $queryBuilder=$systemSettingRepository->findSystemSetting($request->query->get('search'));
+            $data=$paginator->paginate(
+                $queryBuilder,
+                $request->query->getInt('page',1),
+                18
+            );
+            return $this->render('system_setting/index.html.twig', [
+                'system_settings' => $data,
+                'form' => $form->createView(),
+                'edit'=>$id
+            ]);
+
+        }
+        $system_setting = new SystemSetting();
+        $form = $this->createForm(SystemSettingType::class, $system_setting);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($system_setting);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('system_setting_index');
+        }
+        
+        $queryBuilder=$systemSettingRepository->findSystemSetting($request->query->get('search'));
+        $data=$paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page',1),
+            18
+        );
         return $this->render('system_setting/index.html.twig', [
-            'system_settings' => $systemSettingRepository->findAll(),
+            'system_settings' => $data,
+            'form' => $form->createView(),
+            'edit'=>false
         ]);
-    }
-
+    }  
+ 
     /**
-     * @Route("/new", name="system_setting_new", methods={"GET","POST"})
+     * @Route("/{id}", name="system_setting_delete", methods={"DELETE"})
      */
-    public function new(Request $request): Response
+    public function delete(Request $request,SystemSetting $system_setting): Response
     {
-        $systemSetting = new SystemSetting();
-        $form = $this->createForm(SystemSetting1Type::class, $systemSetting);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($this->isCsrfTokenValid('delete'.$system_setting->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($systemSetting);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('system_setting_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->renderForm('system_setting/new.html.twig', [
-            'system_setting' => $systemSetting,
-            'form' => $form,
-        ]);
-    }
-
-    /**
-     * @Route("/{id}", name="system_setting_show", methods={"GET"})
-     */
-    public function show(SystemSetting $systemSetting): Response
-    {
-        return $this->render('system_setting/show.html.twig', [
-            'system_setting' => $systemSetting,
-        ]);
-    }
-
-    /**
-     * @Route("/{id}/edit", name="system_setting_edit", methods={"GET","POST"})
-     */
-    public function edit(Request $request, SystemSetting $systemSetting): Response
-    {
-        $form = $this->createForm(SystemSetting1Type::class, $systemSetting);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('system_setting_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->renderForm('system_setting/edit.html.twig', [
-            'system_setting' => $systemSetting,
-            'form' => $form,
-        ]);
-    }
-
-    /**
-     * @Route("/{id}", name="system_setting_delete", methods={"POST"})
-     */
-    public function delete(Request $request, SystemSetting $systemSetting): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$systemSetting->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($systemSetting);
+            $entityManager->remove($system_setting);
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('system_setting_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('system_setting_index');
     }
 }

@@ -19,6 +19,22 @@ class TermsandconditionsRepository extends ServiceEntityRepository
         parent::__construct($registry, Termsandconditions::class);
     }
 
+
+    public function findTermsandconditions($search=null)
+    {
+        $qb=$this->createQueryBuilder('p');
+        if($search)
+            $qb->andWhere("p.name  LIKE '%".$search."%'");
+
+            return 
+            $qb->orderBy('p.id', 'ASC')
+            ->getQuery()
+     
+            
+        ;
+    }
+
+
     // /**
     //  * @return Termsandconditions[] Returns an array of Termsandconditions objects
     //  */

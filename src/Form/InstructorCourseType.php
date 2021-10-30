@@ -17,7 +17,7 @@ class InstructorCourseType extends AbstractType
             ->add('course')
             ->add('instructor')
             // ->add('status')
-            ->add('duration')
+            // ->add('duration')
         ;
     }
 
