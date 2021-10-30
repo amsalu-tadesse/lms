@@ -26,13 +26,13 @@ class InstructorCourseChapterController extends AbstractController
     public function index(InstructorCourseRepository $instructorCourseRepository): Response
     {
 
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->getDoctrine()->getManager(); 
 
         // $teachersList = $em->getRepository(Instructor::class)->findAll();
         //    dd($instructorCourseRepository->findAll());
         $mylist = $em->getRepository(InstructorCourse::class)->findByUser($this->getUser());
      
-        return $this->render('instructor_course_chapter/instructor_vew.html.twig', [
+        return $this->render('instructor_course_chapter/instructor_view.html.twig', [
             'instructor_courses' => $mylist,
             // 'instructorsList' => $teachersList,
         ]);

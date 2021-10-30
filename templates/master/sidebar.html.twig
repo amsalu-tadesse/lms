@@ -38,7 +38,7 @@
 				<!-- Add icons to the links using the .nav-icon class
 				               with font-awesome or any other icon font library -->
 
-			<li class="nav-header"><h6> {% trans %}USER SETTINGS {% endtrans %}   </h6> </li>
+			<li class="nav-header"><h6> {% trans %}USERS {% endtrans %}   </h6> </li>
 				<li class="nav-item">
 						<li class="nav-item">
 							<a href="{{path('user_group_index')}}" class="nav-link">
@@ -136,6 +136,34 @@
 					</a>
 				</li>
 			</li>
+
+
+
+
+
+
+		<li class="nav-header"><h6> {% trans %} SYSTEM SETTINGS {% endtrans %} </h6></li>
+
+
+			<li class="nav-item">
+				 
+
+					<li class="nav-item">
+						<a href="{{path('termsandconditions_index')}}" class="nav-link">
+							<i class="far fa-circle nav-icon"></i>
+							<p>{% trans %}Terms and Conditions{% endtrans %}</p>
+						</a>
+					</li>
+				
+					<li class="nav-item">
+						<a href="{{ path('system_setting_index')}}" class="nav-link">
+							<i class="far fa-circle nav-icon"></i>
+							<p>{% trans %} Settings {% endtrans %}</p>
+						</a>
+					</li>
+				 
+			</li> 
+
 
 
 		</ul>

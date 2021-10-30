@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New SystemSetting{% endblock %}
+
+{% block body %}
+    
+
+        <div class="card card-info">
+<div class="card card-header">
+<h3>Create new SystemSetting</h3>
+</div>
+<div class="card card-body">
+{{ include('system_setting/_form.html.twig') }}
+</div>
+</div>
+
+
+
+
+
+
+    <a href="{{ path('system_setting_index') }}">back to list</a>
+{% endblock %}

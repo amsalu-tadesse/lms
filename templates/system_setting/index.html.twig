@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}SystemSetting index{% endblock %}
+
+{% block body %}
+
+
+    <a href="{{ path('system_setting_new') }}" class="btn btn-success mb-2">Create new</a>
+
+        <div class="card card-info">
+<div class="card card-header">
+<h5>System Settings</h5>
+</div>
+<div class="card card-body">
+<table class="table">
+<thead>
+    <tr>
+        <th>Id</th>
+        <th>Code</th>
+        <th>Value</th>
+        <th>active</th>
+        <th>actions</th>
+    </tr>
+</thead>
+<tbody>
+{% for system_setting in system_settings %}
+    <tr>
+        <td>{{ system_setting.id }}</td>
+        <td>{{ system_setting.code }}</td>
+        <td>{{ system_setting.value }}</td>
+        <td>{{ system_setting.active ? "YES":"NO" }}</td>
+        <td>
+            <a href="{{ path('system_setting_show', {'id': system_setting.id}) }}">show</a>
+            <a href="{{ path('system_setting_edit', {'id': system_setting.id}) }}">edit</a>
+        </td>
+    </tr>
+{% else %}
+    <tr>
+        <td colspan="4">no records found</td>
+    </tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+</div>
+
+
+   
+
+{% endblock %}

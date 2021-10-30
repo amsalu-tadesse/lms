@@ -31,7 +31,7 @@ class QuizController extends AbstractController
         } 
         return $this->render('quiz/index.html.twig', [
             'quizzes' => $quizzes,
-            'instructorCourse' => $instructorCourse,
+            'instructorCourse' => $instructorCourse, 
         ]);
     }
 
@@ -41,7 +41,22 @@ class QuizController extends AbstractController
     function new (Request $request, InstructorCourse $instructorCourse): Response {
 
         $quiz = new Quiz();
-        $form = $this->createForm(QuizType::class, $quiz);
+        // $form = $this->createForm(QuizType::class, $quiz);
+    
+           // $quizLists =  array();
+           $chapters = $instructorCourse->getInstructorCourseChapters();
+           $registeredChaptersid = array();
+           foreach ($chapters as $chapter) {
+               $temp = $chapter->getQuizzes();
+               foreach ($temp as $qz) {
+                   // $quizLists[]= $qz;
+                   $registeredChaptersid[] = $qz->getInstructorCourseChapter()->getId();
+               }
+           }
+
+      
+        $form = $this->createForm(QuizType::class, $quiz, array('registeredChaptersid' => $registeredChaptersid));
+        
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -84,7 +99,19 @@ class QuizController extends AbstractController
      */
     public function edit(Request $request, Quiz $quiz): Response
     {
-        $form = $this->createForm(QuizType::class, $quiz);
+      
+        $chapters = $instructorCourse->getInstructorCourseChapters();
+        $registeredChaptersid = array();
+        foreach ($chapters as $chapter) {
+            $temp = $chapter->getQuizzes();
+            foreach ($temp as $qz) {
+                $registeredChaptersid[] = $qz->getInstructorCourseChapter()->getId();
+            }
+        }
+
+
+        $form = $this->createForm(QuizType::class,$quiz, array('registeredChaptersid' => $registeredChaptersid));
+        
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Termsandconditions{% endblock %}
+
+{% block body %}
+    <h1>Edit Termsandconditions</h1>
+
+    {{ include('termsandconditions/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('termsandconditions_index') }}">back to list</a>
+
+    {{ include('termsandconditions/_delete_form.html.twig') }}
+{% endblock %}
+

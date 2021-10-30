@@ -33,11 +33,7 @@ class Quiz
      * @ORM\Column(type="float", nullable=true)
      */
     private $passvalue;
-
-    /**
-     * @ORM\Column(type="smallint", nullable=true)
-     */
-    private $active;
+ 
 
     /**
      * @ORM\ManyToOne(targetEntity=InstructorCourseChapter::class, inversedBy="quizzes")
@@ -56,6 +52,11 @@ class Quiz
      * @ORM\Column(type="string", length=255)
      */
     private $name;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $active;
 
     public function __construct()
     {
@@ -103,17 +104,7 @@ class Quiz
         return $this;
     }
 
-    public function getActive(): ?int
-    {
-        return $this->active;
-    }
 
-    public function setActive(?int $active): self
-    {
-        $this->active = $active;
-
-        return $this;
-    }
 
     public function getInstructorCourseChapter(): ?InstructorCourseChapter
     {
@@ -173,5 +164,17 @@ class Quiz
     public function __toString()
     {
         return $this->name;
+    }
+
+    public function getActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): self
+    {
+        $this->active = $active;
+
+        return $this;
     }
 }

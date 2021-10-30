@@ -17,7 +17,7 @@ class ContentType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $incrsid = $options['incrsid'];
+        $incrsid = $options['incrsid']; 
         $builder
             ->add('chapter', EntityType::class, [
                 'class' => InstructorCourseChapter::class,
