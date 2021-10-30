@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit QuizQuestions{% endblock %}
+{% block title %}Edit Quiz Questions{% endblock %}
 
 {% block body %}
-    <h1>Edit QuizQuestions</h1>
+   
      {{ include('quiz_questions/_form.html.twig', {'button_label': 'Update'}) }}
     {# {% set descriptions = [] %}
  {% for choice in quiz_question.quizChoices %}
@@ -21,19 +21,64 @@
 
 <script>
     $('tr').remove();
-    var description = {{ choicelist | raw }}
-    {# console.log(description); #}
+    var descriptions = {{ choicelist | raw }}
+     var answ = "{{ answer }}"; 
+     var counter = 0;
+  
 
     
+    for(var i = 0; i < descriptions.length; i++)
+    {
+        var letter = descriptions[i].letter;
+        var desc = descriptions[i].description;
+        var ans
+        var temp  = null;
+        if(answ == letter)
+        {
+            temp = "checked";
+        }
+    var newRow = jQuery('<tr><td>'+letter+'&nbsp;&nbsp;<input type="radio" name="answer" value="'+letter+'" '+temp+'></td><td><div class="form-group"> <textarea id="'+letter+'" name="'+letter+'" class="form-control"  rows="3"  required>'+ desc +'</textarea></div></td></tr>');
+        jQuery('table.authors-list').append(newRow);
+
+        counter ++;
     
+    }
+
+
+
+    jQuery('a.add-author').click(function(event){
+        event.preventDefault();
+       
+        if(counter == 9)
+        {
+            document.getElementById("dynamic").style.background='red';
+ 
+        }
+        if(counter > 9)
+        {
+            document.getElementById("dynamic").style.background='red';
+
+            alert("Maximum number reached");
+        }
+        else 
+        {
+           
+
+        var newRow = jQuery('<tr><td>'+getChars(counter)+'&nbsp;&nbsp;<input type="radio" name="answer" value="'+getChars(counter)+'"></td><td><div class="form-group"> <textarea id="'+getChars(counter)+'" name="'+getChars(counter)+'" class="form-control"  rows="3"  required></textarea></div></td></tr>');
+            jQuery('table.authors-list').append(newRow);
+        }
+        counter++;
+    });
+
+
    
 </script>
 
 
 
 <script>
-    var counter = 1;
-    jQuery('a.add-author').click(function(event){
+    
+   /* jQuery('a.add-author').click(function(event){
         event.preventDefault();
         counter++;
         if(counter == 9)
@@ -55,7 +100,7 @@
             jQuery('table.authors-list').append(newRow);
         }
         
-    });
+    });*/
 
     function getChars(x)
     {

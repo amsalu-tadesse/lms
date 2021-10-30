@@ -79,6 +79,7 @@ class QuizQuestionsController extends AbstractController
         }
 
         return $this->renderForm('quiz_questions/new.html.twig', [
+            'id'=>$quiz->getId(),
             'quiz_question' => $quizQuestion,
             'form' => $form,
         ]);
@@ -109,14 +110,14 @@ class QuizQuestionsController extends AbstractController
      */
     public function edit(Request $request, QuizQuestions $quizQuestion): Response
     {
-        
+       
         $form = $this->createForm(QuizQuestionsType::class, $quizQuestion);
         $form->handleRequest($request);
        
         if ($form->isSubmitted() && $form->isValid()) {
             $postedData = $request->request->all();
-            unset($postedData['quiz_questions']);
-            // dd($postedData );
+             unset($postedData['quiz_questions']);
+        
             $entityManager = $this->getDoctrine()->getManager();
 
             $answer = null;
@@ -129,7 +130,12 @@ class QuizQuestionsController extends AbstractController
                     continue;
                 }
 
-                $choice = new QuizChoices();
+                $choice = $entityManager->getRepository(QuizChoices::class)->findOneBy(['letter'=>$letter,'question'=>$quizQuestion->getId()]);
+                if(!$choice)
+                {
+                    $choice = new QuizChoices();
+                }
+               
                 $choice->setLetter($letter);
                 $choice->setDescription($description);
                 $choice->setQuestion($quizQuestion);
@@ -140,18 +146,20 @@ class QuizQuestionsController extends AbstractController
          
             $entityManager->flush();
 
-            return $this->redirectToRoute('quiz_questions_index', ['id'=>$quizQuestion->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('quiz_questions_index', ['id'=>$quizQuestion->getQuiz()->getId()], Response::HTTP_SEE_OTHER);
         }
         $choicelist = array();
         foreach ($quizQuestion->getQuizChoices() as $choice) {
             $choicelist[] = array('letter'=>$choice->getLetter(),'description'=>$choice->getDescription());
         }
+        // dd($quizQuestion->getQuizChoices() );
 
-        // dd( json_encode($choicelist));
+       
 
         return $this->renderForm('quiz_questions/edit.html.twig', [
             'quiz_question' => $quizQuestion,
             'choicelist' => json_encode($choicelist),
+            'answer' =>$quizQuestion->getAnswer(),
             'form' => $form,
             
         ]);
