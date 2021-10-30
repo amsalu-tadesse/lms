@@ -10,7 +10,7 @@
 {% endblock %}
 {% block javascripts %}
 <script>
-    var type = {
+   /* var type = {
         {
             type = 0,
         }
@@ -24,16 +24,23 @@
         $("#content").show();
         $("#videoLink").hide();
         $('#resourcedesc').find('label').html('Resource description details');
-    } else {}
+    } else {}*/
 </script>
 <script>
-    $("#videoLinkRadio").on("click", function() {
+   $("#videoLinkRadio").on("click", function() {
         $("#content_videoLink").prop('disabled', false);
         $("#content_filename").prop('disabled', true);
+        $("#content_content").prop('disabled', true);
     });
     $("#videoFileRadio").on("click", function() {
         $("#content_videoLink").prop('disabled', true);
         $("#content_filename").prop('disabled', false);
+        $("#content_content").prop('disabled', true);
+    });
+    $("#ContentRadio").on("click", function() {
+        $("#content_videoLink").prop('disabled', true);
+        $("#content_filename").prop('disabled', true);
+        $("#content_content").prop('disabled', false);
     });
 </script>
 {% endblock %}

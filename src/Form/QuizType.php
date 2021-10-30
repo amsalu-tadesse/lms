@@ -20,12 +20,13 @@ class QuizType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $registeredChaptersid = $options['registeredChaptersid'];
-        
+
         $builder
             ->add('name')
             ->add('instruction')
             ->add('percentage')
             ->add('passvalue')
+            ->add('duration')
             ->add('active')
             ->add('instructorCourseChapter', EntityType::class, [
                 'class' => InstructorCourseChapter::class,

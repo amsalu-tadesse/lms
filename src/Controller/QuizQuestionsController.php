@@ -39,28 +39,40 @@ class QuizQuestionsController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $postedData = $request->request->all();
+          
             unset($postedData['quiz_questions']);
 
-            if (!array_key_exists(strtoupper($form->getData()->getAnswer()), $postedData)) {
+           /* if (!array_key_exists(strtoupper($form->getData()->getAnswer()), $postedData)) {
                 end($postedData); // move the internal pointer to the end of the array
                 $key = key($postedData);
                 $this->addFlash('danger', 'Please enter the correct answer ranged from A to ' . $key);
                 return $this->redirectToRoute('quiz_questions_new', ['id' => $quiz->getId()]);
-            }
+            }*/
 
             $entityManager = $this->getDoctrine()->getManager();
             $quizQuestion->setQuiz($quiz);
             $entityManager->persist($quizQuestion);
             $entityManager->flush();
+
+            $answer = null;
  
             foreach ($postedData as $letter => $description) {
+                if($letter=="answer")
+                {
+                    $answer = $description;
+                    $quizQuestion->setAnswer($answer);
+                    continue;
+                }
+
                 $choice = new QuizChoices();
                 $choice->setLetter($letter);
                 $choice->setDescription($description);
                 $choice->setQuestion($quizQuestion);
                 $entityManager->persist($choice);
+                 
                
-            }
+            } 
+           
          
             $entityManager->flush();
 
