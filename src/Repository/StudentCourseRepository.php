@@ -162,5 +162,86 @@ class StudentCourseRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }    
+
+    public function count($t)
+    {
+        return $this
+            ->createQueryBuilder('st')
+            ->select("count(st.id)")
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+
+    public function getRequiredDTData($start, $length, $orders, $search, $columns)
+    {
+        $searchItem = $search['value'];
+        $columnNum = $orders[0]['column'];
+        $orderColumn = $columns[$columnNum]['data'];
+        $orderDir = $orders[0]['dir'];
+
+        // Create Main Query
+        $query = $this->createQueryBuilder('sc');
+    
+        // Create Count Query
+        $countQuery = $this->createQueryBuilder('stCount');
+        $countQuery->select('COUNT(stCount.id)');
+        
+        // Create inner joins
+        $query
+
+            ->select("sc.id, concat(u.firstName,' ',u.middleName,' ',u.lastName) as name", 'sc.isAtPage as page', 'sc.active', 'sc.createdAt')
+            ->innerJoin('sc.student',"st")
+            ->innerJoin('st.user','u');
+        $countQuery
+            ->innerJoin('stCount.student',"st")
+            ->innerJoin('st.user','u');
+    
+        //if all columns are from the same table you can use this
+
+        // $count = sizeof($columns);
+        // $flag = 0;
+
+        $searchQuery =  "concat(u.firstName,' ',u.middleName,' ',u.lastName) LIKE '%".$searchItem.'%\'';
+
+        $query->Where($searchQuery);
+        $countQuery->Where($searchQuery);
+        $countQuery->setMaxResults(10);
+        //order
+        if($columns[$columnNum]['data'] == "name")
+            $query->orderBy("name",$orderDir);
+        else        
+            $query->orderBy("sc.$orderColumn",$orderDir);
+
+        // Limit
+        $query->setFirstResult($start)->setMaxResults($length);
+        // Execute
+        $results = $query->getQuery()->getResult();
+        $countResult = $countQuery->getQuery()->getSingleScalarResult();
+        
+
+        return array(
+            "results"       => $results,
+            "countResult"   => $countResult
+        );
+    }
+
+    /**
+     * @return Product[] Returns an array of Product objects
+     */
+
+    public function filterData($name)
+    {
+        return  $this->createQueryBuilder('st')
+            ->innerJoin('st.student',"st")
+            ->innerJoin('st.u','u')
+            ->Where("u.firstName LIKE :name")
+            
+            ->setParameter('name', '%'.$name.'%')
+            ->orderBy('p.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }
 

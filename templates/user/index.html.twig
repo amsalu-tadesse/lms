@@ -40,13 +40,58 @@
 									{% set button_label = 'Update' %}
 								{% endif %}
 								{{ include('user/_form.html.twig') }}
-
-
 							</div>
 							<!-- /.card-body -->
 						</div>
 					</div>
 
+				   {{ form_start(searchForm,{'attr': {'role':'form'}, 'method': 'GET'}) }}
+					<div class="row">
+						
+						<div class="col-sm-2">		
+							<div class="form-group">
+								<label class="col-sm-12 control-label no-padding-right">First Name</label>
+								{{ form_widget(searchForm.firstName,{'attr':{'class':'form-control'},'full_name':'firstName','value':app.request.get('firstName') })}}
+								{# {# <input type="text" class="form-control" name="name"/>  #}
+								<div class="help-block with-errors"></div>
+							</div>
+						</div>
+						<div class="col-sm-2">
+							<div class="form-group">
+								<label class="col-sm-12 control-label no-padding-right">Middle Name</label>
+								{{ form_widget(searchForm.middleName,{'attr':{'class':'form-control'},'full_name':'middleName','value': app.request.get('middleName')}) }}
+								<div class="help-block with-errors"></div>
+							</div>
+						</div>
+						<div class="col-sm-2">
+							<div class="form-group">
+								<label class="col-sm-12 control-label no-padding-right">Last Name</label>
+								{{ form_widget(searchForm.lastName,{'attr':{'class':'form-control'},'full_name':'lastName','value': app.request.get('lastName')}) }}
+								<div class="help-block with-errors"></div>
+							</div>
+						</div>
+						<div class="col-sm-2">
+							<div class="form-group">
+								<label class="col-sm-12 control-label no-padding-right">Username</label>
+								{{ form_widget(searchForm.username,{'attr':{'class':'form-control'},'full_name':'userName','value': app.request.get('userName')}) }}
+								<div class="help-block with-errors"></div>
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="form-group">
+								<label class="col-sm-12 control-label no-padding-right">UserType</label>
+								{{ form_widget(searchForm.userType,{'attr':{'class':'form-control'},'full_name':'userType','value': app.request.get('userType')}) }}
+								<div class="help-block with-errors"></div>
+							</div>
+						</div>
+						<div class="col-sm-1">
+							<div class="form-group">
+								<label class="col-sm-12 control-label no-padding-right"></label>
+								<button class="btn btn-info" style="margin-top: 8px;width:100%;"><i class="fas fa-search"></i></button>
+							</div>
+						</div> 
+					{{ form_end(searchForm) }} 
+					
 					<div class="col-md-12">
 						<div class="card card ">
 							<div class="card-header">

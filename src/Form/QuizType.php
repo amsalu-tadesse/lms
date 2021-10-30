@@ -6,6 +6,7 @@ use App\Entity\Quiz;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class QuizType extends AbstractType
 {
@@ -16,7 +17,16 @@ class QuizType extends AbstractType
             ->add('instruction')
             ->add('percentage')
             ->add('passvalue')
-            ->add('active')
+            ->add('active', ChoiceType::class,[
+                'choices'=> [
+                    'no'=> '0',
+                    'yes'=>'1'
+                ],
+            ])
+            ->add('activeQuestions',null, [
+                'attr' =>['placeholder' => 'total number of questions visible for the student']
+            ])
+            // ->
             ->add('instructorCourseChapter')
         ;
     }

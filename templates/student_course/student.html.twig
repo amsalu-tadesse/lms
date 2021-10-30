@@ -49,9 +49,6 @@
             </div>
         </div>
 	{% else %}
-    <pre>
-        {{ dump(student_courses) }}
-    </pre>
 		{% for course in student_courses %}
             {% set id = course.id %}
             {% set array = array|merge([ id ]) %}

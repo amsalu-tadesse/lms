@@ -36,6 +36,28 @@ class InstructorCourseRepository extends ServiceEntityRepository
     }
     */
 
+    public function filterIC($course, $instructor)
+    {
+        $q =  $this->createQueryBuilder('ic')
+                ->join('ic.course','c')
+                ->join('ic.instructor', 'i');
+            if($course !="")
+            {
+                $q->Where('c.id LIKE :course')
+                  ->setParameter('course', '%'.$course.'%');
+            }
+            if($instructor !="")
+            {
+                $q->andWhere('i.id LIKE :instructor')
+                ->setParameter('instructor', '%'.$instructor.'%');
+            }
+
+            $q->orderBy('ic.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+        return $q;
+    }
+
     public function findCoursesSortByCategory($id=0)
     {
         $qb = $this->createQueryBuilder('ic')
@@ -73,5 +95,6 @@ class InstructorCourseRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
     
 }

@@ -32,7 +32,6 @@ class QuizQuestionsController extends AbstractController
      * @Route("/new/{id}", name="quiz_questions_new", methods={"GET","POST"})
      */
     function new (Request $request, Quiz $quiz): Response {
-
         $quizQuestion = new QuizQuestions();
         $form = $this->createForm(QuizQuestionsType::class, $quizQuestion);
         $form->handleRequest($request);

@@ -7,12 +7,14 @@ use App\Entity\InstructorCourse;
 use App\Entity\InstructorCourseStatus;
 use App\Entity\User;
 use App\Form\InstructorCourseType;
+use App\Form\Filter\InstructorCourseFilterType;
 use App\Repository\InstructorCourseRepository;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Knp\Component\Pager\PaginatorInterface;
 
 /** 
  * @Route("/instructor/course")
@@ -22,16 +24,28 @@ class InstructorCourseController extends AbstractController
     /**
      * @Route("/", name="instructor_course_index", methods={"GET"})
      */
-    public function index(InstructorCourseRepository $instructorCourseRepository): Response
+    public function index(Request $request, PaginatorInterface $paginator, InstructorCourseRepository $instructorCourseRepository): Response
     {
+        $pageSize = 15;
         $em = $this->getDoctrine()->getManager();
 
         $teachersList = $em->getRepository(Instructor::class)->findAll();
-    //    dd($instructorCourseRepository->findAll());
-    
+  
+        $st_course = new InstructorCourse();
+        $searchForm = $this->createForm(InstructorCourseFilterType::class,$st_course);
+        $searchForm->handleRequest($request);
+
+        $queryBuilder = $instructorCourseRepository->filterIC($request->query->get('course'),$request->query->get('instructor'));
+        $data=$paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page',1),
+            $pageSize
+        );
+
         return $this->render('instructor_course/index.html.twig', [
-            'instructor_courses' => $instructorCourseRepository->findAll(),
+            'instructor_courses' => $data,
             'instructorsList' => $teachersList,
+            'searchForm' => $searchForm->createView()
         ]);
     }
 

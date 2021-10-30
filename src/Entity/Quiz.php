@@ -39,6 +39,7 @@ class Quiz
      */
     private $active;
 
+    
     /**
      * @ORM\ManyToOne(targetEntity=InstructorCourseChapter::class, inversedBy="quizzes")
      * @ORM\JoinColumn(nullable=false)
@@ -50,12 +51,15 @@ class Quiz
      */
     private $quizQuestions;
 
-  
-
     /**
      * @ORM\Column(type="string", length=255)
      */
     private $name;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $ActiveQuestions;
 
     public function __construct()
     {
@@ -173,5 +177,17 @@ class Quiz
     public function __toString()
     {
         return $this->name;
+    }
+
+    public function getActiveQuestions(): ?int
+    {
+        return $this->ActiveQuestions;
+    }
+
+    public function setActiveQuestions(int $ActiveQuestions): self
+    {
+        $this->ActiveQuestions = $ActiveQuestions;
+
+        return $this;
     }
 }

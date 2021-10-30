@@ -36,9 +36,8 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->flush();
     }
 
-    public function filterUser($fname, $mname, $lname, $userType)
+    public function filterUser($fname, $mname, $lname, $username, $userType)
     {
- 
         $q =  $this->createQueryBuilder('u');
             
             // ->innerJoin('u.department','dt')  
@@ -61,16 +60,18 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
             if($userType !="")
             {
-                $q->join('u.userType','ut');
-                andWhere('u.username LIKE :username')
-                ->setParameter('username', '%'.$userType.'%');
+                $q->join('u.userType','ut')
+                ->andWhere('u.userType = :username')
+                ->setParameter('username', $userType);
             }
-            // ->andWhere('dt.id LIKE :department')
-            
-            
-            
-            
-            // ->setParameter('department', '%'.$dep.'%')
+
+
+            if($username !="")
+            {
+                $q->andWhere('u.username = :username')
+                ->setParameter('username', $userType);
+            }
+
             $q->orderBy('u.id', 'ASC')
             ->getQuery()
             ->getResult()

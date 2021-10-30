@@ -59,7 +59,6 @@ class InstructorCourseChapterController extends AbstractController
      */
     public function quiz(InstructorCourse $instructorCourse, Request $request): Response
     {
-
         $em = $this->getDoctrine()->getManager();
         $instructorCourseChapters = $em->getRepository(InstructorCourseChapter::class)->findBy(['instructorCourse'=>$instructorCourse]);
         return $this->render('quiz/index.html.twig', [
@@ -101,15 +100,6 @@ class InstructorCourseChapterController extends AbstractController
     {
         return $this->render('instructor_course_chapter/show.html.twig', [
             'instructor_course_chapter' => $instructorCourseChapter,
-        ]);
-    }
-
-    /**
-     * @Route("/{id}/quiz", name="course_quiz")
-     */
-    public function quizPage(InstructorCourseChapter $instructorCourseChapter)
-    {
-        return $this->render('instructor_course_chapter/quiz.html.twig', [
         ]);
     }
 

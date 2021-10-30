@@ -32,19 +32,14 @@
 		<!-- Sidebar Menu -->
 		<nav class="mt-2">
 			<ul
+
+			
 				class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 				<!-- Add icons to the links using the .nav-icon class
 				               with font-awesome or any other icon font library -->
-				<li class="nav-item">
-					<a href="#" class="nav-link">
-						<i class="nav-icon fas fa-user"></i>
-						<p>
-							{% trans %}Users setting{% endtrans %}
-							<i class="fas fa-angle-right right"></i>
-						</p>
-					</a>
-					<ul class="nav nav-treeview">
 
+			<li class="nav-header"><h6> {% trans %}USER SETTINGS {% endtrans %}   </h6> </li>
+				<li class="nav-item">
 						<li class="nav-item">
 							<a href="{{path('user_group_index')}}" class="nav-link">
 								<i class="far fa-circle nav-icon"></i>
@@ -63,18 +58,16 @@
 								<p>{% trans %}Users{% endtrans %}</p>
 							</a>
 						</li>
-					</ul>
 				</li>
 
+
+
+
+			<li class="nav-header"><h6> {% trans %} STUDENT REQUESTS {% endtrans %} </h6></li>
+
+
                 <li class="nav-item">
-					<a href="#" class="nav-link">
-						<i class="nav-icon fa fa-clock"></i>
-						<p>
-							{% trans %} Course Requests{% endtrans %}
-							<i class="fas fa-angle-right right"></i>
-						</p>
-					</a>
-					<ul class="nav nav-treeview">
+					 
 
 						<li class="nav-item">
 							<a href="{{path('course_request')}}" class="nav-link">
@@ -82,30 +75,24 @@
 								<p>{% trans %}New Requests{% endtrans %}</p>
 							</a>
 						</li>
-						{# <li class="nav-item">
-							<a href="{{ path('approved_course_request')}}" class="nav-link">
-								<i class="far fa-circle nav-icon"></i>
-								<p>{% trans %}Approved Requests{% endtrans %}</p>
-							</a>
-						</li> #}
+					
 						<li class="nav-item">
 							<a href="{{ path('rejected_course_request')}}" class="nav-link">
 								<i class="far fa-circle nav-icon"></i>
 								<p>{% trans %}Rejected Requests{% endtrans %}</p>
 							</a>
 						</li>
-					</ul>
+					 
 				</li> 
 
+
+
+			<li class="nav-header"> <h6>  {% trans %} COURSE {% endtrans %} <h6> </li>
+
+
 				<li class="nav-item has-treeview menu-open ">
-					<a href="#" class="nav-link">
-						<i class="nav-icon fas fa-book"></i>
-						<p>
-							{% trans %}Course{% endtrans %}
-							<i class="fas fa-angle-right right"></i>
-						</p>
-					</a>
-					<ul class="nav nav-treeview">
+				
+				
 						<li class="nav-item">
 							<a href="{{path('course_index')}}" class="nav-link">
 								<i class="far fa-circle nav-icon"></i>
@@ -127,7 +114,7 @@
 						<li class="nav-item">
 							<a href="{{path('instructor_course_index')}}" class="nav-link">
 								<i class="far fa-circle nav-icon"></i>
-								<p>{% trans %}Assing Courses{% endtrans %}</p>
+								<p>{% trans %}Assign Courses{% endtrans %}</p>
 							</a>
 						</li>
 						<li class="nav-item">
@@ -139,7 +126,7 @@
 							</a>
 						</li>
 
-					</ul>
+					
 				</li>
 				<li class="nav-item"></li>
 				<li class="nav-item">
@@ -149,6 +136,8 @@
 					</a>
 				</li>
 			</li>
+
+
 		</ul>
 	</nav>
 	<!-- /.sidebar-menu -->
