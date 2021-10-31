@@ -82,7 +82,7 @@ class RegistrationController extends AbstractController
                 $em->flush();
 
                 $message = "verification code is <b>$code</b> ";
-                $sent =  $mservice->sendEmail($mailer, $message, $form_data['email'], "account");
+                $sent =  $mservice->sendEmail($mailer, $message, $form_data['email'], "account verification");
 
                 return $this->render('registration/confirmation_email.html.twig', [
                     'email' => $form_data['email'],
@@ -107,7 +107,7 @@ class RegistrationController extends AbstractController
      *  @Route("/verification", name="app_register_main")
      * 
      */
-    public function registere(Request $request, VerificationRepository $ver_repo, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, UserAuthenticator $authenticator): Response
+    public function registere(Request $request, VerificationRepository $ver_repo, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, UserAuthenticator $authenticator, MailerService $mservice): Response
     {
         $form_data = $request->cookies->get("form_data");
         $form_data = json_decode($form_data, true);
@@ -136,10 +136,11 @@ class RegistrationController extends AbstractController
                     ]);
                 }
                 else{
+                    $pass = rand(223232, 998999);
                     $user->setPassword(
                         $passwordEncoder->encodePassword(
                             $user,
-                            "123456"
+                            "$pass"
                         )
                     );
                     $user->setRoles(['ROLE_STUDENT']);
@@ -205,6 +206,12 @@ class RegistrationController extends AbstractController
                         $response->headers->setCookie($cookie);
                         $response->sendHeaders();
                     }
+                    
+                    $message = "<p style='font-size: 15px;'>Dear ".$user->getFirstName()." ".$user->getMiddleName()." You have successfully registered for ECA ".
+                               "Learning management system. Please login with the following credentials".
+                               " and change your password <br>username=<strong>".$user->getUsername()."</strong><br> password=<strong>$pass</strong></p>";
+                    $sent =  $mservice->sendEmail($this->mailer, $message, $user->getEmail(), "account confirmation");
+                    
                     return $this->render('registration/notification.html.twig');
                 }
             }

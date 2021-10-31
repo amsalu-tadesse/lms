@@ -130,6 +130,17 @@
             <section class="section border-0 m-0" style="min-height: 600px;">
                 <div class="container-fluid">
                     <div class="row">
+                    {% for label, messages in app.flashes %} 
+                        {% for message in messages %}
+                            <div class="alert alert-danger alert-{{ label }} fade show" role="alert">
+                            <strong> {{ message }}</strong>
+                            <button type="button" class="close btn-primary" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            </div>
+                        {% endfor %} 
+                    {% endfor %}
+
                         {% if pages_seen|length != 0 %}
                                 <script>
                                     control.view_at = "{{pages_seen.pagesCompleted}}";
@@ -295,6 +306,7 @@
 
     <!-- jquery -->
     <script src=" {{asset( 'assets/plugins/jquery/jquery.js')}} "></script>
+	<script src="{{asset('assets/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 
     <!-- Theme Base, Components and Settings -->
     <script src="{{asset( 'student/js/theme.js')}} "></script>
@@ -321,6 +333,7 @@
         
     });
 
+    $('.alert').alert();
     $("li").on("click", function(){
        $("#intro").remove();
        lists = $(".list li");

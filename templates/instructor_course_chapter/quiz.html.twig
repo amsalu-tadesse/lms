@@ -162,10 +162,13 @@
 
 
 function startTimer(minutes, seconds,  display) {
+	var round = 0;
     setInterval(function () {
-
-        minutes = minutes < 10 ? "0" + minutes : minutes;
-        seconds = seconds < 10 ?  "0" + seconds : seconds;
+		if(minutes<10 && round == 0){
+			minutes = minutes < 10 ? "0" + minutes : minutes;
+        	seconds = seconds < 10 ?  "0" + seconds : seconds;
+			round = 1;
+		}
 
         display.textContent = minutes + ":" + seconds;
 

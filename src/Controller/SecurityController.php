@@ -143,6 +143,38 @@ class SecurityController extends AbstractController
         ]);
     }
 
+        /**
+     * @Route("/password/change", name="change_password", methods={"GET","POST"})
+     */
+    public function passwordChange(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    {
+        $user = new User();
+        $form = $this->createForm(ForgotPasswordType::class, $user);
+        $form->handleRequest($request);
+
+        $email = $request->getSession()->get('password_change_email');
+        if($email == null)
+        {
+            return $this->redirectToRoute('app_login');
+        }        
+        if ($form->isSubmitted() && $form->isValid()) {
+    
+            $entityManager = $this->getDoctrine()->getManager();
+
+            $user = $entityManager->getRepository(User::class)->findOneBy(array('email' => $email));
+            $user->setPassword($passwordEncoder->encodePassword($user, $form['plainPassword']->getData()));
+            
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_login', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->renderForm('security/password_change.html.twig', [
+            'form' => $form,
+            'error' => ""
+        ]);
+    }
     /**
      * @Route("/logout", name="app_logout")
      */
