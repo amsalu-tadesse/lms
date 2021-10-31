@@ -47,7 +47,7 @@
 						<div class="card border-0 border-radius-0 ">
 					{% endif %}
 							<div class="card-body">
-								<a href="{{path('content_list',{'course':chapter.id,'chapter':chapter.topic})}}">
+								<a href="{{path('content_list',{'course':chapter.instructorCourse.id,'chapter':chapter.topic})}}">
 									<h4 class="card-title card-title-custom mb-1 text-4 font-weight-bold">{{chapter.topic}}</h4>
 								</a>
 								<p class="card-text" style="padding: 14px 0px 0px;">{% trans %}Videos{% endtrans %} : {{ chapter.total_video }}

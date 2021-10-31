@@ -1,0 +1,59 @@
+{% extends "sBase.html.twig" %}
+
+{% block stylesheet %}
+    <style>
+        body {
+			font-size: 15px;
+		}
+        .card{
+            background-color: white;
+        }
+        label {
+            font-size: 16px;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+	<div class="container">
+		<div class="row">
+			<div class="card my-3">
+				<div class="card-body" style="padding: 20px 100px;">
+					{% for question in stud_que %}
+						<h5 class="py-3">
+							{{question.question}}</h5>
+						<input type="hidden" id="parameter" value="{{question.id}}">
+						<form>
+							{% for choice in question.question.quizChoices %}
+                                
+								<div class="d-flex flex-column px-4 py-1">
+									<label class="d-flex align-items-center text-color-grey mb-0" for="shipping_method{{choice.id}}">
+										{% if choice.letter == question.answer %}
+											<script>
+												checked = 1;
+											</script>
+											<input disabled id="shipping_method{{choice.id}}" type="radio" class="me-2" name="choice" checked="checked" value="{{choice.letter}}">
+											{{choice.letter}}) &nbsp;&nbsp;
+											{{ choice.description}}
+										{% else %}
+											<input disabled id="shipping_method{{choice.id}}" type="radio" class="me-2" name="choice" value="{{choice.letter}}">
+											{{choice.letter}}) &nbsp;&nbsp;
+											{{ choice.description}}
+										{% endif %}
+									</label>
+								</div>
+							{% endfor %}
+                            <div class="d-flex flex-column px-4 py-1">
+                                {% if question.answer == question.question.answer %}
+                                    <span style="color:green">Corect Answer: <b>{{question.question.answer}}</b></span>
+                                {% else %}
+                                    <span style="color:red">Corect Answer: <b>{{question.question.answer}}</b></span>
+                                {% endif %}
+                            </div>
+						</form>
+					{% endfor %}
+                <a href="{{path('course_chapters',{'id':chapter.instructorCourse.id})}}" class="btn btn-primary px-5 mx-2 my-2">submit</a>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

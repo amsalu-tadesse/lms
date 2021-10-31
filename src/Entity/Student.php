@@ -50,12 +50,18 @@ class Student
      */
     private $studentQuestions;
 
+    /**
+     * @ORM\OneToMany(targetEntity=StudentQuiz::class, mappedBy="student")
+     */
+    private $studentQuizzes;
+
     public function __construct()
     {
         $this->studentCourses = new ArrayCollection();
         $this->studentContentReactions = new ArrayCollection();
         $this->studentChapters = new ArrayCollection();
         $this->studentQuestions = new ArrayCollection();
+        $this->studentQuizzes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -206,6 +212,36 @@ class Student
             // set the owning side to null (unless already changed)
             if ($studentQuestion->getStudent() === $this) {
                 $studentQuestion->setStudent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|StudentQuiz[]
+     */
+    public function getStudentQuizzes(): Collection
+    {
+        return $this->studentQuizzes;
+    }
+
+    public function addStudentQuiz(StudentQuiz $studentQuiz): self
+    {
+        if (!$this->studentQuizzes->contains($studentQuiz)) {
+            $this->studentQuizzes[] = $studentQuiz;
+            $studentQuiz->setStudent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStudentQuiz(StudentQuiz $studentQuiz): self
+    {
+        if ($this->studentQuizzes->removeElement($studentQuiz)) {
+            // set the owning side to null (unless already changed)
+            if ($studentQuiz->getStudent() === $this) {
+                $studentQuiz->setStudent(null);
             }
         }
 
