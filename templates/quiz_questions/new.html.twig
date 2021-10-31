@@ -31,7 +31,7 @@
         {
             /*<input type="text" name="'+getChars(counter)+'" class="form-control" maxlenght= "255" /> */
 
-        var newRow = jQuery('<tr><td>'+getChars(counter)+'&nbsp;&nbsp;<input type="radio" name="answer" value="'+getChars(counter)+'"></td><td><div class="form-group"> <textarea id="'+getChars(counter)+'" name="'+getChars(counter)+'" class="form-control"  rows="3"  required></textarea></div></td></tr>');
+        var newRow = jQuery('<tr><td>'+getChars(counter)+'&nbsp;&nbsp;<input type="radio" name="answer" value="'+getChars(counter)+'"></td><td><div class="form-group"> <textarea id="'+getChars(counter)+'" name="'+getChars(counter)+'" class="form-control"  rows="3"  required></textarea></div></td><td><a   class="btn btn-xs"> <span class="fa fa-trash" style="color:red;" onclick="removerow(this)"></span> </a></td></tr>');
             jQuery('table.authors-list').append(newRow);
         }
         
@@ -42,6 +42,13 @@
         var arr = ['','B','C','D','E','F','G','H','I','J'];
         return arr[x];
     }
+    function removerow(x)
+    {
+       x.parentNode.parentNode.parentNode.remove();
+       counter--;
+     
+    }
 </script>
+
 {% endblock %}
 

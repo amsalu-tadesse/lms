@@ -122,6 +122,8 @@ class QuizQuestionsController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
 
             $answer = null;
+            $existingIds = array();
+
  
             foreach ($postedData as $letter => $description) {
                 if($letter=="answer")
@@ -136,6 +138,10 @@ class QuizQuestionsController extends AbstractController
                 {
                     $choice = new QuizChoices();
                 }
+                else 
+                {
+                    $existingIds[] = $choice->getId();
+                }
                
                 $choice->setLetter($letter);
                 $choice->setDescription($description);
@@ -143,7 +149,20 @@ class QuizQuestionsController extends AbstractController
                 $entityManager->persist($choice);
                
             } 
+
+
+
            
+            $allChoicesInDb = $entityManager->getRepository(QuizChoices::class)->findBy(['question'=>$quizQuestion->getId()]);
+
+          
+            foreach ($allChoicesInDb as $ch) {
+                 
+                 if(!in_array($ch->getId(), $existingIds))
+                 {
+                    $entityManager->remove($ch);
+                 }
+            }
          
             $entityManager->flush();
 
