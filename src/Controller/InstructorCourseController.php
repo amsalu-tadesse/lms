@@ -35,16 +35,32 @@ class InstructorCourseController extends AbstractController
         $searchForm->handleRequest($request);
 
         $queryBuilder = $instructorCourseRepository->filterIC($request->query->get('course'), $request->query->get('instructor'));
+
         $data = $paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page', 1),
             $pageSize
         );
+            $crs_stnumber = array();
+       $ic_student_count = $em->getRepository(instructorCourse::class)->findAll();
+       $json = "[['Course', 'number']";
+  
+       foreach ($ic_student_count as $key => $value) {
+        
+        $crs_stnumber[$value->getCourse()->getName()] =  sizeof($value->getStudentCourses());
 
+        $col =  ",['".$value->getCourse()->getName()."', ".sizeof($value->getStudentCourses())."]";
+        $col =trim(preg_replace('/\s+/', ' ', $col));
+        $json .= $col ;
+       }
+       $json .= "];";
+    // dd($json);
         return $this->render('instructor_course/index.html.twig', [
             'instructor_courses' => $data,
             'instructorsList' => $teachersList,
             'searchForm' => $searchForm->createView(),
+            'crs_stnumber' =>$json ,
+           
         ]);
     }
 

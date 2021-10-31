@@ -39,23 +39,26 @@ class InstructorCourseRepository extends ServiceEntityRepository
 
     public function filterIC($course, $instructor)
     {
-        $q =  $this->createQueryBuilder('ic')
-                ->join('ic.course','c')
-                ->join('ic.instructor', 'i');
+        
+        $q =  $this->createQueryBuilder('ic');
+                
+                
             if($course !="")
             {
-                $q->Where('c.id LIKE :course')
+                $q->join('ic.course','c')
+               ->Where('c.id LIKE :course')
                   ->setParameter('course', '%'.$course.'%');
             }
             if($instructor !="")
-            {
-                $q->andWhere('i.id LIKE :instructor')
+            {$q->join('ic.instructor', 'i')
+                ->andWhere('i.id LIKE :instructor')
                 ->setParameter('instructor', '%'.$instructor.'%');
             }
 
             $q->orderBy('ic.id', 'ASC')
             ->getQuery()
-            ->getResult();
+             ->getResult();
+             
         return $q;
     }
 

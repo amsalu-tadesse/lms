@@ -1,232 +1,263 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    {% trans %}
-    StudentCourse index
-    {% endtrans %}
+	{% trans %}
+	StudentCourse index
+
+
+	{% endtrans %}
 {% endblock %}
+
+{% block stylesheets %}
+	<link href="{{ asset('assets/plugins/dataTables/datatables.min.css') }}">
+{% endblock %}
+
 {% block breadcrumbhome %}
-    {% trans %}
-    Studentcourse
-    {% endtrans %}
+	{% trans %}
+	Studentcourse
+
+
+	{% endtrans %}
 {% endblock %}
 {% block breadcrumbcontent %}
-    {% trans %}
-    index
-    {% endtrans %}
+	{% trans %}
+	index
+
+
+	{% endtrans %}
 {% endblock %}
-{% block stylesheets %}
-    <link href="{{ asset('assets/plugins/dataTables/datatables.min.css') }}">
-    {% endblock %}
-    {% block body %}
 
-        <div class="card card-info">
-            <div class="card card-header">
-                <div class="row">
-                    <div class="col-md-6" >
-                        <h3>
-                            {% trans %}
-                            Students registered for course
-                            {% endtrans %}
-                            {{ instructor_course.course | capitalize }}
-                        </h3>
-                    </div>
-                    <div class="col-md-6">
-                        <a onclick="showdiv()" href="#" class="btn btn-primary" style="float:right">
-                            {% trans %}
-                            Report
-                            {% endtrans %}
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="card card-body">
+{% block body %}
+
+	<div class="card card-info">
+		<div class="card card-header">
+			<div class="row">
+				<div class="col-md-6">
+					<h3>
+						{% trans %}
+						Students registered for course
 
 
-			
+						{% endtrans %} {{ instructor_course.course | capitalize }}
+					</h3>
+				</div>
+				<div class="col-md-6">
 
-                <div class="  text-center" style="display:none" id="chart">
-			{# <canvas id="myChart" style="width:100%;max-width:600px"></canvas> #}
-		<div class="text-center" id="myChart" style="width:100%; max-width:800px; height:500px;"></div>
-                </div>
+					<a onclick="showchart()" href="#" class="btn btn-primary" style="float:right">
+						{% trans %}
+						Report
 
-                <table class="table" id="table">
-                    <thead>
-                        <tr>
-                            <th>
-                                Id
-                            </th>
-                            <th>
-                                {% trans %}
-                                Name
-                                {% endtrans %}
-                            </th>
-                            <th>
-                                {% trans %}
-                                Registered Date
-                                {% endtrans %}
-                            </th>
-                            <th>
-                                {% trans %}
-                                Completion
-                                {% endtrans %}
-                                (%)
-                            </th>
-                            <th>
-                                {% trans %}
-                                is Active
-                                {% endtrans %}
-                            </th>
-                            {# <th>Is at page</th> #}
-                            <th>
-                                {% trans %}
-                                Actions
-                                {% endtrans %}
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-        </div>
 
-        <div class="modal fade" id="modal-delete">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title text-bold text-red">
-                            Deactivating Record
-                        </h4>
-                        <button type="button" class="close btn btn-primary" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">
-                                &times;
-                            </span>
-                        </button>
-                    </div>
+						{% endtrans %}
+					</a>
+				</div>
+			</div>
+		</div>
 
-                    <div class="modal-body"></div>
-                    <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-warning" data-dismiss="modal">
-                            Close
-                        </button>
+		{# style="width:100%; max-width:800px; height:500px;" #}
+		<div class=" row text-center" style="display:none" id="chart">
+			<div class="text-center col-md-3"></div>
+			<div class="text-center col-md-6 col-sm-12" id="myChart" style="width:100%; max-width:800px; height:300px;"></div>
+			<div class="text-center col-md-3"></div>
+		</div>
 
-                        <button onclick="changeStatus1()" type="submit" id="paynow" class="btn btn-success">
-                            <i class="fa fa-arrow-alt-circle-right m-1"></i>
-                            Yes
-                            				
-                        </button>
-                    </div>
-                {# </form> #}
-                </div>
-            <!-- /.modal-content -->
-            </div>
-        <!-- /.modal-dialog -->
-        </div>
-    {% endblock %}
+		<div class="card card-body">
 
-    {% block javascripts %}
-        <script src="{{ asset('assets/plugins/datatables/datatables.min.js') }}"></script>
+			<table class="table" id="table">
+				<thead>
+					<tr>
+						<th>
+							Id
+
+
+						</th>
+						<th>
+							{% trans %}
+							Name
+
+
+							{% endtrans %}
+						</th>
+						<th>
+							{% trans %}
+							Registered Date
+
+
+							{% endtrans %}
+						</th>
+						<th>
+							{% trans %}
+							Completion
+
+
+							{% endtrans %}
+							(%)
+
+
+						</th>
+						<th>
+							{% trans %}
+							is Active
+
+
+							{% endtrans %}
+						</th>
+						{# <th>Is at page</th> #}
+						<th>
+							{% trans %}
+							Actions
+
+
+							{% endtrans %}
+						</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+		</div>
+	</div>
+
+	<div class="modal fade" id="modal-delete">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title text-bold text-red">
+						Deactivating Record
+
+
+					</h4>
+					<button type="button" class="close btn btn-primary" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">
+							&times;
+
+
+						</span>
+					</button>
+				</div>
+
+				<div class="modal-body"></div>
+				<div class="modal-footer justify-content-between">
+					<button type="button" class="btn btn-warning" data-dismiss="modal">
+						Close
+
+
+					</button>
+
+					<button onclick="changeStatus1()" type="submit" id="paynow" class="btn btn-success">
+						<i class="fa fa-arrow-alt-circle-right m-1"></i>
+						Yes
+
+
+					</button>
+				</div>
+				{# </form> #}
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	<script src="{{ asset('assets/plugins/datatables/datatables.min.js') }}"></script>
 	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-        <script>
+	<script src="{{asset('assets/dist/js/chart.js')}}"></script>
+
+	<script>
 		var selected_id = {
-			id: 0
-		};
-		function changeStatus(name, id, status)
-		{
-			if(status == 1 )
-			{
-				;
-				$(".modal-body").html("Are you sure you want to diactivate <strong> "+name+"</strong>  for the course");
-			}
-			else{
-				$(".modal-body").html("Are you sure you want to activate <strong>"+name+"</strong>  for the course");
-			}
+id: 0
+};
+function changeStatus(name, id, status) {
+if (status == 1) {;
+$(".modal-body").html("Are you sure you want to diactivate <strong> " + name + "</strong>  for the course");
+} else {
+$(".modal-body").html("Are you sure you want to activate <strong>" + name + "</strong>  for the course");
+} selected_id.id = id;
+}
 
-			selected_id.id = id;
-		}
+function changeStatus1() {
+$("#modal-delete").modal('hide');
+// $("#modal-delete").hide();
+// $("#modal-delete, .modal-backdrop").removeClass("show");
+url = "{{ path('change_student_course_status') }}";
+$.ajax({
+url: url,
+data: {
+'id': selected_id.id
+},
+success: function (data) {
+if (data == 1) {
+$("#" + selected_id.id).html('<i class="fas fa-check-circle" style="color: green"></i>');
+} else {
+$("#" + selected_id.id).html('<i class="fas fa-times-circle" style="color: red"></i>');
+}
+},
+error: function (data) { // console.log(data);
+}
+});
+}
 
-		function changeStatus1()
-		{
-			$("#modal-delete").modal('hide');
-			//$("#modal-delete").hide();
-			//$("#modal-delete, .modal-backdrop").removeClass("show");
-			url = "{{ path('change_student_course_status') }}";
-			$.ajax({
-				url: url,
-				data: {'id':selected_id.id},
-				success: function(data){
-					if(data == 1)
-					{
-						$("#"+selected_id.id).html('<i class="fas fa-check-circle" style="color: green"></i>');
-					}
-					else{
-						$("#"+selected_id.id).html('<i class="fas fa-times-circle" style="color: red"></i>');
-					}
-				},
-				error: function(data)
-				{
-				//	console.log(data);
-				}
-			});
-		}
+$(document).ready(function () {
+var instcrs = {{instructor_course.id}}
+$('#table').dataTable({
+"columns": [
+{
+"data": "id"
+},
+{
+"data": "name"
+},
+{
+"data": "createdAt"
+},
+{
+"data": "page"
+}, {
+"data": "status"
+}, {
+"data": "actions"
+}
+],
+// Server-side parameters
+"processing": true,
+"serverSide": true,
+// Ajax call
+"ajax": {
+	"data":{'id':instcrs},
+"url": "{{ path('list_student_in_course') }}",
+"type": "POST"
+}
 
-		$(document).ready(function(){   
-		    $('#table').dataTable({
-		    	"columns": [
-		    		{ "data" : "id"},
-		    		{ "data" : "name"},
-					{ "data" : "createdAt" },
-					{ "data" : "page" },
-					{ "data" : "status" },
-					{ "data" : "actions" }
-		    	],
-		        // Server-side parameters
-		        "processing": true,
-		        "serverSide": true,
-		        // Ajax call
-		        "ajax": {
-		            "url": "{{ path('list_student_in_course') }}",
-		            "type": "POST"
-		        },
-		        // Classic DataTables parameters
-		        // "paging" : true,
-		        // "info" : true, 
-		        // "searching": false,
-		        // "pageLength": 10,
-		        // "order": [[2, 'asc']]
-		    });
-		});
+});
+});
 	</script>
 
-        <script>
-		function showdiv()
-		{
-			$("#chart").toggle();
-
-			google.charts.load('current', {'packages':['corechart']});
-			google.charts.setOnLoadCallback(drawChart);
-			
-			function drawChart() {
-			var data = google.visualization.arrayToDataTable([
-			  ['Contry', 'Mhl'],
-			  ['0%',54.8],
-			  ['1-25%',48.6],
-			  ['26-50%',44.4],
-			  ['51-75%',23.9],
-			  ['76-99%',14.5],
-			  ['100%',11.5]
-			]);
-			
-			var options = {
-			  title:'Course Completion Statistics',
-			  is3D:true
-			};
-			
-			var chart = new google.visualization.PieChart(document.getElementById('myChart'));
-			  chart.draw(data, options);
-			}
-	
-		}
+	<script>
+		/*var arr = [
+[
+'Contry', 'Mhl'
+],
+[
+'0%', 54.8
+],
+[
+'1-25%', 48.6
+],
+[
+'26-50%', 77
+],
+[
+'51-75%', 23.9
+],
+[
+'76-99%', 14.5
+],
+[
+'100%', 11.5
+]
+];
+function showchart() {
+render(arr);
+}*/
 	</script>
-    {% endblock %}
-    
+{% endblock %}

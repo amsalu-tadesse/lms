@@ -30,7 +30,7 @@ class StudentCourseController extends AbstractController
 
     // ******** student home page , don't touch it OK
     public function index(StudentCourseRepository $studentCourseRepository, PaginatorInterface $paginator, Request $request, InstructorCourseRepository $course): Response
-    {
+    { 
 
         if ($this->getUser()->getProfile() == null) {
             return $this->redirectToRoute('app_login');
@@ -179,13 +179,15 @@ class StudentCourseController extends AbstractController
             $search = $request->request->get('search');
             $orders = $request->request->get('order');
             $columns = $request->request->get('columns');
+            $instcrs = $request->request->get('id');
+             
         } else // If the request is not a POST one, die hard
         {
             die;
         }
 
         // Get results from the Repository
-        $results = $studentCourseRepository->getRequiredDTData($start, $length, $orders, $search, $columns);
+        $results = $studentCourseRepository->getRequiredDTData($start, $length, $orders, $search, $columns,$instcrs);
         // Returned objects are of type Town
         $objects = $results["results"];
         // Get total number of objects
@@ -288,7 +290,7 @@ class StudentCourseController extends AbstractController
         $em->flush();
 
         $returnResponse = new JsonResponse();
-        $returnResponse->setJson($status);
+        $returnResponse->setJson($status); 
 
         return $returnResponse; // return $this->redirectToRoute('course_request');
     }

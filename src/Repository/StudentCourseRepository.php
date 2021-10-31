@@ -173,7 +173,7 @@ class StudentCourseRepository extends ServiceEntityRepository
     }
 
 
-    public function getRequiredDTData($start, $length, $orders, $search, $columns)
+    public function getRequiredDTData($start, $length, $orders, $search, $columns,$instcrs)
     {
         $searchItem = $search['value'];
         $columnNum = $orders[0]['column'];
@@ -192,9 +192,11 @@ class StudentCourseRepository extends ServiceEntityRepository
 
             ->select("sc.id, concat(u.firstName,' ',u.middleName,' ',u.lastName) as name", 'sc.isAtPage as page', 'sc.active', 'sc.createdAt')
             ->innerJoin('sc.student',"st")
+            ->innerJoin('sc.instructorCourse',"ic")
             ->innerJoin('st.user','u');
         $countQuery
             ->innerJoin('stCount.student',"st")
+            ->innerJoin('stCount.instructorCourse',"ins")
             ->innerJoin('st.user','u');
     
         //if all columns are from the same table you can use this
@@ -202,12 +204,16 @@ class StudentCourseRepository extends ServiceEntityRepository
         // $count = sizeof($columns);
         // $flag = 0;
 
-        $searchQuery =  "concat(u.firstName,' ',u.middleName,' ',u.lastName) LIKE '%".$searchItem.'%\'';
-
+        $searchQuery =  "concat(u.firstName,' ',u.middleName,' ',u.lastName) LIKE '%".$searchItem.'%\' ';
         $query->Where($searchQuery);
         $countQuery->Where($searchQuery);
         $countQuery->setMaxResults(10);
         //order
+        $query->andWhere("ic.id= :inst1");
+        $query->setParameter('inst1', $instcrs);
+        $countQuery->andWhere("ins.id=:inst2");
+        $countQuery->setParameter('inst2', $instcrs);
+
         if($columns[$columnNum]['data'] == "name")
             $query->orderBy("name",$orderDir);
         else        
