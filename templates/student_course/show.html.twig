@@ -29,7 +29,7 @@
         <br>
         <div class="row">
             <div class="col-md-2">
-                <a href="{{ path('student_course_index') }}" class="btn btn-default btn-block">{% trans %}Back to list{% endtrans %}</a>
+                <a href="{{ path('students_in_course',{'id':student_course.instructorCourse.id}) }}" class="btn btn-info btn-block">{% trans %}Back to list{% endtrans %}</a>
             </div>
             {# <div class="col-md-2">
                 <a href="{{ path('student_course_edit', {'id': student_course.id}) }}"
