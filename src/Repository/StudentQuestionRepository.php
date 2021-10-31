@@ -24,6 +24,7 @@ class StudentQuestionRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('sa')
             ->join('sa.student', 'st')
             ->join('sa.question', 'qq')
+            ->join('qq.quizChoices','qc')
             ->join('qq.quiz', 'q')
             ->where('q.id = :quiz')
             ->andWhere('st.id = :val')

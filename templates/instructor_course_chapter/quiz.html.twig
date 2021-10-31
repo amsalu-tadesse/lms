@@ -30,9 +30,21 @@
 		.card-body label {
 			font-size: 18px;
 		}
+		.btn-primary{
+			color: #fff;
+			background-color: #1a3b52;
+			border-color: #0d6efd;
+		}
+		.btn.disabled, .btn:disabled, fieldset:disabled .btn {
+			pointer-events: all;
+			opacity: 1;
+		}
 	</style>
 {% endblock %}
 {% block body %}
+<script> 	
+	checked = 0;
+</script>
 	<div class="container">
 		<div class="row">
 			{% set num = 1 %}
@@ -43,7 +55,7 @@
 						<h5 style="font-family: poppins; padding: 5px;"> {{chapter.topic }}</h5>
 					</div>
 					<div class="col-sm-4">
-						<center> <h3 id="time">05:00</h3></center>
+						<center> <h3 id="time"><span id="minute" minute="{{time.minutes}}">{{time.minutes}}</span>:<span id="second" second="{{time.seconds}}">{{time.seconds}}</span></h3></center>
 					</div>
 					<div class="col-sm-4">
 						<span style="float: right">
@@ -56,35 +68,38 @@
 					</div>
 				</div>
 				<div class="card-body">
-
 					{% for question in quiz_ques %}
-
 						<h5 class="py-3">
 							{{question.question}}</h5>
-							<form>
-						{% for choice in question.quizChoices %}
-							
+							<input type="hidden" id="parameter" value="{{question.id}}">
+							<form >
+						{% for choice in question.question.quizChoices %}
 							<div class="d-flex flex-column px-4 py-1">
-								<label class="d-flex align-items-center text-color-grey mb-0" for="shipping_method1">
-									<input id="shipping_method1" type="radio" class="me-2" name="choice" value="{{choice.letter}}" >
-									{{ choice.description}}
+								<label class="d-flex align-items-center text-color-grey mb-0" for="shipping_method{{choice.id}}">
+									{% if choice.letter == question.answer %}
+										<script> 	
+											checked = 1;
+										</script>
+										<input id="shipping_method{{choice.id}}" type="radio" class="me-2" name="choice" checked="checked" value="{{choice.letter}}" >
+										{{choice.letter}}) &nbsp;&nbsp; {{ choice.description}}
+									{% else %}
+										<input id="shipping_method{{choice.id}}" type="radio" class="me-2" name="choice" value="{{choice.letter}}" >
+										{{choice.letter}}) &nbsp;&nbsp; {{ choice.description}}
+									{% endif %}
 								</label>
 							</div>
 							
 						{% endfor %}
 						</form>
 					{% endfor %}
+
+						
 					<div>
-						{# {% if quiz_ques.getPaginationData.firstItemNumber == quiz_ques.getTotalItemCount %}
-							<br>
-							<button class="btn btn-primary" style="width: 160px;"> Previous</button>
-						{% endif %} #}
 					</div>
 				</div>
 				<br>
 				<div class="  pagination justify-content-center " id="main-pagination">
 					{{ knp_pagination_render(quiz_ques) }}</div>
-
 
 					<div class="row">
 						<div class="col-md-2">
@@ -93,11 +108,21 @@
 								Previous</a>
 						</div>
 						<div class="col"></div>
+						
+						{% if quiz_ques.getPaginationData.firstItemNumber == quiz_ques.getTotalItemCount %}
+							
 						<div class="col-md-2">
-							<a href="/" class="btn btn-primary float-right" id="next">Next
-								<span class=" fa fa-arrow-alt-circle-right"></span>
-							</a>
-						</div>
+								<a href="{{app.request.pathInfo}}?page={{quiz_ques.getTotalItemCount+1}}" class="btn btn-primary float-right " id="next">Finish
+									<span class=" fa fa-arrow-alt-circle-right"></span>
+								</a>
+							</div>
+						{% else %}	
+							<div class="col-md-2">
+								<a href="/" class="btn btn-primary float-right" id="next">Next
+									<span class=" fa fa-arrow-alt-circle-right"></span>
+								</a>
+							</div>
+						{% endif %}
 					</div>
 				</div>
 				{# <div class="  pagination justify-content-center "> #}
@@ -134,27 +159,52 @@
     }
 });
 
-function startTimer(duration, display) {
-    var timer = duration, minutes, seconds;
+
+
+function startTimer(minutes, seconds,  display) {
     setInterval(function () {
-        minutes = parseInt(timer / 60, 10);
-        seconds = parseInt(timer % 60, 10);
 
         minutes = minutes < 10 ? "0" + minutes : minutes;
-        seconds = seconds < 10 ? "0" + seconds : seconds;
+        seconds = seconds < 10 ?  "0" + seconds : seconds;
 
         display.textContent = minutes + ":" + seconds;
 
-        if (--timer < 0) {
-            timer = duration;
+        if ((seconds-1) < 0) {
+            if(minutes> 0){
+				minutes--;
+				seconds = 59;
+			}
         }
+		else if(minutes !=0 && seconds != 0)
+			--seconds;
     }, 1000);
 }
 
 window.onload = function () {
-    var fiveMinutes = 60 * 5,
-        display = document.querySelector('#time');
-    startTimer(fiveMinutes, display);
+	var minute = $("#minute").attr("minute");
+	var second = $("#second").attr("second");
+    display = document.querySelector('#time');
+    startTimer(minute, second , display);
 };
+
+$("#next").on('click', function(e){
+	e.preventDefault();
+	if(checked)
+	{
+		window.location = $(this).attr("href");
+	}
+});
+
+$("input[type=radio]").on('click', function(e){
+	$link = $("#next").attr("href");
+	$newLink = $link.split("&");
+	
+	checked = 1;
+	$("#next").attr("href", $newLink[0] + "&parameter="+$("#parameter").attr("value")+ "&value="+$(this).attr("value"));
+});
+
+
+	$("#next").removeAttr("disabled");
+	$("#next").removeClass('disabled');
 </script>
 {% endblock %}

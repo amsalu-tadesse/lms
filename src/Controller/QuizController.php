@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\InstructorCourse;
 use App\Entity\InstructorCourseChapter;
 use App\Entity\Quiz;
+use App\Entity\StudentQuiz;
 use App\Entity\StudentQuestion;
 use App\Form\QuizType;
 use App\Repository\QuizQuestionsRepository;
@@ -97,85 +98,163 @@ class QuizController extends AbstractController
     {
         $em = $this->getDoctrine()->getManager();
         $quiz = $em->getRepository(Quiz::class)->findOneBy(array('instructorCourseChapter'=> $chapter->getId()));
-        $prev = $em->getRepository(StudentQuestion::class)->find1($quiz->getId(), $this->getUser()->getProfile()->getId());
-        $question = "";
-        $i = 1;
+        if($quiz != null)
+        {
+            $prev = $em->getRepository(StudentQuestion::class)->find1($quiz->getId(), $this->getUser()->getProfile()->getId());
+            $question = "";
+            $i = 1;
+            $quiz_que = $quiz_que_rep->getQ($quiz->getId());
+            if($prev == null){
+                $student_quiz = new StudentQuiz();
+                $student_quiz->setStudent($this->getUser()->getProfile());
+                $student_quiz->setQuiz($quiz);
 
-        $quiz_que = $quiz_que_rep->getQ($quiz->getId());
-        
-        if($prev == null){
-            if($quiz->getActiveQuestions() < sizeof($quiz_que)){
-                $question_ids = array();
-                foreach($quiz_que as $key => $value)
-                {
-                    $question_ids[] = $value['id'];
-                }
+                //change this based on your timezone
+                $date = date('Y-m-d H:i:s', time());
+                $dateTime = new DateTime($date);
+                // $dateTime->modify('+2 hours');
+                // $result = $dateTime->format('Y-m-d H:i:s');
 
-                $sizof_question_ids = sizeof($question_ids);
-                $selected = array();
-                $control = $quiz->getActiveQuestions();
+                $duration = $quiz->getDuration() + 120;
+                $minutes_add = "$duration Minutes";
+                $currentTime =date_default_timezone_get();
 
-                while($control != 0)
-                {
-                    $random_id = rand(0, $control);
-                    $selected[] = $question_ids[$random_id];
-                    array_splice($question_ids, $random_id,1);
-                    $control--;
-                }
+                $strtotime = strtotime("$date + $minutes_add ");
 
-                foreach($quiz_que as $quiz_q){
-                    $studentQuestion = new StudentQuestion();
-                    if(in_array($quiz_q['id'], $selected))
+                $date = new \DateTime('@'.strtotime("$date + $minutes_add"));
+                $student_quiz->setCreatedAt(new DateTime());
+                $student_quiz->setEndTime($date);
+                $em->persist($student_quiz);
+                $em->flush();
+
+                if($quiz->getActiveQuestions() < sizeof($quiz_que)){
+                    $question_ids = array();
+                    foreach($quiz_que as $key => $value)
                     {
+                        $question_ids[] = $value['id'];
+                    }
+
+                    $sizof_question_ids = sizeof($question_ids);
+                    $selected = array();
+                    $control = $quiz->getActiveQuestions();
+
+                    while($control != 0)
+                    {
+                        $random_id = rand(0, $control);
+                        $selected[] = $question_ids[$random_id];
+                        array_splice($question_ids, $random_id,1);
+                        $control--;
+                    }
+
+                    foreach($quiz_que as $quiz_q){
+                        $studentQuestion = new StudentQuestion();
+                        if(in_array($quiz_q['id'], $selected))
+                        {
+                            $studentQuestion->setStudent($this->getUser()->getProfile());
+                            $studentQuestion->setQuestion($quiz_que_rep->find($quiz_q['id']));
+                            $studentQuestion->setAnsweredAt(new DateTime());
+                            $em->persist($studentQuestion);
+                            $em->flush();  
+                        }
+                    }
+
+                }
+                else{
+                    foreach($quiz_que as $quiz_q){
+                        $studentQuestion = new StudentQuestion();
+                        if($i == 1)
+                        {
+                            $question = $quiz_q;
+                        }
                         $studentQuestion->setStudent($this->getUser()->getProfile());
                         $studentQuestion->setQuestion($quiz_que_rep->find($quiz_q['id']));
                         $studentQuestion->setAnsweredAt(new DateTime());
                         $em->persist($studentQuestion);
-                        $em->flush();  
+                        $em->flush();
                     }
-                    else{
-                        
+                }  
+            }
+            
+
+            $student_quiz = $em->getRepository(StudentQuiz::class)->findOneBy(array('student'=>$this->getUser()->getProfile()->getId(), 'quiz'=>$quiz->getId()));
+            $now = new DateTime(date("Y-m-d H:i:s", time()));
+            $end_time = new DateTime($student_quiz->getEndTime()->format("Y-m-d H:i:s"));
+
+            $date_diff = $end_time->diff($now);
+            $time = array();
+
+            if($now < $end_time)
+            {
+                /// write answer if time available
+                if($request->query->get('value')!= null && $request->query->get('parameter')!= null){
+                    $stud_que = $em->getRepository(StudentQuestion::class)->findOneBy(array('student'=>$this->getUser()->getProfile()->getId(), 'id'=>$request->query->getInt('parameter')));
+                    if($stud_que != null)
+                    {
+                        $stud_que->setAnswer($request->query->get('value'));
+                        $stud_que->setAnsweredAt(new DateTime);
+                        $em->persist($stud_que);
+                        $em->flush();
                     }
                 }
+    
+                $time['minutes'] = $date_diff->i;
+                $time['seconds'] = $date_diff->s;
 
+                $quiz_size = sizeof($quiz_que);
+
+                if($request->query->get('page') > sizeof($quiz_que))
+                {
+                    $stud_que = $em->getRepository(StudentQuestion::class)->find1($this->getUser()->getProfile()->getId(), $quiz->getId());
+                    if($student_quiz->getResult() == null)
+                    {
+                        $correct_answer = 0;
+                        foreach($stud_que as $key => $value)
+                        {
+                            if(strcmp($value->getAnswer(),$value->getQuestion()->getAnswer()) == 0)
+                            {
+                                $correct_answer++;
+                            }
+                        }
+
+                        $student_quiz->setResult($correct_answer);
+                        $em->persist($student_quiz);
+                        $em->flush();
+                    }
+                  
+                    return $this->render('student_quiz/index.html.twig', [
+                        'stud_que' => $stud_que,
+                        'chapter' => $chapter
+                    ]);
+                }
+                else{
+                    if($quiz_size > 0)
+                    {
+                        $data = $paginator->paginate(
+                            $prev,
+                            $request->query->getInt('page', 1),
+                            1
+                        );
+
+                        return $this->render('instructor_course_chapter/quiz.html.twig', [
+                            'quiz' => $quiz,
+                            'chapter' => $chapter,
+                            'time' => $time,
+                            'quiz_ques' => $data,
+                            'student_quiz' => $student_quiz
+                        ]);
+                    }
+                }
+                
             }
             else{
-                foreach($quiz_que as $quiz_q){
-                    $studentQuestion = new StudentQuestion();
-                    if($i == 1)
-                    {
-                        $question = $quiz_q;
-                    }
-                    $studentQuestion->setStudent($this->getUser()->getProfile());
-                    $studentQuestion->setQuestion($quiz_que_rep->find($quiz_q['id']));
-                    $studentQuestion->setAnsweredAt(new DateTime());
-                    $em->persist($studentQuestion);
-                    $em->flush();
-                }
+                //go to last page
             }
+
+            return $this->redirectToRoute('course_list', ['course' => $chapter->getInstructorCourse()->getId(), 'chapter' => $chapter->getTopic()]);
         }
-        
-        // $quiz = $quiz_rep->findBy(array('instructorCourseChapter'=>$chapter->getId()));
-
-        $quiz_size = sizeof($quiz_que);
-
-        if($quiz_size > 0)
-        {
-            $data = $paginator->paginate(
-                $quiz_que,
-                $request->query->getInt('page', 1),
-                1
-            );
-
-            return $this->render('instructor_course_chapter/quiz.html.twig', [
-                'quiz' => $quiz,
-                'chapter' => $chapter,
-                'quiz_ques' => $data,
-            ]);
-        }
-
-        return $this->redirectToRoute('course_list', ['course' => $chapter->getInstructorCourse()->getId(), 'chapter' => $chapter->getTopic()]);
-
+        else{
+            die('');
+        }        
     }
     /**
      * @Route("/show/{id}", name="quiz_show", methods={"GET"})
