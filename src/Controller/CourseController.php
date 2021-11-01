@@ -130,6 +130,7 @@ class CourseController extends AbstractController
         $selected_courses = $request->cookies->get("selected_courses");
         $selected_courses = json_decode($selected_courses, true);
 
+        //dd($selected_courses);
         $em = $this->getDoctrine()->getManager();
         $courses = $em->getRepository(Course::class)->findBy(array('id' => $selected_courses));
         return $this->render('course/selected_courses.html.twig',[
