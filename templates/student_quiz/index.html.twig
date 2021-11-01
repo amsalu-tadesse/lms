@@ -17,7 +17,7 @@
 	<div class="container">
 		<div class="row">
 			<div class="card my-3">
-            {% set show_un_answered_questions = 0 %} 
+            {% set show_un_answered_questions = 1 %} 
 				<div class="card-body" style="padding: 20px 100px;">
 					{% for question in stud_que %}
                         {% if question.answer == null  %}

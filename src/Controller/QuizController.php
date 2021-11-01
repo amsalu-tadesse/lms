@@ -11,7 +11,7 @@ use App\Form\QuizType;
 use App\Repository\QuizQuestionsRepository;
 use App\Repository\QuizRepository;
 use Knp\Component\Pager\PaginatorInterface;
-use App\Repository\StudentAnswerRepository;
+use App\Repository\StudentCourseRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -94,8 +94,15 @@ class QuizController extends AbstractController
     /**
      * @Route("/quiz/{id}", name="course_quiz")
      */
-    public function quizPage(Request $request, InstructorCourseChapter $chapter, QuizQuestionsRepository $quiz_que_rep, PaginatorInterface $paginator)
+    public function quizPage(Request $request, InstructorCourseChapter $chapter, QuizQuestionsRepository $quiz_que_rep, PaginatorInterface $paginator, StudentCourseRepository $stud_course)
     {
+        
+        $check_student_course = $stud_course->findBy(array('student'=> $this->getUser()->getProfile()->getId(),'instructorCourse'=>$chapter->getInstructorCourse()->getId()));
+        if($check_student_course == null)
+        {
+            return $this->redirectToRoute("student_course_index");
+        }
+        
         $em = $this->getDoctrine()->getManager();
         $quiz = $em->getRepository(Quiz::class)->findOneBy(array('instructorCourseChapter'=> $chapter->getId()));
         if($quiz != null)
@@ -106,7 +113,6 @@ class QuizController extends AbstractController
             $quiz_que = $quiz_que_rep->getQ($quiz->getId());
             if(sizeof($quiz_que) > 0){
                 if($prev == null  ){
-                    dd("");
                     $student_quiz = new StudentQuiz();
                     $student_quiz->setStudent($this->getUser()->getProfile());
                     $student_quiz->setQuiz($quiz);
@@ -139,7 +145,7 @@ class QuizController extends AbstractController
                         $sizof_question_ids = sizeof($question_ids);
                         $selected = array();
                         $control = $quiz->getActiveQuestions();
-
+                        
                         while($control != 0)
                         {
                             $random_id = rand(0, $control);
@@ -177,7 +183,6 @@ class QuizController extends AbstractController
                     }  
                 }
             
-
                 $student_quiz = $em->getRepository(StudentQuiz::class)->findOneBy(array('student'=>$this->getUser()->getProfile()->getId(), 'quiz'=>$quiz->getId()));
                 $now = new DateTime(date("Y-m-d H:i:s", time()));
                 $end_time = new DateTime($student_quiz->getEndTime()->format("Y-m-d H:i:s"));
@@ -206,7 +211,7 @@ class QuizController extends AbstractController
 
                     if($request->query->get('page') > sizeof($quiz_que))
                     {
-                        $stud_que = $em->getRepository(StudentQuestion::class)->find1($this->getUser()->getProfile()->getId(), $quiz->getId());
+                        $stud_que = $em->getRepository(StudentQuestion::class)->find1($quiz->getId(), $this->getUser()->getProfile()->getId());
                         if($student_quiz->getResult() == null)
                         {
                             $correct_answer = 0;
@@ -231,6 +236,7 @@ class QuizController extends AbstractController
                     else{
                         if($quiz_size > 0)
                         {
+                            $prev = $em->getRepository(StudentQuestion::class)->find1($quiz->getId(), $this->getUser()->getProfile()->getId());
                             $data = $paginator->paginate(
                                 $prev,
                                 $request->query->getInt('page', 1),

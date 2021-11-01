@@ -14,6 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Mailer\MailerInterface;
 use App\Repository\VerificationRepository;
 use App\Services\MailerService;
+use DateTime;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
@@ -151,23 +152,17 @@ class SecurityController extends AbstractController
         $user = new User();
         $form = $this->createForm(ForgotPasswordType::class, $user);
         $form->handleRequest($request);
-
-        $email = $request->getSession()->get('password_change_email');
-        if($email == null)
-        {
-            return $this->redirectToRoute('app_login');
-        }        
+       
         if ($form->isSubmitted() && $form->isValid()) {
     
             $entityManager = $this->getDoctrine()->getManager();
-
-            $user = $entityManager->getRepository(User::class)->findOneBy(array('email' => $email));
+            $user = $this->getUser();
             $user->setPassword($passwordEncoder->encodePassword($user, $form['plainPassword']->getData()));
-            
+            $user->setLastLogin(new DateTime());
             $entityManager->persist($user);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_login', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('home');
         }
 
         return $this->renderForm('security/password_change.html.twig', [
