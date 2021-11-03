@@ -16,9 +16,6 @@ class QuestionAnswerNewType extends AbstractType
             ->add('course',null,[
                 'attr' => ['class'=>'form-control']
             ])
-            ->add('title',null,[
-                'attr'=>['class'=>'form-control mt-1']
-            ])
             ->add('question',TextareaType::class,[
                 'attr'=>[
                     'class'=>'form-control mt-2',

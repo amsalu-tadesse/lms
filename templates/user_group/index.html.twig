@@ -5,7 +5,7 @@
 
 {% block breadcrumbhome %}
     <a href="{{ path('user_group_index') }} ">
-	   {% trans %}User Group{% endtrans %} 
+	   {% trans %}User groups{% endtrans %} 
 	</a> 
 {% endblock %}
 {% block breadcrumbcontent %}{% trans %}Index{% endtrans %}{% endblock %}
@@ -25,7 +25,7 @@
 								<h3 class="card-title">
 									{% if edit  %}Edit
 									{% else %}
-										Add New
+										{% trans %}Add New{% endtrans %}{% trans %}User groups{% endtrans %} 
 									{% endif %}
 								</h3>
 
@@ -52,7 +52,7 @@
 					<div class="col-md-12">
 						<div class="card ">
 							<div class="card-header">
-								<h3 class="card-title">User Group List</h3>
+								<h3 class="card-title">{% trans %}User Group List{% endtrans %}</h3>
 							</div>
 
 
@@ -124,7 +124,7 @@
 												<td>
 													{# {% if is_granted("edt_usr_grp") %} #}
 
-														<form class="d-inline" method="post" action="{{ path('user_group_action',{'id':user_group.id})}}" onsubmit="return confirm('Are you sure you want to {{ user_group.isActive ? 'DeActivate':'Activate'}} this User Group?');">
+														<form class="d-inline" method="post" action="{{ path('user_group_action',{'id':user_group.id})}}" onsubmit="return confirm('Are you sure you want to {{ user_group.isActive ? 'DeActivate':'Activate'|trans}} this User Group?');">
 															<input name="activateUserGroup" value="{{ user_group.isActive ? 0 : 1}}" hidden>
 															{{ user_group.isActive ?  '<button class="btn btn-sm badge-success">Enabled</button>': '<button class="btn btn-sm btn-danger">Disabled</button>' }}
 

@@ -17,7 +17,8 @@ class QuestionAnswerNewStudentType extends AbstractType
                 'attr'=>[
                     'class'=>'form-control mt-2',
                     'placeholder'=>'Add your question here!',
-                    'rows'=>3
+                    'rows'=>3,
+                    'value' => ""
                     ]
             ])
         ;

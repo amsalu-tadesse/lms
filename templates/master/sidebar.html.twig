@@ -141,25 +141,28 @@
 
 		<li class="nav-header"><h6> {% trans %} Q&A {% endtrans %} </h6></li>
 			<li class="nav-item">
-				<li class="nav-item">
-					<a href="{{path('question_answer_index')}}" class="nav-link">
-						<i class="far fa-circle nav-icon"></i>
-						<p>{% trans %}Questions{% endtrans %}</p>
-					</a>
-				</li>
+				 
+ 
+				
+					<li class="nav-item">
+						<a href="{{ path('question_answer_index')}}" class="nav-link">
+							<i class="far fa-circle nav-icon"></i>
+							<p>{% trans %} Q&A {% endtrans %}</p>
+						</a>
+					</li>
 				 
 			</li> 
 		<li>	
 
 		<li class="nav-header"><h6> {% trans %} SYSTEM SETTINGS {% endtrans %} </h6></li>
 			<li class="nav-item">
-				<li class="nav-item">
+				{# <li class="nav-item">
 					<a href="{{path('termsandconditions_index')}}" class="nav-link">
 						<i class="far fa-circle nav-icon"></i>
 						<p>{% trans %}Terms and Conditions{% endtrans %}</p>
 					</a>
 				</li>
-			
+			 #}
 				<li class="nav-item">
 					<a href="{{ path('system_setting_index')}}" class="nav-link">
 						<i class="far fa-circle nav-icon"></i>
@@ -174,7 +177,7 @@
 				<li class="nav-item">
 					<a href="{{path('academic_level_index')}}" class="nav-link">
 						<i class="far fa-circle nav-icon"></i>
-						<p>{% trans %}Academic Level{% endtrans %}</p>
+						<p>{% trans %}academic level{% endtrans %}</p>
 					</a>
 				</li>
 			

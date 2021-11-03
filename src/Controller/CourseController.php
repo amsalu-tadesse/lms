@@ -97,11 +97,10 @@ class CourseController extends AbstractController
      /**
      * @Route("/detail/{id}", name="course_description")
      */
-    public function courseDetail(InstructorCourseChapter $chapter, InstructorCourseRepository $course, ContentRepository $content, Request $request): Response
+    public function courseDetail(InstructorCourse $instructorCourse, InstructorCourseRepository $course_repo, ContentRepository $content, Request $request): Response
     {
-        $courses = $course->findCoursesSortByCategory($chapter->getId());
-        $chaptersWithContent = $content->getChaptersWithContentForCourse($chapter->getId());
-        
+        $courses = $course_repo->findCoursesSortByCategory($instructorCourse->getId());
+        $chaptersWithContent = $content->getChaptersWithContentForCourse($instructorCourse->getId());
         if($this->isGranted("ROLE_STUDENT"))
         {
             $questionAnswer = new QuestionAnswer();
@@ -114,17 +113,16 @@ class CourseController extends AbstractController
                 $questionAnswer->setQuestion($form['question']->getData());
                 $questionAnswer->setCreatedAt(new DateTime());
                 $questionAnswer->setIsReply(0);
-                $questionAnswer->setCourse($course->find($request->request->get("val1")));
+                $questionAnswer->setCourse($course_repo->find($request->request->get("val1")));
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($questionAnswer);
                 $em->flush();
             }
     
             $em = $this->getDoctrine()->getManager();
-            $question = $em->getRepository(QuestionAnswer::class)->findBy(['course'=>$chapter->getId()],['id'=>'desc']);
-    
+            $question = $em->getRepository(QuestionAnswer::class)->findBy(['course'=>$instructorCourse->getCourse()->getId()],['id'=>'desc']);
             return $this->render('course/description_login.html.twig',[
-                'chapter' => $chapter,
+                'chapter' => $courses,
                 'chapters' => $chaptersWithContent,
                 'question' => $question,
                 'form' => $form->createView()
@@ -158,6 +156,7 @@ class CourseController extends AbstractController
         $selected_courses = $request->cookies->get("selected_courses");
         $selected_courses = json_decode($selected_courses, true);
 
+        //dd($selected_courses);
         $em = $this->getDoctrine()->getManager();
         $courses = $em->getRepository(Course::class)->findBy(array('id' => $selected_courses));
         return $this->render('course/selected_courses.html.twig',[

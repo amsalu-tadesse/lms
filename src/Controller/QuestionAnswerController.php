@@ -10,6 +10,7 @@ use App\Repository\QuestionAnswerRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use DateTime;
 use Knp\Component\Pager\PaginatorInterface;
@@ -36,6 +37,31 @@ class QuestionAnswerController extends AbstractController
         return $this->render('question_answer/index.html.twig', [
             'question_answers' => $data,
         ]);
+    }
+
+    /**
+     * @Route("/load", name="question_answer_load_more", methods={"GET"})
+     */
+    public function loadMore(QuestionAnswerRepository $questionAnswerRepository, Request $request): Response
+    {
+        if($request->isXmlHttpRequest()) {
+            $result = array();
+            $questions = $questionAnswerRepository->getQuestionAnswer($request->query->get('course'), $request->query->get('start'),$request->query->get('end'));
+            foreach($questions as $key => $value)
+            {
+                $result[$key] = $value[0];
+                $result[$key]['date'] = $result[$key]['createdAt']->format('d-m-Y');
+                $result[$key]['instructor'] = $value['instructor'];
+                $result[$key]['student'] = $value['student'];
+            }
+            $returnResponse = new JsonResponse();
+            $returnResponse->setJson(json_encode($result));
+    
+            return $returnResponse;
+        }
+        else{
+            die("error");
+        }        
     }
 
     /**

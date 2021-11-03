@@ -30,8 +30,29 @@ class QuestionAnswerRepository extends ServiceEntityRepository
             ->andWhere('ic.id = :val')
             ->setParameter('val', $value)
             ->orderBy('q.createdAt', 'Desc')
+            ->setFirstResult(1)
+            ->setMaxResults(9)
             ->getQuery()
             ->getResult()
+        ;
+    }
+
+    public function getQuestionAnswer($course, $start, $end)
+    {
+        return $this->createQueryBuilder('q')
+            ->select('q','u.username as instructor', 'stu.username as student')
+            ->join('q.course','ic')
+            ->leftJoin('q.student', 'stud')
+            ->leftJoin('stud.user', 'stu')
+            ->leftJoin('q.instructor', 'ins')
+            ->leftJoin('ins.user', 'u')
+            ->andWhere('ic.id = :val')
+            ->setParameter('val', $course)
+            ->orderBy('q.createdAt', 'Desc')
+            ->setFirstResult($start)
+            ->setMaxResults($end)
+            ->getQuery()
+            ->getArrayResult()
         ;
     }
     

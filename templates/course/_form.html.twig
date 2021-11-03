@@ -8,15 +8,16 @@
 		<div class="help-block with-errors"></div>
 	</div>
 	<div class="form-group ">
-		<label class="control-label no-padding-right">{{ form_label(form.name," Course Name ") }}</label>
+		<label class="control-label no-padding-right">{{ form_label(form.name,"Course Name") |trans({}, 'messages') |  raw }}</label>
 		{{ form_widget(form.name,{'attr':{'class':'form-control'}}) }}
 		<div class="help-block with-errors"></div>
 	</div>
 	<div class="form-group ">
-		<label class="control-label no-padding-right">{{ form_label(form.code," Course Code ") }}</label>
+		<label class="control-label no-padding-right">{{ form_label(form.code,"Course code") |trans({}, 'messages') |  raw }}</label>
 		{{ form_widget(form.code,{'attr':{'class':'form-control'}}) }}
 		<div class="help-block with-errors"></div>
 	</div>
+ 
 
 	<div class="form-group ">
 		<label class="control-label no-padding-right">   {{ form_label(form.credit," Course Credit ") }}</label>
