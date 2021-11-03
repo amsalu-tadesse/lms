@@ -97,4 +97,6 @@ INSERT INTO `permission` (`id`, `code`, `name`) VALUES
 (NULL, 'choices_delete', 'choices delete'),
 (NULL, 'new_request_list', 'new request list'),
 (NULL, 'rejected_request_list', 'rejected request list'),
-(NULL, 'my_course', 'see own course')
+(NULL, 'my_course', 'see own course'),
+(NULL, 'manage_users', 'manage_users')
+(NULL, 'approve_course_request', 'approve course request')
