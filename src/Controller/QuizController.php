@@ -192,7 +192,7 @@ class QuizController extends AbstractController
                 if($now < $end_time)
                 {
                     /// write answer if time available
-                    if($request->query->get('value')!= null && $request->query->get('parameter')!= null){
+                    if($request->query->get('value')!= null && $request->query->get('parameter')!= null && $request->query->get('page') <= $quiz_size){
                         $stud_que = $em->getRepository(StudentQuestion::class)->findOneBy(array('student'=>$this->getUser()->getProfile()->getId(), 'id'=>$request->query->getInt('parameter')));
                         if($stud_que != null)
                         {
