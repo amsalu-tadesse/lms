@@ -23,12 +23,6 @@ class SystemSetting
     private $code;
 
    
-
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $active;
-
     /**
      * @ORM\Column(type="text", nullable=true)
      */
@@ -51,19 +45,7 @@ class SystemSetting
         return $this;
     }
 
- 
 
-    public function getActive(): ?bool
-    {
-        return $this->active;
-    }
-
-    public function setActive(?bool $active): self
-    {
-        $this->active = $active;
-
-        return $this;
-    }
 
     public function getValue(): ?string
     {

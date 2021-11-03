@@ -1,202 +1,293 @@
 <!-- Main Sidebar Container -->
-<aside
-	class="main-sidebar sidebar-dark-primary elevation-4">
-	<!-- Brand Logo -->
-	<a href="/" class="brand-link">
-		<img src="{{asset('images/eca.png')}}" alt="*" class="brand-image img-circle elevation-3" style="opacity: .8">
-		<span class="brand-text font-weight-light">ECA LMS</span>
-	</a>
-	<!-- Sidebar -->
-	<div
-		class="sidebar">
-		<!-- Sidebar user panel (optional) -->
-		<div class="user-panel mt-3 pb-3 mb-3 d-flex">
-			<div class="image"></div>
-			<div class="info">
-				<a href="#" class="d-block"> {% if app.user %}{{app.user.username}} {% endif %}
-				  </a>
-			</div>
-		</div>
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="/" class="brand-link">
+        <img src="{{ asset('images/eca.png') }}" alt="*" class="brand-image img-circle elevation-3" style="opacity: .8">
+            <span class="brand-text font-weight-light">
+                ECA LMS
+                            
+            </span>
+        </a>
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <!-- Sidebar user panel (optional) -->
+            <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                <div class="image"></div>
+                <div class="info">
+                    <a href="#" class="d-block">
+                        {% if app.user %}
+                            {{ app.user.username }}
+                        {% endif %}
+                    </a>
+                </div>
+            </div>
 
-		<!-- SidebarSearch Form -->
-		<div class="form-inline">
-			<div class="input-group" data-widget="sidebar-search">
-				<input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
-				<div class="input-group-append">
-					<button class="btn btn-sidebar">
-						<i class="fas fa-search fa-fw"></i>
-					</button>
-				</div>
-			</div>
-		</div>
+            <!-- SidebarSearch Form -->
+            <div class="form-inline">
+                <div class="input-group" data-widget="sidebar-search">
+                    <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+                        <div class="input-group-append">
+                            <button class="btn btn-sidebar">
+                                <i class="fas fa-search fa-fw"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
 
-		<!-- Sidebar Menu -->
-		<nav class="mt-2">
-			<ul
+                <!-- Sidebar Menu -->
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                        <!-- Add icons to the links using the .nav-icon class
+                                                				               with font-awesome or any other icon font library -->
+               {% if is_granted('user_list') or is_granted('user_group_list') or is_granted('user_type_list') %}
+                        <li class="nav-header">
+                            <h6>
+                                {% trans %}
+                                USERS 
+                                                                
+                                {% endtrans %}
+                            </h6>
+                        </li>
+                        {% endif %}
+                        <li class="nav-item">
+                            {% if is_granted('user_group_list') %}
+                                <li class="nav-item">
+                                    <a href="{{ path('user_group_index') }}" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>
+                                            {% trans %}
+                                            User groups
+                                                                                        
+                                            {% endtrans %}
+                                        </p>
+                                    </a>
+                                </li>
+                            {% endif %}
+                            {% if is_granted('user_type_list') %}
+                                <li class="nav-item">
+                                    <a href="{{ path('usertype_index') }}" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>
+                                            {% trans %}
+                                            User Types
+                                                                                        
+                                            {% endtrans %}
+                                        </p>
+                                    </a>
+                                </li>
+                            {% endif %}
+                            {% if is_granted('user_list') %}
+                                <li class="nav-item">
+                                    <a href="{{ path('user_index') }}" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>
+                                            {% trans %}
+                                            Users
+                                                                                        
+                                            {% endtrans %}
+                                        </p>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </li>
+                        {% if is_granted('rejected_request_list') or is_granted('new_request_list') %}
+                        <li class="nav-header">
+                            <h6>
+                                {% trans %}
+                                STUDENT REQUESTS 
+                                                                
+                                {% endtrans %}
+                            </h6>
+                        </li>
+{% endif %}
+                        <li class="nav-item">
 
-			
-				class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-				<!-- Add icons to the links using the .nav-icon class
-				               with font-awesome or any other icon font library -->
+                            {% if is_granted('new_request_list') %}
+                                <li class="nav-item">
+                                    <a href="{{ path('course_request') }}" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>
+                                            {% trans %}
+                                            New Requests
+                                                                                        
+                                            {% endtrans %}
+                                        </p>
+                                    </a>
+                                </li>
+                            {% endif %}
+                            {% if is_granted('rejected_request_list') %}
+                                <li class="nav-item">
+                                    <a href="{{ path('rejected_course_request') }}" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>
+                                            {% trans %}
+                                            Rejected Requests
+                                                                                        
+                                            {% endtrans %}
+                                        </p>
+                                    </a>
+                                </li>
+                            {% endif %}
 
-			<li class="nav-header"><h6> {% trans %}USERS {% endtrans %}   </h6> </li>
-				<li class="nav-item">
-						<li class="nav-item">
-							<a href="{{path('user_group_index')}}" class="nav-link">
-								<i class="far fa-circle nav-icon"></i>
-								<p>{% trans %}User groups{% endtrans %}</p>
-							</a>
-						</li>
-						<li class="nav-item">
-							<a href="{{path('usertype_index')}}" class="nav-link">
-								<i class="far fa-circle nav-icon"></i>
-								<p>{% trans %}User Types{% endtrans %}</p>
-							</a>
-						</li>
-						<li class="nav-item">
-							<a href="{{path('user_index')}}" class="nav-link">
-								<i class="far fa-circle nav-icon"></i>
-								<p>{% trans %}Users{% endtrans %}</p>
-							</a>
-						</li>
-				</li>
+                        </li>
+                        {% if is_granted('my_course') or is_granted('instructor_course_list') or is_granted('course_category_list') or is_granted('course_list') %}
+                        <li class="nav-header">
+                            <h6>
+                                {% trans %}
+                                COURSE 
+                                                                
+                                {% endtrans %}
+                                <h6></li>
+{% endif %}
+                                <li class="nav-item has-treeview menu-open ">
+                                    {% if is_granted('course_list') %}
+                                        <li class="nav-item">
+                                            <a href="{{ path('course_index') }}" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>
+                                                    {% trans %}
+                                                    Course list
+                                                                                                        									
+                                                                                                        
+                                                    {% endtrans %}
+                                                </p>
+                                            </a>
+                                        </li>
 
+                                    {% endif %}
+                                    {% if is_granted('course_category_list') %}
 
+                                        <li class="nav-item">
+                                            <a href="{{ path('course_category_index') }}" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>
+                                                    {% trans %}
+                                                    Course Category 
+                                                    											
+                                                    {% endtrans %}
+                                                </p>
+                                            </a>
+                                        </li>
+                                    {% endif %}
 
-			
-			<li class="nav-header"><h6> {% trans %} STUDENT REQUESTS {% endtrans %} </h6></li>
+                                    {% if is_granted('instructor_course_list') %}
+                                        <li class="nav-item">
+                                            <a href="{{ path('instructor_course_index') }}" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>
+                                                    {% trans %}
+                                                    Assign Courses
+                                                                                                        
+                                                    {% endtrans %}
+                                                </p>
+                                            </a>
+                                        </li>
+                                    {% endif %}
 
+                                    {% if is_granted('my_course') %}
+                                        <li class="nav-item">
+                                            <a href="{{ path('instructor_course_chapter_index') }}" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>
+                                                    {% trans %}
+                                                    My Courses
+                                                                                                        
+                                                    {% endtrans %}
+                                                </p>
+                                            </a>
+                                        </li>
+                                    {% endif %}
 
-                <li class="nav-item">
-					 
+                                </li>
+                        
+                            </li>
+                            {% if is_granted('system_setting_list') %}
+                            <li class="nav-header">
+                                <h6>
+                                    {% trans %}
+                                    SYSTEM SETTINGS 
+                                                                            
+                                    {% endtrans %}
+                                </h6>
+                            </li>
+{% endif %}
+                            <li class="nav-item">
+                                
+                                <li class="nav-item">
+                                {% if is_granted('system_setting_list') %}
+                                
+                                    <a href="{{ path('system_setting_index') }}" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>
+                                            {% trans %}
+                                            Settings 
+                                                                                            
+                                            {% endtrans %}
+                                        </p>
+                                    </a>
 
-						<li class="nav-item">
-							<a href="{{path('course_request')}}" class="nav-link">
-								<i class="far fa-circle nav-icon"></i>
-								<p>{% trans %}New Requests{% endtrans %}</p>
-							</a>
-						</li>
-					
-						<li class="nav-item">
-							<a href="{{ path('rejected_course_request')}}" class="nav-link">
-								<i class="far fa-circle nav-icon"></i>
-								<p>{% trans %}Rejected Requests{% endtrans %}</p>
-							</a>
-						</li>
-					 
-				</li> 
+                                {% endif %}
+                                </li>
+                            </li>
+                            <li>
+                                {% if is_granted('academic_level_list') %}
+                                <li class="nav-header">
 
+                                    <h6>
+                                        {% trans %}
+                                        OTHERS 
+                                                                                    
+                                        {% endtrans %}
+                                    </h6>
+                                </li>
+                                {% endif %}
+                                <li class="nav-item">
+                                    <li class="nav-item">
+                                    {% if is_granted('academic_level_list') %}
 
+                                        <a href="{{ path('academic_level_index') }}" class="nav-link">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>
+                                                {% trans %}
+                                                academic level
+                                                                                                    
+                                                {% endtrans %}
+                                            </p>
+                                        </a>
+                                        {% endif %}
+                                    </li>
 
-			<li class="nav-header"> <h6>  {% trans %} COURSE {% endtrans %} <h6> </li>
+                                    {# <li class="nav-item">
+                                        <a href="{{ path('country_index') }}" class="nav-link">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>
+                                                {% trans %}
+                                                Country 
+                                                                                                    
+                                                {% endtrans %}
+                                            </p>
+                                        </a>
+                                    </li> #}
 
+                                    <li class="nav-item">
+                                    {% if is_granted('qa_ask') or is_granted('qa_answer') %}
+                                    
+                                        <a href="{{ path('question_answer_index') }}" class="nav-link">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>
+                                                {% trans %}
+                                                Q&A 
+                                                {% endtrans %}
+                                            </p>
+                                        </a>
+                                    {% endif %}
+                                    </li>
 
-				<li class="nav-item has-treeview menu-open ">
-				
-				
-						<li class="nav-item">
-							<a href="{{path('course_index')}}" class="nav-link">
-								<i class="far fa-circle nav-icon"></i>
-								<p>
-									{% trans %}Course list
-									{% endtrans %}
-								</p>
-							</a>
-						</li>
-
-						{# <li class="nav-item">
-							<a href="{{path('instructorCourseStatus_index')}}" class="nav-link">
-								<i class="far fa-circle nav-icon"></i>
-								<p>{% trans %}
-									Course status
-									{% endtrans %}</p>
-							</a>
-						</li> #}
-						<li class="nav-item">
-							<a href="{{path('instructor_course_index')}}" class="nav-link">
-								<i class="far fa-circle nav-icon"></i>
-								<p>{% trans %}Assign Courses{% endtrans %}</p>
-							</a>
-						</li>
-						<li class="nav-item">
-							<a href="{{path('instructor_course_chapter_index')}}" class="nav-link">
-								<i class="far fa-circle nav-icon"></i>
-								<p>{% trans %}
-									My Courses
-									{% endtrans %}</p>
-							</a>
-						</li>
-
-					
-				</li>
-				<li class="nav-item"></li>
-				<li class="nav-item">
-					<a href="{{path('exam_index')}}" class="nav-link">
-						<i class="far fa-circle nav-icon"></i>
-						<p>{% trans %}Exams{% endtrans %}</p>
-					</a>
-				</li>
-			</li>
-
-
-		<li class="nav-header"><h6> {% trans %} Q&A {% endtrans %} </h6></li>
-			<li class="nav-item">
-				 
- 
-				
-					<li class="nav-item">
-						<a href="{{ path('question_answer_index')}}" class="nav-link">
-							<i class="far fa-circle nav-icon"></i>
-							<p>{% trans %} Q&A {% endtrans %}</p>
-						</a>
-					</li>
-				 
-			</li> 
-		<li>	
-
-		<li class="nav-header"><h6> {% trans %} SYSTEM SETTINGS {% endtrans %} </h6></li>
-			<li class="nav-item">
-				{# <li class="nav-item">
-					<a href="{{path('termsandconditions_index')}}" class="nav-link">
-						<i class="far fa-circle nav-icon"></i>
-						<p>{% trans %}Terms and Conditions{% endtrans %}</p>
-					</a>
-				</li>
-			 #}
-				<li class="nav-item">
-					<a href="{{ path('system_setting_index')}}" class="nav-link">
-						<i class="far fa-circle nav-icon"></i>
-						<p>{% trans %} Settings {% endtrans %}</p>
-					</a>
-				</li>	 
-			</li> 
-		<li>
-
-		<li class="nav-header"><h6> {% trans %} OTHERS {% endtrans %} </h6></li>
-			<li class="nav-item">
-				<li class="nav-item">
-					<a href="{{path('academic_level_index')}}" class="nav-link">
-						<i class="far fa-circle nav-icon"></i>
-						<p>{% trans %}academic level{% endtrans %}</p>
-					</a>
-				</li>
-			
-				<li class="nav-item">
-					<a href="{{ path('country_index')}}" class="nav-link">
-						<i class="far fa-circle nav-icon"></i>
-						<p>{% trans %} Country {% endtrans %}</p>
-					</a>
-				</li>	
-				<li class="nav-item">
-					<a href="{{ path('course_category_index')}}" class="nav-link">
-						<i class="far fa-circle nav-icon"></i>
-						<p>{% trans %} Course Category {% endtrans %}</p>
-					</a>
-				</li>	 
-			</li> 
-		<li>	
-		</ul>
-	</nav>
-	<!-- /.sidebar-menu -->
-</div>
-<!-- /.sidebar --></aside>
+                                </li>
+                                <li></ul>
+                            </nav>
+                        <!-- /.sidebar-menu -->
+                        </div>
+                    <!-- /.sidebar -->
+                    </aside>
+                    

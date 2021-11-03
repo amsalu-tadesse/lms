@@ -22,8 +22,10 @@
             </div>
             
             <div class="col-md-6">
-               {# <a href="{{ path('studentlesson', {'id': 1}) }}" class="btn btn-primary" style="float:right">View as amsalu </a> #}
+			{% if is_granted('content_create') %}
+			
                <a href="{{ path('content_new', {'id': incrsid}) }}" class="btn btn-primary" style="float:right">{% trans %}add content{% endtrans %} </a>
+			{% endif %}
             </div>
         </div>
 
@@ -51,8 +53,12 @@
 							{# <td>{{ content.videoLink }}</td> #}
 								<td>{{ content.chapter }}</td>
 							<td>
+								{% if is_granted('content_list') %}
 								<a href="{{ path('content_show', {'id': content.id}) }}" class="btn btn-sm btn-primary">show</a>
+								{% endif %}
+								{% if is_granted('content_create') %}
 								<a href="{{ path('content_edit', {'id': content.id}) }}" class="btn btn-sm btn-warning">edit</a>
+								{% endif %}
 							</td>
 						</tr>
 					{% else %}

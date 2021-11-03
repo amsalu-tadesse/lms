@@ -20,11 +20,13 @@
 						<th>Course</th>
 						{# <th>Instructor</th> #}
 						<th>{% trans %}Assign date{% endtrans %}</th>
-						<th>Status</th>
+						{# <th>Status</th> #}
 						{# <th>Active</th> #}
 						<th>Students</th>
+							{% if is_granted('chapter_list') or is_granted('content_list') or is_granted('quiz_list') %}
 
-						<th>actions</th>
+						<th>actions</th> 
+							{% endif %}
 					</tr>
 				</thead>
 				<tbody>
@@ -32,14 +34,10 @@
 						<tr>
 							<td>{{ loop.index }}</td>
 							<td>{{ instructor_course.course | capitalize}}</td>
-							{# {% if instructor_course.instructor %}
-								<td>{{ instructor_course.instructor.user.firstName ~ ' ' ~ instructor_course.instructor.user.middleName ~ ' ' ~ instructor_course.instructor.user.lastName }}</td>
-							{% else %}
-								<td></td>
-							{% endif %} #}
+						
 
 							<td>{{ instructor_course.createdAt ? instructor_course.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-							<td> {{ instructor_course.status }}</td>
+							{# <td> {{ instructor_course.status }}</td> #}
 							{# <td> {{ instructor_course.active ? "YES" : "NO" }}</td> #}
 
 							<td>
@@ -52,26 +50,32 @@
 
 							</td>
 							<td>
+
+								{% if is_granted('chapter_list') %}
+								
 								<a href="{{ path('instructor_course_chapter_content_list', {'id': instructor_course.id}) }}" class="btn btn-primary btn-sm">
 									<span class="fa fa-plus"></span>
 									{% trans %}Chapters{% endtrans %}
 								</a>
+							{% endif %}
+							{% if is_granted('content_list') %}
 								<a href="{{ path('content_index', {'id': instructor_course.id}) }}" class="btn btn-success btn-sm">
 									<span class="fa fa-plus"></span>
 									Contents
 								</a>
-
+							{% endif %}
+							{% if is_granted('quiz_list') %}
 								<a href="{{ path('quiz_index', {'id': instructor_course.id}) }}" class="btn btn-success btn-sm">
 									<span class="fa fa-plus"></span>
 									Quiz
 								</a>
-
+							{% endif %}
 
 							</td>
 						</tr>
 					{% else %}
 						<tr>
-							<td colspan="4">no records found</td>
+							<td colspan="4"> {% trans %}no records found{% endtrans %}</td>
 						</tr>
 					{% endfor %}
 				</tbody>

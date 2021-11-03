@@ -18,7 +18,7 @@ class QuizType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $registeredChaptersid = $options['registeredChaptersid'];
+        $unregisteredChaptersid = $options['unregisteredChaptersid'];
 
         $builder
             ->add('name')
@@ -36,30 +36,37 @@ class QuizType extends AbstractType
                 'placeholder' => "", 
                 // 'choice_value' => 'title',
                 'query_builder' => function (EntityRepository $er) 
-                use($registeredChaptersid){
+                use($unregisteredChaptersid){
 
 
                     $chapter = '';
- 
-                    foreach ($registeredChaptersid as $value) {
-                         
-                        if($chapter == '')
-                        {
-                            $chapter = $value;
-                        }
-                        else 
-                        {
-                            $chapter .= ','.$value;
+                    if($unregisteredChaptersid !='')
+                    {
+                        foreach ($unregisteredChaptersid as $value) {
+                                            
+                            if($chapter == '')
+                            {
+                                $chapter = $value;
+                            }
+                            else 
+                            {
+                                $chapter .= ','.$value;
+                            }
                         }
                     }
+                            
 
-                    // dd($chapter); 
+                    // dd($chapter);
 
                     $res = $er->createQueryBuilder('s');
                     if($chapter != '')
                     {
                         $res = $res->leftjoin ('App:Quiz', 'q', 'WITH', 'q.instructorCourseChapter = s.id')
-                        ->andWhere('s.id not in ('.$chapter.') ');
+                        ->andWhere('s.id in ('.$chapter.') ');
+                    }
+                    else 
+                    {
+                        $res = $res->andWhere('false');
                     }
                       
              
@@ -76,7 +83,7 @@ class QuizType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setRequired('registeredChaptersid');
+        $resolver->setRequired('unregisteredChaptersid');
         $resolver->setDefaults([
             'data_class' => Quiz::class, 
         ]);

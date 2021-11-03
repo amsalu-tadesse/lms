@@ -17,8 +17,11 @@
                 <h3>{% trans %}AcademicLevel list{% endtrans %}</h3>
             </div>
             <div class="col-md-6">
+            {% if is_granted('academic_level_create') %}
+            
                <a href="{{ path('academic_level_new') }}" class="btn btn-primary" style="float:right">
             {% trans %}Add new AcademicLevel{% endtrans %}</a>
+        {% endif %}
             </div>
         </div>
     </div>
@@ -29,7 +32,10 @@
                                         <th>Id</th>
                                         <th>{% trans %}Name{% endtrans %}</th>
                                         <th>{% trans %}Description{% endtrans %}</th>
+                                            {% if is_granted('academic_level_list') or is_granted('academic_level_edit') %}
                                         <th>{% trans %}Action{% endtrans %}</th>
+                                            {% endif %}
+                                     
                 </tr>
             </thead>
             <tbody>
@@ -39,10 +45,14 @@
                                         <td>{{ academic_level.name }}</td>
                                         <td>{{ academic_level.description }}</td>
                                         <td>
-                        <a
+                                            {% if is_granted('academic_level_list') %}
+                        <a class="btn btn-info btn-sm"
                             href="{{ path('academic_level_show', {'id': academic_level.id}) }}">{% trans %}Show{% endtrans %}</a>
-                        <a
+                            {% endif %}
+                            {% if is_granted('academic_level_edit') %}
+                        <a class="btn btn-warning btn-sm"
                             href="{{ path('academic_level_edit', {'id': academic_level.id}) }}">{% trans %}Edit{% endtrans %}</a>
+                            {% endif %}
                     </td>
                 </tr>
                 {% else %}

@@ -40,7 +40,7 @@ class UserGroupController extends AbstractController
                 $form->handleRequest($request);
         
                 if ($form->isSubmitted() && $form->isValid()) {
-                    $this->denyAccessUnlessGranted('edt_usr_grp');
+                    // $this->denyAccessUnlessGranted('edt_usr_grp');
                     $userGroup->setUpdatedAt(new \DateTime());
                     $userGroup->setUpdatedBy($this->getUser());
                     $this->getDoctrine()->getManager()->flush();

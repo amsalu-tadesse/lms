@@ -69,7 +69,9 @@
 							<th>{% trans %}Student{% endtrans %}</th>
 							<th>{% trans %}Course{% endtrans %}</th>
 							<th>{% trans %}Date{% endtrans %}</th>
-							<th>{% trans %}Action{% endtrans %}</th>
+								{% if is_granted("approve_course_request") %}
+							<th>{% trans %}Actions{% endtrans %}</th>
+								{% endif %}
 						</tr>
 					</thead>
 					<tbody>
@@ -87,12 +89,14 @@
 								<td>{{ student_course.instructorCourse.course.name }}</td>
 								<td>{{ student_course.createdAt ? student_course.createdAt|date('Y-m-d H:i:s') : '' }}</td>
 
+									{% if is_granted("approve_course_request") %}
 
 								<td>
 									<a href="{{path('course_request_activate',{id:student_course.id})}}" type="accept" data-course="{{student_course.instructorCourse.course.name}}" data-stud="{{student_course.student}}" class="confBtn">
 										<i class="btn btn-success btn-sm">Accept</i>
 									</a>
 								</td>
+								{% endif %}
 							</tr>
 						{% else %}
 							<tr>

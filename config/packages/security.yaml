@@ -31,7 +31,7 @@ security:
                 path: app_logout
                 # where to redirect after logout
                 target: /
-
+            entry_point: App\Security\AuthenticationEntryPoint
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
 
