@@ -3,9 +3,9 @@
 {% block title %}New QuizChoices{% endblock %}
 
 {% block body %}
-    <h1>Create new QuizChoices</h1>
+    <h1>{% trans %}create new{% endtrans %} Choices</h1>
 
     {{ include('quiz_choices/_form.html.twig') }}
 
-    <a href="{{ path('quiz_choices_index') }}">back to list</a>
+    <a href="{{ path('quiz_choices_index') }}">{% trans %}Back to list{% endtrans %}</a>
 {% endblock %}

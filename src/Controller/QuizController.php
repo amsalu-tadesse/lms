@@ -210,18 +210,23 @@ class QuizController extends AbstractController
 
                     $prev = $em->getRepository(StudentQuestion::class)->find1($quiz->getId(), $this->getUser()->getProfile()->getId());
                     $quiz_size = sizeof($prev);
-
-                    if ($request->query->get('page') > $quiz_size) {
+                    
+                    $correct_answer = 0;
+                    if($request->query->get('page') > $quiz_size)
+                    {
                         $stud_que = $em->getRepository(StudentQuestion::class)->find1($quiz->getId(), $this->getUser()->getProfile()->getId());
-                        if ($student_quiz->getResult() == null) {
-                            $correct_answer = 0;
-                            foreach ($stud_que as $key => $value) {
-                                if (strcmp($value->getAnswer(), $value->getQuestion()->getAnswer()) == 0) {
-                                    $correct_answer++;
-                                }
+                        
+                        foreach($stud_que as $key => $value)
+                        {
+                            if(strcmp($value->getAnswer(),$value->getQuestion()->getAnswer()) == 0)
+                            {
+                                $correct_answer++;
                             }
-
-                            $student_quiz->setResult($correct_answer);
+                        }
+                        if($student_quiz->getResult() == null)
+                        {
+                            $res = ($correct_answer/sizeof($stud_que))*$quiz->getPercentage();
+                            $student_quiz->setResult($res);
                             $em->persist($student_quiz);
                             $em->flush();
                         }
@@ -229,6 +234,7 @@ class QuizController extends AbstractController
                         return $this->render('student_quiz/index.html.twig', [
                             'stud_que' => $stud_que,
                             'chapter' => $chapter,
+                            'correct_answer' => $correct_answer
                         ]);
                     } else {
                         if ($quiz_size > 0) {
@@ -247,17 +253,22 @@ class QuizController extends AbstractController
                             ]);
                         }
                     }
-
-                } else {
-                    $stud_que = $em->getRepository(StudentQuestion::class)->find1($quiz->getId(), $this->getUser()->getProfile()->getId());
-                    if ($student_quiz->getResult() == null) {
-                        $correct_answer = 0;
-                        foreach ($stud_que as $key => $value) {
-                            if (strcmp($value->getAnswer(), $value->getQuestion()->getAnswer()) == 0) {
-                                $correct_answer++;
-                            }
+                    
+                }
+                else{
+                    $stud_que = $em->getRepository(StudentQuestion::class)->find1($quiz->getId(),$this->getUser()->getProfile()->getId());
+                    $correct_answer = 0;
+                    foreach($stud_que as $key => $value)
+                    {
+                        if(strcmp($value->getAnswer(),$value->getQuestion()->getAnswer()) == 0)
+                        {
+                            $correct_answer++;
                         }
+                    }
 
+                    if($student_quiz->getResult() == null)
+                    {
+                        $res = ($correct_answer/sizeof($stud_que))*$quiz->getPercentage();
                         $student_quiz->setResult($correct_answer);
                         $em->persist($student_quiz);
                         $em->flush();
@@ -265,6 +276,7 @@ class QuizController extends AbstractController
                     return $this->render('student_quiz/index.html.twig', [
                         'stud_que' => $stud_que,
                         'chapter' => $chapter,
+                        'correct_answer' => $correct_answer
                     ]);
                 }
             }

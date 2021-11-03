@@ -10,7 +10,7 @@
 {% block body %}
     {{ include('content/_form.html.twig') }}
 
-    <a href="{{ path('content_index', {'id': 1}) }}">back to list</a>
+    <a href="{{ path('content_index', {'id': 1}) }}">{% trans %}Back to list{% endtrans %}</a>
 {% endblock %}
 {% block javascripts %}
 <script>

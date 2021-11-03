@@ -18,7 +18,7 @@
 				<!-- Nav tabs -->
 				<ul class="nav nav-tabs" role="tablist" >
 					<li class="nav-item">
-						<a class="nav-link active" href="#tab1" role="tab" data-toggle="tab">Chapters</a>
+						<a class="nav-link active" href="#tab1" role="tab" data-toggle="tab">{% trans %}Chapters{% endtrans %}</a>
 					</li>
 				</ul>
 
@@ -97,7 +97,7 @@
 				</div>
                 <br>
                 <div class="col-sm-3">
-                    <a href="{{ path('request_delete',{'id':courses.id})}}" class="btn btn-danger">Cancel request</a>
+                    <a href="{{ path('request_delete',{'id':courses.id})}}" class="btn btn-danger">{% trans %}cancel request{% endtrans %}</a>
                 </div>
 			</div>
 		</div>

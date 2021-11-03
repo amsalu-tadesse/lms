@@ -103,12 +103,13 @@ class CourseController extends AbstractController
 
         $courses = $course_repo->findCoursesSortByCategory($instructorCourse->getId());
         $chaptersWithContent = $content->getChaptersWithContentForCourse($instructorCourse->getId());
+        
+        $questionAnswer = new QuestionAnswer();
+        $form = $this->createForm(QuestionAnswerNewStudentType::class, $questionAnswer);
+        $form->handleRequest($request);
+
         if($this->isGranted("ROLE_STUDENT"))
         {
-            $questionAnswer = new QuestionAnswer();
-            $form = $this->createForm(QuestionAnswerNewStudentType::class, $questionAnswer);
-            $form->handleRequest($request);
-    
             if($form->isSubmitted() && $form->isValid())
             {
                 $questionAnswer->setStudent($this->getUser()->getProfile());
@@ -134,7 +135,9 @@ class CourseController extends AbstractController
        
         
         return $this->render('course/description.html.twig',[
-            'chapter' => $chapter,
+            'chapter' => $courses,
+            'question' => [],
+            'form' => $form->createView(),
             'chapters' => $chaptersWithContent
         ]);
     }

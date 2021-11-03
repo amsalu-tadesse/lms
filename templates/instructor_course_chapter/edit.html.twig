@@ -1,7 +1,7 @@
 
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Chapter{% endblock %}
+{% block title %}{% trans %}Edit{% endtrans %} Chapter{% endblock %}
 {% block breadcrumbhome %}
     <a href="{{path('instructor_course_chapter_index',{'id':instructor_course_chapter.id})}}">
 	   {% trans %}Course{% endtrans %} 
@@ -15,7 +15,7 @@
     {{ include('instructor_course_chapter/_form.html.twig', {'button_label': 'Update','class': 'form-control'}) }}
     <table>
     <td>
-        <a href="{{ path('instructor_course_chapter_index') }}">back to list</a>
+        <a href="{{ path('instructor_course_chapter_index') }}">{% trans %}Back to list{% endtrans %}</a>
     </td><td>
     {{ include('instructor_course_chapter/_delete_form.html.twig') }}
     </td></table>

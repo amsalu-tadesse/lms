@@ -92,8 +92,13 @@
 								<td> {{ quiz.active ? "YES": "NO" }}
 								</td>
 								<td>
+<<<<<<< HEAD
 									{% if is_granted('quiz_edit') %}
 									<a class="btn btn-warning btn-xs" href="{{ path('quiz_edit', {'id': quiz.id}) }}"> <span class="fa fa-edit"></span>
+=======
+								
+									<a class="btn btn-warning" href="{{ path('quiz_edit', {'id': quiz.id}) }}"> <span class="fa fa-edit"></span>
+>>>>>>> 3b0248555c2f52776618b90d747f76a832c4bb87
 										{% trans %}Edit{% endtrans %}
 									</a>
 									{% endif %}

@@ -19,8 +19,8 @@
             <thead>
                 <tr>
                     <th>Id</th>
-                    <th>Course</th>
-                    <th>Date Applied</th>
+                    <th>tr</th>
+                    <th>{% trans %}date applied{% endtrans %}</th>
                     <th>status</th>
                     <th>actions</th>
                 </tr> 
@@ -38,7 +38,7 @@
                     </a>
                      &nbsp;
                     <a 
-                        href="{{ path('request_delete', {'id': request.id}) }}">cancel request
+                        href="{{ path('request_delete', {'id': request.id}) }}">{% trans %}cancel request{% endtrans %}
                     </a>
 
                     </td>

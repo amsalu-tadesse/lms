@@ -1,44 +1,67 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{% trans %}StudentCourse{% endtrans %}{% endblock %}
-{% block breadcrumbhome %}{% trans %}Studentcourse{% endtrans %}{% endblock %}
-{% block breadcrumbcontent %}{% trans %}Show{% endtrans %}{% endblock %}
-{% block body %}
-<div class="card">
-    <div class="card-body">
-        <table class="table">
-            <tbody>
-                                                                <tr>
-                    <th>{% trans %}Date{% endtrans %}</th>
-                    <td>{{ student_course.createdAt ? student_course.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                </tr>
-                                                <tr>
-                    <th>{% trans %}Status{% endtrans %}</th>
-                    <td>{{ student_course.status }}</td>
-                </tr>
-                                                <tr>
-                    <th>{% trans %}Active{% endtrans %}</th>
-                    <td>{{ student_course.active ? 'Yes' : 'No' }}</td>
-                </tr>
-                                                <tr>
-                    <th>{% trans %}IsAtPage{% endtrans %}</th>
-                    <td>{{ student_course.isAtPage }}</td>
-                </tr>
-                            </tbody>
-        </table>
-        <br>
-        <div class="row">
-            <div class="col-md-2">
-                <a href="{{ path('students_in_course',{'id':student_course.instructorCourse.id}) }}" class="btn btn-info btn-block">{% trans %}Back to list{% endtrans %}</a>
-            </div>
-            {# <div class="col-md-2">
-                <a href="{{ path('student_course_edit', {'id': student_course.id}) }}"
-                    class="btn btn-primary btn-block">edit</a>
-            </div> #}
-            <div class="col-md-2">
-                {{ include('student_course/_delete_form.html.twig') }}
-            </div>
-        </div>
-    </div>
-</div>
+{% block title %}
+	{% trans %}StudentCourse{% endtrans %}
 {% endblock %}
+{% block breadcrumbhome %}
+	{% trans %}Studentcourse{% endtrans %}
+{% endblock %}
+{% block breadcrumbcontent %}
+	{% trans %}Show{% endtrans %}
+{% endblock %}
+{% block body %}
+	<div class="card">
+		<div class="card-body">
+			<table class="table">
+				<tbody>
+					<tr>
+						<th>Name</th>
+						<td>{{student.user.firstName}}
+							{{student.user.middleName}}
+							{{student.user.lastName}}
+						</td>
+					</tr>
+					<tr>
+						<th>Email</th>
+						<td>
+							{{student.user.email}}
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<br>
+    <h4 style="margin-left:40px;"> {% trans %}Attended Courses{% endtrans %}</h5>
+    <br>
+	{% for course in student_course %}
+		<div class="card">
+			<div class="card-body">
+				<table class="table table-responsive">
+					<tbody>
+						<tr>
+							<th style="width: 150px">{% trans %}Course{% endtrans %}</th>
+							<td>{{ course.instructorCourse.course.name}}</td>
+						</tr>
+						<tr>
+							<th>{% trans %}Date Registered{% endtrans %}</th>
+							<td>{{ course.createdAt ? course.createdAt|date('Y-m-d') : '' }}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	{% endfor %}
+	<br>
+	<div class="row">{# <div class="col-md-2">
+														<a href="{{ path('students_in_course',{'id':student_course.instructorCourse.id}) }}" class="btn btn-info btn-block">{% trans %}Back to list{% endtrans %}</a>
+													</div> #}
+		{# <div class="col-md-2">
+													                <a href="{{ path('student_course_edit', {'id': student_course.id}) }}"
+													                    class="btn btn-primary btn-block">edit</a>
+													            </div> #}
+		{# <div class="col-md-2">
+														{{ include('student_course/_delete_form.html.twig') }}
+													</div> #}
+	</div>
+</div></div>{% endblock %}

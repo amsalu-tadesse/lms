@@ -11,9 +11,18 @@
         label {
             font-size: 16px;
         }
+
+        .result{
+            font-size: 23px;
+            color: white;
+            text-align-last: center;
+            background: #1a5c5c;
+            padding: 10px 20px;
+        }
     </style>
 {% endblock %}
 {% block body %}
+
 	<div class="container">
 		<div class="row">
 			<div class="card my-3">
@@ -33,22 +42,27 @@
                                                 </script>
                                                 <input disabled id="shipping_method{{choice.id}}" type="radio" class="me-2"  checked="checked" value="{{choice.letter}}">
                                                 {{choice.letter}}) &nbsp;&nbsp;
-                                                {{ choice.description}}
+                                                {{ choice.description}} &nbsp; 
+                                                {% if question.answer == question.question.answer %}
+                                                    <span style="color:green"><i class="fa fa-check"></i></span>
+                                                {% else %}
+                                                    <span style="color:red"><i class="fa fa-times"></i></span>
+                                                {% endif %}
                                             {% else %}
                                                 <input disabled id="shipping_method{{choice.id}}" type="radio" class="me-2"  value="{{choice.letter}}">
                                                 {{choice.letter}}) &nbsp;&nbsp;
-                                                {{ choice.description}}
+                                                {{ choice.description}} &nbsp;
                                             {% endif %}
                                         </label>
                                     </div>
                                 {% endfor %}
-                                <div class="d-flex flex-column px-4 py-1">
-                                    {% if question.answer == question.question.answer %}
+                                {# <div class="d-flex flex-column px-4 py-1"> #}
+                                    {# {% if question.answer == question.question.answer %}
                                         <span style="color:green">Corect Answer: <b>{{question.question.answer}}</b></span>
                                     {% else %}
                                         <span style="color:red">Corect Answer: <b>{{question.question.answer}}</b></span>
-                                    {% endif %}
-                                </div>
+                                    {% endif %} #}
+                                {# </div> #}
                             {% endif %}
                         {% else %}
                             <h5 class="py-3">{{question.question}}</h5>
@@ -59,7 +73,12 @@
                                             {% if choice.letter == question.answer %}
                                                 <input disabled id="shipping_method{{choice.id}}" type="radio" class="me-2"  checked="checked" value="{{choice.letter}}">
                                                 {{ choice.letter }}) &nbsp;&nbsp;
-                                                {{ choice.description }}
+                                                {{ choice.description }} &nbsp;
+                                                {% if question.answer == question.question.answer %}
+                                                    <span style="color:green"><i class="fa fa-check"></i></span>
+                                                {% else %}
+                                                    <span style="color:red"><i class="fa fa-times"></i></span>
+                                                {% endif %}
                                             {% else %}
                                                 <input disabled id="shipping_method{{choice.id}}" type="radio" class="me-2"  value="{{choice.letter}}">
                                                 {{choice.letter}}) &nbsp;&nbsp;
@@ -68,16 +87,11 @@
                                         </label>
                                     </div>
                                 {% endfor %}
-                                <div class="d-flex flex-column px-4 py-1">
-                                    {% if question.answer == question.question.answer %}
-                                        <span style="color:green">Corect Answer: <b>{{question.question.answer}}</b></span>
-                                    {% else %}
-                                        <span style="color:red">Corect Answer: <b>{{question.question.answer}}</b></span>
-                                    {% endif %}
-                                </div>
                         {% endif %}
 					{% endfor %}
-                <a href="{{path('course_chapters',{'id':chapter.instructorCourse.id})}}" class="btn btn-primary px-5 mx-2 my-2">go to chapters</a>
+                    <br>
+                    <p class="result">Result: {{correct_answer}}</p>
+                <a href="{{path('course_chapters',{'id':chapter.instructorCourse.id})}}" class="btn btn-primary px-5 mx-2 my-2">Go to next chapters</a>
 				</div>
 			</div>
 		</div>

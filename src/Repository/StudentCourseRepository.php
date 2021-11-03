@@ -191,7 +191,7 @@ class StudentCourseRepository extends ServiceEntityRepository
         // Create inner joins
         $query
 
-            ->select("sc.id, concat(u.firstName,' ',u.middleName,' ',u.lastName) as name", 'sc.isAtPage as page', 'sc.active', 'sc.createdAt')
+            ->select("sc.id, concat(u.firstName,' ',u.middleName,' ',u.lastName) as name", 'sc.isAtPage as page', 'sc.active', 'sc.createdAt', 'st.id as student')
             ->innerJoin('sc.student',"st")
             ->innerJoin('sc.instructorCourse',"ic")
             ->innerJoin('st.user','u');

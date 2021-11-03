@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\InstructorCourse;
 use App\Entity\StudentCourse;
+use App\Entity\Student;
 use App\Form\Filter\RequestFilterType;
 use App\Form\StudentCourseType;
 use App\Repository\ContentRepository;
@@ -166,42 +167,42 @@ class StudentCourseController extends AbstractController
 
 
 
-$json = "[['Student', 'Completion']";
+        $json = "[['Student', 'Completion']";
         foreach ($queryBuilder as $studentCourse) {
             $stdid = $studentCourse->getId();
         
         $comp = $this->getCompletion($stdid);
 
-if($comp==0)
-{
-    $completion['0%'] ++;
-}
-elseif ($comp < 25) {
-    $completion['1-24%'] ++;
-}
+        if($comp==0)
+        {
+            $completion['0%'] ++;
+        }
+        elseif ($comp < 25) {
+            $completion['1-24%'] ++;
+        }
 
-elseif ($comp < 50) {
-    # code...
-    $completion['25-49%'] ++;
-}
-elseif ($comp < 75) {
-    # code...
-    $completion['50-74%'] ++;
-}
+        elseif ($comp < 50) {
+            # code...
+            $completion['25-49%'] ++;
+        }
+        elseif ($comp < 75) {
+            # code...
+            $completion['50-74%'] ++;
+        }
 
-elseif ($comp < 100) {
-    # code...
-    $completion['75-99%'] ++;
-}
+        elseif ($comp < 100) {
+            # code...
+            $completion['75-99%'] ++;
+        }
 
-elseif ($comp =100) {
-    # code...
-    $completion['100%'] ++;
-}
+        elseif ($comp =100) {
+            # code...
+            $completion['100%'] ++;
+        }
 
-else{
-    # code...
-}
+        else{
+            # code...
+        }
 
 
         }
@@ -312,7 +313,7 @@ return $completion;
 
             $temp["status"] = '<a href="#" data-toggle="modal" id="' . $value['id'] . '" onclick="changeStatus(\'' . $value['name'] . '\',' . $value['id'] . ',' . $value['active'] . ')" data-target="#modal-delete">' .
                 "<i class='fas $icon' style='color:$color'></i></a>";
-            $temp["actions"] = '<a href="/student/' . $value['id'] . '" class="btn btn-primary">show</a>';
+            $temp["actions"] = '<a href="/student/' . $value['student'] . '" class="btn btn-primary">show</a>';
             $Response[] = $temp;
 
             unset($temp);
@@ -501,8 +502,6 @@ return $completion;
 
     }
 
-
-
     /**
      * @Route("/new", name="student_course_new", methods={"GET","POST"})
      */
@@ -528,10 +527,12 @@ return $completion;
     /**
      * @Route("/{id}", name="student_course_show", methods={"GET"})
      */
-    public function show(StudentCourse $studentCourse): Response
+    public function show(Student $student, StudentCourseRepository $stud_cour_repo): Response
     {
+        $student_course = $stud_cour_repo->findBy(array('student'=>$student->getId()));
         return $this->render('student_course/show.html.twig', [
-            'student_course' => $studentCourse,
+            'student_course' => $student_course,
+            'student' => $student
         ]);
     }
 

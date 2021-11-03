@@ -27,7 +27,15 @@ class QuestionAnswerController extends AbstractController
     public function index(QuestionAnswerRepository $questionAnswerRepository, Request $request, InstructorRepository $inst_repo, PaginatorInterface $paginator): Response
     {
         $instructor = $inst_repo->findOneBy(['user'=>$this->getUser()->getId()]);
-        $questions = $questionAnswerRepository->getQuestions($instructor->getId());
+        if($instructor)
+        {
+            $questions = $questionAnswerRepository->getQuestions($instructor->getId());
+        }
+        else 
+        {
+            $questions = array();
+        }
+       
 
         $data = $paginator->paginate(
             $questions,

@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Content Show{% endblock %}
+{% block title %}{% trans %}Content{% endtrans %} Show{% endblock %}
 {% block breadcrumbhome %}
     <a href="{{ path('content_index',{'id': incrsid}) }} ">
 	   {% trans %}Content{% endtrans %} 
@@ -21,7 +21,7 @@
                 <td>{{ content.id }}</td>
             </tr>
             <tr>
-                <th>Chapter</th>
+                <th>{% trans %}Chapter{% endtrans %}</th>
                 <td>{{ content.chapter }}</td>
             </tr>
             <tr>
@@ -46,7 +46,7 @@
 </div>
 </div>
     
-    <a href="{{ path('content_index',{'id': incrsid}) }}">back to list</a>
+    <a href="{{ path('content_index',{'id': incrsid}) }}">{% trans %}Back to list{% endtrans %}</a>
 
     <a href="{{ path('content_edit', {'id': content.id}) }}">edit</a>
 

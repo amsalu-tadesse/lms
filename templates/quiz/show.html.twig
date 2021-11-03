@@ -37,7 +37,7 @@
         </tbody>
     </table>
 
-    <a href="{{ path('quiz_index',{'id':quiz.instructorCourseChapter.instructorCourse.id }) }}">back to list</a>
+    <a href="{{ path('quiz_index',{'id':quiz.instructorCourseChapter.instructorCourse.id }) }}">{% trans %}Back to list{% endtrans %}</a>
 
     <a href="{{ path('quiz_edit', {'id': quiz.id}) }}">edit</a>
 

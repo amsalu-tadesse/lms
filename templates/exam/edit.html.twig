@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Exam{% endblock %}
+{% block title %}{% trans %}Edit{% endtrans %} Exam{% endblock %}
 {% block breadcrumbhome %}
     <a href="{{ path('exam_index') }} ">
 	   {% trans %}Exam{% endtrans %} 
@@ -20,7 +20,7 @@
         {{ include('exam/_form.html.twig', {'button_label': 'Update','class': 'form-control'}) }}
         <br>
             <div class="col-md-2">
-                <a href="{{ path('exam_index') }}" class="btn btn-primary btn-block">back to list</a>
+                <a href="{{ path('exam_index') }}" class="btn btn-primary btn-block">{% trans %}Back to list{% endtrans %}</a>
             </div>
             <div class="col-md-2" style="padding-top: 0px;">
                 {{ include('exam/_delete_form.html.twig') }}
