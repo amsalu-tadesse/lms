@@ -51,12 +51,12 @@
 					<div class="col-md-12">
 						<div class="card ">
 							<div class="card-header">
-								<h3 class="card-title">User Type List</h3>
+								<h3 class="card-title">{% trans %}User Type List{% endtrans %}</h3>
 								<div class="card-tools">
 								
 									<form class="form-inline ml-3" >
 										<div class="input-group ">
-											<input class="form-control" autocomplete="off" name="search" type="search" placeholder="Search" aria-label="Search">
+											<input class="form-control" autocomplete="off" name="search" type="search" placeholder={{ "Search"|trans }} aria-label="Search">
 											<div class="input-group-append">
 												<button class=" input-group-text btn btn-navbar " type="submit">
 													<i class="fas fa-search"></i>
@@ -75,8 +75,9 @@
 											<th>
 												#
 											</th>
-											<th>{{ knp_pagination_sortable(usertypes, 'Name', 'p.name') }}</th>
-											<th>description</th>
+											<th>{{ knp_pagination_sortable(usertypes, 'Name'|trans, 'u.name') }}</th>
+
+											<th>{% trans %}Description{% endtrans %}</th>
 											<th>Action</th>
 										</tr>
 									</thead>

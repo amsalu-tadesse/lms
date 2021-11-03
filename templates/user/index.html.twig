@@ -51,7 +51,7 @@
 						
 						<div class="col-sm-2">		
 							<div class="form-group">
-								<label class="col-sm-12 control-label no-padding-right">First Name</label>
+								<label class="col-sm-12 control-label no-padding-right">{% trans %}First Name{% endtrans %}</label>
 								{{ form_widget(searchForm.firstName,{'attr':{'class':'form-control'},'full_name':'firstName','value':app.request.get('firstName') })}}
 								{# {# <input type="text" class="form-control" name="name"/>  #}
 								<div class="help-block with-errors"></div>
@@ -59,21 +59,21 @@
 						</div>
 						<div class="col-sm-2">
 							<div class="form-group">
-								<label class="col-sm-12 control-label no-padding-right">Middle Name</label>
+								<label class="col-sm-12 control-label no-padding-right">{% trans %}Middle Name{% endtrans %}</label>
 								{{ form_widget(searchForm.middleName,{'attr':{'class':'form-control'},'full_name':'middleName','value': app.request.get('middleName')}) }}
 								<div class="help-block with-errors"></div>
 							</div>
 						</div>
 						<div class="col-sm-2">
 							<div class="form-group">
-								<label class="col-sm-12 control-label no-padding-right">Last Name</label>
+								<label class="col-sm-12 control-label no-padding-right">{% trans %}Last Name{% endtrans %}</label>
 								{{ form_widget(searchForm.lastName,{'attr':{'class':'form-control'},'full_name':'lastName','value': app.request.get('lastName')}) }}
 								<div class="help-block with-errors"></div>
 							</div>
 						</div>
 						<div class="col-sm-2">
 							<div class="form-group">
-								<label class="col-sm-12 control-label no-padding-right">Username</label>
+								<label class="col-sm-12 control-label no-padding-right">{% trans %}Username{% endtrans %}</label>
 								{{ form_widget(searchForm.username,{'attr':{'class':'form-control'},'full_name':'userName','value': app.request.get('userName')}) }}
 								<div class="help-block with-errors"></div>
 							</div>
@@ -96,7 +96,7 @@
 					<div class="col-md-12">
 						<div class="card card ">
 							<div class="card-header">
-								<h3 class="card-title">{% trans %}Items List{% endtrans %}</h3>
+								<h3 class="card-title">{% trans %}Items list{% endtrans %}</h3>
 							</div>
 							<div class="card-body">
 								<div class="col-xs-12 col-md-12">
