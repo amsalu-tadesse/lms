@@ -32,7 +32,7 @@
         </table>
         <div class="row">
             <div class="col-md-2">
-                <a href="{{ path('exam_index') }}" class="btn btn-default btn-block">back to list</a>
+                <a href="{{ path('exam_index') }}" class="btn btn-default btn-block">{% trans %}Back to list{% endtrans %}</a>
             </div>
             <div class="col-md-2">
                 <a href="{{ path('exam_edit', {'id': exam.id}) }}"

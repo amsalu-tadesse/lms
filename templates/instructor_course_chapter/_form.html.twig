@@ -6,12 +6,12 @@
 
 
 		{# <div class="form-group">
-		                    <label for="nacourseme">Chapter</label>
+		                    <label for="nacourseme">{% trans %}Chapter{% endtrans %}</label>
 		                      {{ form_widget(form.chapter,{'attr':{'class':'form-control'}}) }}
 		     </div> #}
 
 		<div class="form-group">
-			<label for="instructor">Chapter topic:
+			<label for="instructor">{% trans %}chapter topic{% endtrans %}:
 				<span style="font-size: 11px;"></span>
 			</label>
 			{{ form_widget(form.topic,{'attr':{'class':'form-control','placeholder':"e.g Chapter1: Introduction to Computer"}}) }}

@@ -16,13 +16,13 @@
                 <td>{{ quiz_choice.letter }}</td>
             </tr>
             <tr>
-                <th>Description</th>
+                <th>{% trans %}Description{% endtrans %}</th>
                 <td>{{ quiz_choice.description }}</td>
             </tr>
         </tbody>
     </table>
 
-    <a href="{{ path('quiz_choices_index') }}">back to list</a>
+    <a href="{{ path('quiz_choices_index') }}">{% trans %}Back to list{% endtrans %}</a>
 
     <a href="{{ path('quiz_choices_edit', {'id': quiz_choice.id}) }}">edit</a>
 

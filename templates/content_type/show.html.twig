@@ -21,13 +21,13 @@
                 <td>{{ content_type.name }}</td>
             </tr>
             <tr>
-                <th>Description</th>
+                <th>{% trans %}Description{% endtrans %}</th>
                 <td>{{ content_type.description }}</td>
             </tr>
         </tbody>
     </table>
 
-    <a href="{{ path('content_type_index') }}">back to list</a>
+    <a href="{{ path('content_type_index') }}">{% trans %}Back to list{% endtrans %}</a>
 
     <a href="{{ path('content_type_edit', {'id': content_type.id}) }}">edit</a>
 

@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Content index
+{% block title %}
+{% trans %}Content{% endtrans %} index
 {% endblock %}
 {% block breadcrumbhome%} 
 	<a href="{{path('instructor_course_chapter_index')}}">
@@ -8,7 +9,7 @@
 	</a>
 {% endblock %}
 {% block breadcrumbcontent%} index{% endblock %}
-{% block backbtn %}<a href="{{ path('instructor_course_chapter_index') }} " class="btn btn-info">Back to course</a>{% endblock %}
+{% block backbtn %}<a href="{{ path('instructor_course_chapter_index') }} " class="btn btn-info">{% trans %}back to course{% endtrans %}</a>{% endblock %}
 
 
 {% block body %}
@@ -17,7 +18,7 @@
 		<div class="card card-header">
 			 <div class="row">
             <div class="col-md-6">
-                <h3>Content list</h3>
+                <h3>{% trans %}content list{% endtrans %}</h3>
             </div>
             
             <div class="col-md-6">
@@ -36,7 +37,7 @@
 						<th style="width:50%">Title</th>
 						{# <th>Content</th> #}
 						{# <th>videoLink</th> #}
-							<th>Chapter</th>
+							<th>{% trans %}Chapter{% endtrans %}</th>
 						<th>actions</th>
 					</tr>
 				</thead>
@@ -100,5 +101,5 @@
 
 	</div> #}
 
-	{# <a href="{{ path('content_new') }}">Create new</a> #}
+	{# <a href="{{ path('content_new') }}"></a> #}
 {% endblock %}

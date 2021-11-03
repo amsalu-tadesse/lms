@@ -3,7 +3,7 @@
 {% block title %}logo-en.png
 {% endblock %}
 {% block breadcrumbcontent %}
-	Course List
+	{% trans %}Course list{% endtrans %}
 {% endblock %}
 {% block body %}
 	{# <a href="{{ path('instructor_course_new') }}" class="btn btn-success mb-4">Re use course</a> #}
@@ -17,7 +17,7 @@
 				<thead>
 					<tr>
 						<th>Id</th>
-						<th>Course</th>
+						<th>{% trans %}Course{% endtrans %} </th>
 						{# <th>Instructor</th> #}
 						<th>{% trans %}Assign date{% endtrans %}</th>
 						<th>Status</th>
@@ -54,7 +54,7 @@
 							<td>
 								<a href="{{ path('instructor_course_chapter_content_list', {'id': instructor_course.id}) }}" class="btn btn-primary btn-sm">
 									<span class="fa fa-plus"></span>
-									Chapters
+									{% trans %}Chapters{% endtrans %}
 								</a>
 								<a href="{{ path('content_index', {'id': instructor_course.id}) }}" class="btn btn-success btn-sm">
 									<span class="fa fa-plus"></span>

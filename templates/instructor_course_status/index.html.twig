@@ -1,14 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Course Status index
+{% block title %} {% trans %}Course status{% endtrans %} index
 {% endblock %}
 {% block maintitle %}
-
-	Course Status
+	{% trans %}Course status{% endtrans %}
 {% endblock %}
 {% block breadcrumb %}
 
-	<li class="breadcrumb-item active">Course Status</li>
+	<li class="breadcrumb-item active">{% trans %}Course status{% endtrans %}</li>
 {% endblock %}
 {% block body %}
 	<div class="row">
@@ -20,7 +19,7 @@
 						<div class="card card-info collapsed-card">
 							<div class="card-header">
 								<h3 class="card-title">
-									{% if edit  %}Edit
+									{% if edit  %}{% trans %}Edit{% endtrans %}
 									{% else %}
 										{% trans %}Add new{% endtrans %}
 									{% endif %}
@@ -49,7 +48,7 @@
 					<div class="col-md-12">
 						<div class="card ">
 							<div class="card-header">
-								<h3 class="card-title">Course Status List</h3>
+								<h3 class="card-title">{% trans %}Course status list{% endtrans %}</h3>
 								<div class="card-tools">
 								
 									<form class="form-inline ml-3" >

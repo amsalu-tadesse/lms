@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit QuestionAnswer{% endblock %}
+{% block title %}{% trans %}Edit{% endtrans %} QuestionAnswer{% endblock %}
 
 {% block breadcrumbhome %}
     <a href="{{path('question_answer_index')}}">
@@ -26,7 +26,7 @@
         {{ include('question_answer/_form.html.twig', {'button_label': 'Update'}) }}
         </td>
         <td>
-            <a href="{{ path('question_answer_index') }}" class="btn btn-info">back to list</a>
+            <a href="{{ path('question_answer_index') }}" class="btn btn-info">{% trans %}Back to list{% endtrans %}</a>
         </td>
         {% if question_answer.student == null %}
             <td>

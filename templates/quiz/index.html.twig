@@ -38,7 +38,7 @@
 
 						</th>
 						<th>
-							Chapter
+							{% trans %}Chapter{% endtrans %}
 
 						</th>
 						<th>
@@ -85,7 +85,7 @@
 								<td>
 								
 									<a class="btn btn-warning" href="{{ path('quiz_edit', {'id': quiz.id}) }}"> <span class="fa fa-edit"></span>
-										Edit
+										{% trans %}Edit{% endtrans %}
 									</a>
 									 
 								<a class="btn btn-success"  href="{{ path('quiz_questions_index', {'id': quiz.id}) }}"> <span class="fa fa-plus"></span>

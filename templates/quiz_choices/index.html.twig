@@ -10,7 +10,7 @@
             <tr>
                 <th>Id</th>
                 <th>Letter</th>
-                <th>Description</th>
+                <th>{% trans %}Description{% endtrans %}</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -33,5 +33,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('quiz_choices_new') }}">Create new</a>
+    <a href="{{ path('quiz_choices_new') }}">{% trans %}create new{% endtrans %}</a>
 {% endblock %}
