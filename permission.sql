@@ -104,3 +104,5 @@ INSERT INTO `permission` (`id`, `code`, `name`) VALUES
 (NULL, 'academic_status_create', 'academic statu create'),
 (NULL, 'academic_status_edit', 'academic statu edit'),
 (NULL, 'academic_status_delete', 'academic statu delete')
+(NULL, 'qa_ask', 'ask on Q&A')
+(NULL, 'qa_answer', 'answer on Q&A')
