@@ -3,8 +3,16 @@
 
 {% block title %}New InstructorCourseChapter{% endblock %}
 
+{% block breadcrumbhome %}
+    <a href="{{path('instructor_course_chapter_index',{'id':id})}}">
+	   {% trans %}Course{% endtrans %} 
+	</a> /
+     <a href="#">
+	   {% trans %}Chapter{% endtrans %} 
+	</a> 
+{% endblock %}
+{% block breadcrumbcontent %}New{% endblock %}
 {% block body %}
-    <h1>Create new InstructorCourseChapter</h1>
 
     {{ include('instructor_course_chapter/_form.html.twig') }}
 

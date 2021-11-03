@@ -1,7 +1,12 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}New ContentType{% endblock %}
-
+{% block breadcrumbhome %}
+    <a href="{{ path('content_type_index') }} ">
+	   {% trans %}Content Type{% endtrans %} 
+	</a> 
+{% endblock %}
+{% block breadcrumbcontent %}{% trans %}New{% endtrans %}{% endblock %}
 {% block body %}
     <h1>Create new ContentType</h1>
 

@@ -155,12 +155,110 @@ class StudentCourseController extends AbstractController
             10
         );
 
+        $completion = [
+        '0%'=>0,
+        '1-24%'=>0,
+        '25-49%'=>0,
+        '50-74%'=>0,
+        '75-99%'=>0,
+        '100%'=>0,
+        ];
+
+
+
+$json = "[['Student', 'Completion']";
+        foreach ($queryBuilder as $studentCourse) {
+            $stdid = $studentCourse->getId();
+        
+        $comp = $this->getCompletion($stdid);
+
+if($comp==0)
+{
+    $completion['0%'] ++;
+}
+elseif ($comp < 25) {
+    $completion['1-24%'] ++;
+}
+
+elseif ($comp < 50) {
+    # code...
+    $completion['25-49%'] ++;
+}
+elseif ($comp < 75) {
+    # code...
+    $completion['50-74%'] ++;
+}
+
+elseif ($comp < 100) {
+    # code...
+    $completion['75-99%'] ++;
+}
+
+elseif ($comp =100) {
+    # code...
+    $completion['100%'] ++;
+}
+
+else{
+    # code...
+}
+
+
+        }
+
+
+        foreach($completion as $key=>$value)
+        {
+        
+         $col =  ",['".$key."', ".$value."]";
+         $col =trim(preg_replace('/\s+/', ' ', $col));
+         $json .= $col ;
+    
+        }
+
+
+        $json .= "];";
+        
+  
+
         return $this->render('student_course/students_in_course.html.twig'
             , [
                 'student_courses' => $data,
                 'instructor_course' => $instructorCourse,
+                'completion'=>$json,
             ]
         );
+    }
+
+    public function getCompletion($stdid)
+    {
+        $totalContents = 0;
+        $readContents = 0;
+
+$em = $this->getDoctrine()->getManager();
+$studentCourse = $em->getRepository(StudentCourse::class)->find($stdid);
+
+        
+            $chapters = $studentCourse->getInstructorCourse()->getInstructorCourseChapters();
+            foreach ($chapters as $chapter) {
+                $totalContents += sizeof($chapter->getContents());
+
+            }
+            
+            
+            $studentchapters = $studentCourse->getStudent()->getStudentChapters();
+
+            foreach ($studentchapters as $stdchapter) 
+            {
+            
+                $readContents += $stdchapter->getPagesCompleted();
+            }
+
+            $totalContents?$totalContents:1;
+            
+$completion = \round(($readContents/$totalContents), 1)*100;
+return $completion;
+
     }
 
     /**
@@ -190,6 +288,7 @@ class StudentCourseController extends AbstractController
         $results = $studentCourseRepository->getRequiredDTData($start, $length, $orders, $search, $columns,$instcrs);
         // Returned objects are of type Town
         $objects = $results["results"];
+        // dd($objects);
         // Get total number of objects
         $total_objects_count = $studentCourseRepository->count(1);
 
@@ -202,9 +301,11 @@ class StudentCourseController extends AbstractController
         $Response = array();
         $temp = array();
         foreach ($objects as $key => $value) {
+            
+            // dd($this->getCompletion($value['id']));
             $temp["id"] = $value['id'];
             $temp["name"] = $value["name"];
-            $temp["page"] = $value['page'];
+            $temp["page"] = $this->getCompletion($value['id']);
             $temp["createdAt"] = $value['createdAt']->format('Y-m-d');
             $icon = $value['active'] ? "fa-check-circle" : "fa-times-circle";
             $color = $value['active'] ? ' green' : ' red';

@@ -1,7 +1,12 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}CourseCategory index{% endblock %}
-
+{% block breadcrumbhome %}
+    <a href="{{ path('course_category_index') }} ">
+	   {% trans %}Course Category{% endtrans %} 
+	</a> 
+{% endblock %}
+{% block breadcrumbcontent %}{% trans %}Index{% endtrans %}{% endblock %}
 {% block body %}
     <h1>CourseCategory index</h1>
 
@@ -11,7 +16,7 @@
                 <th>Id</th>
                 <th>{% trans %}Name{% endtrans %}</th>
                 <th>{% trans %}Description{% endtrans %}</th>
-                <th>{% trans %}Actions{% endtrans %}</th>
+                <th>{% trans %}Action{% endtrans %}</th>
             </tr>
         </thead>
         <tbody>

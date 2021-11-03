@@ -1,9 +1,17 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}New Quiz Questions{% endblock %}
+{% block breadcrumbhome %}
+    <a href="{{path('quiz_index',{'id':id})}}">
+	   {% trans %}Quiz{% endtrans %} 
+	</a> / 
+	 <a href="#">
+	   {% trans %}Questions{% endtrans %} 
+	</a> 
+{% endblock %}
+{% block breadcrumbcontent %}{% trans %}New{% endtrans %}{% endblock %}
 
 {% block body %}
-    <h1>Create new Quiz Questions</h1>
 
     {{ include('quiz_questions/_form.html.twig') }}
 

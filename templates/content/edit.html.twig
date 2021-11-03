@@ -1,8 +1,12 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Edit Content{% endblock %}
-{% block breadcrumbhome %} Content{% endblock %}
-{% block breadcrumbcontent %} edit{% endblock %}
+{% block breadcrumbhome %} 
+    <a href="{{ path('content_index',{'id': incrsid}) }} ">
+	   {% trans %}Content{% endtrans %} 
+	</a>
+{% endblock %}
+{% block breadcrumbcontent %} Edit{% endblock %}
 
 {% block body %}
     <h1>Edit Content</h1>

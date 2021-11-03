@@ -1,6 +1,8 @@
 {% extends "anon-base.html.twig" %} 
 
 {% block title %}{% trans %}Home{% endtrans %}{% endblock %}
+{% block breadcrumbhome %}{% trans %}Course{% endtrans %}{% endblock %}
+{% block breadcrumbcontent %}{% trans %}List{% endtrans %}{% endblock %}
 {% block stylesheet %}
 <link href="{{asset('assets/plugins/owlCarousel/dist/assets/owl.carousel.min.css')}}" rel="stylesheet"/>
 <link href="{{asset('assets/plugins/owlCarousel/dist/assets/owl.theme.default.min.css')}}" rel="stylesheet"/>

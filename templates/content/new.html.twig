@@ -1,7 +1,11 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}New Content{% endblock %}
-{% block breadcrumbhome %} Content {% endblock %}
+{% block breadcrumbhome %} 
+    <a href="{{ path('content_index',{'id': incrsid}) }} ">
+	   {% trans %}Content{% endtrans %} 
+	</a> 
+{% endblock %}
 {% block breadcrumbcontent %} new {% endblock %}
 {% block body %}
     {{ include('content/_form.html.twig') }}

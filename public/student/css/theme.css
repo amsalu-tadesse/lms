@@ -18,7 +18,7 @@ html {
 }
 
 body {
-    background-color: #FFF;
+    background-color: #08213f;
     color: #444;
     font-family: sans-serif;
     font-size: 14px;
@@ -7706,7 +7706,8 @@ a.text-light:hover {
 }
 
 #footer .footer-copyright.footer-copyright-style-2 {
-    background: #E5E5E5;
+    background: #0d2644;
+    margin-top: 32 px;
     border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 

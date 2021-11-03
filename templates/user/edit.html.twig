@@ -1,7 +1,12 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}{% trans %}Edit User{% endtrans %}{% endblock %}
-
+{% block breadcrumbhome %}
+    <a href="{{ path('user_index') }} ">
+	   {% trans %}User{% endtrans %} 
+	</a> 
+{% endblock %}
+{% block breadcrumbcontent %}{% trans %}Edit{% endtrans %}{% endblock %}
 {% block body %}
     <h1>{% trans %}Edit User{% endtrans %}</h1>
 

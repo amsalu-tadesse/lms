@@ -4,6 +4,10 @@
         h4{
             color: #093146;
         }
+
+        #my_course{
+            display: none;
+        }
     </style>
 {% endblock %}
 {% block body %}
@@ -21,7 +25,6 @@
 <script src="{{asset('student/js/custom.js')}}"></script>
 <script>
     var span = document.getElementsByClassName("close")[0];
-
     function conf()
     {
         var modal = document.getElementById("myModal");

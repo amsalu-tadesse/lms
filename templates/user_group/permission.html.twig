@@ -2,6 +2,12 @@
 
 {% block title %}UserGroup
 {% endblock %}
+{% block breadcrumbhome %}
+    <a href="{{ path('user_group_index') }} ">
+	   {% trans %}User groups{% endtrans %} 
+	</a> 
+{% endblock %}
+{% block breadcrumbcontent %}{% trans %}Permission{% endtrans %}{% endblock %}
 {% block stylesheets %}
 
 	<link rel="stylesheet" href="{{asset('assets/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css')}}">

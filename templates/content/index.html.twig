@@ -2,7 +2,11 @@
 
 {% block title %}Content index
 {% endblock %}
-{% block breadcrumbhome%} Content{% endblock %}
+{% block breadcrumbhome%} 
+	<a href="{{path('instructor_course_chapter_index')}}">
+	   {% trans %}Course{% endtrans %} 
+	</a>
+{% endblock %}
 {% block breadcrumbcontent%} index{% endblock %}
 {% block backbtn %}<a href="{{ path('instructor_course_chapter_index') }} " class="btn btn-info">Back to course</a>{% endblock %}
 
@@ -17,8 +21,10 @@
             </div>
             
             <div class="col-md-6">
-               {# <a href="{{ path('studentlesson', {'id': 1}) }}" class="btn btn-primary" style="float:right">View as amsalu </a> #}
-               <a href="{{ path('content_new', {'id': incrsid}) }}" class="btn btn-primary" style="float:right">Add Content </a>
+			{% if is_granted('content_create') %}
+			
+               <a href="{{ path('content_new', {'id': incrsid}) }}" class="btn btn-primary" style="float:right">{% trans %}add content{% endtrans %} </a>
+			{% endif %}
             </div>
         </div>
 
@@ -29,7 +35,7 @@
 					<tr>
 						<th>Id</th>
 					
-						<th>Title</th>
+						<th style="width:50%">Title</th>
 						{# <th>Content</th> #}
 						{# <th>videoLink</th> #}
 							<th>Chapter</th>
@@ -46,8 +52,12 @@
 							{# <td>{{ content.videoLink }}</td> #}
 								<td>{{ content.chapter }}</td>
 							<td>
+								{% if is_granted('content_list') %}
 								<a href="{{ path('content_show', {'id': content.id}) }}" class="btn btn-sm btn-primary">show</a>
+								{% endif %}
+								{% if is_granted('content_create') %}
 								<a href="{{ path('content_edit', {'id': content.id}) }}" class="btn btn-sm btn-warning">edit</a>
+								{% endif %}
 							</td>
 						</tr>
 					{% else %}
@@ -84,14 +94,14 @@
 	</div>#}
 
 	{# <div class="btn-group">
-	<a href="{{ path('studentlesson', {'id': 1}) }}" class="btn btn-block btn-primary">Add Content </a>
+	<a href="{{ path('studentlesson', {'id': 1}) }}" class="btn btn-block btn-primary">{% trans %}add content{% endtrans %}  </a>
 	</div> #}
 
 {# 	
 	<div class="btn-group"> 
 
 
-		<a href="{{ path('studentlesson', {'id': 1}) }}" class="btn btn-block btn-primary">Add Content</a>
+		<a href="{{ path('studentlesson', {'id': 1}) }}" class="btn btn-block btn-primary">{% trans %}add content{% endtrans %} </a>
 		<a href="{{ path('studentlesson', {'id': 1}) }}" class="btn btn-block btn-primary">Viewasstd</a>
 
 	</div> #}

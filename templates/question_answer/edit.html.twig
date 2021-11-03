@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit QuestionAnswer{% endblock %}
+
+{% block breadcrumbhome %}
+    <a href="{{path('question_answer_index')}}">
+	   {% trans %}Q&A{% endtrans %} 
+	</a> 
+{% endblock %}
+{% block breadcrumbcontent%} {% trans %}Answer{% endtrans %} {% endblock %}
+
+
+{% block stylesheet %}
+    table td{
+        margin: 0px 10px;
+    }
+{% endblock %}
+{% block body %}
+        <div class="card px-3 py-2 mt-3">
+            <div class="card-header">
+            </div>
+            <div class="card-body">
+                {{question_answer.question}}
+            </div>
+        </div>
+        {{ include('question_answer/_form.html.twig', {'button_label': 'Update'}) }}
+        </td>
+        <td>
+            <a href="{{ path('question_answer_index') }}" class="btn btn-info">back to list</a>
+        </td>
+        {% if question_answer.student == null %}
+            <td>
+                {{ include('question_answer/_delete_form.html.twig') }}
+            </td>
+        {% endif %}
+    </table>
+{% endblock %}

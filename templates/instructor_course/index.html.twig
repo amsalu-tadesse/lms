@@ -1,246 +1,317 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	{% trans %}Course assignement{% endtrans %}
+    {% trans %}
+    Course assignement
+    {% endtrans %}
+{% endblock %}
+{% block breadcrumbhome %}
+    <a href="{{ path('instructor_course_index') }} ">
+        {% trans %}
+        Instructor Course
+        {% endtrans %}
+    </a>
 {% endblock %}
 {% block breadcrumbcontent %}
-	{% trans %}Course assignement{% endtrans %}
+    {% trans %}
+    Index
+    {% endtrans %}
 {% endblock %}
 {% block body %}
-	<a href="{{ path('instructor_course_new') }}" class="btn btn-success mb-4">Re use course</a>
+    {% if is_granted('instructor_course_create') %}
 
-	<div class="card card-info">
-		<div class="card card-header">
+        <a href="{{ path('instructor_course_new') }}" class="btn btn-success mb-4">
+            Re use course
+        </a>
+    {% endif %}
 
+    <div class="card card-info">
+        <div class="card card-header">
 
-			<div class="row">
-				<div class="col-md-6">
-					<h3>{% trans %}Course assignement{% endtrans %}</h3>
-				</div>
-				<div class="col-md-6">
+            <div class="row">
+                <div class="col-md-6">
+                    <h3>
+                        {% trans %}
+                        Course assignement
+                        {% endtrans %}
+                    </h3>
+                </div>
+                <div class="col-md-6">
 
-					<a onclick="showchart()" href="#" class="btn btn-primary" style="float:right">
-						{% trans %}
-						Report
-						{% endtrans %}
-					</a>
-				</div>
-			</div>
+                    <a onclick="showchart()" href="#" class="btn btn-primary" style="float:right">
+                        {% trans %}
+                        Report
+                        						
+                        {% endtrans %}
+                    </a>
+                </div>
+            </div>
 
+        </div>
 
-		</div>
+        <div class=" row text-center" style="display:none" id="chart">
+            <div class="text-center col-md-3"></div>
+            <div class="text-center col-md-6 col-sm-12" id="myChart" style="width:100%; max-width:800px; height:300px;"></div>
+            <div class="text-center col-md-3"></div>
+        </div>
 
+        <div class="card card-body">
+            {{ form_start(searchForm,{'attr': {'role':'form'}, 'method': 'GET'}) }}
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label class="col-sm-12 control-label no-padding-right">
+                            Course
+                        </label>
+                        {{ form_widget(searchForm.course,{'attr':{'class':'form-control'},'full_name':'course','value':app.request.get('course') }) }}
+                        <div class="help-block with-errors"></div>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label class="col-sm-12 control-label no-padding-right">
+                            Instructor
+                        </label>
+                        {{ form_widget(searchForm.instructor,{'attr':{'class':'form-control'},'full_name':'instructor','value': app.request.get('instuctor')}) }}
+                        <div class="help-block with-errors"></div>
+                    </div>
+                </div>
+                <div class="col-sm-1">
+                    <div class="form-group">
+                        <label class="col-sm-12 control-label no-padding-right"></label>
+                        <button class="btn btn-info" style="margin-top: 8px;width:100%;">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+                {{ form_end(searchForm) }}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                Id
+                            </th>
+                            <th>
+                                {% trans %}
+                                Course
+                                {% endtrans %}
+                            </th>
+                            <th>
+                                {% trans %}
+                                Instructor
+                                {% endtrans %}
+                            </th>
+                            <th>
+                                {% trans %}
+                                Assign date
+                                {% endtrans %}
+                            </th>
+                            {# <th>{% trans %}Status{% endtrans %}</th> #}
+                            <th>
+                                {% trans %}
+                                Active
+                                {% endtrans %}
+                            </th>
+                            <th>
+                                {% trans %}
+                                Students
+                                {% endtrans %}
+                            </th>
+                            <th>
+                                {% trans %}
+                                Action
+                                {% endtrans %}
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for instructor_course in instructor_courses %}
+                            <tr>
+                                <td>
+                                    {{ loop.index }}
+                                </td>
+                                <td>
+                                    {{ instructor_course.course }}
+                                </td>
+                                {% if instructor_course.instructor %}
+                                    <td>
+                                        {{ instructor_course.instructor.user.firstName ~ ' ' ~ instructor_course.instructor.user.middleName ~ ' ' ~ instructor_course.instructor.user.lastName }}
+                                    </td>
+                                {% else %}
+                                    <td></td>
+                                {% endif %}
 
-		<div class=" row text-center" style="display:none" id="chart">
-			<div class="text-center col-md-3"></div>
-			<div class="text-center col-md-6 col-sm-12" id="myChart" style="width:100%; max-width:800px; height:300px;"></div>
-			<div class="text-center col-md-3"></div>
-		</div>
+                                <td>
+                                    {{ instructor_course.createdAt ? instructor_course.createdAt|date('Y-m-d H:i:s') : '' }}
+                                </td>
+                                {# <td> {{ instructor_course.status }}</td> #}
 
+                                <td>
 
-		<div class="card card-body"> {{ form_start(searchForm,{'attr': {'role':'form'}, 'method': 'GET'}) }}
-			<div class="row">
-				<div class="col-sm-4">
-					<div class="form-group">
-						<label class="col-sm-12 control-label no-padding-right">Course</label> {{ form_widget(searchForm.course,{'attr':{'class':'form-control'},'full_name':'course','value':app.request.get('course') })}}
-						<div class="help-block with-errors"></div>
-					</div>
-				</div>
-				<div class="col-sm-2">
-					<div class="form-group">
-						<label class="col-sm-12 control-label no-padding-right">Instructor</label> {{ form_widget(searchForm.instructor,{'attr':{'class':'form-control'},'full_name':'instructor','value': app.request.get('instuctor')}) }}
-						<div class="help-block with-errors"></div>
-					</div>
-				</div>
-				<div class="col-sm-1">
-					<div class="form-group">
-						<label class="col-sm-12 control-label no-padding-right"></label>
-						<button class="btn btn-info" style="margin-top: 8px;width:100%;">
-							<i class="fas fa-search"></i>
-						</button>
-					</div>
-				</div> {{ form_end(searchForm) }}
-				<table class="table">
-					<thead>
-						<tr>
-							<th>Id</th>
-							<th>{% trans %}Course{% endtrans %}</th>
-							<th>{% trans %}Instructor{% endtrans %}</th>
-							<th>{% trans %}Assign date{% endtrans %}</th>
-							{# <th>{% trans %}Status{% endtrans %}</th> #}
-							<th>{% trans %}Active{% endtrans %}</th>
-							<th>{% trans %}Students{% endtrans %}</th>
-							<th>{% trans %}Actions{% endtrans %}</th>
-						</tr>
-					</thead>
-					<tbody>
-						{% for instructor_course in instructor_courses %}
-							<tr>
-								<td>{{ loop.index }}</td>
-								<td>{{ instructor_course.course }}</td>
-								{% if instructor_course.instructor %}
-									<td>{{ instructor_course.instructor.user.firstName ~ ' ' ~ instructor_course.instructor.user.middleName ~ ' ' ~ instructor_course.instructor.user.lastName }}</td>
-								{% else %}
-									<td></td>
+                                    <a href="#" data-toggle="modal" data-target="#modal-delete{{ instructor_course.id }}">
+                                        <i class="fas {{ instructor_course.active ? 'fa-check-circle': 'fa-times-circle' }}" style='color: {{ instructor_course.active ? ' green': ' red' }}'></i>
+                                    </a>
+
+                                    <div class="modal fade" id="modal-delete{{ instructor_course.id }}">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title text-bold text-red">
+                                                        {{ instructor_course.active ? 'Deactivating a record !!': 'Activating a record !!' }}
+                                                    </h4>
+                                                    <button type="button" class="close btn btn-primary" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">
+                                                            &times;
+                                                        </span>
+                                                    </button>
+                                                </div>
+
+                                                <form id="instructor_course_deactivate_form{{ instructor_course.id }}" action="{{ path('instructor_course_deactivate',{id:instructor_course.id}) }}" class="form" method="POST">
+                                                    <div class="modal-body">
+
+                                                        <div class="form-group text-blue">
+                                                            {% if instructor_course.active %}
+                                                                Are you sure you want to diactivate 
+                                                                {{ instructor_course.course }}
+                                                                ?
+                                                                															
+                                                            {% else %}
+                                                                Are you sure you want to activate 
+                                                                {{ instructor_course.course }}
+                                                                ?
+                                                                															
+                                                            {% endif %}
+
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="modal-footer justify-content-between">
+                                                        <button type="button" class="btn btn-warning" data-dismiss="modal">
+                                                            Close
+                                                        </button>
+
+                                                        <button onclick="" type="submit" id="paynow" class="btn btn-success">
+                                                            <i class="fa fa-arrow-alt-circle-right m-1"></i>
+                                                            Yes
+                                                            														
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        <!-- /.modal-content -->
+                                        </div>
+                                    <!-- /.modal-dialog -->
+                                    </div</td>
+                                </td>
+                                <td>
+                                    <a href="{{ path('students_in_course',{id:instructor_course.id}) }}">
+                                        <span class="badge badge-success">
+                                            &nbsp; 
+                                            {{ instructor_course.studentCourses | length }}
+                                            &nbsp;
+                                        </span>
+                                    </a>
+                                </td>
+                                <td>
+								{% if is_granted('instructor_course_create') %}
+								
+                                    <a class="btn btn-primary btn-sm" href="#" data-toggle="modal" data-target="#modal-default{{ instructor_course.id }}">
+                                        Assign
+                                    </a>
 								{% endif %}
+                                    <div class="modal fade" id="modal-default{{ instructor_course.id }}">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title">
+                                                        {% trans %}
+                                                        Assign Instructor
+                                                        {% endtrans %}
+                                                    </h4>
+                                                    <button type="button" class="close btn btn-primary" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">
+                                                            &times;
+                                                        </span>
+                                                    </button>
+                                                </div>
 
-								<td>{{ instructor_course.createdAt ? instructor_course.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-								{# <td> {{ instructor_course.status }}</td> #}
+                                                <form action="{{ path('assign_instructor',{id:instructor_course.id}) }}" class="form" method="POST">
+                                                    <div class="modal-body">
 
-								<td>
+                                                        <div class="form-group">
+                                                            {% trans %}
+                                                            Select instructor for the course
+                                                            {% endtrans %}
+                                                            <br>
+                                                                <select class="form-control select2bs4" name="instructor" id="instructor">
+                                                                    {% for instructor in instructorsList %}
+                                                                        <option value="{{ instructor.id }}">
+                                                                            {{ instructor.user.firstName ~ ' '~ instructor.user.middleName ~ ' '~ instructor.user.lastName }}
+                                                                        </option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
 
+                                                        </div>
+                                                        <div class="modal-footer justify-content-between">
+                                                            <button type="button" class="btn btn-warning" data-dismiss="modal">
+                                                                {% trans %}
+                                                                Close
+                                                                {% endtrans %}
+                                                            </button>
 
-									<a href="#" data-toggle="modal" data-target="#modal-delete{{instructor_course.id}}">
-										<i class="fas {{instructor_course.active ? 'fa-check-circle': 'fa-times-circle'}}" style='color: {{instructor_course.active ? ' green': ' red'}}'></i>
-									</a>
+                                                            <button onclick="" type="submit" id="assignnow" class="btn btn-success btn-sm">
+                                                                <i class="fa fa-save m-1"></i>
+                                                                {% trans %}
+                                                                Save
+                                                                {% endtrans %}
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            <!-- /.modal-content -->
+                                            </div>
+                                        <!-- /.modal-dialog -->
+                                        </div>
+										{% if is_granted('instructor_course_create') %}
 
+                                        <a href="{{ path('instructor_course_edit', {'id': instructor_course.id}) }}" class="btn btn-warning btn-sm">
+                                            {% trans %}
+                                            Edit
+                                            {% endtrans %}
+                                        </a>
+										{% endif %}
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="4">
+                                        {% trans %}
+                                        No records found
+                                        {% endtrans %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-									<div class="modal fade" id="modal-delete{{instructor_course.id}}">
-										<div class="modal-dialog">
-											<div class="modal-content">
-												<div class="modal-header">
-													<h4 class="modal-title text-bold text-red">{{instructor_course.active ? 'Deactivating a record !!': 'Activating a record !!'}}</h4>
-													<button type="button" class="close btn btn-primary" data-dismiss="modal" aria-label="Close">
-														<span aria-hidden="true">&times;</span>
-													</button>
-												</div>
+        {% endblock %}
 
-												<form id="instructor_course_deactivate_form{{instructor_course.id}}" action="{{path('instructor_course_deactivate',{id:instructor_course.id})}}" class="form" method="POST">
-													<div class="modal-body">
+        {% block javascripts %}
+            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+            <script src="{{ asset('assets/dist/js/chart.js') }}"></script>
 
-														<div class="form-group text-blue">
-															{% if instructor_course.active %}
-																Are you sure you want to diactivate {{instructor_course.course}}
-																?
-															{% else %}
-																Are you sure you want to activate {{instructor_course.course}}
-																?
-															{% endif %}
-
-														</div>
-
-													</div>
-													<div class="modal-footer justify-content-between">
-														<button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
-
-														<button onclick="" type="submit" id="paynow" class="btn btn-success">
-															<i class="fa fa-arrow-alt-circle-right m-1"></i>Yes
-														</button>
-													</div>
-												</form>
-											</div>
-											<!-- /.modal-content -->
-										</div>
-										<!-- /.modal-dialog -->
-									</div</td>
-								</td>
-								<td>
-									<a href="{{ path('students_in_course',{id:instructor_course.id}) }}">
-										<span class="badge badge-success">
-											&nbsp; {{ instructor_course.studentCourses | length  }}
-											&nbsp;</span>
-									</a>
-								</td>
-								<td>
-									{# <a href="{{ path('instructor_course_show', {'id': instructor_course.id}) }}">show</a> #}
-
-
-									<a class="btn btn-primary btn-sm" href="#" data-toggle="modal" data-target="#modal-default{{instructor_course.id}}">Assign</a>
-
-									<div class="modal fade" id="modal-default{{instructor_course.id}}">
-										<div class="modal-dialog">
-											<div class="modal-content">
-												<div class="modal-header">
-													<h4 class="modal-title">{% trans %}Assign Instructor{% endtrans %}</h4>
-													<button type="button" class="close btn btn-primary" data-dismiss="modal" aria-label="Close">
-														<span aria-hidden="true">&times;</span>
-													</button>
-												</div>
-
-												<form action="{{ path('assign_instructor',{id:instructor_course.id}) }}" class="form" method="POST">
-													<div class="modal-body">
-
-														<div class="form-group">
-															{% trans %}Select instructor for the course{% endtrans %}
-															<br>
-															<select class="form-control select2bs4" name="instructor" id="instructor">
-																{% for instructor in instructorsList %}
-																	<option value="{{ instructor.id }}">{{ instructor.user.firstName ~ ' '~ instructor.user.middleName ~ ' '~ instructor.user.lastName }}</option>
-																{% endfor %}
-															</select>
-														</div>
-
-													</div>
-													<div class="modal-footer justify-content-between">
-														<button type="button" class="btn btn-warning" data-dismiss="modal">{% trans %}Close{% endtrans %}</button>
-
-														<button onclick="" type="submit" id="assignnow" class="btn btn-success btn-sm">
-															<i class="fa fa-save m-1"></i>
-															{% trans %}Save{% endtrans %}
-														</button>
-													</div>
-												</form>
-											</div>
-											<!-- /.modal-content -->
-										</div>
-										<!-- /.modal-dialog -->
-									</div>
-
-									<a href="{{ path('instructor_course_edit', {'id': instructor_course.id}) }}" class="btn btn-warning btn-sm">{% trans %}Edit{% endtrans %}</a>
-								</td>
-							</tr>
-						{% else %}
-							<tr>
-								<td colspan="4">{% trans %}No records found{% endtrans %}</td>
-							</tr>
-						{% endfor %}
-					</tbody>
-				</table>
-			</div>
-		</div>
-
-
-	{% endblock %}
-
-	{% block javascripts %}
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<script src="{{asset('assets/dist/js/chart.js')}}"></script>
-
-
-<script>
-	/*var arr = [
-[
-'Contry', 'Mhl'
-],
-[
-'0%', 54.8
-],
-[
-'1-25%', 48.6
-],
-[
-'26-50%', 77
-],
-[
-'51-75%', 23.9
-],
-[
-'76-99%', 14.5
-],
-[
-'100%', 11.5
-]
-];*/
- 
+            <script>
 
 var data = {{ crs_stnumber | raw }}
-console.log(data);
 function showchart()
 {
-	render(data);
+	render(data,'Number of students per course');
 }
 
 </script>
 
-
-	{% endblock %}
+        {% endblock %}
+        
