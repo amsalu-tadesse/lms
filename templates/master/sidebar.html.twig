@@ -41,27 +41,33 @@
 
 			<li class="nav-header"><h6> {% trans %}USERS {% endtrans %}   </h6> </li>
 				<li class="nav-item">
+				{% if is_granted('user_group_list') %}
 						<li class="nav-item">
 							<a href="{{path('user_group_index')}}" class="nav-link">
 								<i class="far fa-circle nav-icon"></i>
 								<p>{% trans %}User groups{% endtrans %}</p>
 							</a>
 						</li>
+					{% endif %}
+					{% if is_granted('user_type_list') %}
 						<li class="nav-item">
 							<a href="{{path('usertype_index')}}" class="nav-link">
 								<i class="far fa-circle nav-icon"></i>
 								<p>{% trans %}User Types{% endtrans %}</p>
 							</a>
 						</li>
+					{% endif %}
+						{% if is_granted('user_list') %}
 						<li class="nav-item">
 							<a href="{{path('user_index')}}" class="nav-link">
 								<i class="far fa-circle nav-icon"></i>
 								<p>{% trans %}Users{% endtrans %}</p>
 							</a>
 						</li>
+					{% endif %}
 				</li>
 
-
+   
 
 
 			<li class="nav-header"><h6> {% trans %} STUDENT REQUESTS {% endtrans %} </h6></li>
@@ -69,20 +75,22 @@
 
                 <li class="nav-item">
 					 
-
+				{% if is_granted('new_request_list') %}
 						<li class="nav-item">
 							<a href="{{path('course_request')}}" class="nav-link">
 								<i class="far fa-circle nav-icon"></i>
 								<p>{% trans %}New Requests{% endtrans %}</p>
 							</a>
 						</li>
-					
+					{% endif %}
+					{% if is_granted('rejected_request_list') %}
 						<li class="nav-item">
 							<a href="{{ path('rejected_course_request')}}" class="nav-link">
 								<i class="far fa-circle nav-icon"></i>
 								<p>{% trans %}Rejected Requests{% endtrans %}</p>
 							</a>
 						</li>
+						{% endif %}
 					 
 				</li> 
 
@@ -92,8 +100,7 @@
 
 
 				<li class="nav-item has-treeview menu-open ">
-				
-				
+				{% if is_granted('course_list') %}
 						<li class="nav-item">
 							<a href="{{path('course_index')}}" class="nav-link">
 								<i class="far fa-circle nav-icon"></i>
@@ -104,20 +111,17 @@
 							</a>
 						</li>
 
-						{# <li class="nav-item">
-							<a href="{{path('instructorCourseStatus_index')}}" class="nav-link">
-								<i class="far fa-circle nav-icon"></i>
-								<p>{% trans %}
-									Course status
-									{% endtrans %}</p>
-							</a>
-						</li> #}
+				{% endif %}
+				{% if is_granted('instructor_course_list') %}
 						<li class="nav-item">
 							<a href="{{path('instructor_course_index')}}" class="nav-link">
 								<i class="far fa-circle nav-icon"></i>
 								<p>{% trans %}Assign Courses{% endtrans %}</p>
 							</a>
 						</li>
+					{% endif %}
+
+					{% if is_granted('my_course') %}
 						<li class="nav-item">
 							<a href="{{path('instructor_course_chapter_index')}}" class="nav-link">
 								<i class="far fa-circle nav-icon"></i>
@@ -126,16 +130,17 @@
 									{% endtrans %}</p>
 							</a>
 						</li>
-
+					{% endif %}
+				 
 					
 				</li>
-				<li class="nav-item"></li>
+				{# <li class="nav-item"></li>
 				<li class="nav-item">
 					<a href="{{path('exam_index')}}" class="nav-link">
 						<i class="far fa-circle nav-icon"></i>
 						<p>{% trans %}Exams{% endtrans %}</p>
 					</a>
-				</li>
+				</li> #}
 			</li>
 
 
@@ -148,7 +153,7 @@
 
 			<li class="nav-item">
 				 
- 
+			{% if is_granted('system_setting_list') %}
 				
 					<li class="nav-item">
 						<a href="{{ path('system_setting_index')}}" class="nav-link">
@@ -156,6 +161,7 @@
 							<p>{% trans %} Settings {% endtrans %}</p>
 						</a>
 					</li>
+					{% endif %}
 				 
 			</li> 
 

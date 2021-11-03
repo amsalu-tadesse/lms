@@ -14,7 +14,7 @@ class SystemSettingType extends AbstractType
         $builder
             ->add('code')
             ->add('value')
-            ->add('active')
+            // ->add('active')
         ;
     }
 
