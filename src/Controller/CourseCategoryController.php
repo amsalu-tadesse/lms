@@ -20,6 +20,7 @@ class CourseCategoryController extends AbstractController
      */
     public function index(CourseCategoryRepository $courseCategoryRepository): Response
     {
+        $this->denyAccessUnlessGranted('course_category_list');
         return $this->render('course_category/index.html.twig', [
             'course_categories' => $courseCategoryRepository->findAll(),
         ]);
@@ -30,6 +31,7 @@ class CourseCategoryController extends AbstractController
      */
     public function new(Request $request): Response
     {
+        $this->denyAccessUnlessGranted('course_category_create');
         $courseCategory = new CourseCategory();
         $form = $this->createForm(CourseCategoryType::class, $courseCategory);
         $form->handleRequest($request);
@@ -63,6 +65,7 @@ class CourseCategoryController extends AbstractController
      */
     public function edit(Request $request, CourseCategory $courseCategory): Response
     {
+        $this->denyAccessUnlessGranted('course_category_edit');
         $form = $this->createForm(CourseCategoryType::class, $courseCategory);
         $form->handleRequest($request);
 
@@ -83,6 +86,7 @@ class CourseCategoryController extends AbstractController
      */
     public function delete(Request $request, CourseCategory $courseCategory): Response
     {
+        $this->denyAccessUnlessGranted('course_category_delete');
         if ($this->isCsrfTokenValid('delete'.$courseCategory->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($courseCategory);

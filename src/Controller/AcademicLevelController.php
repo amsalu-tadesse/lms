@@ -20,7 +20,7 @@ class AcademicLevelController extends AbstractController
      */
     public function index(AcademicLevelRepository $academicLevelRepository, Request $request, PaginatorInterface $paginator): Response
     {
-        // $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        //  $this->denyAccessUnlessGranted('academic_level_list');
         if($request->request->get('edit')){
             $id=$request->request->get('edit');
             $academiclevel=$academiclevelRepository->findOneBy(['id'=>$id]);
@@ -76,6 +76,7 @@ class AcademicLevelController extends AbstractController
      */
     public function new(Request $request): Response
     {
+        $this->denyAccessUnlessGranted('academic_level_create');
         $academicLevel = new AcademicLevel();
         $form = $this->createForm(AcademicLevelType::class, $academicLevel);
         $form->handleRequest($request);
@@ -109,6 +110,7 @@ class AcademicLevelController extends AbstractController
      */
     public function edit(Request $request, AcademicLevel $academicLevel): Response
     {
+        $this->denyAccessUnlessGranted('academic_level_edit');
         $form = $this->createForm(AcademicLevelType::class, $academicLevel);
         $form->handleRequest($request);
 
@@ -129,6 +131,7 @@ class AcademicLevelController extends AbstractController
      */
     public function delete(Request $request, AcademicLevel $academicLevel): Response
     {
+        $this->denyAccessUnlessGranted('academic_level_delete');
         if ($this->isCsrfTokenValid('delete'.$academicLevel->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($academicLevel);

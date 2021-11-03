@@ -20,7 +20,7 @@
 
 		<div class="row">
 				<div class="col-md-6">
-					<h3> {{ courseName }} {% trans %}Course Quizzes{% endtrans %}</h3>
+					<h3> {{ courseName }} {% trans %} Quizzes{% endtrans %}</h3>
 				</div>
 			 <div class="col-md-6">
 			 {% if is_granted('quiz_create') %}
@@ -93,13 +93,13 @@
 								</td>
 								<td>
 									{% if is_granted('quiz_edit') %}
-									<a class="btn btn-warning" href="{{ path('quiz_edit', {'id': quiz.id}) }}"> <span class="fa fa-edit"></span>
+									<a class="btn btn-warning btn-xs" href="{{ path('quiz_edit', {'id': quiz.id}) }}"> <span class="fa fa-edit"></span>
 										{% trans %}Edit{% endtrans %}
 									</a>
 									{% endif %}
 									{% if is_granted('question_list') %}
 									 
-								<a class="btn btn-success"  href="{{ path('quiz_questions_index', {'id': quiz.id}) }}"> <span class="fa fa-plus"></span>
+								<a class="btn btn-success btn-xs"  href="{{ path('quiz_questions_index', {'id': quiz.id}) }}"> <span class="fa fa-plus"></span>
 									{% trans %}Questions{% endtrans %}
 								</a>
 								{% endif %}

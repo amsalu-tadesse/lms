@@ -5,18 +5,18 @@ namespace App\Controller;
 use App\Entity\InstructorCourse;
 use App\Entity\InstructorCourseChapter;
 use App\Entity\Quiz;
-use App\Entity\StudentQuiz;
 use App\Entity\StudentQuestion;
+use App\Entity\StudentQuiz;
 use App\Form\QuizType;
 use App\Repository\QuizQuestionsRepository;
 use App\Repository\QuizRepository;
-use Knp\Component\Pager\PaginatorInterface;
 use App\Repository\StudentCourseRepository;
+use DateTime;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use DateTime;
 
 /**
  * @Route("/quizzes")
@@ -53,15 +53,26 @@ class QuizController extends AbstractController
         // $quizLists =  array();
         $chapters = $instructorCourse->getInstructorCourseChapters();
         $registeredChaptersid = array();
+        $unregisteredChaptersid = array();
         foreach ($chapters as $chapter) {
             $temp = $chapter->getQuizzes();
             foreach ($temp as $qz) {
                 // $quizLists[]= $qz;
+                // dd($qz);
                 $registeredChaptersid[] = $qz->getInstructorCourseChapter()->getId();
             }
+            $unregisteredChaptersid[] = $chapter->getId();
         }
 
-        $form = $this->createForm(QuizType::class, $quiz, array('registeredChaptersid' => $registeredChaptersid));
+        $diff = array_diff($unregisteredChaptersid, $registeredChaptersid);
+        if(!$diff)
+        {
+            $this->addFlash('warning','Please add chapters firs!!');
+        return $this->redirectToRoute('quiz_index',['id'=>$instructorCourse->getId()]);
+        }
+       
+        
+        $form = $this->createForm(QuizType::class, $quiz, array('unregisteredChaptersid' => $diff));
 
         $form->handleRequest($request);
 
@@ -87,7 +98,7 @@ class QuizController extends AbstractController
         return $this->renderForm('quiz/new.html.twig', [
             'quiz' => $quiz,
             'form' => $form,
-            'id' => $instructorCourse->getId()
+            'id' => $instructorCourse->getId(),
         ]);
     }
 
@@ -96,23 +107,21 @@ class QuizController extends AbstractController
      */
     public function quizPage(Request $request, InstructorCourseChapter $chapter, QuizQuestionsRepository $quiz_que_rep, PaginatorInterface $paginator, StudentCourseRepository $stud_course)
     {
-        
-        $check_student_course = $stud_course->findBy(array('student'=> $this->getUser()->getProfile()->getId(),'instructorCourse'=>$chapter->getInstructorCourse()->getId()));
-        if($check_student_course == null)
-        {
+
+        $check_student_course = $stud_course->findBy(array('student' => $this->getUser()->getProfile()->getId(), 'instructorCourse' => $chapter->getInstructorCourse()->getId()));
+        if ($check_student_course == null) {
             return $this->redirectToRoute("student_course_index");
         }
-        
+
         $em = $this->getDoctrine()->getManager();
-        $quiz = $em->getRepository(Quiz::class)->findOneBy(array('instructorCourseChapter'=> $chapter->getId()));
-        if($quiz != null)
-        {
+        $quiz = $em->getRepository(Quiz::class)->findOneBy(array('instructorCourseChapter' => $chapter->getId()));
+        if ($quiz != null) {
             $prev = $em->getRepository(StudentQuestion::class)->find1($quiz->getId(), $this->getUser()->getProfile()->getId());
             $question = "";
             $i = 1;
             $quiz_que = $quiz_que_rep->getQ($quiz->getId());
-            if(sizeof($quiz_que) > 0){
-                if($prev == null  ){
+            if (sizeof($quiz_que) > 0) {
+                if ($prev == null) {
                     $student_quiz = new StudentQuiz();
                     $student_quiz->setStudent($this->getUser()->getProfile());
                     $student_quiz->setQuiz($quiz);
@@ -125,53 +134,48 @@ class QuizController extends AbstractController
 
                     $duration = $quiz->getDuration() + 120;
                     $minutes_add = "$duration Minutes";
-                    $currentTime =date_default_timezone_get();
+                    $currentTime = date_default_timezone_get();
 
                     $strtotime = strtotime("$date + $minutes_add ");
 
-                    $date = new \DateTime('@'.strtotime("$date + $minutes_add"));
+                    $date = new \DateTime('@' . strtotime("$date + $minutes_add"));
                     $student_quiz->setCreatedAt(new DateTime());
                     $student_quiz->setEndTime($date);
                     $em->persist($student_quiz);
                     $em->flush();
 
-                    if($quiz->getActiveQuestions() < sizeof($quiz_que)){
+                    if ($quiz->getActiveQuestions() < sizeof($quiz_que)) {
                         $question_ids = array();
-                        foreach($quiz_que as $key => $value)
-                        {
+                        foreach ($quiz_que as $key => $value) {
                             $question_ids[] = $value['id'];
                         }
 
                         $sizof_question_ids = sizeof($question_ids);
                         $selected = array();
                         $control = $quiz->getActiveQuestions();
-                        
-                        while($control != 0)
-                        {
+
+                        while ($control != 0) {
                             $random_id = rand(0, $control);
                             $selected[] = $question_ids[$random_id];
-                            array_splice($question_ids, $random_id,1);
+                            array_splice($question_ids, $random_id, 1);
                             $control--;
                         }
 
-                        foreach($quiz_que as $quiz_q){
+                        foreach ($quiz_que as $quiz_q) {
                             $studentQuestion = new StudentQuestion();
-                            if(in_array($quiz_q['id'], $selected))
-                            {
+                            if (in_array($quiz_q['id'], $selected)) {
                                 $studentQuestion->setStudent($this->getUser()->getProfile());
                                 $studentQuestion->setQuestion($quiz_que_rep->find($quiz_q['id']));
                                 $studentQuestion->setAnsweredAt(new DateTime());
                                 $em->persist($studentQuestion);
-                                $em->flush();  
+                                $em->flush();
                             }
                         }
 
-                    }
-                    else{
-                        foreach($quiz_que as $quiz_q){
+                    } else {
+                        foreach ($quiz_que as $quiz_q) {
                             $studentQuestion = new StudentQuestion();
-                            if($i == 1)
-                            {
+                            if ($i == 1) {
                                 $question = $quiz_q;
                             }
                             $studentQuestion->setStudent($this->getUser()->getProfile());
@@ -180,45 +184,39 @@ class QuizController extends AbstractController
                             $em->persist($studentQuestion);
                             $em->flush();
                         }
-                    }  
+                    }
                 }
-                $student_quiz = $em->getRepository(StudentQuiz::class)->findOneBy(array('student'=>$this->getUser()->getProfile()->getId(), 'quiz'=>$quiz->getId()));
+                $student_quiz = $em->getRepository(StudentQuiz::class)->findOneBy(array('student' => $this->getUser()->getProfile()->getId(), 'quiz' => $quiz->getId()));
                 $now = new DateTime(date("Y-m-d H:i:s", time()));
                 $end_time = new DateTime($student_quiz->getEndTime()->format("Y-m-d H:i:s"));
 
                 $date_diff = $end_time->diff($now);
                 $time = array();
 
-                if($now < $end_time)
-                {
+                if ($now < $end_time) {
                     /// write answer if time available
-                    if($request->query->get('value')!= null && $request->query->get('parameter')!= null){
-                        $stud_que = $em->getRepository(StudentQuestion::class)->findOneBy(array('student'=>$this->getUser()->getProfile()->getId(), 'id'=>$request->query->getInt('parameter')));
-                        if($stud_que != null)
-                        {
+                    if ($request->query->get('value') != null && $request->query->get('parameter') != null) {
+                        $stud_que = $em->getRepository(StudentQuestion::class)->findOneBy(array('student' => $this->getUser()->getProfile()->getId(), 'id' => $request->query->getInt('parameter')));
+                        if ($stud_que != null) {
                             $stud_que->setAnswer($request->query->get('value'));
                             $stud_que->setAnsweredAt(new DateTime);
                             $em->persist($stud_que);
                             $em->flush();
                         }
                     }
-        
+
                     $time['minutes'] = $date_diff->i;
                     $time['seconds'] = $date_diff->s;
 
                     $prev = $em->getRepository(StudentQuestion::class)->find1($quiz->getId(), $this->getUser()->getProfile()->getId());
                     $quiz_size = sizeof($prev);
 
-                    if($request->query->get('page') > $quiz_size)
-                    {
+                    if ($request->query->get('page') > $quiz_size) {
                         $stud_que = $em->getRepository(StudentQuestion::class)->find1($quiz->getId(), $this->getUser()->getProfile()->getId());
-                        if($student_quiz->getResult() == null)
-                        {
+                        if ($student_quiz->getResult() == null) {
                             $correct_answer = 0;
-                            foreach($stud_que as $key => $value)
-                            {
-                                if(strcmp($value->getAnswer(),$value->getQuestion()->getAnswer()) == 0)
-                                {
+                            foreach ($stud_que as $key => $value) {
+                                if (strcmp($value->getAnswer(), $value->getQuestion()->getAnswer()) == 0) {
                                     $correct_answer++;
                                 }
                             }
@@ -227,15 +225,13 @@ class QuizController extends AbstractController
                             $em->persist($student_quiz);
                             $em->flush();
                         }
-                    
+
                         return $this->render('student_quiz/index.html.twig', [
                             'stud_que' => $stud_que,
-                            'chapter' => $chapter
+                            'chapter' => $chapter,
                         ]);
-                    }
-                    else{
-                        if($quiz_size > 0)
-                        {
+                    } else {
+                        if ($quiz_size > 0) {
                             $data = $paginator->paginate(
                                 $prev,
                                 $request->query->getInt('page', 1),
@@ -247,21 +243,17 @@ class QuizController extends AbstractController
                                 'chapter' => $chapter,
                                 'time' => $time,
                                 'quiz_ques' => $data,
-                                'student_quiz' => $student_quiz
+                                'student_quiz' => $student_quiz,
                             ]);
                         }
                     }
-                    
-                }
-                else{
-                    $stud_que = $em->getRepository(StudentQuestion::class)->find1($quiz->getId(),$this->getUser()->getProfile()->getId());
-                    if($student_quiz->getResult() == null)
-                    {
+
+                } else {
+                    $stud_que = $em->getRepository(StudentQuestion::class)->find1($quiz->getId(), $this->getUser()->getProfile()->getId());
+                    if ($student_quiz->getResult() == null) {
                         $correct_answer = 0;
-                        foreach($stud_que as $key => $value)
-                        {
-                            if(strcmp($value->getAnswer(),$value->getQuestion()->getAnswer()) == 0)
-                            {
+                        foreach ($stud_que as $key => $value) {
+                            if (strcmp($value->getAnswer(), $value->getQuestion()->getAnswer()) == 0) {
                                 $correct_answer++;
                             }
                         }
@@ -272,13 +264,13 @@ class QuizController extends AbstractController
                     }
                     return $this->render('student_quiz/index.html.twig', [
                         'stud_que' => $stud_que,
-                        'chapter' => $chapter
+                        'chapter' => $chapter,
                     ]);
                 }
             }
         }
-        $this->addFlash("danger","Quiz has not been prepared for this chapter");
-            return $this->redirectToRoute("content_list",array('course'=>$chapter->getInstructorCourse()->getId(),'chapter'=>$chapter->getTopic()));
+        $this->addFlash("danger", "Quiz has not been prepared for this chapter");
+        return $this->redirectToRoute("content_list", array('course' => $chapter->getInstructorCourse()->getId(), 'chapter' => $chapter->getTopic()));
     }
     /**
      * @Route("/show/{id}", name="quiz_show", methods={"GET"})
@@ -299,6 +291,7 @@ class QuizController extends AbstractController
         $chapters = $quiz->getInstructorCourseChapter()->getInstructorCourse()->getInstructorCourseChapters();
         // unset($chapters[$quiz->getInstructorCourseChapter()]);
         $registeredChaptersid = array();
+        $unregisteredChaptersid = array();
         $currentIcsid = $quiz->getInstructorCourseChapter()->getId();
 
         foreach ($chapters as $key => $chapter) {
@@ -307,13 +300,23 @@ class QuizController extends AbstractController
             foreach ($temp as $qz) {
                 if ($qz->getInstructorCourseChapter()->getId() != $currentIcsid) {
                     $registeredChaptersid[] = $qz->getInstructorCourseChapter()->getId();
-                }
-                ;
-            }
-        }
 
-        $form = $this->createForm(QuizType::class,$quiz, array('registeredChaptersid' => $registeredChaptersid));
-        
+                }
+
+            }
+            $unregisteredChaptersid[] = $chapter->getId();
+        }
+        $diff = array_diff($unregisteredChaptersid, $registeredChaptersid);
+      
+        if(!$diff)
+        {
+            $this->addFlash('warning','Add chapters firs!!');
+        return $this->redirectToRoute('quiz_index',['id'=>$quiz->getInstructorCourseChapter()->getInstructorCourse()->getId()]);
+        }
+       
+
+        $form = $this->createForm(QuizType::class, $quiz, array('unregisteredChaptersid' => $diff));
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

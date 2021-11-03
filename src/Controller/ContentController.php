@@ -34,7 +34,7 @@ class ContentController extends AbstractController
      */
     public function index(ContentRepository $contentRepository,Request $request, InstructorCourse $instructorCourse, PaginatorInterface $paginator): Response
     {
-        
+        $this->denyAccessUnlessGranted('content_list');
         if($request->request->get('edit')){
             $id=$request->request->get('edit');
             $content=$contentRepository->findOneBy(['id'=>$id]);
@@ -158,6 +158,8 @@ class ContentController extends AbstractController
      */
     public function contentList($course, $chapter, InstructorCourseChapterRepository $course_chapter, StudentChapterRepository $stud_chap, ContentRepository $contentRepository,Request $request): Response
     {
+
+
         $em = $this->getDoctrine()->getManager();
         $contents = $contentRepository->getContentsForChapter($course, $chapter);
 
@@ -214,6 +216,8 @@ class ContentController extends AbstractController
      */
     public function new(Request $request,InstructorCourse $instructorCourse, SluggerInterface $slugger): Response
     {
+
+        $this->denyAccessUnlessGranted('content_new');
         $content = new Content();
 
         $em = $this->getDoctrine()->getManager();
@@ -281,6 +285,7 @@ class ContentController extends AbstractController
      */
     public function edit(Request $request, Content $content): Response
     {
+        $this->denyAccessUnlessGranted('content_edit');
         $em = $this->getDoctrine()->getManager();
 
         $uploadSize =  $em->getRepository(SystemSetting::class)->findOneBy(['code'=>'upload_size'])->getValue();
@@ -306,6 +311,7 @@ class ContentController extends AbstractController
      */
     public function delete(Request $request, Content $content): Response
     {
+        $this->denyAccessUnlessGranted('content_delete');
         $instid = $content->getChapter()->getInstructorCourse()->getId();;
      
         if ($this->isCsrfTokenValid('delete'.$content->getId(), $request->request->get('_token'))) {

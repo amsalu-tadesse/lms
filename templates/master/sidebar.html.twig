@@ -39,7 +39,7 @@
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <!-- Add icons to the links using the .nav-icon class
                                                 				               with font-awesome or any other icon font library -->
-
+               {% if is_granted('user_list') or is_granted('user_group_list') or is_granted('user_type_list') %}
                         <li class="nav-header">
                             <h6>
                                 {% trans %}
@@ -48,6 +48,7 @@
                                 {% endtrans %}
                             </h6>
                         </li>
+                        {% endif %}
                         <li class="nav-item">
                             {% if is_granted('user_group_list') %}
                                 <li class="nav-item">
@@ -89,7 +90,7 @@
                                 </li>
                             {% endif %}
                         </li>
-
+                        {% if is_granted('rejected_request_list') or is_granted('new_request_list') %}
                         <li class="nav-header">
                             <h6>
                                 {% trans %}
@@ -98,7 +99,7 @@
                                 {% endtrans %}
                             </h6>
                         </li>
-
+{% endif %}
                         <li class="nav-item">
 
                             {% if is_granted('new_request_list') %}
@@ -129,7 +130,7 @@
                             {% endif %}
 
                         </li>
-
+                        {% if is_granted('my_course') or is_granted('instructor_course_list') or is_granted('course_category_list') or is_granted('course_list') %}
                         <li class="nav-header">
                             <h6>
                                 {% trans %}
@@ -137,7 +138,7 @@
                                                                 
                                 {% endtrans %}
                                 <h6></li>
-
+{% endif %}
                                 <li class="nav-item has-treeview menu-open ">
                                     {% if is_granted('course_list') %}
                                         <li class="nav-item">
@@ -190,7 +191,6 @@
                                                 <p>
                                                     {% trans %}
                                                     My Courses
-                                                                                                        									
                                                                                                         
                                                     {% endtrans %}
                                                 </p>
@@ -199,15 +199,9 @@
                                     {% endif %}
 
                                 </li>
-                            {# <li class="nav-item"></li>
-                                                        				<li class="nav-item">
-                                                        					<a href="{{path('exam_index')}}" class="nav-link">
-                                                        						<i class="far fa-circle nav-icon"></i>
-                                                        						<p>{% trans %}Exams{% endtrans %}</p>
-                                                        					</a>
-                                                        				</li> #}
+                        
                             </li>
-
+                            {% if is_granted('system_setting_list') %}
                             <li class="nav-header">
                                 <h6>
                                     {% trans %}
@@ -216,15 +210,12 @@
                                     {% endtrans %}
                                 </h6>
                             </li>
+{% endif %}
                             <li class="nav-item">
-                                {# <li class="nav-item">
-                                                                    					<a href="{{path('termsandconditions_index')}}" class="nav-link">
-                                                                    						<i class="far fa-circle nav-icon"></i>
-                                                                    						<p>{% trans %}Terms and Conditions{% endtrans %}</p>
-                                                                    					</a>
-                                                                    				</li>
-                                                                    			 #}
+                                
                                 <li class="nav-item">
+                                {% if is_granted('system_setting_list') %}
+                                
                                     <a href="{{ path('system_setting_index') }}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>
@@ -234,11 +225,14 @@
                                             {% endtrans %}
                                         </p>
                                     </a>
+
+                                {% endif %}
                                 </li>
                             </li>
                             <li>
-
+                                {% if is_granted('academic_level_list') %}
                                 <li class="nav-header">
+
                                     <h6>
                                         {% trans %}
                                         OTHERS 
@@ -246,8 +240,11 @@
                                         {% endtrans %}
                                     </h6>
                                 </li>
+                                {% endif %}
                                 <li class="nav-item">
                                     <li class="nav-item">
+                                    {% if is_granted('academic_level_list') %}
+
                                         <a href="{{ path('academic_level_index') }}" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>
@@ -257,6 +254,7 @@
                                                 {% endtrans %}
                                             </p>
                                         </a>
+                                        {% endif %}
                                     </li>
 
                                     {# <li class="nav-item">
