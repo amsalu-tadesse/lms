@@ -1,6 +1,12 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Student index{% endblock %}
+{% block breadcrumbhome %}
+    <a href="#">
+	   {% trans %}Student{% endtrans %} 
+	</a> 
+{% endblock %}
+{% block breadcrumbcontent %}{% trans %}Rejected{% endtrans %}{% endblock %}
 
 {% block body %}
     <h1>Student index</h1>

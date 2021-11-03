@@ -4,11 +4,11 @@
 	{% trans %}Course Requests{% endtrans %}
 {% endblock %}
 {% block breadcrumbhome %}
-	{% trans %}Requests{% endtrans %}
+    <a href="{{path('course_request')}}">
+	   {% trans %}Requests{% endtrans %} 
+	</a> 
 {% endblock %}
-{% block breadcrumbcontent %}
-	{% trans %}index{% endtrans %}
-{% endblock %}
+{% block breadcrumbcontent %}{% trans %}Rejected{% endtrans %}{% endblock %}
 
 {% block stylesheets %}
 	<style>
@@ -37,7 +37,7 @@
 					<div class="col-sm-4">
 						<div class="form-group">
 							<label class="col-sm-12 control-label">{{ form_label(searchForm.student) }}</label>
-							{{ form_widget(searchForm.student,{'attr':{'class':'form-control'},'full_name':'student','value':app.request.get('student') })}}
+							{{ form_widget(searchForm.student,{'attr':{'class':'form-control','placeholder':'Enter email'},'full_name':'student','value':app.request.get('student') })}}
 							{# <input type="text" class="form-control" student="name"/> #}
 							<div class="help-block with-errors"></div>
 						</div>

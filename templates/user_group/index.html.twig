@@ -2,14 +2,13 @@
 
 {% block title %}User Group index
 {% endblock %}
-{% block maintitle %}
 
-	User Group
+{% block breadcrumbhome %}
+    <a href="{{ path('user_group_index') }} ">
+	   {% trans %}User Group{% endtrans %} 
+	</a> 
 {% endblock %}
-{% block breadcrumb %}
-
-	<li class="breadcrumb-item active">User Groups</li>
-{% endblock %}
+{% block breadcrumbcontent %}{% trans %}Index{% endtrans %}{% endblock %}
 {% block body %}
 
 

@@ -2,7 +2,10 @@
 
 {% block title %}Exam index
 {% endblock %}
-{% block breadcrumbhome %}exam
+{% block breadcrumbhome %}
+    <a href="{{ path('exam_index') }} ">
+	   {% trans %}Exam{% endtrans %} 
+	</a> 
 {% endblock %}
 {% block breadcrumbcontent %}index
 {% endblock %}

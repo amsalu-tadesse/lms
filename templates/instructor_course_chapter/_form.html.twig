@@ -1,32 +1,25 @@
- 
+<div class="card card-info">
+	<div class="card card-header"></div>
+	<div class="card card-body">
 
-    <div class="card card-info">
-<div class="card card-header">
-   <h3>Assign course to Instructors</h3>
+		{{ form_start(form) }}
+
+
+		{# <div class="form-group">
+		                    <label for="nacourseme">Chapter</label>
+		                      {{ form_widget(form.chapter,{'attr':{'class':'form-control'}}) }}
+		     </div> #}
+
+		<div class="form-group">
+			<label for="instructor">Chapter topic:
+				<span style="font-size: 11px;"></span>
+			</label>
+			{{ form_widget(form.topic,{'attr':{'class':'form-control','placeholder':"e.g Chapter1: Introduction to Computer"}}) }}
+		</div>
+
+
+		<button class="btn btn-primary mt-2">{{ button_label|default('Save') }}</button>
+
+		{{ form_end(form) }}
+	</div>
 </div>
-<div class="card card-body">
-
-{{ form_start(form) }}
-
-
-   {# <div class="form-group">
-                    <label for="nacourseme">Chapter</label>
-                      {{ form_widget(form.chapter,{'attr':{'class':'form-control'}}) }}
-     </div> #}
-
-   <div class="form-group">
-                    <label for="instructor">Chapter topic: <span style="font-size: 11px;"></span></label>
-                      {{ form_widget(form.topic,{'attr':{'class':'form-control','placeholder':"e.g Chapter1: Introduction to Computer"}}) }}
-     </div>
- 
-
-
- 
-
-
-      <button class="btn btn-primary mt-2">{{ button_label|default('Save') }}</button>
-      
-    {{ form_end(form) }}
-</div>
-</div>
-   

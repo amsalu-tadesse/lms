@@ -6,10 +6,12 @@
 
 	Terms and Conditions
 {% endblock %}
-{% block breadcrumb %}
-
-	<li class="breadcrumb-item active">Terms and Conditions</li>
+{% block breadcrumbhome %}
+    <a href="#">
+	   {% trans %}Terms And conditions{% endtrans %} 
+	</a> 
 {% endblock %}
+{% block breadcrumbcontent %}{% trans %}Index{% endtrans %}{% endblock %}
 {% block body %}
 	<div class="row">
 		<div class="card col-md">

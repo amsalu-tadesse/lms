@@ -2,8 +2,10 @@
 
 {% block title %}{% trans %}Course list{% endtrans %}
 {% endblock %}
-{% block maintitle %}
-	{% trans %}Courses{% endtrans %}
+{% block breadcrumbhome %}
+    <a href="{{ path('course_index') }} ">
+	   {% trans %}Course{% endtrans %} 
+	</a> 
 {% endblock %}
 {% block breadcrumbcontent %}
 	{% trans %}Course list {% endtrans %}

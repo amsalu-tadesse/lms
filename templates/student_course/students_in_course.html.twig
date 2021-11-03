@@ -89,7 +89,6 @@
 							{% trans %}
 							Completion
 
-
 							{% endtrans %}
 							(%)
 
@@ -109,7 +108,7 @@
 
 
 							{% endtrans %}
-						</th>
+						</th> 
 					</tr>
 				</thead>
 				<tbody></tbody>
@@ -198,6 +197,7 @@ error: function (data) { // console.log(data);
 }
 
 $(document).ready(function () {
+
 var instcrs = {{instructor_course.id}}
 $('#table').dataTable({
 "columns": [
@@ -233,31 +233,17 @@ $('#table').dataTable({
 	</script>
 
 	<script>
-		/*var arr = [
-[
-'Contry', 'Mhl'
-],
-[
-'0%', 54.8
-],
-[
-'1-25%', 48.6
-],
-[
-'26-50%', 77
-],
-[
-'51-75%', 23.9
-],
-[
-'76-99%', 14.5
-],
-[
-'100%', 11.5
-]
-];
-function showchart() {
-render(arr);
-}*/
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="{{asset('assets/dist/js/chart.js')}}"></script>
+
+
+<script>
+
+var data = {{ completion | raw }}
+//console.log(data);
+function showchart()
+{
+	render(data,'Student Completion Statistics');
+}
 	</script>
 {% endblock %}

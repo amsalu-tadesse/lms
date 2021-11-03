@@ -41,7 +41,7 @@ class InstructorCourseController extends AbstractController
             $request->query->getInt('page', 1),
             $pageSize
         );
-            $crs_stnumber = array();
+        $crs_stnumber = array();
        $ic_student_count = $em->getRepository(instructorCourse::class)->findAll();
        $json = "[['Course', 'number']";
   

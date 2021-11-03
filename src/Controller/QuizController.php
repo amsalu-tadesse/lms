@@ -36,7 +36,6 @@ class QuizController extends AbstractController
             }
 
         }
-        // dd( $quizzes);
         return $this->render('quiz/index.html.twig', [
             'quizzes' => $quizzes,
             'instructorCourse' => $instructorCourse,
@@ -88,6 +87,7 @@ class QuizController extends AbstractController
         return $this->renderForm('quiz/new.html.twig', [
             'quiz' => $quiz,
             'form' => $form,
+            'id' => $instructorCourse->getId()
         ]);
     }
 
@@ -182,7 +182,6 @@ class QuizController extends AbstractController
                         }
                     }  
                 }
-            
                 $student_quiz = $em->getRepository(StudentQuiz::class)->findOneBy(array('student'=>$this->getUser()->getProfile()->getId(), 'quiz'=>$quiz->getId()));
                 $now = new DateTime(date("Y-m-d H:i:s", time()));
                 $end_time = new DateTime($student_quiz->getEndTime()->format("Y-m-d H:i:s"));
@@ -207,9 +206,10 @@ class QuizController extends AbstractController
                     $time['minutes'] = $date_diff->i;
                     $time['seconds'] = $date_diff->s;
 
-                    $quiz_size = sizeof($quiz_que);
+                    $prev = $em->getRepository(StudentQuestion::class)->find1($quiz->getId(), $this->getUser()->getProfile()->getId());
+                    $quiz_size = sizeof($prev);
 
-                    if($request->query->get('page') > sizeof($quiz_que))
+                    if($request->query->get('page') > $quiz_size)
                     {
                         $stud_que = $em->getRepository(StudentQuestion::class)->find1($quiz->getId(), $this->getUser()->getProfile()->getId());
                         if($student_quiz->getResult() == null)
@@ -236,7 +236,6 @@ class QuizController extends AbstractController
                     else{
                         if($quiz_size > 0)
                         {
-                            $prev = $em->getRepository(StudentQuestion::class)->find1($quiz->getId(), $this->getUser()->getProfile()->getId());
                             $data = $paginator->paginate(
                                 $prev,
                                 $request->query->getInt('page', 1),

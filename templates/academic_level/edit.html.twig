@@ -1,7 +1,10 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}{% trans %}Edit AcademicLevel{% endtrans %}{% endblock %}
-{% block breadcrumbhome %}{% trans %}academiclevel{% endtrans %}{% endblock %}
+{% block breadcrumbhome %}
+<a href="{{ path('instructor_course_chapter_index') }} ">
+    {% trans %}academiclevel{% endtrans %}{% endblock %}
+</a>
 {% block breadcrumbcontent %}{% trans %}Edit{% endtrans %}{% endblock %}
 {% block body %}
 <div class="card card-info">

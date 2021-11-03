@@ -2,6 +2,12 @@
 
 {% block title %}QuizQuestions index
 {% endblock %}
+{% block breadcrumbhome %}
+    <a href="{{path('quiz_index',{'id':quiz.id})}}">
+	   {% trans %}Quiz{% endtrans %} 
+	</a> 
+{% endblock %}
+{% block breadcrumbcontent %}{% trans %}Questions{% endtrans %}{% endblock %}
 
 {% block body %}
 

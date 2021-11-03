@@ -2,6 +2,15 @@
 
 {% block title %}Edit Quiz Questions
 {% endblock %}
+{% block breadcrumbhome %}
+    <a href="{{path('quiz_index',{'id':quiz_question.quiz.id})}}">
+	   {% trans %}Quiz{% endtrans %} 
+	</a> / 
+	 <a href="{{path('quiz_questions_index',{'id':quiz_question.quiz.id})}}">
+	   {% trans %}Questions{% endtrans %} 
+	</a> 
+{% endblock %}
+{% block breadcrumbcontent %}{% trans %}Edit{% endtrans %}{% endblock %}
 
 {% block body %} {{ include('quiz_questions/_form.html.twig', {'button_label': 'Update'}) }}
 	{# {% set descriptions = [] %}

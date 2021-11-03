@@ -6,11 +6,12 @@
 
 	{% trans %}Manage users{% endtrans %}
 {% endblock %}
-{% block breadcrumb %}
-	<li class="breadcrumb-item active">{% trans %}User{% endtrans %}
-	</li>
-	<li class="breadcrumb-item active">{% trans %}User{% endtrans %}</li>
+{% block breadcrumbhome %}
+    <a href="#">
+	   {% trans %}User{% endtrans %} 
+	</a> 
 {% endblock %}
+{% block breadcrumbcontent %}{% trans %}Index{% endtrans %}{% endblock %}
 {% block body %}
 	<div class="row">
 		<div class="card col-md">

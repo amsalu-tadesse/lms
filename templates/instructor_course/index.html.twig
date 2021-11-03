@@ -3,9 +3,12 @@
 {% block title %}
 	{% trans %}Course assignement{% endtrans %}
 {% endblock %}
-{% block breadcrumbcontent %}
-	{% trans %}Course assignement{% endtrans %}
+{% block breadcrumbhome %}
+    <a href="{{ path('instructor_course_index') }} ">
+	   {% trans %}Instructor Course{% endtrans %} 
+	</a> 
 {% endblock %}
+{% block breadcrumbcontent %}{% trans %}Index{% endtrans %}{% endblock %}
 {% block body %}
 	<a href="{{ path('instructor_course_new') }}" class="btn btn-success mb-4">Re use course</a>
 
@@ -234,10 +237,10 @@
  
 
 var data = {{ crs_stnumber | raw }}
-console.log(data);
+//console.log(data);
 function showchart()
 {
-	render(data);
+	render(data,'Nember of students per course');
 }
 
 </script>

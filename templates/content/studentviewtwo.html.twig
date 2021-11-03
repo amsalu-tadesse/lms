@@ -2,7 +2,12 @@
 
 {% block title %}Content index
 {% endblock %}
-
+{% block breadcrumbhome %}
+	<a href="{{ path('content_index',{'id': incrsid}) }} ">
+	   {% trans %}Content{% endtrans %} 
+	</a> 
+{% endblock %}
+{% block breadcrumbcontent %}{% trans %}Student View{% endtrans %}{% endblock %}
 {% block body %}
 
 	{% for content in contents %}

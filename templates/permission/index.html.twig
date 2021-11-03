@@ -2,14 +2,12 @@
 
 {% block title %}Permission index
 {% endblock %}
-{% block maintitle %}
-
-	Permission
+{% block breadcrumbhome %}
+    <a href="{{path('permission_index')}}">
+	   {% trans %}Permission{% endtrans %} 
+	</a> 
 {% endblock %}
-{% block breadcrumb %}
-
-	<li class="breadcrumb-item active">Permission</li>
-{% endblock %}
+{% block breadcrumbcontent %}Index{% endblock %}
 {% block body %}
 	<div class="row">
 		<div class="card col-md">

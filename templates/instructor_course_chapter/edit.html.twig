@@ -1,15 +1,22 @@
 
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit InstructorCourseChapter{% endblock %}
-{% block breadcrumbhome %}instructorcoursechapter{% endblock %}
+{% block title %}Edit Chapter{% endblock %}
+{% block breadcrumbhome %}
+    <a href="{{path('instructor_course_chapter_index',{'id':instructor_course_chapter.id})}}">
+	   {% trans %}Course{% endtrans %} 
+	</a> /
+     <a href="{{path('instructor_course_chapter_content_list',{'id':instructor_course_chapter.instructorCourse.id})}}">
+	   {% trans %}Chapter{% endtrans %} 
+	</a> 
+{% endblock %}
 {% block breadcrumbcontent %}edit{% endblock %}
 {% block body %}
-    <h1>Edit InstructorCourseChapter</h1>
-
     {{ include('instructor_course_chapter/_form.html.twig', {'button_label': 'Update','class': 'form-control'}) }}
-
-    <a href="{{ path('instructor_course_chapter_index') }}">back to list</a>
-
+    <table>
+    <td>
+        <a href="{{ path('instructor_course_chapter_index') }}">back to list</a>
+    </td><td>
     {{ include('instructor_course_chapter/_delete_form.html.twig') }}
+    </td></table>
 {% endblock %}

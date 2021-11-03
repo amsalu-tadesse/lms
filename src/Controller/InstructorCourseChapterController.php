@@ -90,6 +90,7 @@ class InstructorCourseChapterController extends AbstractController
         return $this->renderForm('instructor_course_chapter/new.html.twig', [
             'instructor_course_chapter' => $instructorCourseChapter,
             'form' => $form,
+            'id' => $instructorCourse->getId()
         ]);
     }
 

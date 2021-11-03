@@ -1,9 +1,13 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}InstructorCourseChapter{% endblock %}
-
+{% block breadcrumbhome %}
+    <a>
+	   {% trans %}Chapter{% endtrans %} 
+	</a> 
+{% endblock %}
+{% block breadcrumbcontent %}Show{% endblock %}
 {% block body %}
-    <h1>InstructorCourseChapter</h1>
 
     <table class="table">
         <tbody>

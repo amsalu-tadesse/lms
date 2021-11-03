@@ -4,10 +4,14 @@ namespace App\Controller;
 
 use App\Entity\Course;
 use App\Entity\InstructorCourse;
+use App\Entity\InstructorCourseChapter;
 use App\Entity\InstructorCourseStatus;
 use App\Form\CourseType;
+use App\Form\QuestionAnswerNewStudentType;
+use App\Entity\QuestionAnswer;
 use App\Repository\CourseRepository;
 use App\Repository\InstructorCourseRepository;
+use App\Repository\StudentQuizRepository;
 use DateTime;
 use App\Repository\ContentRepository;
 use App\Repository\InstructorCourseChapterRepository;
@@ -93,20 +97,44 @@ class CourseController extends AbstractController
      /**
      * @Route("/detail/{id}", name="course_description")
      */
-    public function courseDetail($id, InstructorCourseRepository $course, ContentRepository $content): Response
+    public function courseDetail(InstructorCourseChapter $chapter, InstructorCourseRepository $course, ContentRepository $content, Request $request): Response
     {
-        $courses = $course->findCoursesSortByCategory($id);
-        $chaptersWithContent = $content->getChaptersWithContentForCourse($id);
-
+        $courses = $course->findCoursesSortByCategory($chapter->getId());
+        $chaptersWithContent = $content->getChaptersWithContentForCourse($chapter->getId());
+        
         if($this->isGranted("ROLE_STUDENT"))
         {
+            $questionAnswer = new QuestionAnswer();
+            $form = $this->createForm(QuestionAnswerNewStudentType::class, $questionAnswer);
+            $form->handleRequest($request);
+    
+            if($form->isSubmitted() && $form->isValid())
+            {
+                $questionAnswer->setStudent($this->getUser()->getProfile());
+                $questionAnswer->setQuestion($form['question']->getData());
+                $questionAnswer->setCreatedAt(new DateTime());
+                $questionAnswer->setIsReply(0);
+                $questionAnswer->setCourse($course->find($request->request->get("val1")));
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($questionAnswer);
+                $em->flush();
+            }
+    
+            $em = $this->getDoctrine()->getManager();
+            $question = $em->getRepository(QuestionAnswer::class)->findBy(['course'=>$chapter->getId()],['id'=>'desc']);
+    
             return $this->render('course/description_login.html.twig',[
-                'courses' => $courses,
-                'chapters' => $chaptersWithContent
+                'chapter' => $chapter,
+                'chapters' => $chaptersWithContent,
+                'question' => $question,
+                'form' => $form->createView()
             ]);   
         }
+
+       
+        
         return $this->render('course/description.html.twig',[
-            'courses' => $courses,
+            'chapter' => $chapter,
             'chapters' => $chaptersWithContent
         ]);
     }
@@ -151,11 +179,12 @@ class CourseController extends AbstractController
     /**
      * @Route("/{id}/chapters/", name="course_chapters", methods={"GET"})
      */
-    public function chapters(InstructorCourse $course, ContentRepository $contentRepository, InstructorCourseChapterRepository $chaptersRepository): Response
+    public function chapters(InstructorCourse $course, StudentQuizRepository $student_quiz, ContentRepository $contentRepository, InstructorCourseChapterRepository $chaptersRepository): Response
     {   
-        $chapters = $chaptersRepository->findChapters($course->getId());  
+        $chapters = $chaptersRepository->findChapters($course->getId(), $this->getUser()->getProfile()->getId());  
         $contents = $contentRepository->getContentsCount($course->getId());
         $chapter_list = array();
+
         foreach($chapters as $key => $value){
             $flag = 1;
             $chapter_list[$key] = $value[0];
@@ -180,10 +209,17 @@ class CourseController extends AbstractController
 
         }
 
+        $quiz = $student_quiz->getQuizesForStudent($course->getId(), $this->getUser()->getProfile()->getId());
+        $quizWithChapter = array();
+        foreach($quiz as $key => $value)
+        {
+            $quizWithChapter[$value['chapter_id']] =  $value;
+        }
         return $this->render('student_course/chapters.html.twig',[
             'chapters' => $chapter_list,
             'course' => $course->getCourse(),
             'contents' => $contents,
+            'quiz' => $quizWithChapter 
         ]);
     }
 

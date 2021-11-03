@@ -2,7 +2,11 @@
 
 {% block title %}Content index
 {% endblock %}
-{% block breadcrumbhome%} Content{% endblock %}
+{% block breadcrumbhome%} 
+	<a href="{{path('instructor_course_chapter_index')}}">
+	   {% trans %}Course{% endtrans %} 
+	</a>
+{% endblock %}
 {% block breadcrumbcontent%} index{% endblock %}
 {% block backbtn %}<a href="{{ path('instructor_course_chapter_index') }} " class="btn btn-info">Back to course</a>{% endblock %}
 
@@ -29,7 +33,7 @@
 					<tr>
 						<th>Id</th>
 					
-						<th>Title</th>
+						<th style="width:50%">Title</th>
 						{# <th>Content</th> #}
 						{# <th>videoLink</th> #}
 							<th>Chapter</th>

@@ -1,7 +1,12 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}{% trans %}Country{% endtrans %}{% endblock %}
-
+{% block breadcrumbhome %}
+    <a href="{{ path('country_index') }} ">
+	   {% trans %}Country{% endtrans %} 
+	</a> 
+{% endblock %}
+{% block breadcrumbcontent %}{% trans %}Show{% endtrans %}{% endblock %}
 {% block body %}
     <h1>{% trans %}Country{% endtrans %}</h1>
  

@@ -1,7 +1,11 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}{% trans %}AcademicLevel index{% endtrans %}{% endblock %}
-{% block breadcrumbhome %}{% trans %}academiclevel{% endtrans %}{% endblock %}
+{% block breadcrumbhome %}
+    <a href="{{ path('academic_level_index') }} ">
+	   {% trans %}Academic Level{% endtrans %} 
+	</a>
+{% endblock %}
 {% block breadcrumbcontent %}{% trans %}list{% endtrans %}{% endblock %}
 
 {% block body %}

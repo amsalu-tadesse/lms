@@ -6,10 +6,12 @@
 
 	System Setting
 {% endblock %}
-{% block breadcrumb %}
-
-	<li class="breadcrumb-item active">System Setting</li>
+{% block breadcrumbhome %}
+    <a href="#">
+	   {% trans %}Setting{% endtrans %} 
+	</a> 
 {% endblock %}
+{% block breadcrumbcontent %}{% trans %}Index{% endtrans %}{% endblock %}
 {% block body %}
 	<div class="row">
 		<div class="card col-md">

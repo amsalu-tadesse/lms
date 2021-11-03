@@ -60,6 +60,7 @@ class StudentCourseRepository extends ServiceEntityRepository
             ->join('i.user','u')
             ->join('ic.course', 'c')
             ->Where('s.student = :val')
+            ->andWhere('s.active = 1')
             ->setParameter('val', $value)
             ->getQuery()
             ->getResult()

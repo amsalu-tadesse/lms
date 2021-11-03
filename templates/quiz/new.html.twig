@@ -9,6 +9,18 @@
 		}
 	</style>
 {% endblock %}
+{% block breadcrumbhome %}
+
+    <a href="{{path('instructor_course_chapter_index',{'id':id})}}">
+	   {% trans %}Course{% endtrans %} 
+	</a> / 
+	<a href="#">
+	   {% trans %}Quiz{% endtrans %} 
+	</a> 
+{% endblock %}
+{% block breadcrumbcontent%}
+	{% trans %}New{% endtrans %} 
+{% endblock %}
 {% block body %}
 	{# <h1>Create new Quiz</h1>
 	

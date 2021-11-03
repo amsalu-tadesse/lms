@@ -47,4 +47,20 @@ class StudentQuizRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function getQuizesForStudent($course, $student)
+    {
+        return $this->createQueryBuilder('sq')
+            ->select('q.passvalue', 'q.isMandatory', 'ch.id as chapter_id', 'sq.result')
+            ->join('sq.quiz', 'q')
+            ->join('q.instructorCourseChapter', 'ch')
+            ->join('ch.instructorCourse','ic')
+            ->where('ic.id = :val1')
+            ->andWhere('sq.student = :val')
+            ->setParameter('val1', $course)
+            ->setParameter('val', $student)
+            ->getQuery()
+            ->getArrayResult()
+        ;
+    }
 }

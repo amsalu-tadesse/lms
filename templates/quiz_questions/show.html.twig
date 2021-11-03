@@ -1,6 +1,12 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}QuizQuestions{% endblock %}
+{% block breadcrumbhome %}
+    <a href="{{path('quiz_index',{'id':quizQustion.quiz.id})}}">
+	   {% trans %}Requests{% endtrans %} 
+	</a> 
+{% endblock %}
+{% block breadcrumbcontent %}{% trans %}Rejected{% endtrans %}{% endblock %}
 
 {% block body %}
     <h1>QuizQuestions</h1>

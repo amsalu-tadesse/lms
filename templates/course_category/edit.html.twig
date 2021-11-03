@@ -2,6 +2,12 @@
 
 {% block title %}{% trans %}Edit CourseCategory{% endtrans %}{% endblock %}
 
+{% block breadcrumbhome %}
+    <a href="{{ path('course_category_index') }} ">
+	   {% trans %}Course Category{% endtrans %} 
+	</a> 
+{% endblock %}
+{% block breadcrumbcontent %}{% trans %}Edit{% endtrans %}{% endblock %}
 {% block body %}
     <h1>{% trans %}Edit CourseCategory{% endtrans %}</h1>
 

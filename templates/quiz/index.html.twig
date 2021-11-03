@@ -3,7 +3,14 @@
 {% block title %}
 	Quiz index
 {% endblock %}
-
+{% block breadcrumbhome %}
+    <a href="{{path('instructor_course_chapter_index')}}">
+	   {% trans %}Quiz{% endtrans %} 
+	</a> 
+{% endblock %}
+{% block breadcrumbcontent%}
+	Index
+{% endblock %}
 {% block body %}
 
 	<div class="card card-info">

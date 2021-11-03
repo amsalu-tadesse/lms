@@ -1,6 +1,6 @@
 <div class="card px-5 pt-3 mt-1" style="padding-bottom: 80px">
-				<h4 class="pt-2 pb-2" style="color:#093146">{{courses.name}}</h4>
-				<p style="margin-bottom: 40px">{{courses.description}}</p>
+				<h4 class="pt-2 pb-2" style="color:#093146">{{chapter.InstructorCourse.course.name}}</h4>
+				<p style="margin-bottom: 40px">{{chapter.InstructorCourse.course.description}}</p>
 
 				<!-- Nav tabs -->
 				<ul class="nav nav-tabs" role="tablist" >
@@ -10,9 +10,12 @@
 					<li class="nav-item">
 						<a class="nav-link" href="#tab2" role="tab" data-toggle="tab">{% trans %}Instructor{% endtrans %}</a>
 					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="#tab3" role="tab" data-toggle="tab">Q&A</a>
-					</li>
+					{# {% if is_granted("ROLE_STUDENT") %} #}
+						<li class="nav-item">
+							<a class="nav-link" href="#tab3" role="tab" data-toggle="tab">Q&A</a>
+						</li>
+					{# {% endif %} #}
+					
 				</ul>
 
 				<!-- Tab panes -->
@@ -48,6 +51,7 @@
 					</div>
 				{% endif %}
 				{% set flag = content.chapter.id %}
+				
 				<div id="accordion">
 					<div class="card">
 						<div class="card-header" id="headingOne">
@@ -90,5 +94,54 @@
 
 
 	</div>
-	<div role="tabpanel" class="tab-pane fade show" id="tab2">{% trans %}Instructor{% endtrans %} .....</div>
-	<div role="tabpanel" class="tab-pane fade show" id="tab3"></div></div></div>
+	<div role="tabpanel" class="tab-pane fade show" style="margin: 20px 30px;" id="tab2"> 
+	 <h4 style="color:#173146; ">
+	 	{{chapter.instructorCourse.instructor.user.firstName}} 
+	 	{{chapter.instructorCourse.instructor.user.firstName}}
+		 {{chapter.instructorCourse.instructor.user.firstName}}
+	 </h4>
+
+	 <p>{{ chapter.instructorCourse.instructor.user.email}}
+	
+	</div>
+	<div role="tabpanel" class="tab-pane fade show" id="tab3">
+	<div class="comments">
+	{% for que in question %}
+		{% if que.student != null %}
+			<div class="card bg-white mt-2 mx-3 question">
+				<div class="card-body">
+					<p class="meta"><span class="qadata">{{que.createdAt|date('d-m-Y')}} </span>{{que.student.user.username}}</p>
+					<p class="message">{{que.question}}</p>
+				</div>
+			</div>
+		{% else %}
+			
+			<div class="card bg-white mt-2 question mx-3">
+				<div class="card-body">
+					<p class="meta"><span class="qadata">{{que.createdAt|date('d-m-Y')}} </span>{{que.instructor.user.username}}</p>	
+					<p class="message">{{que.question}}</p>
+				</div>
+			</div>
+		{% endif %}
+		{% if que.answer != null %}
+			<div class="card bg-white mt-2 answer">
+				<div class="card-body">
+					<p class="meta"><span class="qadata">{{que.createdAt|date('d-m-Y')}} </span>{{que.instructor.user.username}}</p>
+					<p class="message">{{que.answer}}</p>
+				</div>
+			</div>
+		{% endif %}
+		
+		
+	{% endfor %}
+	</div>
+		
+			<br>
+			<center><a href="#">Load more ...</a></center>
+			{{form_start(form)}}
+				{{form_widget(form)}}
+				<input type="hidden" name="val1" value="{{chapter.instructorCourse.id}}">
+				<input type="submit" class="btn btn-primary mt-1" style="min-width: 150px">
+			{{form_end(form)}}
+		</div>
+	</div></div></div>

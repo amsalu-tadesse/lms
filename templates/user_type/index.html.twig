@@ -6,10 +6,12 @@
 
 	User Type
 {% endblock %}
-{% block breadcrumb %}
-
-	<li class="breadcrumb-item active">User Type</li>
+{% block breadcrumbhome %}
+    <a href="{{ path('usertype_index') }} ">
+	   {% trans %}User Type{% endtrans %} 
+	</a> 
 {% endblock %}
+{% block breadcrumbcontent %}{% trans %}Index{% endtrans %}{% endblock %}
 {% block body %}
 	<div class="row">
 		<div class="card col-md">

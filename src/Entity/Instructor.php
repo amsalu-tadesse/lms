@@ -35,9 +35,15 @@ class Instructor
      */
     private $instructorCourses;
 
+    /**
+     * @ORM\OneToMany(targetEntity=QuestionAnswer::class, mappedBy="instructor")
+     */
+    private $questionAnswers;
+
     public function __construct()
     {
         $this->instructorCourses = new ArrayCollection();
+        $this->questionAnswers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -101,6 +107,36 @@ class Instructor
     public function __toString()
     {
         return $this->user->getFirstName() . " ".$this->user->getLastName();
+    }
+
+    /**
+     * @return Collection|QuestionAnswer[]
+     */
+    public function getQuestionAnswers(): Collection
+    {
+        return $this->questionAnswers;
+    }
+
+    public function addQuestionAnswer(QuestionAnswer $questionAnswer): self
+    {
+        if (!$this->questionAnswers->contains($questionAnswer)) {
+            $this->questionAnswers[] = $questionAnswer;
+            $questionAnswer->setInstructor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQuestionAnswer(QuestionAnswer $questionAnswer): self
+    {
+        if ($this->questionAnswers->removeElement($questionAnswer)) {
+            // set the owning side to null (unless already changed)
+            if ($questionAnswer->getInstructor() === $this) {
+                $questionAnswer->setInstructor(null);
+            }
+        }
+
+        return $this;
     }
 
    
