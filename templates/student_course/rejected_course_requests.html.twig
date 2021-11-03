@@ -12,8 +12,9 @@
 
 {% block stylesheets %}
 	<style>
-		.col-sm-4, .col-sm-2{
-			padding: 0px 10px;
+		.col-sm-4,
+		.col-sm-2 {
+			padding: 0 10px;
 		}
 	</style>
 {% endblock %}
@@ -72,66 +73,39 @@
 						</tr>
 					</thead>
 					<tbody>
-							{% for student_course in student_courses %}
-								<tr>
-									<td><input type="checkbox" name="approved_students[]"></td>
-									<td>{{ loop.index }}</td>
-									<td>{{ student_course.student }}</td>
-									<td>{{ student_course.instructorCourse.course.name }}</td>
-									<td>{{ student_course.createdAt ? student_course.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+						<script type="text/javascript">
+							$allItems = [];
+						</script>
+						{% for student_course in student_courses %}
+							<script type="text/javascript">
+								$allItems.push({{ student_course.id }});
+							</script>
+							<tr>
+								<td><input type="checkbox" value="{{student_course.id}}"></td>
+								<td>{{ loop.index }}</td>
+								<td>{{ student_course.student }}</td>
+								<td>{{ student_course.instructorCourse.course.name }}</td>
+								<td>{{ student_course.createdAt ? student_course.createdAt|date('Y-m-d H:i:s') : '' }}</td>
 
 
-									<td>
-										<a href="{{path('course_request_activate',{id:student_course.id})}}">
-											<i class="btn btn-success btn-sm">Accept</i>
-										</a>
-
-										<div class="modal fade" id="modal-delete{{student_course.id}}">
-											<div class="modal-dialog">
-												<div class="modal-content">
-													<div class="modal-header">
-														<h4 class="modal-title text-bold text-green">Registering a student</h4>
-														<button type="button" class="close btn btn-primary" data-dismiss="modal" aria-label="Close">
-															<span aria-hidden="true">&times;</span>
-														</button>
-													</div>
-
-													<form id="undo_course_request_form{{student_course.id}}" action="{{path('course_request_deactivate',{id:student_course.id})}}" class="form" method="POST">
-														<div class="modal-body">
-
-															<div class="form-group text-blue">
-																Are you sure you want to register
-																<u>
-																	{{student_course.student}}
-																</u>
-																for the course
-																{{student_course.instructorCourse.course}}
-																?
-															</div>
-
-														</div>
-														<div class="modal-footer justify-content-between">
-															<button type="button" class="btn btn-warning" data-dismiss="modal">NO</button>
-
-															<button onclick="" type="submit" id="paynow" class="btn btn-success">
-																<i class="fa fa-arrow-alt-circle-right m-1"></i>Yes
-															</button>
-														</div>
-													</form>
-												</div>
-												<!-- /.modal-content -->
-											</div>
-											<!-- /.modal-dialog -->
-										</div</td>
-									</td>
-								</tr>
-							{% else %}
-								<tr>
-									<td colspan="6">{% trans %}No records found{% endtrans %}</td>
-								</tr>
-							{% endfor %}
+								<td>
+									<a href="{{path('course_request_activate',{id:student_course.id})}}" type="accept" data-course="{{student_course.instructorCourse.course.name}}" data-stud="{{student_course.student}}" class="confBtn">
+										<i class="btn btn-success btn-sm">Accept</i>
+									</a>
+								</td>
+							</tr>
+						{% else %}
+							<tr>
+								<td colspan="6">{% trans %}No records found{% endtrans %}</td>
+							</tr>
+						{% endfor %}
 					</tbody>
 				</table>
+				<div class="row">
+					<div class="col-sm-2">
+						<button class="btn btn-primary confM" type="accept" style="display:none;margin:10px 0px 30px;width: 100%;">Accept </button>
+					</div>
+				</div>	
 				<div class="  pagination justify-content-center ">
 					{{ knp_pagination_render(student_courses) }}</div>
 
@@ -142,5 +116,127 @@
 				</div>
 			</div>
 		</div>
+	</div>
 
-	{% endblock %}
+	<div class="modal fade" id="modal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title text-bold"></h4>
+					<button type="button" class="close btn btn-primary" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+
+				<div class="modal-body">
+
+					<div class="form-group text-blue">
+						Are you sure you want to
+						<span id="text"></span>
+						<u>
+							<span id="student"></span>
+						</u>
+						for the course
+						<span id="course"></span>
+						?
+					</div>
+
+				</div>
+				<div class="modal-footer justify-content-between">
+					<button type="button" class="btn btn-warning" data-dismiss="modal">NO</button>
+
+					<button onclick="approve()" type="submit" id="paynow" class="btn btn-success">
+						<i class="fa fa-arrow-alt-circle-right m-1"></i>Yes
+					</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+
+	<form id="secondForm" action="" method="post">
+		<input type="hidden" name="checked_list[]" id="selected_list">
+	</form>
+{% endblock %}
+
+{% block javascripts %}
+	<script>
+		$selected = {
+			type: 0,
+			url: "",
+		};
+		$items = [];
+
+		$(".confBtn").on("click", function(e){
+			e.preventDefault();
+			$selected.url = $(this).attr("href");
+			$("#student").text($(this).attr("data-stud"));
+			$("#course").text($(this).attr("data-course"));
+			$("#modal").modal("show");
+			$selected.type = $(this).attr("type");
+			if($selected.type.localeCompare("accept")==0){
+				$(".modal-title").text("Registering a student");
+				$("#text").text("register");
+				$(".modal-title").css("color","#28a745");
+			}
+		});
+
+		$(".confM").on("click", function(e){
+			e.preventDefault();
+			$("#student").text($items.length+ " students ");
+			$("#modal").modal("show");
+			$selected.type = $(this).attr("type");
+			if($selected.type.localeCompare("accept")==0){
+				$(".modal-title").text("Registering a student");
+				$("#text").text("register");
+				$(".modal-title").css("color","#28a745");
+			}
+		});
+
+		$(document).ready(function(){
+			$('input:checkbox').prop('checked', false);        
+		});
+		
+		$("input[type='checkbox']").change(function () {
+			if (this.checked) {
+				$items.push(parseInt($(this).val()));
+			} else {
+				index = $items.indexOf($(this).val());
+				if (index > -2) {
+					$items.splice(index, 1);
+				}	
+			}
+			if ($items.length > 0) {
+				$(".confM").css("display", "block");
+			} else {
+				$(".confM").css("display", "none");
+			}
+			console.log($items);
+		});
+
+		function approve()
+		{
+			if($items.length > 0 ){
+				count = $items.length;
+				$check = 1;
+				for ($i = 0; $i < count; $i ++) {
+					if (!$allItems.includes($items[$i])) {
+						$check = 0;
+					}
+				}
+
+				if($check)
+				{
+					if($selected.type.localeCompare("accept") == 0)
+						$("#secondForm").attr("action","/student/approveMultiple");
+					$("#selected_list").val($items);
+					$("#secondForm").submit();
+				} 
+			}
+			else
+				window.location = $selected.url;
+		}
+	</script>
+{% endblock %}
+

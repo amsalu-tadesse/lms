@@ -98,7 +98,7 @@ class UserAuthenticator extends AbstractFormLoginAuthenticator implements Passwo
         else{
             if(!$user->getLastLogin()){
 
-                return new RedirectResponse($this->urlGenerator->generate('app_forgot_password_request'));
+                return new RedirectResponse($this->urlGenerator->generate('change_password'));
             }
             else if($user->getIsActive()==false){
                 return new RedirectResponse($this->urlGenerator->generate('user_show',['id'=>$user->getId()]));

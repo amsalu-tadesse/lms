@@ -14,16 +14,25 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use App\Services\MailerService;
 
 /**
  * @Route("/user")
  */
 class UserController extends AbstractController
 {
+    private $mailer;
+
+    public function __construct(MailerInterface $mailer)
+    {
+        $this->mailer = $mailer;
+    }
+
     /**
      * @Route("/", name="user_index", methods={"GET","POST"})
      */
-    public function index(Request $request, UserRepository $userRepository, PaginatorInterface $paginator, UserPasswordEncoderInterface $userPasswordEncoderInterface): Response
+    public function index(Request $request, UserRepository $userRepository, PaginatorInterface $paginator, UserPasswordEncoderInterface $userPasswordEncoderInterface, MailerService $mservice): Response
     {
         // $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
@@ -84,7 +93,7 @@ class UserController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $password = $user->getPassword();
             if (!$password) {
-                $password = "123456";
+                $password = rand(223232, 998999);
             }
 
             $user->setPassword($userPasswordEncoderInterface->encodePassword($user, $password));
@@ -134,6 +143,12 @@ class UserController extends AbstractController
 
             }
             $entityManager->flush();
+
+            $message = "<p style='font-size: 15px;'>Dear ".$user->getFirstName()." ".$user->getMiddleName()." You have successfully registered for ECA ".
+            "Learning management system. Please login with the following credentials".
+            " and change your password <br>username=<strong>".$user->getUsername()."</strong><br> password=<strong>".$password."</strong></p>";
+            
+            $sent =  $mservice->sendEmail($this->mailer, $message, $user->getEmail(), "account confirmation");
 
             return $this->redirectToRoute('user_index');
         }
@@ -197,7 +212,7 @@ class UserController extends AbstractController
             // $user->setPassword($userPasswordEncoderInterface->encodePassword($user,$user->getPassword()));
             $password = $user->getPassword();
             if (!$password) {
-                $password = "123456";
+                $password = rand(223232, 998999);
             }
 
             $user->setPassword($userPasswordEncoderInterface->encodePassword($user, $password));

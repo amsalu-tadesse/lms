@@ -268,12 +268,56 @@ class StudentCourseController extends AbstractController
         $data = $paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page', 1),
-            8
+            15
         );
 
         return $this->render('student_course/requested_courses.html.twig', [
             'requests' => $data,
         ]);
+    }
+
+    /**
+    * @Route("/approveMultiple", name="approve_multiple", methods={"GET","POST"})
+    */
+   public function requestApproveMultiple(StudentCourseRepository $stud_cour_repo, PaginatorInterface $paginator, Request $request): Response
+   {
+       $ids = array();
+       $ids = explode(",",$request->request->get('checked_list')[0]);
+       $em = $this->getDoctrine()->getManager();
+       foreach($ids as $id)
+       {
+           $stud_course = $stud_cour_repo->find($id);
+           if($stud_course != null)
+           {
+               $stud_course->setStatus(1);
+               $em->persist($stud_course);
+               $em->flush();
+           }
+       }
+       return $this->redirectToRoute("course_request");
+   }
+
+   /**
+    * @Route("/rejectMultiple", name="reject_multiple", methods={"GET","POST"})
+    */
+    public function requestRejectMultiple(StudentCourseRepository $stud_cour_repo, PaginatorInterface $paginator, Request $request): Response
+    {
+       $ids = array();
+       $ids = explode(",",$request->request->get('checked_list')[0]);
+       $em = $this->getDoctrine()->getManager();
+
+       foreach($ids as $key => $value)
+       {
+           $stud_course = $stud_cour_repo->find($value);
+           if($stud_course != null)
+           {
+               $stud_course->setStatus(2);
+               $em->persist($stud_course);
+               $em->flush();
+           }
+       }
+       return $this->redirectToRoute("course_request");
+ 
     }
 
     /**

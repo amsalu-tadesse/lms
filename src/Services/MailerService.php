@@ -26,7 +26,7 @@ class MailerService
             //->bcc('bcc@example.com')
             //->replyTo('fabien@example.com')
             //->priority(Email::PRIORITY_HIGH)
-            ->subject('LMS '.$payment.' verification')
+            ->subject('LMS '.$payment)
             // ->text('My first for Payroll notification')
             ->html($message);
 

@@ -14,6 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Mailer\MailerInterface;
 use App\Repository\VerificationRepository;
 use App\Services\MailerService;
+use DateTime;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
@@ -143,6 +144,32 @@ class SecurityController extends AbstractController
         ]);
     }
 
+        /**
+     * @Route("/password/change", name="change_password", methods={"GET","POST"})
+     */
+    public function passwordChange(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    {
+        $user = new User();
+        $form = $this->createForm(ForgotPasswordType::class, $user);
+        $form->handleRequest($request);
+       
+        if ($form->isSubmitted() && $form->isValid()) {
+    
+            $entityManager = $this->getDoctrine()->getManager();
+            $user = $this->getUser();
+            $user->setPassword($passwordEncoder->encodePassword($user, $form['plainPassword']->getData()));
+            $user->setLastLogin(new DateTime());
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('home');
+        }
+
+        return $this->renderForm('security/password_change.html.twig', [
+            'form' => $form,
+            'error' => ""
+        ]);
+    }
     /**
      * @Route("/logout", name="app_logout")
      */
