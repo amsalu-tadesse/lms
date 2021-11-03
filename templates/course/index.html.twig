@@ -6,7 +6,7 @@
 	{% trans %}Courses{% endtrans %}
 {% endblock %}
 {% block breadcrumbcontent %}
-	{% trans %}Course list {% endtrans %}
+	{% trans %}Course list{% endtrans %}
 {% endblock %}
 {% block body %}
 	<div class="row">
@@ -71,11 +71,19 @@
 											<th>
 												#
 											</th>
-											<th>{{ knp_pagination_sortable(courses, 'Name', 'p.name') }}</th>
-											<th>{{ knp_pagination_sortable(courses, 'Code', 'p.code') }}</th>
+
+										 
+										 
+											{# <th>{{ knp_pagination_sortable(courses, 'Name', 'p.name') }}</th> #}
+ 
+
+											<th>{{ knp_pagination_sortable(courses, 'Name'|trans({}, 'messages'), 'p.name' )|raw }}</th>
+
+											<th>{{ knp_pagination_sortable(courses, 'Code'|trans({}, 'messages'), 'p.code' )|raw }}</th>
+
 
 											<th>{% trans %}Credit{% endtrans %}</th>
-											<th>{% trans %}Action{% endtrans %}</th>
+											<th>{% trans %}Ation{% endtrans %}</th>
 										</tr>
 									</thead>
 									<tbody>

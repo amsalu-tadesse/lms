@@ -1,98 +1,181 @@
-Learning Management System: Système de gestion de l'apprentissage
-Sign in to start your session: Identifiez-vous pour démarrer votre session
-Username: Nom d'utilisateur
-Repeat password: Répéter le mot de passe
-Rassword: Mot de passe
-Forgot Password: Mot de passe oublié
-Create Account: Créer un compte
-Sign In: S'identifier
-Home: Accueil
-My Courses: Mes cours
-Copyright 2021: Droit d'auteur 2021
-Technology: Technologie
-No courses selected: Aucun cours sélectionné
-All Rights Reserved: Tous droits réservés
-Sign up: S'inscrire
-First Name: Prénom
-Middle Name: Deuxième nom
-Last Name: Nom de famille
-Email: e-mail
-I agree to terms and conditions: J'accepte les termes et conditions
-Sign up to create account: Inscrivez-vous pour créer un compte
-Reset your password: Réinitialisez votre mot de passe
-Admininsration: Administration
-Enter your email address and we we will send you a link to reset your password. : Saisissez votre adresse email et nous vous enverrons un lien pour réinitialiser votre mot de passe
-Send password reset email: Envoyer un e-mail de réinitialisation du mot de passe
-User settings: Paramètres utilisateur
-Add new: Ajouter un nouveau
-Name: Nom
-Description: Description
-Save: Enregistrer
-Reset: Réinitialiser
-Delete: Supprimez
-Edit: Éditer
-User groups: Groupe d'utilisateurs
-User group list: Liste des groupes d'utilisateurs
-Status: Statut
+academic level: niveau académique
+Access denied: Accès refusé
 Action: Action
-Enabled: Activé
-Disabled: Desactivé
-Manage: Gérer
-User Types: Types d'utilisateurs
-Student: étudiant
-Instructor: Instructeur
-Users: Utilisateurs
-User: Utilisateur
-Items list: Liste d'articles
-Course: Cours
-Code: Code
-Credit: Crédit
-Category: Catégorie
-Search: Chercher
-Content: Contenu
-Content type: Type de contenu
-Lessons: Leçons
-Exams: Examens
-Create new exam: créer un nouvel examen
-Course status: Statut du cours
-Assign: Affecter
-Active: Active
-Yes: Oui
-No: Non
-Assign Instructor: Affecter un instructeur
-Select instructor for the course : Sélectionnez l'instructeur pour le cours
-Close: Fermer
-Registered date: Date d'enregistrement
-Completion: Achèvement
-Back to list: Retour à la liste
-Show: Afficher
-Messages: Messages
-Chapter: Chapitre
-Topic: Sujet
-Number: Numéro
-Phone number: Numéro de téléphone
-View: voir
-Download: Télécharger
-Register: S'inscrire
 Activate: Activer
+Active: Active
+add chapter : ajouter un chapitre
+add content: ajouter du contenu
+Add new: Ajouter un nouveau
+Add new exam: Ajouter un nouvel examen
+Admin: Administrateur
+Admininsration: Administration
+All Rights Reserved: Tous droits réservés
+Are you sure you want to delete?: Etes-vous sûr que vous voulez supprimer?
+Artificial intelligence: Intelligence artificielle
+Assign: Affecter
+assign course to instructor: attribuer le cours à l'instructeur
+Assign date: Attribuer une date
+Assign Instructor: Affecter un instructeur
+Back: arrière
+back chapter : retour chapitre
+back to course: Retour aux cours
+Back to list: Retour à la liste
+Cancel: Annuler
+cancel request: demande d'annulation
+Category: Catégorie
+Chapter: Chapitre
+chapter topic : sujet du chapitre
+Chapters: chapitres
+choose file: Choisir le fichier
+click to select: cliquez pour sélectionner
+Close: Fermer
+Code: Code
+Completion: Achèvement
+Content: Contenu
+content list: liste de contenu
+Content type: Type de contenu
+Copyright 2021: Droit d'auteur 2021
+Course: Cours
+Course assignement: devoir de cours
+Course Category: Catégorie de cours
+course chapters list : liste des chapitres de cours
+Course code: Code de cours
+Course Credit: Crédit de cours
+Course list: Liste des cours
+Course Name: Nom du cours
+Course status: Statut du cours
+Course status list: Liste des statuts du cours
+Courses assignement: Affectation des cours
+Create Account: Créer un compte
+create new: créer un nouveau
+Create new exam: créer un nouvel examen
+create new terms and conditions: créer de nouvelles conditions générales
+Credit: Crédit
+date applied: date d'application
 Deactivate: Désactiver
-Year: Année
-Month: Mois
-Economic Commission for Africa: Commission économique pour l'Afrique
-Operation successful: Opération réussie
-Error: Erreur
+Delete: Supprimez
+Description: la description
 Director: Directeur
-Platform: Plate-forme
+Disabled: Desactivé
+Download: Télécharger
+Duration : Durée
+Economic Commission for Africa: Commission économique pour l'Afrique
+Edit: Éditer
+Edit instructor Course: Modifier le cours de l'instructeur
+edit instructor course chapter: modifier le chapitre du cours d'instructeur
+Edit system setting: Modifier les paramètres du système
+Email: e-mail
+Enabled: Activé
 Enroll: Inscrire
 Enrolled: Inscrit
-Artificial intelligence: Intelligence artificielle
-Are you sure you want to delete?: Etes-vous sûr que vous voulez supprimer?
-Results found: Résultats trouvés
-No result found for your search: Aucun résultat trouvé pour votre recherche
-Access denied: Accès refusé
-You have no privilege for this operation: Vous n'avez aucun privilège pour cette opération
-Wait: Patienter
-Submit: Soumettre
-Modify: Modifier
+Enter email: Entrez l'e-mail
+Enter first name: entrez votre prénom
+Enter last name: Entrer le nom de famille
+Enter middle name: Entrez le deuxième prénom
+Enter username: Saisissez votre nom d'utilisateur
+Enter your email address and we we will send you a link to reset your password. : Saisissez votre adresse email et nous vous enverrons un lien pour réinitialiser votre mot de passe
+Error: Erreur
+Exam list: Liste des examens
+Exams: Examens
 Exit: Mortie
+File: Déposer
+First Name: Prénom
+Forgot Password: Mot de passe oublié
+Home: Accueil
+I agree to terms and conditions: J'accepte les termes et conditions
+In : en
+Instructor: Instructeur
+instructor course: cours d'instructeur
+Items list: Liste d'articles
+Last Name: Nom de famille
+Learning Management System: Système de gestion de l'apprentissage
+Lessons: Leçons
+logout: Se déconnecter
+Main Story: histoire principale
+Manage: Gérer
+Messages: Messages
+Middle Name: Deuxième nom
+Modify: Modifier
 Module: Module
+Month: Mois
+My Courses: mes cours
+Name: Nom
+New Requests: nouvelles demandes
+No: Non
+no  file choose: aucun fichier choisir
+No courses selected: Aucun cours sélectionné
+No records found: Aucun enregistrement trouvé
+No result found for your search: Aucun résultat trouvé pour votre recherche
+Number: Numéro
+Operation successful: Opération réussie
+other courses: autres cours
+passvalue: valeur de passe
+percentage: pourcentage
+Permissions for group: Autorisations pour le groupe
+Phone number: Numéro de téléphone
+Platform: Plate-forme
+Rassword: Mot de passe
+Re use course: Cours de réutilisation
+Register: S'inscrire
+Registered date: Date d'enregistrement
+Rejected Requests: Demandes rejetées
+Remove All: Enlever tout
+Remove from my courses: Supprimer de mes cours
+Repeat password: Répéter le mot de passe
+Request list: Liste des demandes
+Requested courses: Cours demandés
+Reset: Réinitialiser
+reset password: Réinitialiser le mot de passe
+Reset your password: Réinitialisez votre mot de passe
+Results found: Résultats trouvés
+Save: Enregistrer
+Search: Chercher
+Select instructor for the course : Sélectionnez l'instructeur pour le cours
+Send password reset email: Envoyer un e-mail de réinitialisation du mot de passe
+Show: Afficher
+Sign In: S'identifier
+Sign in to start your session: Identifiez-vous pour démarrer votre session
+Sign up: S'inscrire
+Sign up to create account: Inscrivez-vous pour créer un compte
+Status: Statut
+Student: Étudiant
+Student Requests : Demandes d'étudiants
+Students: étudiants
+Submit: Soumettre
+system setting index: index des paramètres système
+System settings: Les paramètres du système
+Technology: Technologie
+Terms : termes
+Terms and conditions index: Index des conditions générales
+title: Titre
+Topic: Sujet
+Total result: résultat total
+Update: mettre à jour
+update content: mettre à jour le contenu
+upload video: Télécharger une video
+User: Utilisateur
+User Group List: Liste des groupes d'utilisateurs
+User groups: Groupe d'utilisateurs
+User settings: Paramètres utilisateur
+User Type: Type d'utilisateur
+User Type List: Liste des types d'utilisateurs
+User Types: Types d'utilisateurs
+Username: Nom d'utilisateur
+Users: Utilisateurs
+Users in a group: Utilisateurs dans un groupe
+Value: valeur
+Values accepted: Valeurs acceptées
+View: voir
+view File: Voir la fiche
+Wait: Patienter
+Year: Année
+Yes: Oui
+you do not select any course: vous ne sélectionnez aucun cours
+You have no privilege for this operation: Vous n'avez aucun privilège pour cette opération
+Youtube link: lien Youtube
+SYSTEM SETTINGS: LES PARAMÈTRES DU SYSTÈME
+COURSE : COURS
+STUDENT REQUESTS: DEMANDES DES ÉTUDIANTS
+USERS: UTILISATEURS
+Settings: Paramètres
+Add New : Ajouter un nouveau

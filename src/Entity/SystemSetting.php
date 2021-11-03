@@ -22,15 +22,17 @@ class SystemSetting
      */
     private $code;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $value;
+   
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $active;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $value;
 
     public function getId(): ?int
     {
@@ -49,17 +51,7 @@ class SystemSetting
         return $this;
     }
 
-    public function getValue(): ?string
-    {
-        return $this->value;
-    }
-
-    public function setValue(?string $value): self
-    {
-        $this->value = $value;
-
-        return $this;
-    }
+ 
 
     public function getActive(): ?bool
     {
@@ -69,6 +61,18 @@ class SystemSetting
     public function setActive(?bool $active): self
     {
         $this->active = $active;
+
+        return $this;
+    }
+
+    public function getValue(): ?string
+    {
+        return $this->value;
+    }
+
+    public function setValue(?string $value): self
+    {
+        $this->value = $value;
 
         return $this;
     }
