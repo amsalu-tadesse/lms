@@ -29,14 +29,10 @@
       
       
         <td>
-<<<<<<< HEAD
             {{ include('question_answer/_form.html.twig', {'button_label': 'Update'}) }}
             </td>
             <td>
             <a href="{{ path('question_answer_index') }}" class="btn btn-info">back to list</a>
-=======
-            <a href="{{ path('question_answer_index') }}" class="btn btn-info">{% trans %}Back to list{% endtrans %}</a>
->>>>>>> 3b0248555c2f52776618b90d747f76a832c4bb87
         </td>
 
         {% if question_answer.student == null %}
