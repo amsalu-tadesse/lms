@@ -30,8 +30,6 @@ class QuestionAnswerRepository extends ServiceEntityRepository
             ->andWhere('ic.id = :val')
             ->setParameter('val', $value)
             ->orderBy('q.createdAt', 'Desc')
-            ->setFirstResult(1)
-            ->setMaxResults(9)
             ->getQuery()
             ->getResult()
         ;
@@ -56,7 +54,30 @@ class QuestionAnswerRepository extends ServiceEntityRepository
         ;
     }
     
+    public function newQuestionNotification($id)
+    {
+        return $this->createQueryBuilder('q')
+            ->select('count(q.id) as new_questions')
+            ->join('q.instructor','inst')
+            ->join('inst.user', 'u')
+            ->where('u.id = :val')
+            ->andWhere('q.notification = 0')
+            ->setParameter('val', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 
+    public function updateNotification($id)
+    {
+        return $this->createQueryBuilder('q')
+            ->update()
+            ->set('q.notification ', '1')
+            ->where('q.instructor = :val')
+            ->setParameter('val', $id)
+            ->getQuery()
+            ->execute();
+    }
+    
     /*
     public function findOneBySomeField($value): ?QuestionAnswer
     {
