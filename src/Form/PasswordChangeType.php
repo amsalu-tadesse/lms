@@ -23,7 +23,7 @@ class PasswordChangeType extends AbstractType
             ->add('password',PasswordType::class,[
                 'mapped'=>false,
                 'label' => 'Old Password',
-                'attr'=>['class'=>'form-control mb-3']
+                'attr'=>['class'=>'form-control mb-1']
             ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,

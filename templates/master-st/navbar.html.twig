@@ -24,7 +24,8 @@
 										</li>
 										<li class="dropdown test" id="my_course">
 											<a class="dropdown-item" href="{{ path('selected_courses')}}">
-												{% trans %}My Courses{% endtrans %}	<sup>
+												{% trans %}My Courses{% endtrans %}
+												<sup>
 													<span class="badge badge-primary" id="num"></span>
 												</sup>
 											</a>
@@ -48,39 +49,33 @@
 											{% set code = 'fr' %}
 										{% endif %}
 
-
 										<li class="dropdown">
 											<a class="dropdown-item dropdown-toggle" href="#">
 
-												<i class="fas fa-globe fa-sm"></i> &nbsp;
+												<i class="fas fa-globe fa-sm"></i>
+												&nbsp;
 												{{activelang}}
-
 											</a>
 											<ul class="dropdown-menu dropdown-menu-sm float-right">
-
-												<li>
-
-
+												<li class="dropdown-submenu">
 													<a href="/language?lang={{code}}&&curr={{ path(app.request.attributes.get('_route'),
-																																							app.request.attributes.get('_route_params')) }}" class="dropdown-item">
+																																																																			app.request.attributes.get('_route_params')) }}" class="dropdown-item">
 														<b>{{secondlang}}</b>
 													</a>
 												</li>
 											</ul>
 										</li>
 
-
 										<li class="dropdown">
 											<a class="dropdown-item dropdown-toggle" href="#">
 												{{app.user.username}}
 												<i class="fas fa-chevron-down"></i>
 											</a>
-											<ul
-												class="dropdown-menu">
-												{# <li class="dropdown-submenu">
-																																					<a class="dropdown-item" href="#">Profile</a>
-																																				</li> #}
-												<li>
+											<ul class="dropdown-menu">
+												<li class="dropdown-submenu">
+													<a class="dropdown-item" href="{{path('change_password_logged_in')}}">Change password</a>
+												</li>
+												<li class="dropdown-submenu">
 													<a class="dropdown-item" href="{{path('app_logout')}}">Logout</a>
 												</li>
 											</ul>

@@ -192,19 +192,33 @@ class SecurityController extends AbstractController
                 $entityManager->flush();
             }
             else{
-                return $this->renderForm('security/change_password_logged_in.html.twig', [
-                    'form' => $form,
-                    'error' => "Incorrect Old Password"
-                ]);
+                if($this->isGranted('ROLE_STUDENT'))
+                    return $this->renderForm('security/change_password_logged_in_student.html.twig', [
+                        'form' => $form,
+                        'error' => "Incorrect Old password"
+                    ]);
+                else
+                    return $this->renderForm('security/change_password_logged_in.html.twig', [
+                        'form' => $form,
+                        'error' => "Incorrect Old password"
+                    ]);
             }
-
-            return $this->redirectToRoute('home');
+            if($this->isGranted('ROLE_STUDENT'))
+                return $this->redirectToRoute('student_course_index');
+            else
+                return $this->redirectToRoute('home');
         }
 
-        return $this->renderForm('security/change_password_logged_in.html.twig', [
-            'form' => $form,
-            'error' => ""
-        ]);
+        if($this->isGranted('ROLE_STUDENT'))
+            return $this->renderForm('security/change_password_logged_in_student.html.twig', [
+                'form' => $form,
+                'error' => ""
+            ]);
+        else
+            return $this->renderForm('security/change_password_logged_in.html.twig', [
+                'form' => $form,
+                'error' => ""
+            ]);
     }
     /**
      * @Route("/logout", name="app_logout")
