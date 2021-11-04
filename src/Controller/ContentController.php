@@ -217,7 +217,7 @@ class ContentController extends AbstractController
     public function new(Request $request,InstructorCourse $instructorCourse, SluggerInterface $slugger): Response
     {
 
-        $this->denyAccessUnlessGranted('content_new');
+        // $this->denyAccessUnlessGranted('content_new');
         $content = new Content();
 
         $em = $this->getDoctrine()->getManager();
@@ -285,7 +285,7 @@ class ContentController extends AbstractController
      */
     public function edit(Request $request, Content $content): Response
     {
-        $this->denyAccessUnlessGranted('content_edit');
+        // $this->denyAccessUnlessGranted('content_edit');
         $em = $this->getDoctrine()->getManager();
 
         $uploadSize =  $em->getRepository(SystemSetting::class)->findOneBy(['code'=>'upload_size'])->getValue();
@@ -311,7 +311,7 @@ class ContentController extends AbstractController
      */
     public function delete(Request $request, Content $content): Response
     {
-        $this->denyAccessUnlessGranted('content_delete');
+        // $this->denyAccessUnlessGranted('content_delete');
         $instid = $content->getChapter()->getInstructorCourse()->getId();;
      
         if ($this->isCsrfTokenValid('delete'.$content->getId(), $request->request->get('_token'))) {
