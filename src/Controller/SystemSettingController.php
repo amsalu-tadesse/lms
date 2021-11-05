@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
-/**
  * @Route("/systemsetting")
  */
 class SystemSettingController extends AbstractController
@@ -75,7 +74,7 @@ class SystemSettingController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="system_setting_show", methods={"GET"})
+     * @Route("/{id}/show", name="system_setting_show", methods={"GET"})
      */
     public function show(SystemSetting $systemSetting): Response
     {
