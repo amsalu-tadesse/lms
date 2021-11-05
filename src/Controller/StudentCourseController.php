@@ -32,7 +32,6 @@ class StudentCourseController extends AbstractController
     // ******** student home page , don't touch it OK
     public function index(StudentCourseRepository $studentCourseRepository, PaginatorInterface $paginator, Request $request, InstructorCourseRepository $course): Response
     { 
-
         if ($this->getUser()->getProfile() == null) {
             return $this->redirectToRoute('app_login');
         }
@@ -56,6 +55,9 @@ class StudentCourseController extends AbstractController
      */
     public function courseRequest(Request $request, StudentCourseRepository $studentCourseRepository, PaginatorInterface $paginator): Response
     {
+        if($this->isGranted("ROLE_ADMIN") || $this->isGranted("ROLE_DIRECTOR")){
+            $studentCourseRepository->updateNotification();
+        }
         $st_course = new StudentCourse();
         $searchForm = $this->createForm(RequestFilterType::class, $st_course);
         $searchForm->handleRequest($request);
@@ -254,11 +256,11 @@ $studentCourse = $em->getRepository(StudentCourse::class)->find($stdid);
             
                 $readContents += $stdchapter->getPagesCompleted();
             }
-
-            $totalContents?$totalContents:1;
             
-$completion = \round(($readContents/$totalContents), 1)*100;
-return $completion;
+            $contents = $totalContents ? $totalContents:1;
+            
+            $completion = \round(($readContents/$contents), 1)*100;
+            return $completion;
 
     }
 
@@ -347,6 +349,8 @@ return $completion;
             $st_course->setInstructorCourse($em->getRepository(InstructorCourse::class)->find($course));
             $st_course->setStatus(0);
             $st_course->setActive(0);
+            $st_course->setDirectorNotification(0);
+            $st_course->setTeacherNotification(0);
             $st_course->setCreatedAt(new DateTime());
             $em->persist($st_course);
             $em->flush();
@@ -512,6 +516,8 @@ return $completion;
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
+            $studentCourse->setTeacherNotification(0);
+            $studentCourse->setDirectorNotification(0);
             $entityManager->persist($studentCourse);
             $entityManager->flush();
 
@@ -607,5 +613,25 @@ return $completion;
         }
 
         return $this->redirectToRoute('student_course_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    /**
+     * @Route("/course/request/new/notification", name="new_course_request", methods={"GET"})
+     */
+    public function notification(StudentCourseRepository $stud_course_repo, Request $request): Response
+    {
+        if($request->isXmlHttpRequest()) {
+            $result = array();
+            $questions = $stud_course_repo->newCourseRequest();
+            
+            $returnResponse = new JsonResponse();
+            $returnResponse->setJson($questions['new_requests']);
+    
+            return $returnResponse;
+            
+        }
+        else{
+            die("error");
+        }   
     }
 }

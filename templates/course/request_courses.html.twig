@@ -17,11 +17,11 @@
 			<div class="card px-5 py-2 mb-2" course-id="{{course.id}}">
 				<div class="row">
 					<div class="col-sm-11">
-						<h4>{{course.name}}</h4>
-						<p>{{course.description}}</p>
+						<h4>{{course.course.name}}</h4>
+						<p>{{course.course.description}}</p>
 					</div>
 					<div class="col-sm-1" style="align-self:center">
-						<button class="btn btn-danger" onclick="removeCourse({{course.id}},'{{course.name}}')" title="remove" style="margin: 0px 50%;">
+						<button class="btn btn-danger" onclick="removeCourse({{course.id}},'{{course.course.name}}')" title="remove" style="margin: 0px 50%;">
 							<i class="fas fa-times-circle"></i>
 						</button>
 					</div>

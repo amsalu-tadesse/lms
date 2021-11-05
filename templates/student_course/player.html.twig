@@ -260,7 +260,9 @@
                                                 desc[id] = de;
                                                 resource[id] = res;
                                             </script>
-                                            {% elseif content.content != "" %}
+                                            {% endif %}
+                                            
+                                            {% if content.content != "" %}
                                                 {% if flag < pages_seen.pagesCompleted %}
                                                 <script>
                                                     control.viewed_content.push({{content.id}});

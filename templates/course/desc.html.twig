@@ -76,7 +76,9 @@
 </div>
 
 <div role="tabpanel" class="tab-pane fade show" id="tab3">
-    <div class="comments">{% for que in question %} {% if que.student != null %}
+    <div class="comments">{% for que in question %} 
+
+    {% if que.student != null %}
         <div class="card bg-white mt-2 mx-3 question">
             <div class="card-body">
                 <p class="meta">
@@ -86,7 +88,7 @@
                 <p class="message">{{que.question}}</p>
             </div>
         </div>
-        {% else %}
+        {% elseif que.instructor != null %}
 
         <div class="card bg-white mt-2 question-teacher mx-3">
             <div class="card-body">

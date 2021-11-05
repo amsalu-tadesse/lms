@@ -197,6 +197,8 @@ class RegistrationController extends AbstractController
                             $st_course->setInstructorCourse($em->getRepository(InstructorCourse::class)->find($sel_cor));
                             $st_course->setStatus(0);
                             $st_course->setActive(0);
+                            $st_course->setTeacherNotification(0);
+                            $st_course->setDirectorNotification(0);
                             $st_course->setCreatedAt(new DateTime());
                             $em->persist($st_course);
                             $em->flush();

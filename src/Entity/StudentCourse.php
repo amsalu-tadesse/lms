@@ -53,6 +53,16 @@ class StudentCourse
      */
     private $completedAt;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $teacherNotification;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $directorNotification;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -138,6 +148,30 @@ class StudentCourse
     public function setCompletedAt(?\DateTimeInterface $completedAt): self
     {
         $this->completedAt = $completedAt;
+
+        return $this;
+    }
+
+    public function getTeacherNotification(): ?bool
+    {
+        return $this->teacherNotification;
+    }
+
+    public function setTeacherNotification(bool $teacherNotification): self
+    {
+        $this->teacherNotification = $teacherNotification;
+
+        return $this;
+    }
+
+    public function getDirectorNotification(): ?bool
+    {
+        return $this->directorNotification;
+    }
+
+    public function setDirectorNotification(bool $directorNotification): self
+    {
+        $this->directorNotification = $directorNotification;
 
         return $this;
     }

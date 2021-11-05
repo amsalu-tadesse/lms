@@ -106,7 +106,7 @@
                                 <li class="nav-item">
                                     <a href="{{ path('course_request') }}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>
+                                        <p id="new_request">
                                             {% trans %}
                                             New Requests
                                                                                         
@@ -138,7 +138,7 @@
                                                                 
                                 {% endtrans %}
                                 <h6></li>
-{% endif %}
+                                {% endif %}
                                 <li class="nav-item has-treeview menu-open ">
                                     {% if is_granted('course_list') %}
                                         <li class="nav-item">

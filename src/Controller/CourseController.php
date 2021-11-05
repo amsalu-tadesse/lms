@@ -115,6 +115,7 @@ class CourseController extends AbstractController
                 $questionAnswer->setStudent($this->getUser()->getProfile());
                 $questionAnswer->setQuestion($form['question']->getData());
                 $questionAnswer->setCreatedAt(new DateTime());
+                $questionAnswer->setNotification(0);
                 $questionAnswer->setIsReply(0);
                 $questionAnswer->setCourse($course_repo->find($request->request->get("val1")));
                 $em = $this->getDoctrine()->getManager();
@@ -145,14 +146,14 @@ class CourseController extends AbstractController
     /**
      * @Route("/mycourses", name="selected_courses")
      */
-    public function selectedCourses(Request $request, CourseRepository $course): Response
+    public function selectedCourses(Request $request, InstructorCourseRepository $course): Response
     {
         if($this->isGranted("ROLE_STUDENT")){
             $selected_courses = $request->cookies->get("selected_courses_login");
             $selected_courses = json_decode($selected_courses, true);
-
+        
             $em = $this->getDoctrine()->getManager();
-            $courses = $em->getRepository(Course::class)->findBy(array('id' => $selected_courses));
+            $courses = $em->getRepository(InstructorCourse::class)->findBy(array('id' => $selected_courses));
             return $this->render('student_course/selected_courses_login.html.twig',[
                 'courses' => $courses
             ]);
@@ -163,7 +164,7 @@ class CourseController extends AbstractController
 
         //dd($selected_courses);
         $em = $this->getDoctrine()->getManager();
-        $courses = $em->getRepository(Course::class)->findBy(array('id' => $selected_courses));
+        $courses = $em->getRepository(InstructorCourse::class)->findBy(array('id' => $selected_courses));
         return $this->render('course/selected_courses.html.twig',[
             'courses' => $courses
         ]);
