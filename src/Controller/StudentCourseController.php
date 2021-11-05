@@ -255,7 +255,7 @@ $studentCourse = $em->getRepository(StudentCourse::class)->find($stdid);
                 $readContents += $stdchapter->getPagesCompleted();
             }
 
-            $totalContents?$totalContents:1;
+            $totalContents = $totalContents?$totalContents:1;
             
 $completion = \round(($readContents/$totalContents), 1)*100;
 return $completion;
