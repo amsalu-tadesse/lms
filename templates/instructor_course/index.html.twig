@@ -98,6 +98,11 @@
                             </th>
                             <th>
                                 {% trans %}
+                                Course Category
+                                {% endtrans %}
+                            </th>
+                            <th>
+                                {% trans %}
                                 Instructor
                                 {% endtrans %}
                             </th>
@@ -132,6 +137,9 @@
                                 </td>
                                 <td>
                                     {{ instructor_course.course }}
+                                </td>
+                                <td>
+                                    {{ instructor_course.course.courseCategory.name }}
                                 </td>
                                 {% if instructor_course.instructor %}
                                     <td>

@@ -250,5 +250,23 @@ class StudentCourseRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
+    public function newCourseRequest()
+    {
+        return $this->createQueryBuilder('sc')
+            ->select('count(sc.id) as new_requests')
+            ->where('sc.directorNotification = 0')
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function updateNotification()
+    {
+        return $this->createQueryBuilder('sc')
+            ->update()
+            ->set('sc.directorNotification ', '1')
+            ->getQuery()
+            ->execute();
+    }
 }
 

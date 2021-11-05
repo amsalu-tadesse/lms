@@ -163,6 +163,38 @@
                     }, 5000);
                 });
             }
+
+            var adm = "{{ is_granted('ROLE_DIRECTOR') }}";
+            if( adm == "1"){
+                console.log("addmin");
+                user = {{app.user.id}};
+                    $.ajax({
+                        url: "{{path('new_course_request')}}",
+                        success: function(data){
+                            if(data != 0){
+                                $("#new_request .badge").remove();
+                                badge = $("<span class='badge badge-primary'>"+data+"</span>");
+                                $('#new_request').append(badge);
+                            }
+                        }
+                    }); 
+                $(document).ready(function(){
+                    user = {{app.user.id}};
+                    setInterval(function(){ 
+                        $.ajax({
+                            url: "{{path('new_course_request')}}",
+                            data: {'id': user},
+                            success: function(data){
+                                if(data != 0){
+                                     $("#new_request .badge").remove();
+                                    badge = $("<span class='badge badge-primary'>"+data+"</span>");
+                                    $('#new_request').append(badge);
+                                }
+                            }
+                        }); 
+                    }, 5000);
+                });
+            }
         </script>
 
         <script>

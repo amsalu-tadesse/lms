@@ -121,7 +121,7 @@ class SystemSettingController extends AbstractController
         return $this->redirectToRoute('system_setting_index');
     }
     /**
-     * @Route("/temsandconditions", name="temsandconditions", methods={"GET"})
+     * @Route("/temsandconditions/terms/conditions", name="temsandconditions", methods={"GET"})
      */
     public function termsandconditions(Request $request): Response
     {
