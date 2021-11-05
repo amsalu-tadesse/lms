@@ -24,8 +24,9 @@ class QuestionAnswerController extends AbstractController
     /**
      * @Route("/", name="question_answer_index", methods={"GET"})
      */
-    public function index(QuestionAnswerRepository $questionAnswerRepository, Request $request, InstructorRepository $inst_repo, PaginatorInterface $paginator): Response
+    public function index(QuestionAnswerRepository $questionAnswerRepository, QuestionAnswerRepository $que_ans_repo, Request $request, InstructorRepository $inst_repo, PaginatorInterface $paginator): Response
     {
+
         $instructor = $inst_repo->findOneBy(['user'=>$this->getUser()->getId()]);
         if($instructor)
         {
@@ -36,6 +37,8 @@ class QuestionAnswerController extends AbstractController
             $questions = array();
         }
        
+        $question_answer = $que_ans_repo->updateNotification(['instructor'=>$instructor->getId()]);
+
 
         $data = $paginator->paginate(
             $questions,
@@ -91,6 +94,7 @@ class QuestionAnswerController extends AbstractController
                 $questionAnswer->setStudent($this->getUser()->getProfile());
             $questionAnswer->setCreatedAt(new DateTime());
             $questionAnswer->setIsReply(0);
+            $questionAnswer->setNotification(0);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($questionAnswer);
             $entityManager->flush();
@@ -136,6 +140,25 @@ class QuestionAnswerController extends AbstractController
             'question_answer' => $questionAnswer,
             'form' => $form,
         ]);
+    }
+
+    /**
+     * @Route("/notification/new", name="new_question_notification", methods={"GET"})
+     */
+    public function notification(QuestionAnswerRepository $questionAnswerRepository, Request $request): Response
+    {
+        if($request->isXmlHttpRequest()) {
+            $result = array();
+            $questions = $questionAnswerRepository->newQuestionNotification($request->query->get('id'));
+        
+            $returnResponse = new JsonResponse();
+            $returnResponse->setJson($questions['new_questions']);
+    
+            return $returnResponse;
+        }
+        else{
+            die("error");
+        }   
     }
 
     /**

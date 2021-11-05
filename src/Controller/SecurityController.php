@@ -6,6 +6,7 @@ use App\Entity\SystemSetting;
 use App\Entity\User;
 use App\Entity\Verification;
 use App\Form\ForgotPasswordType;
+use App\Form\PasswordChangeType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Response;
@@ -169,6 +170,55 @@ class SecurityController extends AbstractController
             'form' => $form,
             'error' => ""
         ]);
+    }
+
+    /**
+     * @Route("/change/password", name="change_password_logged_in", methods={"GET","POST"})
+     */
+    public function changePassword(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    {
+        $user = new User();
+        $form = $this->createForm(PasswordChangeType::class, $user);
+        $form->handleRequest($request);
+       
+        if ($form->isSubmitted() && $form->isValid()) {
+            $checkPass = $passwordEncoder->isPasswordValid($this->getUser(), $form['password']->getData());
+            if($checkPass){
+                $entityManager = $this->getDoctrine()->getManager();
+                $user = $this->getUser();
+                $user->setPassword($passwordEncoder->encodePassword($user, $form['plainPassword']->getData()));
+                $user->setLastLogin(new DateTime());
+                $entityManager->persist($user);
+                $entityManager->flush();
+            }
+            else{
+                if($this->isGranted('ROLE_STUDENT'))
+                    return $this->renderForm('security/change_password_logged_in_student.html.twig', [
+                        'form' => $form,
+                        'error' => "Incorrect Old password"
+                    ]);
+                else
+                    return $this->renderForm('security/change_password_logged_in.html.twig', [
+                        'form' => $form,
+                        'error' => "Incorrect Old password"
+                    ]);
+            }
+            if($this->isGranted('ROLE_STUDENT'))
+                return $this->redirectToRoute('student_course_index');
+            else
+                return $this->redirectToRoute('home');
+        }
+
+        if($this->isGranted('ROLE_STUDENT'))
+            return $this->renderForm('security/change_password_logged_in_student.html.twig', [
+                'form' => $form,
+                'error' => ""
+            ]);
+        else
+            return $this->renderForm('security/change_password_logged_in.html.twig', [
+                'form' => $form,
+                'error' => ""
+            ]);
     }
     /**
      * @Route("/logout", name="app_logout")

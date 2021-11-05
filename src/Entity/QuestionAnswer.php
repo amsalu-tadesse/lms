@@ -32,10 +32,6 @@ class QuestionAnswer
      */
     private $question;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $isReply;
 
     /**
      * @ORM\Column(type="string", length=5000, nullable=true)
@@ -62,6 +58,11 @@ class QuestionAnswer
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $answeredAt;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $notification;
 
     public function getId(): ?int
     {
@@ -184,6 +185,18 @@ class QuestionAnswer
     public function setAnsweredAt(?\DateTimeInterface $answeredAt): self
     {
         $this->answeredAt = $answeredAt;
+
+        return $this;
+    }
+
+    public function getNotification(): ?bool
+    {
+        return $this->notification;
+    }
+
+    public function setNotification(bool $notification): self
+    {
+        $this->notification = $notification;
 
         return $this;
     }
