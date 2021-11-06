@@ -45,7 +45,7 @@ class ContentRepository extends ServiceEntityRepository
             ->Join('c.chapter', 'ch')
             ->join('ch.instructorCourse', 'ic')
             ->andWhere('ch.topic = :val')
-            ->andWhere('ic.course = :val2')
+            ->andWhere('ic.id = :val2')
             ->setParameter('val', $chapter)
             ->setParameter('val2', $course)
             ->getQuery()

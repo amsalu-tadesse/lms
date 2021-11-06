@@ -44,7 +44,6 @@ class InstructorCourseChapterController extends AbstractController
      */
     public function contentList(InstructorCourse $instructorCourse, Request $request): Response
     {
-
         $em = $this->getDoctrine()->getManager();
         $instructorCourseChapters = $em->getRepository(InstructorCourseChapter::class)->findBy(['instructorCourse'=>$instructorCourse]);
         return $this->render('instructor_course_chapter/index.html.twig', [
@@ -114,7 +113,7 @@ class InstructorCourseChapterController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
-            return $this->redirectToRoute('instructor_course_chapter_content_list', ['id'=> $request->get("id")]);
+            return $this->redirectToRoute('instructor_course_chapter_content_list', ['id'=> $instructorCourseChapter->getInstructorCourse()->getId()]);
         }
 
         return $this->renderForm('instructor_course_chapter/edit.html.twig', [

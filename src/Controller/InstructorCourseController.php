@@ -54,7 +54,6 @@ class InstructorCourseController extends AbstractController
         $json .= $col ;
        }
        $json .= "];";
-    // dd($json);
         return $this->render('instructor_course/index.html.twig', [
             'instructor_courses' => $data,
             'instructorsList' => $teachersList,

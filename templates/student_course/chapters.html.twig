@@ -21,7 +21,7 @@
 {% endblock %}
 {% block body %}
 	<h4 class="page-title">
-		{% trans %}Chapters {% endtrans %} in <a style="color:#70c0ff" href="{{path('course_description', {'id':course.id})}}">{{ course.name }}</a>
+		{% trans %}Chapters {% endtrans %} in <a style="color:#70c0ff" href="{{path('course_description', {'id':instructorCourse.id})}}">{{ instructorCourse.course.name }}</a>
 	</h4>
 		{% if chapters|length == 0 %}
 			<div class="row chapter-list mb-3">

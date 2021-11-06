@@ -174,5 +174,10 @@
 	</div>
 {% endblock %}
 {% block javascripts %}
-	
-{% endblock%}
+	<script>
+		$("form:eq(0)").on("submit", function(e){
+			$("#spinner").css("display","block");
+			$(".save").remove();
+		})
+	</script>
+{% endblock %}

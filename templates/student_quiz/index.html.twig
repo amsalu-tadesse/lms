@@ -26,12 +26,11 @@
 	<div class="container">
 		<div class="row">
 			<div class="card my-3">
-            {% set show_un_answered_questions = 1 %} 
 				<div class="card-body" style="padding: 20px 100px;">
 					{% for question in stud_que %}
                         {% if question.answer == null  %}
                             {% if show_un_answered_questions %}
-							    <h5 class="py-3">{{question.question}}</h5>
+							    <h5 class="py-3">{{question.question|raw}}</h5>
                                 <input type="hidden" id="parameter" value="{{question.id}}">
                                 {% for choice in question.question.quizChoices %}
                                     <div class="d-flex flex-column px-4 py-1">
@@ -65,7 +64,7 @@
                                 {# </div> #}
                             {% endif %}
                         {% else %}
-                            <h5 class="py-3">{{question.question}}</h5>
+                            <h5 class="py-3">{{question.question|raw}}</h5>
                                 <input type="hidden" id="parameter" value="{{question.id}}">
                                 {% for choice in question.question.quizChoices %}
                                     <div class="d-flex flex-column px-4 py-1">
@@ -90,7 +89,21 @@
                         {% endif %}
 					{% endfor %}
                     <br>
-                    <p class="result">Result: {{correct_answer}}</p>
+                    <p class="result">Result: {{correct_answer}}
+                        <br>
+                        <br>
+                        {% if quiz.passValue > student_quiz.result %}
+                            {% if quiz.noOfRetakeAllowed >= student_quiz.trial %}
+                                You failed this quiz you have <a href="#" class="btn btn-info"> click here to retake exam</a>
+                            {% else %}
+                                <span style="color: #d7cece;font-size: 21px;">Failed!</span>
+                            {% endif %}
+                        {% else %}
+                            Passed!
+                        {% endif %}
+                        
+                    </p>
+                    
                 <a href="{{path('course_chapters',{'id':chapter.instructorCourse.id})}}" class="btn btn-primary px-5 mx-2 my-2">Go to next chapters</a>
 				</div>
 			</div>

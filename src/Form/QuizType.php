@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
 
 class QuizType extends AbstractType
@@ -72,7 +73,11 @@ class QuizType extends AbstractType
              
                     return $res;
                 },
-            ]) 
+            ])
+            ->add('noOfRetakeAllowed', NumberType::class, [
+                'label' => 'Number of allowed attempts if student fails exam',
+                'attr' => ['class' => 'form-control']
+            ])
             ->add('active')
             ->add('isMandatory')
             ->add('activeQuestions',null, [

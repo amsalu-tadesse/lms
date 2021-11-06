@@ -39,6 +39,11 @@ class StudentQuestion
      */
     private $answeredAt;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $active;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -88,6 +93,18 @@ class StudentQuestion
     public function setAnsweredAt(\DateTimeInterface $answeredAt): self
     {
         $this->answeredAt = $answeredAt;
+
+        return $this;
+    }
+
+    public function getActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): self
+    {
+        $this->active = $active;
 
         return $this;
     }

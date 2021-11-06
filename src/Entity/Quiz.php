@@ -79,6 +79,11 @@ class Quiz
      */
     private $studentQuizzes;
 
+    /**
+     * @ORM\Column(type="integer",options={"default" : 0})
+     */
+    private $noOfRetakeAllowed;
+
     public function __construct()
     {
         $this->quizQuestions = new ArrayCollection();
@@ -261,6 +266,18 @@ class Quiz
                 $studentQuiz->setQuiz(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getNoOfRetakeAllowed(): ?int
+    {
+        return $this->noOfRetakeAllowed;
+    }
+
+    public function setNoOfRetakeAllowed(int $noOfRetakeAllowed): self
+    {
+        $this->noOfRetakeAllowed = $noOfRetakeAllowed;
 
         return $this;
     }

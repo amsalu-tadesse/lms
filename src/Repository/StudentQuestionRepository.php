@@ -28,6 +28,7 @@ class StudentQuestionRepository extends ServiceEntityRepository
             ->join('qq.quiz', 'q')
             ->where('q.id = :quiz')
             ->andWhere('st.id = :val')
+
             ->setParameter('quiz', $quiz)
             ->setParameter('val', $student)
             ->getQuery()

@@ -10,6 +10,7 @@ use App\Entity\StudentQuiz;
 use App\Form\QuizType;
 use App\Repository\QuizQuestionsRepository;
 use App\Repository\QuizRepository;
+use App\Repository\SystemSettingRepository;
 use App\Repository\StudentCourseRepository;
 use DateTime;
 use Knp\Component\Pager\PaginatorInterface;
@@ -40,6 +41,15 @@ class QuizController extends AbstractController
             'quizzes' => $quizzes,
             'instructorCourse' => $instructorCourse,
         ]);
+    }
+
+    /**
+     * @Route("/retake/{id}", name="quiz_index", methods={"GET"})
+     */
+    public function retake(QuizRepository $quizRepository, Quiz $quiz): Response
+    {
+        dd("");
+        return $this->redirectToRoute("course_quiz");
     }
 
     /**
@@ -102,10 +112,12 @@ class QuizController extends AbstractController
         ]);
     }
 
+
+
     /**
      * @Route("/quiz/{id}", name="course_quiz")
      */
-    public function quizPage(Request $request, InstructorCourseChapter $chapter, QuizQuestionsRepository $quiz_que_rep, PaginatorInterface $paginator, StudentCourseRepository $stud_course)
+    public function quizPage(Request $request, SystemSettingRepository $setting_repo, InstructorCourseChapter $chapter, QuizQuestionsRepository $quiz_que_rep, PaginatorInterface $paginator, StudentCourseRepository $stud_course)
     {
 
         $check_student_course = $stud_course->findBy(array('student' => $this->getUser()->getProfile()->getId(), 'instructorCourse' => $chapter->getInstructorCourse()->getId()));
@@ -114,9 +126,13 @@ class QuizController extends AbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
+
+        $setting = $setting_repo->getValue("show_un_answered_questions");
+        
         $quiz = $em->getRepository(Quiz::class)->findOneBy(array('instructorCourseChapter' => $chapter->getId()));
         if ($quiz != null) {
             $prev = $em->getRepository(StudentQuestion::class)->find1($quiz->getId(), $this->getUser()->getProfile()->getId());
+            
             $question = "";
             $i = 1;
             $quiz_que = $quiz_que_rep->getQ($quiz->getId());
@@ -141,6 +157,8 @@ class QuizController extends AbstractController
                     $date = new \DateTime('@' . strtotime("$date + $minutes_add"));
                     $student_quiz->setCreatedAt(new DateTime());
                     $student_quiz->setEndTime($date);
+                    $student_quiz->setActive(1);
+                    $studentt_quiz->setTrial(0);
                     $em->persist($student_quiz);
                     $em->flush();
 
@@ -186,14 +204,19 @@ class QuizController extends AbstractController
                         }
                     }
                 }
+
+                $test_taken = false;
                 $student_quiz = $em->getRepository(StudentQuiz::class)->findOneBy(array('student' => $this->getUser()->getProfile()->getId(), 'quiz' => $quiz->getId()));
+                if($student_quiz->getResult() != null){
+                    $test_taken = true;
+                }
                 $now = new DateTime(date("Y-m-d H:i:s", time()));
                 $end_time = new DateTime($student_quiz->getEndTime()->format("Y-m-d H:i:s"));
 
                 $date_diff = $end_time->diff($now);
                 $time = array();
 
-                if ($now < $end_time) {
+                if ($now < $end_time && !$test_taken) {
                     /// write answer if time available
                     if ($request->query->get('value') != null && $request->query->get('parameter') != null) {
                         $stud_que = $em->getRepository(StudentQuestion::class)->findOneBy(array('student' => $this->getUser()->getProfile()->getId(), 'id' => $request->query->getInt('parameter')));
@@ -234,6 +257,7 @@ class QuizController extends AbstractController
                         return $this->render('student_quiz/index.html.twig', [
                             'stud_que' => $stud_que,
                             'chapter' => $chapter,
+                            'show_un_answered_questions' => $setting['value'],
                             'correct_answer' => $correct_answer
                         ]);
                     } else {
@@ -273,9 +297,13 @@ class QuizController extends AbstractController
                         $em->persist($student_quiz);
                         $em->flush();
                     }
+
                     return $this->render('student_quiz/index.html.twig', [
                         'stud_que' => $stud_que,
                         'chapter' => $chapter,
+                        'quiz' => $quiz,
+                        'student_quiz' => $student_quiz,
+                        'show_un_answered_questions' => $setting['value'],
                         'correct_answer' => $correct_answer
                     ]);
                 }

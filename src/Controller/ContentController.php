@@ -158,8 +158,6 @@ class ContentController extends AbstractController
      */
     public function contentList($course, $chapter, InstructorCourseChapterRepository $course_chapter, StudentChapterRepository $stud_chap, ContentRepository $contentRepository,Request $request): Response
     {
-
-
         $em = $this->getDoctrine()->getManager();
         $contents = $contentRepository->getContentsForChapter($course, $chapter);
 

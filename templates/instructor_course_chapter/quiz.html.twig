@@ -69,8 +69,9 @@
 				</div>
 				<div class="card-body">
 					{% for question in quiz_ques %}
-						<h5 class="py-3">
-							{{question.question}}</h5>
+							{% autoescape %}
+							<h5 class="py-3">{{question.question|raw}}</h5>
+							{% endautoescape %}
 							<input type="hidden" id="parameter" value="{{question.id}}">
 							<form >
 						{% for choice in question.question.quizChoices %}

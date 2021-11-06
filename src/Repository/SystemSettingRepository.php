@@ -34,6 +34,16 @@ class SystemSettingRepository extends ServiceEntityRepository
         ;
     }
 
+    public function getValue($code)
+    {
+        return $this->createQueryBuilder('s')
+                ->select('s.value')
+                ->where('s.code = :code')
+                ->setParameter("code", $code)
+                ->getQuery()
+                ->getOneOrNullResult();
+    }
+
     // /**
     //  * @return SystemSetting[] Returns an array of SystemSetting objects
     //  */

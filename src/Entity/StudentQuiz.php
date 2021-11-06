@@ -44,6 +44,16 @@ class StudentQuiz
      */
     private $result;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $trial;
+
+    /**
+     * @ORM\Column(type="boolean",options={"default" : 1})
+     */
+    private $active;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -105,6 +115,30 @@ class StudentQuiz
     public function setResult(?string $result): self
     {
         $this->result = $result;
+
+        return $this;
+    }
+
+    public function getTrial(): ?int
+    {
+        return $this->trial;
+    }
+
+    public function setTrial(int $trial): self
+    {
+        $this->trial = $trial;
+
+        return $this;
+    }
+
+    public function getActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): self
+    {
+        $this->active = $active;
 
         return $this;
     }
