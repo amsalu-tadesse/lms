@@ -6,10 +6,14 @@
 
 {{ form_start(form) }}
 
-
+ 
    <div class="form-group">
-                    <label for="value">Upload size (in MB)</label>
+                    {# <label for="value">Upload size (in MB)</label> #}
                       {{ form_widget(form.value,{'attr':{'class':'form-control'}}) }}
+     </div>
+   <div class="form-group">
+                    {# <label for="value">Upload size (in MB)</label> #}
+                      {{ form_widget(form.description,{'attr':{'class':'form-control'}}) }}
      </div>
 
 

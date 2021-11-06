@@ -18,6 +18,8 @@
                 <th>Code</th>
                 {# <th>Code</th> #}
                 <th>Value</th>
+                <th>Description</th>
+              
                 <th>actions</th>
             </tr>
         </thead>
@@ -26,9 +28,10 @@
             <tr>
                 <td>{{ system_setting.id }}</td>
                 <td>{{ system_setting.code }}</td>
-                {# <td>{{ "Payment Reason"}}</td> #}
                 {# <td>{{ system_setting.code }}</td> #}
                 <td>{{ system_setting.value }}</td>
+                <td>{{ system_setting.description }}</td>
+           
                 <td>
                     <a href="{{ path('system_setting_edit', {'id': system_setting.id}) }}" class="btn btn-info">edit</a>
                 </td>
