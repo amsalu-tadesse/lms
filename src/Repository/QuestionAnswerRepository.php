@@ -25,9 +25,10 @@ class QuestionAnswerRepository extends ServiceEntityRepository
     
     public function getQuestions($value)
     {
+        
         return $this->createQueryBuilder('q')
             ->join('q.course','ic')
-            ->andWhere('ic.id = :val')
+            ->andWhere('ic.instructor = :val')
             ->setParameter('val', $value)
             ->orderBy('q.createdAt', 'Desc')
             ->getQuery()

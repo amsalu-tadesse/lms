@@ -44,15 +44,6 @@ class QuizController extends AbstractController
     }
 
     /**
-     * @Route("/retake/{id}", name="quiz_index", methods={"GET"})
-     */
-    public function retake(QuizRepository $quizRepository, Quiz $quiz): Response
-    {
-        dd("");
-        return $this->redirectToRoute("course_quiz");
-    }
-
-    /**
      * @Route("/new/{id}", name="quiz_new", methods={"GET","POST"})
      */
     function new (Request $request, InstructorCourse $instructorCourse): Response {
@@ -112,14 +103,119 @@ class QuizController extends AbstractController
         ]);
     }
 
+    /**
+    * @Route("/retake/{id}", name="retake_exam", methods={"GET"})
+    */
+    public function retake(QuizRepository $quizRepository, QuizQuestionsRepository $quiz_que_rep, InstructorCourseChapter $chapter, StudentCourseRepository $stud_course): Response
+    {
+        $check_student_course = $stud_course->findBy(array('student' => $this->getUser()->getProfile()->getId(), 'instructorCourse' => $chapter->getInstructorCourse()->getId()));
+        if ($check_student_course == null) {
+            return $this->redirectToRoute("student_course_index");
+        }
 
+        $em = $this->getDoctrine()->getManager();
+        $i = 1;
+        $quiz = $em->getRepository(Quiz::class)->findOneBy(array('instructorCourseChapter' => $chapter->getId()));
+        if($quiz != null){
+            $quiz_que = $quiz_que_rep->getQ($quiz->getId());
+            $size_quiz_que = sizeof($quiz_que);
+            if($size_quiz_que)
+            {
+                $prev_quiz = $em->getRepository(StudentQuiz::class)->findBy(array('quiz'=>$quiz->getId(), 'student'=>$this->getUser()->getProfile()->getId()),array('id'=>'DESC'),1,0);
+                $previous_quiz = $prev_quiz[0];
+
+                //deactivate former quiz
+                $previous_quiz->setActive(0);
+                $em->persist($previous_quiz);
+                $em->flush();
+
+                $sql = "update student_question sq ".
+                       "join quiz_questions qq on sq.question_id = qq.id ".
+                       "set sq.active = 0 ".
+                       "where qq.quiz_id = ? and sq.student_id = ?";
+                $stmt = $em->getConnection()->prepare($sql);
+                $stmt->execute([$quiz->getId(), $this->getUser()->getProfile()->getId()]);
+                //deactivate previous questions 
+                // $em->getRepository(StudentQuestion::class)->deactivateQuestions($quiz->getId(), $this->getUser()->getProfile()->getId());
+
+                $student_quiz = new StudentQuiz();
+                $student_quiz->setStudent($this->getUser()->getProfile());
+                $student_quiz->setQuiz($quiz);
+
+                //change this based on your timezone
+                $date = date('Y-m-d H:i:s', time());
+                $dateTime = new DateTime($date);
+                // $dateTime->modify('+2 hours');
+                // $result = $dateTime->format('Y-m-d H:i:s');
+
+                $duration = $quiz->getDuration() + 120;
+                $minutes_add = "$duration Minutes";
+                $currentTime = date_default_timezone_get();
+
+                $strtotime = strtotime("$date + $minutes_add ");
+
+                $date = new \DateTime('@' . strtotime("$date + $minutes_add"));
+                $student_quiz->setCreatedAt(new DateTime());
+                $student_quiz->setEndTime($date);
+                $student_quiz->setActive(1);
+                $student_quiz->setTrial($previous_quiz->getTrial()+1);
+            
+                $em->persist($student_quiz);
+                $em->flush();
+
+                if ($quiz->getActiveQuestions() < sizeof($quiz_que)) {
+                    $question_ids = array();
+                    foreach ($quiz_que as $key => $value) {
+                        $question_ids[] = $value['id'];
+                    }
+
+                    $sizof_question_ids = sizeof($question_ids);
+                    $selected = array();
+                    $control = $quiz->getActiveQuestions();
+
+                    while ($control != 0) {
+                        $random_id = rand(0, $control);
+                        $selected[] = $question_ids[$random_id];
+                        array_splice($question_ids, $random_id, 1);
+                        $control--;
+                    }
+
+                    foreach ($quiz_que as $quiz_q) {
+                        $studentQuestion = new StudentQuestion();
+                        if (in_array($quiz_q['id'], $selected)) {
+                            $studentQuestion->setStudent($this->getUser()->getProfile());
+                            $studentQuestion->setQuestion($quiz_que_rep->find($quiz_q['id']));
+                            $studentQuestion->setAnsweredAt(new DateTime());
+                            $studentQuestion->setActive(1);
+                            $em->persist($studentQuestion);
+                            $em->flush();
+                        }
+                    }
+
+                } else {
+                    foreach ($quiz_que as $quiz_q) {
+                        $studentQuestion = new StudentQuestion();
+                        if ($i == 1) {
+                            $question = $quiz_q;
+                        }
+                        $studentQuestion->setStudent($this->getUser()->getProfile());
+                        $studentQuestion->setQuestion($quiz_que_rep->find($quiz_q['id']));
+                        $studentQuestion->setAnsweredAt(new DateTime());
+                        $studentQuestion->setActive(1);
+                        $em->persist($studentQuestion);
+                        $em->flush();
+                    }
+                }
+            }
+        }
+        return $this->redirectToRoute("course_quiz",['id'=>$chapter->getId()]);
+    }
 
     /**
      * @Route("/quiz/{id}", name="course_quiz")
      */
     public function quizPage(Request $request, SystemSettingRepository $setting_repo, InstructorCourseChapter $chapter, QuizQuestionsRepository $quiz_que_rep, PaginatorInterface $paginator, StudentCourseRepository $stud_course)
     {
-
         $check_student_course = $stud_course->findBy(array('student' => $this->getUser()->getProfile()->getId(), 'instructorCourse' => $chapter->getInstructorCourse()->getId()));
         if ($check_student_course == null) {
             return $this->redirectToRoute("student_course_index");
@@ -158,7 +254,7 @@ class QuizController extends AbstractController
                     $student_quiz->setCreatedAt(new DateTime());
                     $student_quiz->setEndTime($date);
                     $student_quiz->setActive(1);
-                    $studentt_quiz->setTrial(0);
+                    $student_quiz->setTrial(0);
                     $em->persist($student_quiz);
                     $em->flush();
 
@@ -185,6 +281,7 @@ class QuizController extends AbstractController
                                 $studentQuestion->setStudent($this->getUser()->getProfile());
                                 $studentQuestion->setQuestion($quiz_que_rep->find($quiz_q['id']));
                                 $studentQuestion->setAnsweredAt(new DateTime());
+                                $studentQuestion->setActive(1);
                                 $em->persist($studentQuestion);
                                 $em->flush();
                             }
@@ -199,6 +296,7 @@ class QuizController extends AbstractController
                             $studentQuestion->setStudent($this->getUser()->getProfile());
                             $studentQuestion->setQuestion($quiz_que_rep->find($quiz_q['id']));
                             $studentQuestion->setAnsweredAt(new DateTime());
+                            $studentQuestion->setActive(1);
                             $em->persist($studentQuestion);
                             $em->flush();
                         }
@@ -206,7 +304,7 @@ class QuizController extends AbstractController
                 }
 
                 $test_taken = false;
-                $student_quiz = $em->getRepository(StudentQuiz::class)->findOneBy(array('student' => $this->getUser()->getProfile()->getId(), 'quiz' => $quiz->getId()));
+                $student_quiz = $em->getRepository(StudentQuiz::class)->findOneBy(array('student' => $this->getUser()->getProfile()->getId(), 'quiz' => $quiz->getId(),'active'=>1));
                 if($student_quiz->getResult() != null){
                     $test_taken = true;
                 }
@@ -217,6 +315,7 @@ class QuizController extends AbstractController
                 $time = array();
 
                 if ($now < $end_time && !$test_taken) {
+                   
                     /// write answer if time available
                     if ($request->query->get('value') != null && $request->query->get('parameter') != null) {
                         $stud_que = $em->getRepository(StudentQuestion::class)->findOneBy(array('student' => $this->getUser()->getProfile()->getId(), 'id' => $request->query->getInt('parameter')));
@@ -257,6 +356,8 @@ class QuizController extends AbstractController
                         return $this->render('student_quiz/index.html.twig', [
                             'stud_que' => $stud_que,
                             'chapter' => $chapter,
+                            'quiz' => $quiz,
+                            'student_quiz' => $student_quiz, 
                             'show_un_answered_questions' => $setting['value'],
                             'correct_answer' => $correct_answer
                         ]);
@@ -297,7 +398,6 @@ class QuizController extends AbstractController
                         $em->persist($student_quiz);
                         $em->flush();
                     }
-
                     return $this->render('student_quiz/index.html.twig', [
                         'stud_que' => $stud_que,
                         'chapter' => $chapter,

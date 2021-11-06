@@ -47,6 +47,14 @@ class HomeController extends AbstractController
       
        
     }
+
+    /**
+     * @Route("/print", name="home")
+     */
+    public function print()
+    {
+        return $this->render("certificate/print.html.twig");
+    }
       /**
      * @Route("/pdf", name="test")
      */

@@ -28,12 +28,24 @@ class StudentQuestionRepository extends ServiceEntityRepository
             ->join('qq.quiz', 'q')
             ->where('q.id = :quiz')
             ->andWhere('st.id = :val')
-
+            ->andWhere('sa.active = 1')
             ->setParameter('quiz', $quiz)
             ->setParameter('val', $student)
             ->getQuery()
             ->getResult()
         ;
+    }
+
+    public function deactivateQuestions($quiz, $student)
+    {
+        return $this->createQueryBuilder('sq')  
+                ->update()
+                ->where('sq.question.quiz = :quiz')
+                ->andWhere('sq.student = :student')
+                ->setParameter("quiz", $quiz)
+                ->setParameter("student", $student)
+                ->getQuery()
+                ->execute();
     }
 
     // /**
