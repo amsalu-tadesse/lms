@@ -7,20 +7,20 @@
 
    <div class="card card-info">
         <div class="card card-header">
-        <h3>System Setting list</h3>
+        <h3>{% trans %}System Setting list{% endtrans %}</h3>
         </div>
         <div class="card card-body">
 
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Code</th>
+                <th>#</th>
+                <th>{% trans %}Code{% endtrans %}</th>
                 {# <th>Code</th> #}
-                <th>Value</th>
-                <th>Description</th>
+                <th>{% trans %}Value{% endtrans %}</th>
+                <th>{% trans %}Description{% endtrans %}</th>
               
-                <th>actions</th>
+                <th>{% trans %}Actions{% endtrans %}</th>
             </tr>
         </thead>
         <tbody>
@@ -38,7 +38,7 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="5">no records found</td>
+                <td colspan="5">{% trans %}no records found{% endtrans %}</td>
             </tr>
         {% endfor %}
         </tbody>

@@ -1,6 +1,6 @@
 <div class="card card-info">
 <div class="card card-header">
- <h3>Edit SystemSetting</h3>
+ <h3>{% trans %}Edit system setting{% endtrans %}</h3>
 </div>
 <div class="card card-body">
 
@@ -17,7 +17,7 @@
      </div>
 
 
-      <button class="btn btn-success mt-2">{{ button_label|default('Save') }}</button>
+      <button class="btn btn-success mt-2">{{ button_label|default('Save' | trans | raw) }}</button>
     {{ form_end(form) }}
 </div>
 </div>

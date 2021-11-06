@@ -21,7 +21,7 @@
     {% if is_granted('instructor_course_create') %}
 
         <a href="{{ path('instructor_course_new') }}" class="btn btn-success mb-4">
-            Re use course
+       {% trans %}Re use course{% endtrans %}
         </a>
     {% endif %}
 
@@ -224,7 +224,7 @@
 								{% if is_granted('instructor_course_create') %}
 								
                                     <a class="btn btn-primary btn-sm" href="#" data-toggle="modal" data-target="#modal-default{{ instructor_course.id }}">
-                                        Assign
+                                        {% trans %}Assign{% endtrans %}
                                     </a>
 								{% endif %}
                                     <div class="modal fade" id="modal-default{{ instructor_course.id }}">

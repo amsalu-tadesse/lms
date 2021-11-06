@@ -3,17 +3,17 @@
 
 <div class="row ">
 	<div class="form-group  col-md-4 col-sm-6 ">
-		{{form_label(form.firstName)}}
+		{{form_label(form.firstName,'First Name' | trans | raw)  }}
 		{{ form_widget(form.firstName,{'attr':{'class':form_errors(form.firstName)? 'form-control is-invalid':'form-control','placeholder':" Enter first name"|trans}}) }}
 		<div class="help-block text-danger">{{form_errors(form.firstName)}}</div>
 	</div>
 	<div class="form-group col-md-4 col-sm-6 ">
-		{{form_label(form.middleName)}}
+		{{form_label(form.middleName,'Middle Name' | trans | raw)}}
 		{{ form_widget(form.middleName,{'attr':{'class':form_errors(form.middleName)? 'form-control is-invalid':'form-control','placeholder':" Enter middle name"|trans}}) }}
 		<div class="help-block text-danger">{{form_errors(form.middleName)}}</div>
 	</div>
 	<div class="form-group  col-md-4 col-sm-6 ">
-		{{form_label(form.lastName)}}
+		{{form_label(form.lastName,'Last Name' | trans | raw)}}
 		{{ form_widget(form.lastName,{'attr':{'class':form_errors(form.lastName)? 'form-control is-invalid':'form-control','placeholder':" Enter last name"|trans}}) }}
 		<div class="help-block text-danger">{{form_errors(form.lastName)}}</div>
 	</div>
@@ -22,7 +22,7 @@
 	<div
 		class="col-md-6"> 
 		<div class="form-group ">
-			{{form_label(form.email)}}
+			{{form_label(form.email,'Email' | trans | raw)}}
 			{{ form_widget(form.email,{'attr':{'class':form_errors(form.email)? 'form-control  is-invalid':'form-control ','placeholder':" Enter username"|trans}}) }}
 			<div class="help-block text-danger">{{form_errors(form.email)}}</div>
 		</div> 
@@ -42,7 +42,7 @@
 	{# <div class="col-md-6"></div> #}
 	<div class="col-md-6">
 		<div class="form-group ">
-			{{form_label(form.userType)}}
+			{{form_label(form.userType,'User Type' | trans | raw)}}
 			{{ form_widget(form.userType,{'attr':{'class':form_errors(form.userType)? 'form-control  is-invalid':'form-control ','placeholder':"Enter..."}}) }}
 			<div class="help-block text-danger">{{form_errors(form.userType)}}</div>
 		</div>
@@ -55,11 +55,11 @@
 	<div class="col-md-6"></div>
 	<div class="card-footer float-right">
 		<table><td>
-		<button class="btn  btn-success save">{{ button_label|default('Save') }}</button>
+		<button class="btn  btn-success save">{{ button_label|default('Save') | trans | raw }}</button>
 		<button class="buttonload btn btn-primary" id="spinner" style="display:none">
 			<i class="fa fa-spinner fa-spin"></i> Signing Up
 		</button></td><td>
-		<a href="{{app.request.headers.get('referer')}}" class="btn btn-info ">back</a>
+		<a href="{{app.request.headers.get('referer')}}" class="btn btn-info ">{% trans %}Back{% endtrans %}</a>
 		</td></table>
 	</div>
 </div>

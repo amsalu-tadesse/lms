@@ -14,12 +14,8 @@ class CourseCategoryType extends AbstractType
     {
         $builder
             ->add('name',null,['attr'=>['class'=>'form-control']])
-            ->add('description', CKEditorType::class, array(
-                'attr'=>['class'=>'form-control'],
-                'config' => array(
-                    'uiColor' => '#ffffff',
-                 ),
-            ))
+            ->add('description',null,['attr'=>['class'=>'form-control']])
+            
         ;
     }
 

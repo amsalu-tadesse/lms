@@ -1,17 +1,17 @@
 {% extends 'anon-base.html.twig' %}
 
-{% block title %}Terms and Conditions
+{% block title %}{% trans %}Terms and Conditions{% endtrans %}
 {% endblock %}
 {% block stylesheet %}{% endblock %}
 {% block body %}
 	<div class="container">
-		<h3 class="text-light">Terms and Conditions</h3>
+		<h3 class="text-light">{% trans %}Terms and Conditions{% endtrans %}</h3>
 		<div class="card card-info">
 			<div class="card-body">
-				<h4 style="color:black">Terms</h4>
+				<h4 style="color:black">{% trans %}Terms{% endtrans %}</h4>
 				{{terms}}
 				<hr>
-				<h4 style="color:black">Conditions</h4>
+				<h4 style="color:black">{% trans %}Conditions{% endtrans %}</h4>
 				{{conditions}}
 			</div>
 		</div>

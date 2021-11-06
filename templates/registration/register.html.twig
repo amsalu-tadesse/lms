@@ -26,7 +26,7 @@
                 <div class="alert alert-danger" role="alert">{{ flashError }}</div>
             {% endfor %}
 
-            <h3 class="text-light">Sign up to {% trans %}Create Account{% endtrans %}</h3>
+            <h3 class="text-light">{% trans %} Sign up to Create Account{% endtrans %}</h3>
             <div class="card" style="background:white">
             <div class="card-body"> 
             {% if message != "" %}
@@ -75,14 +75,14 @@
                     <div class="row py-0">
                         <div class="form-group">
                             {{ form_widget(registrationForm.agreeTerms)}}
-				            	&nbsp;&nbsp;I agree to <a target="_blank" href="{{path('temsandconditions')}}"> terms and conditions</a>
+				            	&nbsp;&nbsp;{% trans %}I agree to{% endtrans %} <a target="_blank" href="{{path('temsandconditions')}}"> {% trans %}terms and conditions{% endtrans %}</a>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-md-2">
                             <button class="buttonload btn btn-primary btn-block" id="spinner" style="display:none">
-                                <i class="fa fa-spinner fa-spin"></i> Signing Up
+                                <i class="fa fa-spinner fa-spin"></i> {% trans %}Signing Up{% endtrans %}
                             </button>
                             <button type="submit" class="btn btn-primary btn-block" id="submit">{% trans %}Sign up{% endtrans %}</button>
                         </div>

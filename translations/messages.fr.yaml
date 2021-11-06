@@ -10,14 +10,7 @@ Add new exam: Ajouter un nouvel examen
 Admin: Administrateur
 Admininsration: Administration
 All Rights Reserved: Tous droits réservés
-
-
-
 Are you sure you want to delete?: Etes-vous sûr que vous voulez supprimer?
-
-
-
-
 Artificial intelligence: Intelligence artificielle
 Assign: Affecter
 assign course to instructor: attribuer le cours à l'instructeur
@@ -62,7 +55,6 @@ date applied: date d'application
 Deactivate: Désactiver
 Delete: Supprimez
 Description: la description
-Director: Directeur
 Disabled: Desactivé
 Download: Télécharger
 Duration : Durée
@@ -89,9 +81,9 @@ File: Déposer
 First Name: Prénom
 Forgot Password: Mot de passe oublié
 Home: Accueil
-I agree to terms and conditions: J'accepte les termes et conditions
+I agree to: Je suis d'accord pour
+
 In : en
-Instructor: Instructeur
 instructor course: cours d'instructeur
 Items list: Liste d'articles
 Last Name: Nom de famille
@@ -153,7 +145,9 @@ system setting index: index des paramètres système
 System settings: Les paramètres du système
 Technology: Technologie
 Terms : termes
-Terms and conditions index: Index des conditions générales
+terms and conditions: Termes et conditions
+Terms and Conditions: Termes et conditions
+Conditions: État
 title: Titre
 Topic: Sujet
 Total result: résultat total
@@ -187,3 +181,33 @@ USERS: UTILISATEURS
 Settings: Paramètres
 Add New : Ajouter un nouveau
 Are you sure you want to delete this item?: Êtes-vous sûr de bien vouloir supprimer cet élément?
+Add new category: Ajouter une nouvelle catégorie
+Report: Signaler
+Academic Level list: Liste des niveaux académiques
+Add new Academic Level: ajouter un nouveau niveau académique
+Academic Level update: Mise à jour du niveau académique
+Change password: Changer le mot de passe
+Old Password: ancien mot de passe
+Password: Mot de passe
+Add to my courses: Ajouter à mes cours
+Add Question: Ajouter une question
+Welcome to Learning Management System: Bienvenue dans le système de gestion de l'apprentissage
+Chapter not added: Chapitre non ajouté
+OTHERS: AUTRES
+Administrator: Administrateur
+Administrators: Administrateurs
+Director: Réalisateur
+Directors: Directeurs
+Instructor: Instructeur
+Instructors: Instructeurs
+Assign Courses: Distribuer des cours
+Assign course to Instructors: Attribuer un cours aux instructeurs
+System Setting list: Liste des paramètres système
+Your registration is successful. username and password is sent to the email you provided. now you can login and start learning as soon as your requests are approved: Votre inscription est réussie. nom d'utilisateur et mot de passe est envoyé à l'e-mail que vous avez fourni. maintenant vous pouvez vous connecter et commencer à apprendre dès que vos demandes sont approuvées
+Click here to Sign In: Cliquez ici pour vous connecter
+An email with Verification code is sent to: Un e-mail avec le code de vérification est envoyé à
+please check your email and enter the verification code.: veuillez vérifier votre courrier électronique et entrer le code de vérification.
+
+
+
+

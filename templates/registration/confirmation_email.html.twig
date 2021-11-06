@@ -1,6 +1,6 @@
 {% extends 'anon-base.html.twig' %}
 
-{% block title %}Verification{% endblock %}
+{% block title %}{% trans %}Verification{% endtrans %}{% endblock %}
 {% block stylesheet %}
     <style>
         .card{
@@ -19,7 +19,7 @@
                 <div class="card-body">
                     <center><img src="{{ asset('/images/eca.png')}}" height="150px" with="150px"/></center>
                     <p>An email with Verification code is sent to {{email}}. 
-                        please check your email and enter the verification code.</p>
+                        {% trans %}please check your email and enter the verification code.{% endtrans %}</p>
                     
                     <p style="color:red">
                         {% if error != "" %}
@@ -29,10 +29,10 @@
                     
                     <form action="{{path('app_register_main')}}" method="POST">
                         <div class="form-group">
-                            <label style="font-weight:bold"> Verification Code</label>
+                            <label style="font-weight:bold">{% trans %}Verification Code{% endtrans %}</label>
                             <input type="number" class="form-control" name="ver_code">
                             <br>
-                            <input type="submit" class="btn btn-primary" value="submit">
+                            <input type="submit" class="btn btn-primary" value={{"submit"} | tans | raw}>
                         </div>
                     </form>
                 </div>

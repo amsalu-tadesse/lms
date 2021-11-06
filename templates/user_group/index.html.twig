@@ -39,7 +39,7 @@
 							<!-- /.card-header -->
 							<div class="card-body">
 								{% if edit  %}
-									{% set button_label = 'Update' %}
+									{% set button_label = 'Update'|trans|raw %}
 								{% endif %}
 								{{ include('user_group/_form.html.twig') }}
 
@@ -75,7 +75,7 @@
 											<th>{% trans %}Description{% endtrans %}</th>
 											<th>{% trans %}Status{% endtrans %}</th>
 											{# <th>permission</th> #}
-											<th>Action</th>
+											<th>{% trans %} Action {% endtrans %}</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -85,33 +85,34 @@
 										 {% for user_group in user_groups %}
 											<tr>
 												<td>
-													{{ i }}
-													{% set i = i+1 %}
+													{{loop.index}}
 												</td>
-												<td>{{ user_group.name }}
+												<td>  {{user_group.name | trans | raw}} 
 													<span class="badge badge-primary badge-pill">
-														 {{ user_group.users|length}}  users</span>
+														 {{ user_group.users|length}}  {% trans %}Users{% endtrans %}</span>
 												</td>
 
-												<td>{{ user_group.description }}</td>
-												<td>
-													{% if is_granted("user_group_edit") %}
+										<td>{{ user_group.description | trans | raw }}</td>
+										<td>
+											{% if is_granted("user_group_edit") %}
 
-														<form class="d-inline" method="post" action="{{ path('user_group_action',{'id':user_group.id})}}" onsubmit="return confirm('Are you sure you want to {{ user_group.isActive ? 'DeActivate':'Activate'|trans}} this User Group?');">
-															<input name="activateUserGroup" value="{{ user_group.isActive ? 0 : 1}}" hidden>
-															{{ user_group.isActive ?  '<button class="btn btn-sm badge-success">Enabled</button>': '<button class="btn btn-sm btn-danger">Disabled</button>' }}
+												<form class="d-inline" method="post" action="{{ path('user_group_action',{'id':user_group.id})}}" onsubmit="return confirm('Are you sure you want to deactivate this User Group?');">
+													<input name="activateUserGroup" value="{{ user_group.isActive ? 0 : 1}}" hidden>
+													{# {% set enabled = "Enabled" | trans | raw %} #}
 
-														</form>
-													 {% endif %} 
-												</td>
-												<td>
+													{{ user_group.isActive ?  ('<button class="btn btn-sm badge-success">'~'Enabled'|trans | raw ~'</button>') | raw: ('<button class="btn btn-sm btn-danger">Disabled</button>') | raw}}
+
+												</form>
+												{% endif %} 
+										</td>
+										<td>
 												 
-													    <a href="{{ path('user_group_users',{'id': user_group.id})}}">manage</a>
+													    <a href="{{ path('user_group_users',{'id': user_group.id})}}">{{ 'Manage' | trans | raw }}</a>
 													{# {% endif %} #}
 													{% if is_granted("manage_users") %}
 														<form class="d-inline" method="post">
 															<input type="hidden" name="edit" value="{{user_group.id}}">
-															<button class="btn btn-sm btn-info" title="Edit">
+															<button class="btn btn-sm btn-info" title={{"Edit" | trans | raw}}>
 															<i class="fa fa-edit"></i>
 															</button>
 														</form>
