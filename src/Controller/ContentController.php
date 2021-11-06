@@ -219,7 +219,7 @@ class ContentController extends AbstractController
         $content = new Content();
 
         $em = $this->getDoctrine()->getManager();
-
+ 
         $uploadSize =  $em->getRepository(SystemSetting::class)->findOneBy(['code'=>'upload_size'])->getValue();
         if(!$uploadSize) $uploadSize = 100;//default.
         $form = $this->createForm(ContentType::class,$content, array('uploadSize'=>$uploadSize,'incrsid' => $instructorCourse->getId()));
@@ -230,6 +230,20 @@ class ContentController extends AbstractController
 
             $brochureFile = $form->get('filename')->getData();
             $youtubeLink = $form->get('videoLink')->getData();
+
+
+            if($youtubeLink)
+            {
+                $y = explode('=',$youtubeLink);
+                if(sizeof($y) == 2)
+                {
+                    $youtubeLink  ='https://www.youtube.com/embed/'.explode('=',$youtubeLink)[1];
+                    $content->setVideoLink( $youtubeLink);
+                }
+                
+            }
+          
+             
 
             // this condition is needed because the 'brochure' field is not required
             // so the PDF file must be processed only when a file is uploaded

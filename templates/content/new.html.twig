@@ -35,18 +35,25 @@
         $("#content_videoLink").prop('disabled', false);
         $("#content_filename").prop('disabled', true);
         $("content_filename").prop('required',false);
-       // $("#content_content").prop('disabled', true);
+        $("#content_content").prop('disabled', true);
+        $("#content").prop('disabled', true);
+        $(".cke_wysiwyg_frame").css('display', 'none  !important');
     });
     $("#videoFileRadio").on("click", function() {
         $("#content_videoLink").prop('disabled', true);
         $("#content_filename").prop('disabled', false);
         $("content_filename").prop('required',true);
-       // $("#content_content").prop('disabled', true);
+        $("#content_content").prop('disabled', true);
+        $("#content").prop('disabled', true);
+        $(".cke_wysiwyg_frame").css('display', 'none  !important');
     });
-   /* $("#ContentRadio").on("click", function() {
+    $("#ContentRadio").on("click", function() {
         $("#content_videoLink").prop('disabled', true);
         $("#content_filename").prop('disabled', true);
         $("#content_content").prop('disabled', false);
-    });*/
+        //$("#content").prop('disabled', false);
+        $(".cke_wysiwyg_frame").css('display', 'block !important');
+        
+    });
 </script>
 {% endblock %}

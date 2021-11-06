@@ -94,7 +94,7 @@
                         <br>
                         {% if quiz.passValue > student_quiz.result %}
                             {% if quiz.noOfRetakeAllowed > student_quiz.trial %}
-                                You failed this quiz you have <a href="{{path('retake_exam',{'id':chapter.id})}}" class="btn btn-info"> click here to retake exam</a>
+                                You failed this quiz. <a href="{{path('retake_exam',{'id':chapter.id})}}" class="btn btn-info"> click here to retake exam</a>
                             {% else %}
                                 {% for label, messages in app.flashes %} 
                                     {% for message in messages %}

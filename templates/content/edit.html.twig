@@ -42,5 +42,13 @@
         $("#content_videoLink").prop('disabled', true);
         $("#content_filename").prop('disabled', false);
     });
+    
+
+    $("#ContentRadio").on("click", function() {
+    $("#content_videoLink").prop('disabled', true);
+    $("#content_filename").prop('disabled', true);
+    $("#content_content").prop('disabled', false);
+});
+
 </script>
 {% endblock %}
