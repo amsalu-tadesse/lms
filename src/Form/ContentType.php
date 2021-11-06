@@ -21,7 +21,7 @@ class ContentType extends AbstractType
         $incrsid = $options['incrsid']; 
         $uploadSize = $options['uploadSize']; 
 
-
+ 
 
         $builder
             ->add('chapter', EntityType::class, [

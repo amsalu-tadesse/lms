@@ -6,7 +6,7 @@
     
         
         {% set continue = true %}
-
+ 
         {% for course in courses %}
             {% if course.id in array %}
                 {% set continue = false %}
@@ -15,7 +15,7 @@
             {% endif %}
             {% if continue == true %}
           
-         
+       
                 {% if flag == course.category_id %}
 
             
@@ -43,6 +43,9 @@
                     
                     {% if flag == 0 %}
                         <h4> {{ course.category_name|capitalize }}</h4>
+
+
+
                         <div class="owl-carousel owl-theme show-nav-hover">
                             <div class="card bg-color-gray" style="height: 150px;" card-id="{{course.id}}">
                                 <div class="card-body">
@@ -98,3 +101,4 @@
         {% endfor %}  
         </div>
     </div>
+

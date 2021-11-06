@@ -34,7 +34,7 @@ class ContentController extends AbstractController
      */
     public function index(ContentRepository $contentRepository,Request $request, InstructorCourse $instructorCourse, PaginatorInterface $paginator): Response
     {
-        $this->denyAccessUnlessGranted('content_list');
+       // $this->denyAccessUnlessGranted('content_list');
         if($request->request->get('edit')){
             $id=$request->request->get('edit');
             $content=$contentRepository->findOneBy(['id'=>$id]);
@@ -314,8 +314,19 @@ class ContentController extends AbstractController
      
         if ($this->isCsrfTokenValid('delete'.$content->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($content);
-            $entityManager->flush();
+          
+
+            try
+            {
+                $entityManager->remove($content);
+                $entityManager->flush();
+            } catch (\Exception $ex) {
+                // dd($ex);
+                $message = UtilityController::getMessage($ex->getCode());
+                $this->addFlash('danger', $message);
+            }
+
+
         }
 
         return $this->redirectToRoute('content_index', ['id'=>$instid], Response::HTTP_SEE_OTHER);

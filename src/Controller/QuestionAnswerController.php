@@ -17,7 +17,7 @@ use Knp\Component\Pager\PaginatorInterface;
 
 
 /**
- * @Route("/question/answer")
+ * @Route("/question/answer") 
  */
 class QuestionAnswerController extends AbstractController
 {
@@ -48,7 +48,7 @@ class QuestionAnswerController extends AbstractController
         return $this->render('question_answer/index.html.twig', [
             'question_answers' => $data,
         ]);
-    }
+    } 
 
     /**
      * @Route("/load", name="question_answer_load_more", methods={"GET"})
@@ -81,7 +81,13 @@ class QuestionAnswerController extends AbstractController
     public function new(Request $request, InstructorRepository $inst_repo): Response
     {
         $questionAnswer = new QuestionAnswer();
-        $form = $this->createForm(QuestionAnswerNewType::class, $questionAnswer);
+        $instObj =  $inst_repo->findOneBy(['user'=>$this->getUser()->getId()]);
+        $inid =  $instObj->getId();
+
+        $form = $this->createForm(QuestionAnswerNewType::class, $questionAnswer, array('inid' => $inid));
+
+
+        // $form = $this->createForm(QuestionAnswerNewType::class, $questionAnswer);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if($this->isGranted('ROLE_INSTRUCTOR'))
@@ -123,6 +129,8 @@ class QuestionAnswerController extends AbstractController
      */
     public function edit(Request $request, QuestionAnswer $questionAnswer): Response
     {
+       
+        
         $form = $this->createForm(QuestionAnswerType::class, $questionAnswer);
         $form->handleRequest($request);
 

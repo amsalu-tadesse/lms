@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Repository\InstructorCourseRepository;
 use Ottosmops\Pdftotext\Extract;
+use Symfony\Component\Dotenv\Dotenv;
 
 
 
@@ -47,24 +48,32 @@ class HomeController extends AbstractController
      */
         public function temp()
         {
-           /* //one
-          $txt =  \Ottosmops\Pdftotext\Extract::getText('uploads/pdf/law.pdf'); //returns the text from the pdf
+           /* $projectRoot = $this->getParameter('docroot');
+            $dotenv = new Dotenv();
+            $dd = $dotenv->load($projectRoot.'/.env');
+            //  $_ENV['DATABASE_URL'] = "hahahaha";
+             $dbUser =  $dd->getenv('DATABASE_URL');
+             
+           dd($dbUser);*/
 
-          //three
-         $txt = (new Extract('/usr/bin/pdftotext'))
-    ->pdf('uploads/pdf/law.pdf')
-    ->options('-enc UTF-8 -nopgbrk')
-    ->text();
-  
+          /* $dotenv = new Dotenv();
+$dotenv->load(__DIR__.'/.env');
+$dbUser = getenv('DB_USER');
+dd($dbUser);
 
-  //two////
-  $reader = new \Asika\Pdf2text;
-$output = $reader->decode('uploads/pdf/law.pdf');
+dd("done");*/
 
-          return $this->render('home/pdf.html.twig', [
-            'pdf' => $txt,
-        ]);*/
+// $c = $_ENV['DATABASE_URL'];
+// $v = $this->params->get('DATABASE_URL');
+// $container->setParameter('DATABASE_URL', '88888888888');
+$container = $this->get('validator.email');
+// $object = $container->get('foo.baz.bar');
+dd($container);
 
+
+//eca_olms_mailer
+
+ 
         }
 
  

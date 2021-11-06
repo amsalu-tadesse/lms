@@ -141,8 +141,17 @@ class InstructorCourseController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete' . $instructorCourse->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($instructorCourse);
-            $entityManager->flush();
+            try
+            {
+                $entityManager->remove($instructorCourse);
+                $entityManager->flush();
+            }
+            catch(\Exception $ex)
+            {
+dd($ex);
+            }
+
+            
         }
 
         return $this->redirectToRoute('instructor_course_index', [], Response::HTTP_SEE_OTHER);

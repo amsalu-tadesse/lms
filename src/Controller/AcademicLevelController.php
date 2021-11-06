@@ -76,7 +76,7 @@ class AcademicLevelController extends AbstractController
      */
     public function new(Request $request): Response
     {
-        $this->denyAccessUnlessGranted('academic_level_create');
+        //$this->denyAccessUnlessGranted('academic_level_create');
         $academicLevel = new AcademicLevel();
         $form = $this->createForm(AcademicLevelType::class, $academicLevel);
         $form->handleRequest($request);
@@ -110,7 +110,7 @@ class AcademicLevelController extends AbstractController
      */
     public function edit(Request $request, AcademicLevel $academicLevel): Response
     {
-        $this->denyAccessUnlessGranted('academic_level_edit');
+       // $this->denyAccessUnlessGranted('academic_level_edit');
         $form = $this->createForm(AcademicLevelType::class, $academicLevel);
         $form->handleRequest($request);
 
@@ -131,11 +131,21 @@ class AcademicLevelController extends AbstractController
      */
     public function delete(Request $request, AcademicLevel $academicLevel): Response
     {
-        $this->denyAccessUnlessGranted('academic_level_delete');
+       // $this->denyAccessUnlessGranted('academic_level_delete');
         if ($this->isCsrfTokenValid('delete'.$academicLevel->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($academicLevel);
-            $entityManager->flush();
+          
+
+            try
+            {
+                $entityManager->remove($academicLevel);
+                $entityManager->flush();
+            } catch (\Exception $ex) {
+                // dd($ex);
+                $message = UtilityController::getMessage($ex->getCode());
+                $this->addFlash('danger',$message );
+            }
+
         }
 
         return $this->redirectToRoute('academic_level_index', [], Response::HTTP_SEE_OTHER);
