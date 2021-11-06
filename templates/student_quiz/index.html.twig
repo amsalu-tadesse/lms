@@ -92,15 +92,15 @@
                     <p class="result">Result: {{correct_answer}}
                         <br>
                         <br>
-                        {% if quiz.passValue > student_quiz.result %}
-                            {% if quiz.noOfRetakeAllowed >= student_quiz.trial %}
-                                You failed this quiz you have <a href="#" class="btn btn-info"> click here to retake exam</a>
-                            {% else %}
+                        {# {% if quiz.passValue > student_quiz.result %} #}
+                            {# {% if quiz.noOfRetakeAllowed >= student_quiz.trial %} #}
+                                {# You failed this quiz you have <a href="#" class="btn btn-info"> click here to retake exam</a> #}
+                            {# {% else %}
                                 <span style="color: #d7cece;font-size: 21px;">Failed!</span>
                             {% endif %}
                         {% else %}
                             Passed!
-                        {% endif %}
+                        {% endif %} #}
                         
                     </p>
                     
