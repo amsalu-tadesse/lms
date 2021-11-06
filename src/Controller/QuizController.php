@@ -349,8 +349,17 @@ class QuizController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete' . $quiz->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($quiz);
-            $entityManager->flush();
+          
+            try
+            {
+                $entityManager->remove($quiz);
+                $entityManager->flush();
+            } catch (\Exception $ex) {
+                // dd($ex);
+                $message = UtilityController::getMessage($ex->getCode());
+                $this->addFlash('danger', $message);
+            }
+
         }
 
         return $this->redirectToRoute('quiz_index', [], Response::HTTP_SEE_OTHER);

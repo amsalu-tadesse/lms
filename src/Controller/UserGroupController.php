@@ -193,8 +193,19 @@ class UserGroupController extends AbstractController
         }
         if ($this->isCsrfTokenValid('delete'.$userGroup->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($userGroup);
-            $entityManager->flush();
+           
+
+            try
+            {
+                $entityManager->remove($userGroup);
+                $entityManager->flush();
+            } catch (\Exception $ex) {
+                // dd($ex);
+                $message = UtilityController::getMessage($ex->getCode());
+                $this->addFlash('danger', $message);
+            }
+
+
         }
 
         return $this->redirectToRoute('user_group_index');
