@@ -116,7 +116,7 @@
 															</button>
 														</form>
 													{% endif %}
-													{% if is_granted("manage_users") %}
+													{# {% if is_granted("manage_users") %}
 														<form class="d-inline" method="post" action="{{ path('user_group_delete', {'id': user_group.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
 
 															<input type="hidden" name="_method" value="DELETE">
@@ -127,7 +127,7 @@
 																<i class="fa fa-trash"></i>
 															</button>
 														</form>
-													{% endif %}
+													{% endif %} #}
 												</td>
 
 											</tr>

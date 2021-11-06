@@ -29,15 +29,17 @@ class StudentCourseController extends AbstractController
      * @Route("/", name="student_course_index", methods={"GET"})
      */
 
-    // ******** student home page , don't touch it OK
+     
     public function index(StudentCourseRepository $studentCourseRepository, PaginatorInterface $paginator, Request $request, InstructorCourseRepository $course): Response
     { 
+        
         if ($this->getUser()->getProfile() == null) {
             return $this->redirectToRoute('app_login');
         }
 
         $queryBuilder = $studentCourseRepository->findCourses($this->getUser()->getProfile()->getId());
         $courses = $course->findCoursesSortByCategory();
+    //    dd($courses);
         $data = $paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page', 1),
@@ -98,7 +100,7 @@ class StudentCourseController extends AbstractController
     }
 
     /**
-     * @Route("/course/request/rejected", name="rejected_course_request", methods={"GET"})
+     * @Route("/course/requests/rejected", name="rejected_course_request", methods={"GET"})
      */
     public function rejectedCourseRequest(Request $request, StudentCourseRepository $studentCourseRepository, PaginatorInterface $paginator): Response
     {

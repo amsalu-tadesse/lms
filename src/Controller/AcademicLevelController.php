@@ -134,8 +134,18 @@ class AcademicLevelController extends AbstractController
         $this->denyAccessUnlessGranted('academic_level_delete');
         if ($this->isCsrfTokenValid('delete'.$academicLevel->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($academicLevel);
-            $entityManager->flush();
+          
+
+            try
+            {
+                $entityManager->remove($academicLevel);
+                $entityManager->flush();
+            } catch (\Exception $ex) {
+                // dd($ex);
+                $message = UtilityController::getMessage($ex->getCode());
+                $this->addFlash('danger',$message );
+            }
+
         }
 
         return $this->redirectToRoute('academic_level_index', [], Response::HTTP_SEE_OTHER);

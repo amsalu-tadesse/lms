@@ -89,8 +89,17 @@ class CourseCategoryController extends AbstractController
         // $this->denyAccessUnlessGranted('course_category_delete');
         if ($this->isCsrfTokenValid('delete'.$courseCategory->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($courseCategory);
+           
+
+            try
+            {
+                $entityManager->remove($courseCategory);
             $entityManager->flush();
+            } catch (\Exception $ex) {
+                // dd($ex);
+                $message = UtilityController::getMessage($ex->getCode());
+                $this->addFlash('danger',$message );
+            }
         }
 
         return $this->redirectToRoute('course_category_index', [], Response::HTTP_SEE_OTHER);
