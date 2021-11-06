@@ -36,9 +36,8 @@ class QuestionAnswerController extends AbstractController
         {
             $questions = array();
         }
-       
+        
         $question_answer = $que_ans_repo->updateNotification(['instructor'=>$instructor->getId()]);
-
 
         $data = $paginator->paginate(
             $questions,
