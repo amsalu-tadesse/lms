@@ -233,6 +233,15 @@ class QuizController extends AbstractController
             $i = 1;
             $quiz_que = $quiz_que_rep->getQ($quiz->getId());
             if (sizeof($quiz_que) > 0) {
+                $student_quiz = $em->getRepository(StudentQuiz::class)->findOneBy(array('student' => $this->getUser()->getProfile()->getId(), 'quiz' => $quiz->getId()), array('id'=>'DESC'));
+                if($student_quiz!=null && $student_quiz->getResult() != null)
+                {
+                    if($student_quiz->getResult() < $quiz->getPassValue() && $student_quiz->getTrial() < $quiz->getNoOfRetakeAllowed())
+                    {
+                        return $this->redirectToRoute('retake_exam',['id'=>$chapter->getId()]);
+                    }
+                }
+                
                 if ($prev == null) {
                     $student_quiz = new StudentQuiz();
                     $student_quiz->setStudent($this->getUser()->getProfile());
@@ -348,6 +357,24 @@ class QuizController extends AbstractController
                         if($student_quiz->getResult() == null)
                         {
                             $res = ($correct_answer/sizeof($stud_que))*$quiz->getPercentage();
+
+                            if($res >= $quiz->getPassValue()){
+                                $last_chapter =  $em->getRepository(InstructorCourseChapter::class)->findBy(array('instructorCourse'=>$chapter->getInstructorCourse()->getId()),array('id'=>'DESC'),1,0);
+                                if(array_key_exists(0, $last_chapter))
+                                {
+                                    if($last_chapter[0]->getId() == $chapter->getId())
+                                    {
+                                        $finalize_course = $stud_course->findOneBy(['student'=>$this->getUser()->getProfile()->getId(),'instructorCourse'=>$chapter->getInstructorCourse()->getId()]) ;
+                                        $finalize_course->setStatus(5);
+                                        $em->persist($finalize_course);
+                                        $em->flush();
+                                        $this->addFlash("info", "You are successfully completed this course");
+                                    }
+                                }
+                            }
+                            else{
+                                $this->addFlash("info", "You are faile the exam");
+                            }
                             $student_quiz->setResult($res);
                             $em->persist($student_quiz);
                             $em->flush();
@@ -393,11 +420,32 @@ class QuizController extends AbstractController
 
                     if($student_quiz->getResult() == null)
                     {
-                        $res = ($correct_answer/sizeof($stud_que))*$quiz->getPercentage();
+                        $res = ($correct_answer/sizeof($stud_que))*$quiz->getPercentage(); 
+                        if($res >= $quiz->getPassValue()){
+                            $last_chapter =  $em->getRepository(InstructorCourseChapter::class)->findBy(array('instructorCourse'=>$chapter->getInstructorCourse()->getId()),array('id'=>'DESC'),1,0);
+                            if(array_key_exists(0, $last_chapter))
+                            {
+                                if($last_chapter[0]->getId() == $chapter->getId())
+                                {
+                                    $finalize_course = $stud_course->findOneBy(['student'=>$this->getUser()->getProfile()->getId(),'instructorCourse'=>$chapter->getInstructorCourse()->getId()]) ;
+                                    $finalize_course->setStatus(5);
+                                    $em->persist($finalize_course);
+                                    $em->flush();
+                                    $this->addFlash("info", "You are successfully completed this course. you can get your certificate");
+                                }
+                            }
+                        }
+                        else{
+                            $this->addFlash("info", "You are failed this exam. you will not be certified");
+                        }
+                        
                         $student_quiz->setResult($correct_answer);
                         $em->persist($student_quiz);
                         $em->flush();
+
                     }
+
+                    
                     return $this->render('student_quiz/index.html.twig', [
                         'stud_que' => $stud_que,
                         'chapter' => $chapter,

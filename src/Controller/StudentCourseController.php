@@ -39,7 +39,7 @@ class StudentCourseController extends AbstractController
 
         $queryBuilder = $studentCourseRepository->findCourses($this->getUser()->getProfile()->getId());
         $courses = $course->findCoursesSortByCategory();
-    //    dd($courses);
+
         $data = $paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page', 1),
@@ -96,6 +96,35 @@ class StudentCourseController extends AbstractController
         return $this->render('student_course/approved_course_requests.html.twig', [
             'student_courses' => $stdCrs,
             'searchForm' => $searchForm->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/course/student/finished", name="finished_students_list", methods={"GET"})
+    */
+    public function finishedCourses(StudentCourseRepository $stud_course_repo, PaginatorInterface $paginator, Request $request)
+    {
+        $queryBuilder = $stud_course_repo->findBy(['status'=>5],['id'=>'DESC']);
+        
+        $data = $paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page', 1),
+            15
+        );
+
+        return $this->render('student_course/certification.html.twig', [
+            'student_courses' => $data,
+        ]);
+    }
+
+
+    /**
+     * @Route("/course/certificate/{id}/print", name="print_certificate", methods={"GET"})
+    */
+    public function printCertificate(StudentCourse $studentCourse)
+    {
+        return $this->render('certificate/print.html.twig', [
+            'student_course' => $studentCourse,
         ]);
     }
 

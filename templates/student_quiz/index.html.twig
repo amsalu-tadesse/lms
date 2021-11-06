@@ -96,10 +96,28 @@
                             {% if quiz.noOfRetakeAllowed > student_quiz.trial %}
                                 You failed this quiz you have <a href="{{path('retake_exam',{'id':chapter.id})}}" class="btn btn-info"> click here to retake exam</a>
                             {% else %}
-                                <span style="color: #d7cece;font-size: 21px;">Failed!</span>
+                                {% for label, messages in app.flashes %} 
+                                    {% for message in messages %}
+                                        <div class="alert alert-danger alert-{{ label }} fade show" role="alert">
+                                        <strong> {{ message }}</strong>
+                                        <button type="button" class="close btn-primary" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        </div>
+                                    {% endfor %} 
+                                {% endfor %}
                             {% endif %}
                         {% else %}
-                            Passed!
+                            {% for label, messages in app.flashes %} 
+                                {% for message in messages %}
+                                    <div class="alert alert-{{ label }} fade show" role="alert">
+                                    <strong> {{ message }}</strong>
+                                    <button type="button" class="close btn-primary" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    </div>
+                                {% endfor %} 
+                            {% endfor %}
                         {% endif %}
                         
                     </p>
