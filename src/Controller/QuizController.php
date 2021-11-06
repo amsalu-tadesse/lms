@@ -373,7 +373,7 @@ class QuizController extends AbstractController
                                 }
                             }
                             else{
-                                $this->addFlash("info", "You are faile the exam");
+                                $this->addFlash("info", "You failed this exam");
                             }
                             $student_quiz->setResult($res);
                             $em->persist($student_quiz);
