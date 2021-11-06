@@ -36,7 +36,11 @@ class QuestionAnswerController extends AbstractController
         {
             $questions = array();
         }
-        
+        if(!$instructor)
+        {
+            $this->addFlash('warning','Only Instructor can use Q&A');
+            return $this->redirectToRoute('home');
+        }
         $question_answer = $que_ans_repo->updateNotification(['instructor'=>$instructor->getId()]);
 
         $data = $paginator->paginate(
@@ -64,7 +68,7 @@ class QuestionAnswerController extends AbstractController
                 $result[$key]['instructor'] = $value['instructor'];
                 $result[$key]['student'] = $value['student'];
             }
-            $returnResponse = new JsonResponse();
+            $returnResponse = new JsonResponse(); 
             $returnResponse->setJson(json_encode($result));
     
             return $returnResponse;

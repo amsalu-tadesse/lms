@@ -25,6 +25,7 @@ class ContentType extends AbstractType
 
         $builder
             ->add('chapter', EntityType::class, [
+                'required' => true,
                 'class' => InstructorCourseChapter::class,
                 'required' => false,
                 'placeholder' => "",
@@ -64,6 +65,15 @@ class ContentType extends AbstractType
                         'maxSize' => $uploadSize.'M',
                         'mimeTypes' => [
                             'image/*',
+                            'video/mp4',
+                            'video/avi',
+                            'video/mpeg',
+                            'video/MOV',
+                            'video/SWF',
+                            'audio/mp3',
+                            'audio/wav',
+                            'audio/M4A',
+                            'audio/MP4',
                             'application/pdf',
                             'application/msword',
                             'application/vnd.ms-excel',

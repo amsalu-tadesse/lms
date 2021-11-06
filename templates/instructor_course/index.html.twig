@@ -5,6 +5,28 @@
     Course assignement
     {% endtrans %}
 {% endblock %}
+
+{% block stylesheets %}
+<style>
+	table {
+	  font-family: arial, sans-serif;
+	  border-collapse: collapse;
+	  width: 100%;
+	}
+	
+	td, th {
+	  border: 1px solid #dddddd;
+	  text-align: left;
+	  padding: 8px;
+	}
+	
+	tr:nth-child(even) {
+	  background-color: #dddddd;
+	}
+	</style>
+{% endblock %}
+
+
 {% block breadcrumbhome %}
     <a href="{{ path('instructor_course_index') }} ">
         {% trans %}
@@ -54,6 +76,45 @@
             <div class="text-center col-md-6 col-sm-12" id="myChart" style="width:100%; max-width:800px; height:300px;"></div>
             <div class="text-center col-md-3"></div>
         </div>
+
+
+
+<div class="modal fade" id="modal-xl">
+<div class="modal-dialog modal-xl">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">Course content summary</h4>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+  
+     <table id="rep">
+        <thead>
+          <th>#</th>
+          <th>Chapter</th>
+          <th>Content</th>
+          <th>Quiz</th>
+        </thead>
+        
+      </table> 
+
+
+
+
+    </div>
+    <div class="modal-footer justify-content-between">
+      <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      {# <button type="button" class="btn btn-primary">Save changes</button> #}
+    </div>
+  </div>
+  <!-- /.modal-content -->
+</div>
+<!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
 
         <div class="card card-body">
             {{ form_start(searchForm,{'attr': {'role':'form'}, 'method': 'GET'}) }}
@@ -137,6 +198,11 @@
                                 </td>
                                 <td>
                                     {{ instructor_course.course }}
+
+                                <span data-toggle="modal" data-target="#modal-xl" class="badge badge-info" id="rpt" onclick="generateReport({{instructor_course.id}})">Report</span>
+						
+
+
                                 </td>
                                 <td>
                                     {{ instructor_course.course.category.name }}
@@ -321,5 +387,44 @@ function showchart()
 
 </script>
 
+
+
+<script>
+    function generateReport(x)
+   {
+
+   var urls = "/getsummary/"+ x;
+
+   
+   $.ajax({
+   url: urls ,
+
+   success: function(data){
+    $('#rep tr').remove();
+       $.each(data, function(i, content) {
+    
+   var tr = $('<tr></tr>');
+   var td = $('<td>'+(i+1)+'</td><td>'+content.chapter+'</td><td><table><tr><td>Video</td><td>'+content.contents.video+'</td></tr><tr><td>Youtube</td><td>'+content.contents.youtube+'</td></tr><tr><td>Others</td><td>'+content.contents.others+'</td></tr></table></td><td>'+content.quiz+'</td>');
+   tr.append(td);
+$("#rep").append(tr);
+            
+       });
+
+
+
+   },
+   error: function(data){
+       console.log("Error");
+   }
+});
+
+
+
+   }
+</script>
+
         {% endblock %}
         
+
+
+     
