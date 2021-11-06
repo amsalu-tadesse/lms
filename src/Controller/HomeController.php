@@ -49,7 +49,7 @@ class HomeController extends AbstractController
     }
 
     /**
-     * @Route("/print", name="home")
+     * @Route("/print", name="print")
      */
     public function print()
     {

@@ -201,6 +201,33 @@
                                 </li>
                         
                             </li>
+
+                        {% if is_granted('student_list')  %}
+                        <li class="nav-header">
+                            <h6>
+                                {% trans %}
+                                    Certifications                             
+                                {% endtrans %}
+                                <h6></li>
+                                {% endif %}
+                                <li class="nav-item has-treeview menu-open ">
+                                    {% if is_granted('student_list') %}
+                                        <li class="nav-item">
+                                            <a href="{{ path('finished_students_list') }}" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>
+                                                    {% trans %}
+                                                    Student List                                                                                                        
+                                                    {% endtrans %}
+                                                </p>
+                                            </a>
+                                        </li>
+
+                                    {% endif %}
+
+                                </li>
+                        
+                            </li>
                             {% if is_granted('system_setting_list') %}
                             <li class="nav-header">
                                 <h6>

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-        .graph-7 {
+        body {
             background: url("/images/background-print.jpg");
         }
         
@@ -20,24 +20,50 @@
             }
         }
         
+        body {
+            background-image: url("/images/background-print.jpg");
+            background-size: auto;
+            -o-background-size: cover;
+            background-size: cover;
+        }
+        
         @media print {
             @page {
                 size: A4 landscape,
             }
-            html {
-                background: url("/images/background-print.jpg");
+            body {
+                background-image: url("/images/background-print.jpg");
                 background-size: auto;
                 -o-background-size: cover;
                 background-size: cover;
+            }
+            .card {
+                margin: 400px 600px;
+                width: 100%;
+                font-size: 40px;
+            }
+
+            p{
+                width: 900px;
             }
         }
     </style>
 </head>
 
 <body onload="window.print()">
+    <div class="card">
+        <h2 style="padding:5px 50px">
+            {{student_course.student.user.firstName}}
+            {{student_course.student.user.middleName}}
+            {{student_course.student.user.LastName}}
+        </h2>
 
-    <p>
-    </p>
+
+        <p>This Acknowledge that {{student_course.student.user.firstName}}
+            {{student_course.student.user.middleName}}
+            {{student_course.student.user.LastName}} has successfully completed the training on the course 
+            {{student_course.instructorCourse.course.name }} </p>
+    </div>
 </body>
 
 </html>
