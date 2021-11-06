@@ -6,6 +6,7 @@ use App\Entity\CourseCategory;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 
 class CourseCategoryType extends AbstractType
 {
@@ -13,7 +14,12 @@ class CourseCategoryType extends AbstractType
     {
         $builder
             ->add('name',null,['attr'=>['class'=>'form-control']])
-            ->add('description',null,['attr'=>['class'=>'form-control']])
+            ->add('description', CKEditorType::class, array(
+                'attr'=>['class'=>'form-control'],
+                'config' => array(
+                    'uiColor' => '#ffffff',
+                 ),
+            ))
         ;
     }
 

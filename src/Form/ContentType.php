@@ -36,7 +36,7 @@ class ContentType extends AbstractType
                              ->andWhere('ic.id = :incrsid')
                 ->setParameter('incrsid', $incrsid);
                     return $res;
-                },
+                }, 
             ]) 
             ->add('title')
             // ->add('file')

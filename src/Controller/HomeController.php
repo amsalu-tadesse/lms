@@ -12,6 +12,10 @@ use Symfony\Component\Dotenv\Dotenv;
 
 
 
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Config\FrameworkConfig;
+
+
 
 class HomeController extends AbstractController
 {
@@ -66,12 +70,9 @@ dd("done");*/
 // $c = $_ENV['DATABASE_URL'];
 // $v = $this->params->get('DATABASE_URL');
 // $container->setParameter('DATABASE_URL', '88888888888');
-$container = $this->get('validator.email');
+// $container = $this->get('validator.email');
 // $object = $container->get('foo.baz.bar');
-dd($container);
-
-
-//eca_olms_mailer
+// dd($container);
 
  
         }
