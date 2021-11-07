@@ -92,13 +92,35 @@
                     <p class="result">Result: {{correct_answer}}
                         <br>
                         <br>
+                        {% set flag = true %}
                         {% if quiz.passValue > student_quiz.result %}
                             {% if quiz.noOfRetakeAllowed > student_quiz.trial %}
                                 You failed this quiz. <a href="{{path('retake_exam',{'id':chapter.id})}}" class="btn btn-info"> click here to retake exam</a>
                             {% else %}
+                        
+                                {% if last %}
+                                    {% for label, messages in app.flashes %} 
+                                        {% for message in messages %}
+                                            {% set flag = false %}
+                                            <div class="alert alert-{{ label }} fade show" role="alert">
+                                            <strong> {{ message }}</strong>
+                                            <button type="button" class="close btn-primary" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            </div>
+                                        {% endfor %} 
+                                    {% endfor %}
+                                    <a href="{{path('student_course_index')}}" class="btn btn-primary"> Go to home page</a>
+                                {% else %}
+                                    <a href="{{path('course_chapters',{'id':chapter.instructorCourse.id})}}" class="btn btn-primary px-5 mx-2 my-2">Go to next chapters</a>
+                                {% endif %}
+                            {% endif %}
+                        {% else %}
+                            {% if last %}
                                 {% for label, messages in app.flashes %} 
                                     {% for message in messages %}
-                                        <div class="alert alert-danger alert-{{ label }} fade show" role="alert">
+                                        {% set flag = false %}
+                                        <div class="alert alert-{{ label }} fade show" role="alert">
                                         <strong> {{ message }}</strong>
                                         <button type="button" class="close btn-primary" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
@@ -106,23 +128,16 @@
                                         </div>
                                     {% endfor %} 
                                 {% endfor %}
+                                <a href="{{path('student_course_index')}}" class="btn btn-primary"> Go to home page</a>
+                            {% else %}
+                                <a href="{{path('course_chapters',{'id':chapter.instructorCourse.id})}}" class="btn btn-primary px-5 mx-2 my-2">Go to next chapters</a>
                             {% endif %}
-                        {% else %}
-                            {% for label, messages in app.flashes %} 
-                                {% for message in messages %}
-                                    <div class="alert alert-{{ label }} fade show" role="alert">
-                                    <strong> {{ message }}</strong>
-                                    <button type="button" class="close btn-primary" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                    </div>
-                                {% endfor %} 
-                            {% endfor %}
                         {% endif %}
+                        
+                        
                         
                     </p>
                     
-                <a href="{{path('course_chapters',{'id':chapter.instructorCourse.id})}}" class="btn btn-primary px-5 mx-2 my-2">Go to next chapters</a>
 				</div>
 			</div>
 		</div>

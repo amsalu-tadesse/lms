@@ -216,6 +216,7 @@ class QuizController extends AbstractController
      */
     public function quizPage(Request $request, SystemSettingRepository $setting_repo, InstructorCourseChapter $chapter, QuizQuestionsRepository $quiz_que_rep, PaginatorInterface $paginator, StudentCourseRepository $stud_course)
     {
+        $this->get('session')->getFlashBag()->clear();
         $check_student_course = $stud_course->findBy(array('student' => $this->getUser()->getProfile()->getId(), 'instructorCourse' => $chapter->getInstructorCourse()->getId()));
         if ($check_student_course == null) {
             return $this->redirectToRoute("student_course_index");
@@ -314,6 +315,8 @@ class QuizController extends AbstractController
 
                 $test_taken = false;
                 $student_quiz = $em->getRepository(StudentQuiz::class)->findOneBy(array('student' => $this->getUser()->getProfile()->getId(), 'quiz' => $quiz->getId(),'active'=>1));
+                $last_chapter =  $em->getRepository(InstructorCourseChapter::class)->findBy(array('instructorCourse'=>$chapter->getInstructorCourse()->getId()),array('id'=>'DESC'),1,0);
+
                 if($student_quiz->getResult() != null){
                     $test_taken = true;
                 }
@@ -322,7 +325,9 @@ class QuizController extends AbstractController
 
                 $date_diff = $end_time->diff($now);
                 $time = array();
+                $last = false;
 
+                
                 if ($now < $end_time && !$test_taken) {
                    
                     /// write answer if time available
@@ -354,12 +359,13 @@ class QuizController extends AbstractController
                                 $correct_answer++;
                             }
                         }
+
+
+                        $res = ($correct_answer/sizeof($stud_que))*$quiz->getPercentage();
+
                         if($student_quiz->getResult() == null)
                         {
-                            $res = ($correct_answer/sizeof($stud_que))*$quiz->getPercentage();
-
                             if($res >= $quiz->getPassValue()){
-                                $last_chapter =  $em->getRepository(InstructorCourseChapter::class)->findBy(array('instructorCourse'=>$chapter->getInstructorCourse()->getId()),array('id'=>'DESC'),1,0);
                                 if(array_key_exists(0, $last_chapter))
                                 {
                                     if($last_chapter[0]->getId() == $chapter->getId())
@@ -368,22 +374,34 @@ class QuizController extends AbstractController
                                         $finalize_course->setStatus(5);
                                         $em->persist($finalize_course);
                                         $em->flush();
-                                        $this->addFlash("info", "You are successfully completed this course");
                                     }
                                 }
-                            }
-                            else{
-                                $this->addFlash("info", "You failed this exam");
                             }
                             $student_quiz->setResult($res);
                             $em->persist($student_quiz);
                             $em->flush();
                         }
 
+                        if($res >= $quiz->getPassValue()){
+                            if(array_key_exists(0, $last_chapter))
+                            {
+                                if($last_chapter[0]->getId() == $chapter->getId())
+                                {
+                                    $last = true;
+                                    $this->addFlash("info", "You are successfully completed this course. you can get your certificate");
+                                }
+                            }
+                        }
+                        else{
+                            $last = true;
+                            $this->addFlash("info", "You are failed this exam. you will not be certified");
+                        }
+
                         return $this->render('student_quiz/index.html.twig', [
                             'stud_que' => $stud_que,
                             'chapter' => $chapter,
                             'quiz' => $quiz,
+                            'last' => $last,
                             'student_quiz' => $student_quiz, 
                             'show_un_answered_questions' => $setting['value'],
                             'correct_answer' => $correct_answer
@@ -417,12 +435,12 @@ class QuizController extends AbstractController
                             $correct_answer++;
                         }
                     }
+                    $res = ($correct_answer/sizeof($stud_que))*$quiz->getPercentage(); 
+                    $last_chapter =  $em->getRepository(InstructorCourseChapter::class)->findBy(array('instructorCourse'=>$chapter->getInstructorCourse()->getId()),array('id'=>'DESC'),1,0);
 
                     if($student_quiz->getResult() == null)
                     {
-                        $res = ($correct_answer/sizeof($stud_que))*$quiz->getPercentage(); 
                         if($res >= $quiz->getPassValue()){
-                            $last_chapter =  $em->getRepository(InstructorCourseChapter::class)->findBy(array('instructorCourse'=>$chapter->getInstructorCourse()->getId()),array('id'=>'DESC'),1,0);
                             if(array_key_exists(0, $last_chapter))
                             {
                                 if($last_chapter[0]->getId() == $chapter->getId())
@@ -431,12 +449,8 @@ class QuizController extends AbstractController
                                     $finalize_course->setStatus(5);
                                     $em->persist($finalize_course);
                                     $em->flush();
-                                    $this->addFlash("info", "You are successfully completed this course. you can get your certificate");
                                 }
                             }
-                        }
-                        else{
-                            $this->addFlash("info", "You are failed this exam. you will not be certified");
                         }
                         
                         $student_quiz->setResult($correct_answer);
@@ -444,12 +458,26 @@ class QuizController extends AbstractController
                         $em->flush();
 
                     }
-
+                    if($res >= $quiz->getPassValue()){
+                        if(array_key_exists(0, $last_chapter))
+                        {
+                            if($last_chapter[0]->getId() == $chapter->getId())
+                            {
+                                $last = true;
+                                $this->addFlash("info", "You are successfully completed this course. you can get your certificate");
+                            }
+                        }
+                    }
+                    else{
+                        $last = true;
+                        $this->addFlash("info", "You are failed this exam. you will not be certified");
+                    }
                     
                     return $this->render('student_quiz/index.html.twig', [
                         'stud_que' => $stud_que,
                         'chapter' => $chapter,
                         'quiz' => $quiz,
+                        'last' => $last,
                         'student_quiz' => $student_quiz,
                         'show_un_answered_questions' => $setting['value'],
                         'correct_answer' => $correct_answer

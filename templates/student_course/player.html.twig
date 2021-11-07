@@ -132,12 +132,14 @@
                     <div class="row">
                     {% for label, messages in app.flashes %} 
                         {% for message in messages %}
-                            <div class="alert alert-danger alert-{{ label }} fade show" role="alert">
-                            <strong> {{ message }}</strong>
-                            <button type="button" class="close btn-primary" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            </div>
+                            {% if label=="danger" %}
+                                <div class="alert alert-danger alert-{{ label }} fade show" role="alert">
+                                <strong> {{ message }}</strong>
+                                <button type="button" class="close btn-primary" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                </div>
+                            {% endif %}
                         {% endfor %} 
                     {% endfor %}
 
