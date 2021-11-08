@@ -21,7 +21,7 @@
         }
         
         body {
-            background-image: url("/images/background-print.jpg");
+            background-image: url("/images/background-print.jpg") no-repeat center center fixed;
             background-size: auto;
             -o-background-size: cover;
             background-size: cover;
@@ -29,7 +29,7 @@
         
         @media print {
             @page {
-                size: A4 landscape,
+                size: A4 landscape;
             }
             body {
                 background-image: url("/images/background-print.jpg");
@@ -57,12 +57,12 @@
             {{student_course.student.user.middleName}}
             {{student_course.student.user.LastName}}
         </h2>
+        <hr>
 
 
-        <p>This Acknowledge that {{student_course.student.user.firstName}}
-            {{student_course.student.user.middleName}}
-            {{student_course.student.user.LastName}} has successfully completed the training on the course 
-            {{student_course.instructorCourse.course.name }} </p>
+        <p> has successfully completed the training on the course of</p> 
+        <h4> {{student_course.instructorCourse.course.name }} </h4>
+        <p> and awarded this qualification with <b>Distinction</b> on <br> {{ 'now'|date('M d, Y') }}</p>
     </div>
 </body>
 
