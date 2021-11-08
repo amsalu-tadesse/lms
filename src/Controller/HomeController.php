@@ -4,18 +4,86 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use App\Repository\InstructorCourseRepository;
+use Ottosmops\Pdftotext\Extract;
+use Symfony\Component\Dotenv\Dotenv;
+
+
+
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Config\FrameworkConfig;
+
+
 
 class HomeController extends AbstractController
 {
     /**
      * @Route("/", name="home")
      */
-    public function index()
+    public function index(InstructorCourseRepository $course)
     {
-        // $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
-        return $this->render('home/index.html.twig', [
-            'controller_name' => 'HomeController',
+        if(!$this->isGranted('IS_AUTHENTICATED_FULLY'))
+        {
+            $courses = $course->findCoursesSortByCategory();
+            return $this->render('course/couses_list.html.twig',[
+                'courses' => $courses
+            ]);
+            //return $this->redirectToRoute("courses_list");
+        }
+      
+        if($this->isGranted('ROLE_STUDENT'))
+        {
+            return $this->redirectToRoute("student_course_index");
+        }
+        else
+        {
+            
+        return $this->render('home/admin_index.html.twig', [
+            
         ]);
+        }
+      
+       
     }
+
+    /**
+     * @Route("/print", name="pdf")
+     */
+    public function print()
+    {
+        return $this->render("certificate/print.html.twig");
+    }
+      /**
+     * @Route("/pdf", name="test")
+     */
+        public function temp()
+        {
+           /* $projectRoot = $this->getParameter('docroot');
+            $dotenv = new Dotenv();
+            $dd = $dotenv->load($projectRoot.'/.env');
+            //  $_ENV['DATABASE_URL'] = "hahahaha";
+             $dbUser =  $dd->getenv('DATABASE_URL');
+             
+           dd($dbUser);*/
+
+          /* $dotenv = new Dotenv();
+$dotenv->load(__DIR__.'/.env');
+$dbUser = getenv('DB_USER');
+dd($dbUser);
+
+dd("done");*/
+
+// $c = $_ENV['DATABASE_URL'];
+// $v = $this->params->get('DATABASE_URL');
+// $container->setParameter('DATABASE_URL', '88888888888');
+// $container = $this->get('validator.email');
+// $object = $container->get('foo.baz.bar');
+// dd($container);
+
+ 
+        }
+
+ 
 }

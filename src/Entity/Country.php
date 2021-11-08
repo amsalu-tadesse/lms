@@ -29,15 +29,8 @@ class Country
      */
     private $description;
 
-    /**
-     * @ORM\OneToMany(targetEntity=UserProfile::class, mappedBy="country")
-     */
-    private $userProfiles;
 
-    public function __construct()
-    {
-        $this->userProfiles = new ArrayCollection();
-    }
+   
 
     public function getId(): ?int
     {
@@ -68,36 +61,7 @@ class Country
         return $this;
     }
 
-    /**
-     * @return Collection|UserProfile[]
-     */
-    public function getUserProfiles(): Collection
-    {
-        return $this->userProfiles;
-    }
-
-    public function addUserProfile(UserProfile $userProfile): self
-    {
-        if (!$this->userProfiles->contains($userProfile)) {
-            $this->userProfiles[] = $userProfile;
-            $userProfile->setCountry($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUserProfile(UserProfile $userProfile): self
-    {
-        if ($this->userProfiles->removeElement($userProfile)) {
-            // set the owning side to null (unless already changed)
-            if ($userProfile->getCountry() === $this) {
-                $userProfile->setCountry(null);
-            }
-        }
-
-        return $this;
-    }
-
+     
     public function __toString()
     {
         return $this->name;

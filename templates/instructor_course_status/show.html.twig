@@ -16,13 +16,13 @@
                 <td>{{ instructor_course_status.name }}</td>
             </tr>
             <tr>
-                <th>Description</th>
+                <th>{% trans %}Description{% endtrans %}</th>
                 <td>{{ instructor_course_status.description }}</td>
             </tr>
         </tbody>
     </table>
 
-    <a href="{{ path('instructor_course_status_index') }}">back to list</a>
+    <a href="{{ path('instructor_course_status_index') }}">{% trans %}Back to list{% endtrans %}</a>
 
     <a href="{{ path('instructor_course_status_edit', {'id': instructor_course_status.id}) }}">edit</a>
 

@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{% trans %} Home{% endtrans %}
+{% endblock %}
+{% block breadcrumbhome %}{% trans %}home{% endtrans %}{% endblock %}
+{% block body %}
+<div class="card card-info">
+<div class="card card-header">
+<h5> {% trans %} Learning Management System {% endtrans %}</h5>
+</div>
+<div class="card card-body">
+{% trans %}Welcome to Learning Management System{% endtrans %}
+</div>
+</div>
+{% endblock %}

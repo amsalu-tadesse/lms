@@ -3,9 +3,9 @@
 {% block title %}New InstructorCourseStatus{% endblock %}
 
 {% block body %}
-    <h1>Create new InstructorCourseStatus</h1>
+    <h1>{% trans %}create new{% endtrans %} InstructorCourseStatus</h1>
 
     {{ include('instructor_course_status/_form.html.twig') }}
 
-    <a href="{{ path('instructor_course_status_index') }}">back to list</a>
+    <a href="{{ path('instructor_course_status_index') }}">{% trans %}Back to list{% endtrans %}</a>
 {% endblock %}

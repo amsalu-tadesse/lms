@@ -36,6 +36,57 @@ class InstructorCourseRepository extends ServiceEntityRepository
     }
     */
 
+
+    public function filterIC($course, $instructor)
+    {
+        
+        $q =  $this->createQueryBuilder('ic');
+                
+                
+            if($course !="")
+            {
+                $q->join('ic.course','c')
+               ->Where('c.id LIKE :course')
+                  ->setParameter('course', '%'.$course.'%');
+            }
+            if($instructor !="")
+            {$q->join('ic.instructor', 'i')
+                ->andWhere('i.id LIKE :instructor')
+                ->setParameter('instructor', '%'.$instructor.'%');
+            }
+
+            $q->orderBy('ic.id', 'ASC')
+            ->getQuery()
+             ->getResult();
+             
+        return $q;
+    }
+
+    public function findCoursesSortByCategory($id=0)
+    {
+        $qb = $this->createQueryBuilder('ic')
+            ->select('ic.id','u.firstName','u.middleName', 'u.lastName', 'c.name','c.description', 'c.code', 'cc.id as category_id', 'cc.name as category_name' )
+            ->join('ic.instructor', 'i')
+            ->join('i.user','u')
+            ->join('ic.course', 'c')
+            ->join('c.category','cc');
+            
+        $id = (int)$id;
+        if($id==0){
+            return $qb->Where('c.status = 1')
+                ->orderBy('c.category')
+                ->getQuery()
+                ->getResult()
+            ;
+        }
+        else{
+            return $qb->where('ic.id = :val')
+            ->setParameter('val', $id)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+        }
+    }
     
     public function findByUser($user)
     {
@@ -48,5 +99,6 @@ class InstructorCourseRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
     
 }

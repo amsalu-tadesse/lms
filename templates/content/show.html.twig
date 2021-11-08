@@ -1,7 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Content{% endblock %}
-
+{% block title %}{% trans %}Content{% endtrans %} Show{% endblock %}
+{% block breadcrumbhome %}
+    <a href="{{ path('content_index',{'id': incrsid}) }} ">
+	   {% trans %}Content{% endtrans %} 
+	</a> 
+{% endblock %}
+{% block breadcrumbcontent %}{% trans %}Show{% endtrans %}{% endblock %}
 {% block body %}
 <div class="card card-info">
 <div class="card card-header">
@@ -16,7 +21,7 @@
                 <td>{{ content.id }}</td>
             </tr>
             <tr>
-                <th>Chapter</th>
+                <th>{% trans %}Chapter{% endtrans %}</th>
                 <td>{{ content.chapter }}</td>
             </tr>
             <tr>
@@ -25,7 +30,7 @@
             </tr>
             <tr>
                 <th>Content</th>
-                <td>{{ content.content }}</td>
+                <td>{{ content.content | raw}}</td>
             </tr>
             <tr>
                 <th>File</th>
@@ -41,7 +46,7 @@
 </div>
 </div>
     
-    <a href="{{ path('content_index',{'id': incrsid}) }}">back to list</a>
+    <a href="{{ path('content_index',{'id': incrsid}) }}">{% trans %}Back to list{% endtrans %}</a>
 
     <a href="{{ path('content_edit', {'id': content.id}) }}">edit</a>
 

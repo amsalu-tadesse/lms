@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>success!</title>
+    <link rel="stylesheet" href="{{asset('student/css/success_animation.css')}}">
+    <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}">
+
+    <style>
+        .card {
+            margin: 20px auto;
+            min-width: 380px;
+            max-width: 500px;
+            background-color: white;
+        }
+        
+        body {
+            padding-top: 90px;
+            min-height: 500px;
+            background: #08213f;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card px-4 py-5">
+        <div class="card-body">
+            <div class="success-checkmark">
+                <div class="check-icon"><span class="icon-line line-tip"></span><span class="icon-line line-long"></span>
+                    <div class="icon-circle"></div>
+                    <div class="icon-fix"></div>
+                </div>
+            </div>
+            <p>
+                {% trans %}Your registration is successful. username and password is sent to the email you provided. now you can login and start learning as soon as your requests are approved{% endtrans %}
+            </p>
+            <br>
+            <center>
+                <a href="{{path('app_login')}}" class="btn btn-primary">
+                    {% trans %}Click here to Sign In{% endtrans %}
+                </a>
+            </center>
+        </div>
+    </div>
+    <!-- jquery -->
+    <script src=" {{asset( 'assets/plugins/jquery/jquery.js')}} "></script>
+    <script>
+        $("button ").click(function() {
+                $(".check-icon ").hide();
+                setTimeout(function() {
+                    $(".check-icon ").show();
+                }, 10);
+            }
+
+        );
+    </script>
+</body>
+
+</html>

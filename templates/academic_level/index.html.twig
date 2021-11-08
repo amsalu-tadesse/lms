@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}AcademicLevel index{% endtrans %}{% endblock %}
+{% block breadcrumbhome %}
+    <a href="{{ path('academic_level_index') }} ">
+	   {% trans %}Academic Level{% endtrans %} 
+	</a>
+{% endblock %}
+{% block breadcrumbcontent %}{% trans %}list{% endtrans %}{% endblock %}
+
+{% block body %}
+
+<div class="card card-info">
+    <div class="card card-header">
+        <div class="row">
+            <div class="col-md-6">
+                <h3>{% trans %}AcademicLevel list{% endtrans %}</h3>
+            </div>
+            <div class="col-md-6">
+            {% if is_granted('academic_level_create') %}
+            
+               <a href="{{ path('academic_level_new') }}" class="btn btn-primary" style="float:right">
+            {% trans %}Add new AcademicLevel{% endtrans %}</a>
+        {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="card card-body">
+        <table class="table ">
+            <thead>
+                <tr>
+                                        <th>Id</th>
+                                        <th>{% trans %}Name{% endtrans %}</th>
+                                        <th>{% trans %}Description{% endtrans %}</th>
+                                            {% if is_granted('academic_level_list') or is_granted('academic_level_edit') %}
+                                        <th>{% trans %}Action{% endtrans %}</th>
+                                            {% endif %}
+                                     
+                </tr>
+            </thead>
+            <tbody>
+                {% for academic_level in academiclevels %}
+                <tr>
+                                        <td>{{ academic_level.id }}</td>
+                                        <td>{{ academic_level.name }}</td>
+                                        <td>{{ academic_level.description }}</td>
+                                        <td>
+                                            {% if is_granted('academic_level_list') %}
+                        <a class="btn btn-info btn-sm"
+                            href="{{ path('academic_level_show', {'id': academic_level.id}) }}">{% trans %}Show{% endtrans %}</a>
+                            {% endif %}
+                            {% if is_granted('academic_level_edit') %}
+                        <a class="btn btn-warning btn-sm"
+                            href="{{ path('academic_level_edit', {'id': academic_level.id}) }}">{% trans %}Edit{% endtrans %}</a>
+                            {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4">{% trans %}No records found{% endtrans %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="  pagination justify-content-center ">
+			{{ knp_pagination_render(academiclevels) }}</div>
+
+		<div class="float-right pl-5 pb-2">
+			 
+				{% trans %}Total result{% endtrans %}:
+				{{ academiclevels.getTotalItemCount }} 
+		</div>
+</div>
+
+{% endblock %}

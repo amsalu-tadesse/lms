@@ -1,7 +1,12 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}ContentType index{% endblock %}
-
+{% block breadcrumbhome %}
+    <a href="{{ path('content_type_index') }} ">
+	   {% trans %}Content Type{% endtrans %} 
+	</a> 
+{% endblock %}
+{% block breadcrumbcontent %}{% trans %}Index{% endtrans %}{% endblock %}
 {% block body %}
 
 <div class="card card-info"> 
@@ -14,7 +19,7 @@
             <tr>
                 <th>Id</th>
                 <th>Name</th>
-                <th>Description</th>
+                <th>{% trans %}Description{% endtrans %}</th>
                 <th>actions</th>
             </tr>
         </thead>

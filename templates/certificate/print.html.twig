@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            background: url("/images/background-print.jpg");
+        }
+        
+        .graph-image img {
+            display: none;
+        }
+        
+        @media print {
+            .graph-image img {
+                display: inline;
+            }
+        }
+        
+        body {
+            background-image: url("/images/background-print.jpg") no-repeat center center fixed;
+            background-size: auto;
+            -o-background-size: cover;
+            background-size: cover;
+        }
+        
+        @media print {
+            @page {
+                size: A4 landscape;
+            }
+            body {
+                background-image: url("/images/background-print.jpg");
+                background-size: auto;
+                -o-background-size: cover;
+                background-size: cover;
+            }
+            .card {
+                margin: 400px 600px;
+                width: 100%;
+                font-size: 40px;
+            }
+
+            p{
+                width: 900px;
+            }
+        }
+    </style>
+</head>
+
+<body onload="window.print()">
+    <div class="card">
+        <h2 style="padding:5px 50px">
+            {{student_course.student.user.firstName}}
+            {{student_course.student.user.middleName}}
+            {{student_course.student.user.LastName}}
+        </h2>
+        <hr>
+
+
+        <p> has successfully completed the training on the course of</p> 
+        <h4> {{student_course.instructorCourse.course.name }} </h4>
+        <p> and awarded this qualification with <b>Distinction</b> on <br> {{ 'now'|date('M d, Y') }}</p>
+    </div>
+</body>
+
+</html>

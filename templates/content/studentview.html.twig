@@ -1,14 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Content index
+{% block title %}{% trans %}Content{% endtrans %} index
 {% endblock %}
-
+{% block breadcrumbhome %}
+	<a href="{{ path('content_index',{'id': incrsid}) }} ">
+	   {% trans %}Content{% endtrans %} 
+	</a> 
+{% endblock %}
+{% block breadcrumbcontent %}{% trans %}Student View{% endtrans %}{% endblock %}
 {% block body %}
- 
-
-
- 
-
 	<div class="row">
 
 		<div class="col-7 col-sm-9">

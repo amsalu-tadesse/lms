@@ -30,6 +30,36 @@ class InstructorCourseChapterRepository extends ServiceEntityRepository
             ->getArrayResult()
         ;
     }
+
+    public function findChapters($id, $student)
+    {
+        return $this->createQueryBuilder('icc')
+            ->select('icc','sc.pagesCompleted','ic')
+            ->leftjoin('icc.studentChapters', 'sc')
+            ->join('icc.instructorCourse', 'ic')
+            ->join('ic.studentCourses','scourse')
+            ->where('ic.id = :id')
+            ->andWhere('scourse.student = :student')
+            ->setParameter('id', $id)
+            ->setParameter('student', $student)
+            ->orderBy('icc.id','asc')
+            ->getQuery()
+            ->getArrayResult();
+    }
+
+    public function findChapter1($course, $chapter)
+    {
+        return $this->createQueryBuilder('ch')
+            ->select('ch')
+            ->join('ch.instructorCourse', 'ic')
+            ->where('ch.topic = :id')
+            ->andWhere('ic.id = :val')
+            ->setParameter('id', $chapter)
+            ->setParameter('val', $course)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
     // /**
     //  * @return InstructorCourseChapter[] Returns an array of InstructorCourseChapter objects
     //  */

@@ -1,0 +1,74 @@
+element.style {
+    background-image: url(img/landing/header_bg.jpg);
+    background-size: cover;
+    background-position: center;
+    animation-duration: 750ms;
+    animation-delay: 300ms;
+    animation-fill-mode: forwards;
+    min-height: 645px;
+}
+
+section.section.section-no-border {
+    border: 0;
+}
+
+section.section.section-angled {
+    position: relative;
+    margin: 0;
+    overflow: hidden;
+}
+
+html section.section-dark {
+    background-color: #212529 !important;
+    border-color: #16181b !important;
+}
+
+section.section {
+    background: #f7f7f7;
+    border-top: 5px solid #f1f1f1;
+    margin: 30px 0;
+    padding: 50px 0;
+}
+
+.pt-5 {
+    padding-top: 3rem!important;
+}
+
+.m-0 {
+    margin: 0!important;
+}
+
+element.style {
+    padding: 8rem 0;
+}
+
+section.section.section-angled.section-angled-reverse .section-angled-layer-increase-angle.section-angled-layer-bottom {
+    transform: skewY( -1.7deg) translate3d(0, 50%, 0);
+}
+
+section.section.section-angled.section-angled-reverse .section-angled-layer-bottom {
+    transform: skewY( -0.7deg) translate3d(0, 50%, 0);
+}
+
+section.section.section-angled .section-angled-layer-increase-angle.section-angled-layer-bottom {
+    transform: skewY( 1.7deg) translate3d(0, 50%, 0);
+}
+
+section.section.section-angled .section-angled-layer-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 48px 0;
+    padding: 3rem 0;
+    transform: skewY( 0.7deg) translate3d(0, 50%, 0);
+}
+
+html .bg-color-light,
+html .bg-light {
+    background-color: #FFF !important;
+}
+
+.bg-light {
+    background-color: #2f4f6a!important;
+}

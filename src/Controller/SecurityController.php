@@ -4,11 +4,23 @@ namespace App\Controller;
 
 use App\Entity\SystemSetting;
 use App\Entity\User;
+use App\Entity\Verification;
+use App\Form\ForgotPasswordType;
+use App\Form\PasswordChangeType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Mailer\MailerInterface;
+use App\Repository\VerificationRepository;
+use App\Services\MailerService;
+use DateTime;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+
+use Symfony\Component\Dotenv\Dotenv;
+
 
 class SecurityController extends AbstractController
 {
@@ -31,6 +43,186 @@ class SecurityController extends AbstractController
         return $this->render('security/login.html.twig', ['org_name'=>'org_name', 'last_username' => $lastUsername, 'error' => $error]);
     }
 
+    /**
+     * @Route("/email", name="email_verification")
+     */
+    public function emailVerification(Request $request, MailerInterface $mailer, MailerService $mservice): Response
+    {
+        //ForgotPasswordType
+        if($request->isMethod('post')){
+
+            $em = $this->getDoctrine()->getManager();
+            $email = $request->request->get('email');
+            $ver = new Verification();
+            $ver->setEmail($email);
+            $code = rand(23412,99999);
+            $ver->setVerificationCode($code);
+            $date = date('Y-m-d H:i', time());
+            $date = new \DateTime('@'.strtotime("$date + 3 hours"));
+            $ver->setVerificationExpiry($date);
+            $em->persist($ver);
+            $em->flush();
+
+            $message = "verification code is <b>$code</b> ";
+            $sent =  $mservice->sendEmail($mailer, $message, $email, "account");
+
+            $error = '';
+
+            return $this->render('security/verification-code.html.twig', 
+                    [
+                        'error' => $error,
+                        'email' => $email
+                    ]);
+        }
+        
+        $error = "";
+        return $this->render('security/email-verification.html.twig', ['error' => $error]);
+    }
+
+    /**
+     * @Route("/email/verification", name="email_verification_validation", methods={"GET","POST"})
+     */
+    public function emailVer(VerificationRepository $ver_repo, Request $request): Response
+    {
+        $ver_validation = $ver_repo->findOneByEmail($request->request->get("email"));
+        if(sizeof($ver_validation)>0)
+        {
+            if($ver_validation[0]['verificationCode'] == $request->request->get("code"))
+            {
+                $now = new \DateTime();
+                if($now>$ver_validation[0]['verificationExpiry'])
+                {
+                    return $this->render('security/verification-code.html.twig', [
+                        'email' => $request->request->get('email'),
+                        "error" => "verification code expired"
+                    ]);
+                }
+                else{
+                    $request->getSession()->set('password_change_email', $request->request->get("email"));
+                    return $this->redirectToRoute("password_change");
+                }
+            }
+            else{
+                return $this->render('security/verification-code.html.twig', [
+                    'email' => $request->request->get('ddataaa'),
+                    "error" => "Wrong verification code"
+                ]);
+            }
+        }
+        else{
+            return $this->render('security/email-verification.html.twig', ['error' => "Email not found"]);
+        }
+        
+    }
+
+    /**
+     * @Route("/password", name="password_change", methods={"GET","POST"})
+     */
+    public function passwordChangeForm(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    {
+        $user = new User();
+        $form = $this->createForm(ForgotPasswordType::class, $user);
+        $form->handleRequest($request);
+
+        $email = $request->getSession()->get('password_change_email');
+        if($email == null)
+        {
+            return $this->redirectToRoute('app_login');
+        }        
+        if ($form->isSubmitted() && $form->isValid()) {
+    
+            $entityManager = $this->getDoctrine()->getManager();
+
+            $user = $entityManager->getRepository(User::class)->findOneBy(array('email' => $email));
+            $user->setPassword($passwordEncoder->encodePassword($user, $form['plainPassword']->getData()));
+            
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_login', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->renderForm('security/password_change.html.twig', [
+            'form' => $form,
+            'error' => ""
+        ]);
+    }
+
+        /**
+     * @Route("/password/change", name="change_password", methods={"GET","POST"})
+     */
+    public function passwordChange(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    {
+        $user = new User();
+        $form = $this->createForm(ForgotPasswordType::class, $user);
+        $form->handleRequest($request);
+       
+        if ($form->isSubmitted() && $form->isValid()) {
+    
+            $entityManager = $this->getDoctrine()->getManager();
+            $user = $this->getUser();
+            $user->setPassword($passwordEncoder->encodePassword($user, $form['plainPassword']->getData()));
+            $user->setLastLogin(new DateTime());
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('home');
+        }
+
+        return $this->renderForm('security/password_change.html.twig', [
+            'form' => $form,
+            'error' => ""
+        ]);
+    }
+
+    /**
+     * @Route("/change/password", name="change_password_logged_in", methods={"GET","POST"})
+     */
+    public function changePassword(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    {
+        $user = new User();
+        $form = $this->createForm(PasswordChangeType::class, $user);
+        $form->handleRequest($request);
+       
+        if ($form->isSubmitted() && $form->isValid()) {
+            $checkPass = $passwordEncoder->isPasswordValid($this->getUser(), $form['password']->getData());
+            if($checkPass){
+                $entityManager = $this->getDoctrine()->getManager();
+                $user = $this->getUser();
+                $user->setPassword($passwordEncoder->encodePassword($user, $form['plainPassword']->getData()));
+                $user->setLastLogin(new DateTime());
+                $entityManager->persist($user);
+                $entityManager->flush();
+            }
+            else{
+                if($this->isGranted('ROLE_STUDENT'))
+                    return $this->renderForm('security/change_password_logged_in_student.html.twig', [
+                        'form' => $form,
+                        'error' => "Incorrect Old password"
+                    ]);
+                else
+                    return $this->renderForm('security/change_password_logged_in.html.twig', [
+                        'form' => $form,
+                        'error' => "Incorrect Old password"
+                    ]);
+            }
+            if($this->isGranted('ROLE_STUDENT'))
+                return $this->redirectToRoute('student_course_index');
+            else
+                return $this->redirectToRoute('home');
+        }
+
+        if($this->isGranted('ROLE_STUDENT'))
+            return $this->renderForm('security/change_password_logged_in_student.html.twig', [
+                'form' => $form,
+                'error' => ""
+            ]);
+        else
+            return $this->renderForm('security/change_password_logged_in.html.twig', [
+                'form' => $form,
+                'error' => ""
+            ]);
+    }
     /**
      * @Route("/logout", name="app_logout")
      */

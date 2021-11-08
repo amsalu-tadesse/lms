@@ -1,0 +1,61 @@
+<div class="row mb-2 courses_list">
+	{% if courses|length == 0 %}
+		<div class="card px-5 py-2 mb-2">
+			{% if is_granted("ROLE_STUDENT") %}
+				<center>
+					<h4>You do not select any course</h4>
+				</center>
+			{% else %}
+				<center>
+					<h4>no courses selected</h4>
+				</center>
+			{% endif %}
+
+		</div>
+	{% else %}
+		{% for course in courses %}
+			<div class="card px-5 py-2 mb-2" course-id="{{course.id}}">
+				<div class="row">
+					<div class="col-sm-11">
+						<h4>{{course.course.name}}</h4>
+						<p>{{course.course.description}}</p>
+					</div>
+					<div class="col-sm-1" style="align-self:center">
+						<button class="btn btn-danger" onclick="removeCourse({{course.id}},'{{course.course.name}}')" title="remove" style="margin: 0px 50%;">
+							<i class="fas fa-times-circle"></i>
+						</button>
+					</div>
+				</div>
+			</div>
+		{% endfor %}
+		<div class="row mt-2 buttons">
+			<div class="col-sm-2 col-md-2">
+				{% if is_granted("ROLE_STUDENT") %}
+					<a class="btn btn-primary btn-block" href="{{path('course_apply')}}">Apply</a>
+				{% else %}
+					<a class="btn btn-primary btn-block" href="{{path('app_register')}}">Apply</a>
+				{% endif %}
+			</div>
+			<div class="col-sm-2 col-md-2">
+				<a class="btn btn-danger btn-block" href="#" onclick="conf()">Remove All</a>
+			</div>
+		</div>
+	{% endif %}
+</div>
+<!-- The Modal -->
+<div
+    id="myModal" class="modal" style="min-height: 450px;">
+    <!-- Modal content -->
+    <div class="modal-content">
+        <br>
+        <p>Do you want to remove all courses for your selection list?</p>
+        <br>
+        <div class="row" style="float: right">
+            <div class="col-sm-6"></div>
+            <div class="col-sm-6">
+                <button class="btn btn-success" style="width: 100px;" onclick="removeSelection()">yes</button>
+                <button class="btn btn-danger" style="width: 100px;" onclick="modal.style.display = 'none';">no</button>
+            </div>
+        </div>
+    </div>
+</div>

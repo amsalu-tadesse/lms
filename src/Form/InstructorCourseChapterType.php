@@ -12,7 +12,7 @@ class InstructorCourseChapterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('chapter')
+            // ->add('chapter')
             ->add('topic')
             // ->add('instructorCourse')
         ;

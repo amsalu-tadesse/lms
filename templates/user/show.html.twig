@@ -1,42 +1,62 @@
 {% extends 'base.html.twig' %}
-
-{% block title %}User{% endblock %}
+{% block breadcrumbhome %}
+    <a href="{{ path('user_index') }} ">
+	   {% trans %}User{% endtrans %} 
+	</a> 
+{% endblock %}
+{% block breadcrumbcontent %}{% trans %}Show{% endtrans %}{% endblock %}
+{% block title %}
+	{% trans %}User{% endtrans %}
+{% endblock %}
 
 {% block body %}
-    <h1>User</h1>
 
-    <table class="table">
-        <tbody>
 
-            <tr>
-                <th>First Name</th>
-                <td>{{ user.firstName }}</td>
-            </tr>
-            <tr>
-                <th>Middle Name</th>
-                <td>{{ user.middleName }}</td>
-            </tr>
-            <tr>
-                <th>Last Name</th>
-                <td>{{ user.lastName }}</td>
-            </tr>
-       
-            <tr>
-                <th>User Type</th>
-                <td>{{ user.userType }}</td>
-            </tr>
+	<div class="card card-info">
+		<div class="card card-header">
+			<h3>{% trans %}User{% endtrans %}</h3>
+		</div>
+		<div class="card card-body">
+			<table class="table">
+				<tbody>
 
-            <tr>
-                <th>email</th>
-                <td>{{ user.email }}</td>
-            </tr>
+					<tr>
+						<th>{% trans %}First Name{% endtrans %}</th>
+						<td>{{ user.firstName }}</td>
+					</tr>
+					<tr>
+						<th>{% trans %}Middle Name{% endtrans %}</th>
+						<td>{{ user.middleName }}</td>
+					</tr>
+					<tr>
+						<th>{% trans %}Last Name{% endtrans %}</th>
+						<td>{{ user.lastName }}</td>
+					</tr>
 
-        </tbody>
-    </table>
+					<tr>
+						<th>{% trans %}User Type{% endtrans %}</th>
+						<td>{{ user.userType }}</td>
+					</tr>
 
-    <a href="{{ path('user_index') }}" class="btn btn-primary">back to list</a>
+					<tr>
+						<th>{% trans %}Email{% endtrans %}</th>
+						<td>{{ user.email }}</td>
+					</tr>
 
-    <a href="{{ path('user_edit', {'id': user.id}) }}" class="btn btn-info">edit</a>
+				</tbody>
+			</table>
+		</div>
+	</div>
 
-    {{ include('user/_delete_form.html.twig') }}
+	<table>
+		<tr>
+			<td>
+				<a href="{{ path('user_index') }}" class="btn btn-primary">{% trans %}Back to list{% endtrans %}</a>
+			</td>
+		 
+			<td>{{ include('user/_delete_form.html.twig') }}</td>
+		</tr>
+	</table>
+
+
 {% endblock %}

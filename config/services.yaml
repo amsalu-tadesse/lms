@@ -1,12 +1,19 @@
-# This file is the entry point to configure your own services.
-# Files in the packages/ subdirectory configure your dependencies.
 
-# Put parameters here that don't need to change on each machine where the app is deployed
-# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+    # App\:
+    #     resource: '../src/*'
+    #     exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+ 
+    # App\Controller\:
+    #     resource: '../src/Controller'
+    #     tags: ['controller.service_arguments']
+
+
 parameters:
+    locale: 'en'
     globvar: 200
     uploading_directory_resources:  '%kernel.project_dir%/public/uploads/resources'
     uploading_directory_videos:  '%kernel.project_dir%/public/uploads/videos'
+    docroot:  '%kernel.project_dir%'
 
 services:
     # default configuration for services in *this* file
@@ -19,13 +26,14 @@ services:
     # this creates a service per class whose id is the fully-qualified class name
     App\:
         resource: '../src/*'
-        exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
-
-    # controllers are imported separately to make sure services can be injected
-    # as action arguments even if you don't extend any base controller class
-    App\Controller\:
-        resource: '../src/Controller'
-        tags: ['controller.service_arguments']
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+            - '../src/Tests/'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    App\Subscribers\LocaleSubscriber:
+        arguments:
+            $defaultLocale: '%locale%'

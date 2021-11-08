@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>
+			{% block title %}{% endblock %}
+		</title>
+		<!-- Tell the browser to be responsive to screen width -->
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link
+		rel="shortcut icon" href="{{asset('images/fas.jpg')}}" type="image/x-icon"/>
+		<!-- Font Awesome -->
+		<link
+		rel="stylesheet" href="{{ asset('assets/plugins/fontawesome-free/css/all.min.css') }}">
+
+		<!-- Bootstrap -->
+		<link href="{{asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+
+		<link rel="stylesheet" href="{{ asset('student/css/custom.css') }}">
+		<style>
+			.nav-item-temp {
+				width: 80px;
+			}
+			.header {}
+			.test {
+				display: none;
+			}
+			body {
+				background: hsla(213, 77%, 14%, 1);
+				background: linear-gradient(90deg, hsla(213, 77%, 14%, 1) 0%, hsla(202, 27%, 45%, 1) 100%);
+				background: -moz-linear-gradient(90deg, hsla(213, 77%, 14%, 1) 0%, hsla(202, 27%, 45%, 1) 100%);
+				background: -webkit-linear-gradient(90deg, hsla(213, 77%, 14%, 1) 0%, hsla(202, 27%, 45%, 1) 100%);
+				filter: progid: DXImageTransform.Microsoft.gradient(startColorstr="#08203E", endColorstr="#557C93", GradientType=1);
+			}
+			 .card-body{
+            overflow: hidden;
+        }
+		</style>
+		{% block stylesheet %}{% endblock %}
+	</head>
+	<body>
+		<div class="container-fluid  bg-white mb-0">
+			<div class="row px-5 header">
+				<div class="col-xs-7 col-sm-5 col-md-6">
+					<a href="/"><img src="{{ asset('/images/logo-en.jpg')}}" class="logo" ></a>
+				</div>
+				<div class="col-xs-5 col-sm-7 col-md-6">
+					<div class="banner hidden-xs hidden-sm">
+						<span class="h2 lms-name">{% trans %}Learning Management System{% endtrans %}</span>
+					</div>
+					<div class="navigations">
+						<a class="nav-item" href="{{ path('home') }}">{% trans %}Home{% endtrans %}</a>
+
+						<a class="nav-item test" id="my_course" href="{{ path('selected_courses') }}">{% trans %}My Courses{% endtrans %}<sup>
+								<span class="badge badge-secondary"> {% block selected %}{% endblock %}
+									</span>
+									<sup></a>
+									{% block nav %}{% endblock %}
+									{% set activelang = app.session.get('_locale') %}
+									{% set secondlang = '' %}
+									{% set code = '' %}
+									{% if activelang =='fr' %}
+										{% set activelang = 'French' %}
+										{% set secondlang = 'English' %}
+										{% set code = 'en' %}
+									{% else %}
+										{% set activelang = 'English' %}
+										{% set secondlang = 'French' %}
+										{% set code = 'fr' %}
+									{% endif %}
+
+										<a href="/language?lang={{code}}&&curr={{ path(app.request.attributes.get('_route'),app.request.attributes.get('_route_params')) }}" class="nav-item">
+                                                <b>{{secondlang}}</b>
+                                            </a>
+
+								</div>
+							</div>
+						</div>
+					</div>
+					{% block body %}{% endblock %}
+					{% include "master-st/footer.html.twig" %}
+					<!-- jQuery -->
+					<script src="{{ asset( 'assets/plugins/jquery/jquery.min.js') }}"></script>
+
+					<!-- Popper -->
+					<script src="{{asset('assets/plugins/popper/popper.min.js')}}"></script>
+
+					<!-- Bootstrap 4 -->
+					<script src="{{ asset( 'assets/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+					{% block javascript %}{% endblock %}
+
+				</body>
+                <script>
+                $(document).ready(function(){
+                        var json_str = getCookie('selected_courses');
+                        var arr = JSON.parse(json_str);
+                        cookie_length = arr.length;
+                        if(cookie_length > 0){
+                            $("#my_course").removeClass("test");   
+                        }
+                        else{
+                            $("#my_course").addClass("test");
+                        }
+                    });
+                </script>
+			</html>
+		</body>
+	</html>

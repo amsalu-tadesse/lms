@@ -5,8 +5,12 @@ namespace App\Controller;
 use App\Entity\Content;
 use App\Entity\InstructorCourse;
 use App\Entity\InstructorCourseChapter;
+use App\Entity\StudentChapter;
+use App\Entity\SystemSetting;
 use App\Form\ContentType;
 use App\Repository\ContentRepository;
+use App\Repository\InstructorCourseChapterRepository;
+use App\Repository\StudentChapterRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -16,9 +20,11 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use DateTime;
+
 
 /**
- * @Route("/content")
+ * @Route("/content") 
  */
 class ContentController extends AbstractController
 {
@@ -28,7 +34,7 @@ class ContentController extends AbstractController
      */
     public function index(ContentRepository $contentRepository,Request $request, InstructorCourse $instructorCourse, PaginatorInterface $paginator): Response
     {
-//$request->get('id')
+       // $this->denyAccessUnlessGranted('content_list');
         if($request->request->get('edit')){
             $id=$request->request->get('edit');
             $content=$contentRepository->findOneBy(['id'=>$id]);
@@ -47,6 +53,7 @@ class ContentController extends AbstractController
                 $request->query->getInt('page',1),
                 10
             );
+            
             return $this->render('content/index.html.twig', [
                 'contents' => $data,
                 'form' => $form->createView(),
@@ -55,8 +62,14 @@ class ContentController extends AbstractController
             ]);
 
         }
+
+
         $content = new Content();
-        $form = $this->createForm(ContentType::class,$content, array('incrsid' => $instructorCourse->getId()));
+        $em = $this->getDoctrine()->getManager();
+
+        $uploadSize =  $em->getRepository(SystemSetting::class)->findOneBy(['code'=>'upload_size'])->getValue();
+        if(!$uploadSize) $uploadSize = 100;//default.
+        $form = $this->createForm(ContentType::class,$content, array('uploadSize'=>$uploadSize,'incrsid' => $instructorCourse->getId()));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -139,19 +152,43 @@ class ContentController extends AbstractController
             'uploadDir'=>$this->getParameter('uploading_directory_resources'),
         ]);
     }
-   
-     
-
 
     /**
      * @Route("/{course}/{chapter}/list", name="content_list", methods={"GET"})
      */
-    public function contentList($course, $chapter, ContentRepository $contentRepository,Request $request): Response
+    public function contentList($course, $chapter, InstructorCourseChapterRepository $course_chapter, StudentChapterRepository $stud_chap, ContentRepository $contentRepository,Request $request): Response
     {
+        $em = $this->getDoctrine()->getManager();
         $contents = $contentRepository->getContentsForChapter($course, $chapter);
+
+        $chap = array();
+        $pages_seen = $stud_chap->getProgress($course, $chapter, $this->getUser()->getProfile()->getId());
+        if($pages_seen == null){
+            $chap = $course_chapter->findChapter1($course, $chapter);
+            if($chap != null)
+            {
+                $student_chapter = new StudentChapter();
+                $student_chapter->setStudent($this->getUser()->getProfile());    
+                $student_chapter->setChapter($chap);
+                $student_chapter->setPagesCompleted(0);
+                $student_chapter->setUpdatedAt(new DateTime());
+                $em->persist($student_chapter);
+                $em->flush();
+
+                $pages_seen = array("pagesCompleted"=>0, 'id' => $student_chapter->getId());
+            }
+            else{
+                return $this->redirectToRoute("student_course_index");
+            }   
+        }
+        else{
+            $chap = $course_chapter->findChapter1($course, $chapter);
+        }
 
         return $this->render('student_course/player.html.twig', [
              'contents' => $contents,
+             'pages_seen' => $pages_seen,
+             'chapter' => $chap
         ]);
     }
 
@@ -165,23 +202,27 @@ class ContentController extends AbstractController
         $response = $content["content"];
     
         // Send all this stuff back to DataTables
+        
         $returnResponse = new JsonResponse();
         $returnResponse->setJson($response);
     
         return $returnResponse;
     }
 
-
-
-
     /**
      * @Route("/new/{id}", name="content_new", methods={"GET","POST"})
      */
-    public function new(Request $request,InstructorCourseChapter $instructorCourse, SluggerInterface $slugger): Response
+    public function new(Request $request,InstructorCourse $instructorCourse, SluggerInterface $slugger): Response
     {
- 
+
+        // $this->denyAccessUnlessGranted('content_new');
         $content = new Content();
-        $form = $this->createForm(ContentType::class,$content, array('incrsid' => $instructorCourse->getId()));
+
+        $em = $this->getDoctrine()->getManager();
+ 
+        $uploadSize =  $em->getRepository(SystemSetting::class)->findOneBy(['code'=>'upload_size'])->getValue();
+        if(!$uploadSize) $uploadSize = 100;//default.
+        $form = $this->createForm(ContentType::class,$content, array('uploadSize'=>$uploadSize,'incrsid' => $instructorCourse->getId()));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -190,9 +231,23 @@ class ContentController extends AbstractController
             $brochureFile = $form->get('filename')->getData();
             $youtubeLink = $form->get('videoLink')->getData();
 
+
+            if($youtubeLink)
+            {
+                $y = explode('=',$youtubeLink);
+                if(sizeof($y) == 2)
+                {
+                    $youtubeLink  ='https://www.youtube.com/embed/'.explode('=',$youtubeLink)[1];
+                    $content->setVideoLink( $youtubeLink);
+                }
+                
+            }
+          
+             
+
             // this condition is needed because the 'brochure' field is not required
             // so the PDF file must be processed only when a file is uploaded
-            if ($brochureFile && !$youtubeLink) {
+            if ($brochureFile /*&& !$youtubeLink*/) {
                 $originalFilename = pathinfo($brochureFile->getClientOriginalName(), PATHINFO_FILENAME);
                 // this is needed to safely include the file name as part of the URL
                 $safeFilename = $slugger->slug($originalFilename);
@@ -212,7 +267,7 @@ class ContentController extends AbstractController
                 // instead of its contents
                 $content->setFilename($newFilename);
             }
-
+ 
 
             $entityManager->persist($content);
             $entityManager->flush();
@@ -242,7 +297,12 @@ class ContentController extends AbstractController
      */
     public function edit(Request $request, Content $content): Response
     {
-        $form = $this->createForm(ContentType::class, $content, array('incrsid' => $content->getChapter()->getInstructorCourse()->getId()));
+        // $this->denyAccessUnlessGranted('content_edit');
+        $em = $this->getDoctrine()->getManager();
+
+        $uploadSize =  $em->getRepository(SystemSetting::class)->findOneBy(['code'=>'upload_size'])->getValue();
+        if(!$uploadSize) $uploadSize = 100;
+        $form = $this->createForm(ContentType::class, $content, array('uploadSize'=>$uploadSize,'incrsid' => $content->getChapter()->getInstructorCourse()->getId()));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -263,12 +323,26 @@ class ContentController extends AbstractController
      */
     public function delete(Request $request, Content $content): Response
     {
+        // $this->denyAccessUnlessGranted('content_delete');
+        $instid = $content->getChapter()->getInstructorCourse()->getId();;
+     
         if ($this->isCsrfTokenValid('delete'.$content->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($content);
-            $entityManager->flush();
+          
+
+            try
+            {
+                $entityManager->remove($content);
+                $entityManager->flush();
+            } catch (\Exception $ex) {
+                // dd($ex);
+                $message = UtilityController::getMessage($ex->getCode());
+                $this->addFlash('danger', $message);
+            }
+
+
         }
 
-        return $this->redirectToRoute('content_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('content_index', ['id'=>$instid], Response::HTTP_SEE_OTHER);
     }
 }

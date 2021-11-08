@@ -2,19 +2,24 @@
 
 namespace App\Controller;
 
+use App\Controller\UtilityController;
 use App\Entity\Course;
 use App\Entity\InstructorCourse;
 use App\Entity\InstructorCourseStatus;
+use App\Entity\QuestionAnswer;
 use App\Form\CourseType;
-use App\Repository\CourseRepository;
-use DateTime;
+use App\Form\QuestionAnswerNewStudentType;
 use App\Repository\ContentRepository;
+use App\Repository\CourseRepository;
 use App\Repository\InstructorCourseChapterRepository;
+use App\Repository\InstructorCourseRepository;
+use App\Repository\StudentQuizRepository;
+use DateTime;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @Route("/course")
@@ -24,32 +29,33 @@ class CourseController extends AbstractController
     /**
      * @Route("/", name="course_index", methods={"GET","POST"})
      */
-    public function index(CourseRepository $courseRepository,Request $request, PaginatorInterface $paginator): Response
+    public function index(CourseRepository $courseRepository, Request $request, PaginatorInterface $paginator): Response
     {
+        // $this->denyAccessUnlessGranted('course_list');
         $em = $this->getDoctrine()->getManager();
-        if($request->request->get('edit')){
-            $id=$request->request->get('edit');
-            $course=$courseRepository->findOneBy(['id'=>$id]);
+        if ($request->request->get('edit')) {
+            $id = $request->request->get('edit');
+            $course = $courseRepository->findOneBy(['id' => $id]);
             $form = $this->createForm(CourseType::class, $course);
             $form->handleRequest($request);
-    
+
             if ($form->isSubmitted() && $form->isValid()) {
                 //$instructorCourse = $em->getRepository(InstructorCourse::class)->findOneBy(['course'=>$course,'active'=>1]);//assumption only one inst for one active inst course.
                 $this->getDoctrine()->getManager()->flush();
-    
+
                 return $this->redirectToRoute('course_index');
             }
 
-            $queryBuilder=$courseRepository->findCourse($request->query->get('search'));
-            $data=$paginator->paginate(
+            $queryBuilder = $courseRepository->findCourse($request->query->get('search'));
+            $data = $paginator->paginate(
                 $queryBuilder,
-                $request->query->getInt('page',1),
+                $request->query->getInt('page', 1),
                 18
             );
             return $this->render('course/index.html.twig', [
                 'courses' => $data,
                 'form' => $form->createView(),
-                'edit'=>$id
+                'edit' => $id,
             ]);
 
         }
@@ -58,12 +64,13 @@ class CourseController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $course->setStatus(1);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($course);
             $entityManager->flush();
             $instructorCourse = new InstructorCourse();
             $instructorCourse->setCourse($course);
-            $instructorCourseStatus = $em->getRepository(InstructorCourseStatus::class)->find(1);//not assigned
+            $instructorCourseStatus = $em->getRepository(InstructorCourseStatus::class)->find(1); //not assigned
             $instructorCourse->setStatus($instructorCourseStatus);
             $instructorCourse->setCreatedAt(new DateTime());
             $instructorCourse->setActive(true);
@@ -72,59 +79,143 @@ class CourseController extends AbstractController
 
             return $this->redirectToRoute('course_index');
         }
-        
-        $queryBuilder=$courseRepository->findCourse($request->query->get('search'));
-        $data=$paginator->paginate(
+
+        $queryBuilder = $courseRepository->findCourse($request->query->get('search'));
+        $data = $paginator->paginate(
             $queryBuilder,
-            $request->query->getInt('page',1),
+            $request->query->getInt('page', 1),
             18
         );
         return $this->render('course/index.html.twig', [
             'courses' => $data,
             'form' => $form->createView(),
-            'edit'=>false
+            'edit' => false,
         ]);
-    }  
- 
+    }
+
+    /**
+     * @Route("/detail/{id}", name="course_description")
+     */
+    public function courseDetail(InstructorCourse $instructorCourse, InstructorCourseRepository $course_repo, ContentRepository $content, Request $request): Response
+    {
+        $courses = $course_repo->findCoursesSortByCategory($instructorCourse->getId());
+        $chaptersWithContent = $content->getChaptersWithContentForCourse($instructorCourse->getId());
+        $questionAnswer = new QuestionAnswer();
+        $form = $this->createForm(QuestionAnswerNewStudentType::class, $questionAnswer);
+        $form->handleRequest($request);
+
+        if ($this->isGranted("ROLE_STUDENT")) {
+            if ($form->isSubmitted() && $form->isValid()) {
+                $questionAnswer->setStudent($this->getUser()->getProfile());
+                $questionAnswer->setQuestion($form['question']->getData());
+                $questionAnswer->setCreatedAt(new DateTime());
+                $questionAnswer->setNotification(0);
+                $questionAnswer->setIsReply(0);
+                $questionAnswer->setCourse($course_repo->find($request->request->get("val1")));
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($questionAnswer);
+                $em->flush();
+            }
+
+            $em = $this->getDoctrine()->getManager();
+            $question = $em->getRepository(QuestionAnswer::class)->findBy(['course'=>$instructorCourse->getId()],['id'=>'desc']);
+            return $this->render('course/description_login.html.twig',[
+                'chapter' => $courses,
+                'chapters' => $chaptersWithContent,
+                'question' => $question,
+                'form' => $form->createView(),
+            ]);
+        }
+
+        return $this->render('course/description.html.twig', [
+            'chapter' => $courses,
+            'question' => [],
+            'form' => $form->createView(),
+            'chapters' => $chaptersWithContent,
+        ]);
+    }
+
+    /**
+     * @Route("/mycourses", name="selected_courses")
+     */
+    public function selectedCourses(Request $request, InstructorCourseRepository $course): Response
+    {
+        if ($this->isGranted("ROLE_STUDENT")) {
+            $selected_courses = $request->cookies->get("selected_courses_login");
+            $selected_courses = json_decode($selected_courses, true);
+
+            $em = $this->getDoctrine()->getManager();
+            $courses = $em->getRepository(InstructorCourse::class)->findBy(array('id' => $selected_courses));
+            return $this->render('student_course/selected_courses_login.html.twig', [
+                'courses' => $courses,
+            ]);
+        }
+
+        $selected_courses = $request->cookies->get("selected_courses");
+        $selected_courses = json_decode($selected_courses, true);
+
+        //dd($selected_courses);
+        $em = $this->getDoctrine()->getManager();
+        $courses = $em->getRepository(InstructorCourse::class)->findBy(array('id' => $selected_courses));
+        return $this->render('course/selected_courses.html.twig', [
+            'courses' => $courses,
+        ]);
+    }
+
+    /**
+     * @Route("/remove", name="remove_selected")
+     */
+    public function removeSelected()
+    {
+        $response = new Response();
+        $response->headers->clearCookie('selected_courses');
+        $response->send();
+        dd("done");
+    }
+
     /**
      * @Route("/{id}/chapters/", name="course_chapters", methods={"GET"})
      */
-    public function chapters($id, ContentRepository $contentRepository, InstructorCourseChapterRepository $chaptersRepository): Response
+    public function chapters(InstructorCourse $course, StudentQuizRepository $student_quiz, ContentRepository $contentRepository, InstructorCourseChapterRepository $chaptersRepository): Response
     {
-        $conn = $this->getDoctrine()->getManager()
-            ->getConnection();
-        $sql = "SELECT c.*, sc.pages_completed from instructor_course_chapter c "
-              ."left join student_chapter sc on "
-              ."sc.chapter_id = c.id where c.instructor_course_id = :instructorCourse";
-    
-        $stmt = $conn->prepare($sql);
-        $stmt->execute(array('instructorCourse' => $id));
-        $chapters = $stmt->fetchAll();
+        // $this->denyAccessUnlessGranted('chapter_list');
+        $chapters = $chaptersRepository->findChapters($course->getId(), $this->getUser()->getProfile()->getId());
+        $contents = $contentRepository->getContentsCount($course->getId());
+        $chapter_list = array();
 
-        $contents = $contentRepository->getContentsCount($id);
-        foreach($chapters as $key => $value){
+        foreach ($chapters as $key => $value) {
             $flag = 1;
-            foreach($contents as $key1 => $value1)
-            {
-                if($value['id'] == $value1['id']){
-                    $chapters[$key]['total_video'] = $value1['total_video'];
-                    $chapters[$key]['total_content'] = $value1['con'];
-                    $total_content = $value1['total_video']+$value1['con'];
-                    $chapters[$key]['completed'] = ($value['pages_completed']/$total_content)*100;
+            $chapter_list[$key] = $value[0];
+            foreach ($contents as $key1 => $value1) {
+                if ($value[0]['id'] == $value1['id']) {
+                    // $chapters[$key] = $value
+                    $chapter_list[$key]['total_video'] = $value1['total_video'];
+                    $chapter_list[$key]['total_content'] = $value1['con'];
+                    $total_content = $value1['total_video'] + $value1['con'];
+                    $chapter_list[$key]['completed'] = ($value['pagesCompleted'] / $total_content) * 100;
                     $flag = 2;
-                break;
+                    break;
                 }
             }
 
-            if($flag == 1){
-                $chapters[$key]['total_video'] = 0;
-                $chapters[$key]['total_content'] = 0;
-                $chapters[$key]['completed'] = 0;
+            if ($flag == 1) {
+                $chapter_list[$key]['total_video'] = 0;
+                $chapter_list[$key]['total_content'] = 0;
+                $chapter_list[$key]['completed'] = 0;
             }
+
         }
-        return $this->render('student_course/chapters.html.twig',[
-            'chapters' => $chapters,
+
+        $quiz = $student_quiz->getQuizesForStudent($course->getId(), $this->getUser()->getProfile()->getId());
+        $quizWithChapter = array();
+        foreach ($quiz as $key => $value) {
+            $quizWithChapter[$value['chapter_id']] = $value;
+        }
+        return $this->render('student_course/chapters.html.twig', [
+            'chapters' => $chapter_list,
+            'instructorCourse' => $course,
             'contents' => $contents,
+            'quiz' => $quizWithChapter,
         ]);
     }
 
@@ -133,10 +224,20 @@ class CourseController extends AbstractController
      */
     public function delete(Request $request, Course $course): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$course->getId(), $request->request->get('_token'))) {
+        // $this->denyAccessUnlessGranted('course_delete');
+        if ($this->isCsrfTokenValid('delete' . $course->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($course);
-            $entityManager->flush();
+
+            try
+            {
+                $entityManager->remove($course);
+                $entityManager->flush();
+            } catch (\Exception $ex) {
+                // dd($ex);
+                $message = UtilityController::getMessage($ex->getCode());
+                $this->addFlash('danger',$message );
+            }
+
         }
 
         return $this->redirectToRoute('course_index');

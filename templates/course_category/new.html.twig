@@ -1,11 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New CourseCategory{% endblock %}
-
+{% block title %}{% trans %}New CourseCategory{% endtrans %}{% endblock %}
+{% block breadcrumbhome %}
+    <a href="{{ path('course_category_index') }} ">
+	   {% trans %}Course Category{% endtrans %} 
+	</a> 
+{% endblock %}
+{% block breadcrumbcontent %}{% trans %}New{% endtrans %}{% endblock %}
 {% block body %}
-    <h1>Create new CourseCategory</h1>
 
     {{ include('course_category/_form.html.twig') }}
 
-    <a href="{{ path('course_category_index') }}">back to list</a>
+    <a href="{{ path('course_category_index') }}">{% trans %}Back to list{% endtrans %}</a>
 {% endblock %}

@@ -45,11 +45,29 @@ class Student
      */
     private $studentChapters;
 
+    /**
+     * @ORM\OneToMany(targetEntity=StudentQuestion::class, mappedBy="student")
+     */
+    private $studentQuestions;
+
+    /**
+     * @ORM\OneToMany(targetEntity=StudentQuiz::class, mappedBy="student")
+     */
+    private $studentQuizzes;
+
+    /**
+     * @ORM\OneToMany(targetEntity=QuestionAnswer::class, mappedBy="student")
+     */
+    private $questionAnswers;
+
     public function __construct()
     {
         $this->studentCourses = new ArrayCollection();
         $this->studentContentReactions = new ArrayCollection();
         $this->studentChapters = new ArrayCollection();
+        $this->studentQuestions = new ArrayCollection();
+        $this->studentQuizzes = new ArrayCollection();
+        $this->questionAnswers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -174,5 +192,95 @@ class Student
     {
         // return $this->getUser();
         return $this->user->getFirstName()." ".$this->user->getMiddleName()." ".$this->user->getLastName();
+    }
+
+    /**
+     * @return Collection|StudentQuestion[]
+     */
+    public function getStudentQuestions(): Collection
+    {
+        return $this->studentQuestions;
+    }
+
+    public function addStudentQuestion(StudentQuestion $studentQuestion): self
+    {
+        if (!$this->studentQuestions->contains($studentQuestion)) {
+            $this->studentQuestions[] = $studentQuestion;
+            $studentQuestion->setStudent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStudentQuestion(StudentQuestion $studentQuestion): self
+    {
+        if ($this->studentQuestions->removeElement($studentQuestion)) {
+            // set the owning side to null (unless already changed)
+            if ($studentQuestion->getStudent() === $this) {
+                $studentQuestion->setStudent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|StudentQuiz[]
+     */
+    public function getStudentQuizzes(): Collection
+    {
+        return $this->studentQuizzes;
+    }
+
+    public function addStudentQuiz(StudentQuiz $studentQuiz): self
+    {
+        if (!$this->studentQuizzes->contains($studentQuiz)) {
+            $this->studentQuizzes[] = $studentQuiz;
+            $studentQuiz->setStudent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStudentQuiz(StudentQuiz $studentQuiz): self
+    {
+        if ($this->studentQuizzes->removeElement($studentQuiz)) {
+            // set the owning side to null (unless already changed)
+            if ($studentQuiz->getStudent() === $this) {
+                $studentQuiz->setStudent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|QuestionAnswer[]
+     */
+    public function getQuestionAnswers(): Collection
+    {
+        return $this->questionAnswers;
+    }
+
+    public function addQuestionAnswer(QuestionAnswer $questionAnswer): self
+    {
+        if (!$this->questionAnswers->contains($questionAnswer)) {
+            $this->questionAnswers[] = $questionAnswer;
+            $questionAnswer->setStudent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQuestionAnswer(QuestionAnswer $questionAnswer): self
+    {
+        if ($this->questionAnswers->removeElement($questionAnswer)) {
+            // set the owning side to null (unless already changed)
+            if ($questionAnswer->getStudent() === $this) {
+                $questionAnswer->setStudent(null);
+            }
+        }
+
+        return $this;
     }
 }

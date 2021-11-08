@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Quiz
+{% endblock %}
+{% block stylesheets %}
+	<style>
+		label {
+			padding-top: 15px;
+		}
+		input[type=checkbox] {
+    transform: scale(1.2);
+}
+	</style>
+{% endblock %}
+{% block breadcrumbhome %}
+
+    <a href="{{path('instructor_course_chapter_index',{'id':id})}}">
+	   {% trans %}Course{% endtrans %} 
+	</a> / 
+	<a href="#">
+	   {% trans %}Quiz{% endtrans %} 
+	</a> 
+{% endblock %}
+{% block breadcrumbcontent%}
+	{% trans %}New{% endtrans %} 
+{% endblock %}
+{% block body %}
+	{# <h1>Create new Quiz</h1>
+	
+	    {{ include('quiz/_form.html.twig') }} #}
+
+
+	<div class="card card-info">
+		<div class="card card-header">
+			<h3>Enter Quiz Details</h3>
+		</div>
+		<div class="card card-body">
+			{{ include('quiz/_form.html.twig') }}
+
+		</div>
+	</div>
+
+{% endblock %}

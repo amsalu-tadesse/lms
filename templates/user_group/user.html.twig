@@ -5,6 +5,12 @@
 {% block stylesheets %}
 	<link rel="stylesheet" href="{{asset('assets/plugins/multi-select/jquery.lwMultiSelect.css')}}"/>
 {% endblock %}
+{% block breadcrumbhome %}
+    <a href="{{ path('user_group_index') }} ">
+	   {% trans %}User groups{% endtrans %} 
+	</a> 
+{% endblock %}
+{% block breadcrumbcontent %}{% trans %}permission{% endtrans %}{% endblock %}
 {% block body %}
 <form action="{{path('user_group_permission1',{id: user_group.id})}}" method="post">
 	<div class="card ">
@@ -26,9 +32,9 @@
 					<select class="users_list" multiple name="user[]" style="display:none">
 						{% for user in users %}
 							{% if(user.id in users_exist)%}
-								<option value="{{user.id}}" selected>{{ user.firstName }} {{ user.middleName }} {{ user.LastName }} - {{ user.id }}</option>
+								<option value="{{user.id}}" selected>{{ user.firstName }} {{ user.middleName }} {{ user.LastName }} </option>
 							{% else %}
-								<option value="{{user.id}}">{{ user.firstName }} {{ user.middleName }} {{ user.LastName }} - {{ user.id }}</option>
+								<option value="{{user.id}}">{{ user.firstName }} {{ user.middleName }} {{ user.LastName }} </option>
 							{% endif %}
 							{# <option value="{{user.id}}" >{{ user.firstName }} {{ user.middleName }} {{ user.LastName }} - {{ user.id }}</option> #}
 						{% endfor %}
@@ -57,7 +63,7 @@
 		<!-- /.card-body -->
 		<div class="card-footer float-right">
 			<div class="float-right">
-				<a href="{{path('user_group_index')}}" class="btn btn-primary">Cancel</a>
+				<a href="{{path('user_group_index')}}" class="btn btn-primary">{% trans %}Cancel{% endtrans %}</a>
 				<button class="btn btn-info " type="submit">Save</button>
 			</div>
 		</div>

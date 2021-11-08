@@ -1,13 +1,17 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit ContentType{% endblock %}
-
+{% block title %}{% trans %}Edit{% endtrans %} ContentType{% endblock %}
+{% block breadcrumbhome %}
+    <a href="{{ path('content_type_index') }} ">
+	   {% trans %}Content Type{% endtrans %} 
+	</a> 
+{% endblock %}
+{% block breadcrumbcontent %}{% trans %}Edit{% endtrans %}{% endblock %}
 {% block body %}
-    <h1>Edit ContentType</h1>
 
     {{ include('content_type/_form.html.twig', {'button_label': 'Update'}) }}
 
-    <a href="{{ path('content_type_index') }}">back to list</a>
+    <a href="{{ path('content_type_index') }}">{% trans %}Back to list{% endtrans %}</a>
 
     {{ include('content_type/_delete_form.html.twig') }}
 {% endblock %}

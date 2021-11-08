@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Edit system setting{% endtrans %}{% endblock %}
+
+{% block body %}
+ 
+
+    {{ include('system_setting/_form.html.twig', {'button_label': 'Update' | trans | raw}) }}
+
+    <a href="{{ path('system_setting_index') }}" class="btn btn-primary btn-sm" >{% trans %}Back to list{% endtrans %}</a>
+
+{% endblock %}

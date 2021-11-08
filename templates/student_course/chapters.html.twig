@@ -1,5 +1,5 @@
 {% extends 'sBase.html.twig' %}
-{% block title %}chapters
+{% block title %}{% trans %}chapters{% endtrans %}
 {% endblock %}
 {% block stylesheet %}
 	<style>
@@ -12,52 +12,118 @@
 		.page-title {
 			margin-left: 8%;
 		}
+
+        .disabled {
+            pointer-events:none; 
+            opacity:0.6; 
+        }
 	</style>
 {% endblock %}
 {% block body %}
 	<h4 class="page-title">
-		Chapters in this course
+		{% trans %}Chapters {% endtrans %} in <a style="color:#70c0ff" href="{{path('course_description', {'id':instructorCourse.id})}}">{{ instructorCourse.course.name }}</a>
 	</h4>
 		{% if chapters|length == 0 %}
-			<div class="row chapter-list">
+			<div class="row chapter-list mb-3">
 				<div class="col-md-1"></div>
 				<div class="col-md-10">
 					<div class="card border-0 border-radius-0 ">
 						<div class="card-body">
-							<p class="card-text">You are not participated in any course</p>
+							<p class="card-text">{% trans %}There is no chapter in this course{% endtrans %}</p>
 						</div>
 					</div>
+
 				</div>
 			</div>
 		{% else %}
+			{% set flag = 0 %}
 			{% for chapter in chapters %}
 			<div class="row chapter-list">
 				<div class="col-md-1"></div>
 					<div class="col-md-10">
+					{% if flag == 1 %}
+						<div class="card border-0 border-radius-0 disabled">
+					{% else %}
 						<div class="card border-0 border-radius-0 ">
+					{% endif %}
 							<div class="card-body">
-								<a href="{{path('content_list',{'course':chapter.instructor_course_id,'chapter':chapter.chapter})}}">
-									<h4 class="card-title card-title-custom mb-1 text-4 font-weight-bold">{{chapter.chapter}}</h4>
+								<a href="{{path('content_list',{'course':chapter.instructorCourse.id,'chapter':chapter.topic})}}">
+									<h4 class="card-title card-title-custom mb-1 text-4 font-weight-bold">{{chapter.topic}}</h4>
 								</a>
-								<p class="card-text" style="padding: 14px 0px 0px;">videos : {{ chapter.total_video }}
-									<span style="margin-left:30px;">Notes : {{ chapter.total_content }}</span>
+								<p class="card-text" style="padding: 14px 0px 0px;">{% trans %}Videos{% endtrans %} : {{ chapter.total_video }}
+									<ff style="margin-left:30px;">{% trans %}Text{% endtrans %} : {{ chapter.total_content }}</ff>
 								</p>
 							</div>
 							<div class="card-footer bg-color-grey text-1 text-uppercase">
 								<div class="row">
-									<div class="progress mb-2 col-sm-3 col-md-2">
+									{# <div class="progress mb-2 col-sm-3 col-md-2">
 										<div class="progress-bar progress-bar-primary" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: {{chapter.completed}}%;"></div>
-									</div>
-									<div class="col-md-3 col-sm-6">
-										{{chapter.completed}}% completed
-									</div>
+									</div> #}
+									{% set quizCheck = false %}
+									{% set pass = false %}
+									{% set isMandatory = false %}
+									{% for key, value in quiz %}
+										{% if chapter.id == key %}
+										{% set quizCheck = true %}
+											{% if value.result >= value.passvalue %}
+												{% set pass = true %}
+											{% else %}
+												{% if value.isMandatory %}
+													{% set isMandatory = true %}
+												{% endif %}
+												
+											{% endif %}
+											
+										{% endif %}
+										
+									{% endfor %}
+									{% if chapter.completed == 100 %}
+										<div class="col-md-12 col-sm-12">
+											Content: <i class='fa fa-check'></i><span style="margin-left: 40px">Quiz:
+											{% if quizCheck %}
+												{% if pass %}
+													<span style="color:green"> <b>Passed</b></span>
+												{% else %}
+													<span style="color:red"> <b>Failed</b></span>
+												{% endif %}
+											{% endif %}
+										</div> 
+									{% else %}
+										<div class="col-md-12 col-sm-12">
+											Content: <i class='fa fa-spinner'></i><span style="margin-left: 40px">Quiz:
+											{% if quizCheck %}
+												{% if pass %}
+													<span style="color:green"> <b>Passed</b></span>
+												{% else %}
+													<span style="color:red"> <b>Failed</b></span>
+												{% endif %}
+											{% endif %}
+											
+										</div> 
+									{% endif %}
+									
+									
 								</div>
 
 							</div>
 						</div>
 					</div>
 				</div>
+				{% if chapter.completed !=100 %}
+					{% set flag = 1 %}
+				{% else %}
+					{% if quizCheck %}
+						{% if not pass %}
+							{% if isMandatory %}
+								{% set flag = 1 %}
+							{% endif %}
+						{% endif %}
+					{% endif %}
+					
+				{% endif %}
+				
 			{% endfor %}
 		{% endif %}
 	</div>
+	<div class="mb-3"></div>
 {% endblock %}

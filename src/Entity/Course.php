@@ -49,6 +49,11 @@ class Course
      */
     private $description;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $status;
+
     public function __construct()
     {
         $this->instructorCourses = new ArrayCollection();
@@ -152,4 +157,18 @@ class Course
 
         return $this;
     }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(int $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    
 }

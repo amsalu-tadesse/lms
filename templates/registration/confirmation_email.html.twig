@@ -1,0 +1,42 @@
+{% extends 'anon-base.html.twig' %}
+
+{% block title %}{% trans %}Verification{% endtrans %}{% endblock %}
+{% block stylesheet %}
+    <style>
+        .card{
+            margin: 0px auto;
+        }
+
+        .card-body{
+            padding-top: 0px;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+   <div class="container">
+        <div class="row">
+            <div class="card mt-5" style="max-width: 430px">
+                <div class="card-body">
+                    <center><img src="{{ asset('/images/eca.png')}}" height="150px" with="150px"/></center>
+                    <p>An email with Verification code is sent to {{email}}. 
+                        {% trans %}please check your email and enter the verification code.{% endtrans %}</p>
+                    
+                    <p style="color:red">
+                        {% if error != "" %}
+                            {{error}}
+                        {% endif %}
+                    </p>
+                    
+                    <form action="{{path('app_register_main')}}" method="POST">
+                        <div class="form-group">
+                            <label style="font-weight:bold">{% trans %}Verification Code{% endtrans %}</label>
+                            <input type="number" class="form-control" name="ver_code">
+                            <br>
+                            <input type="submit" class="btn btn-primary" value={{"submit" | trans | raw}}>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>  
+   </div>
+{% endblock %}

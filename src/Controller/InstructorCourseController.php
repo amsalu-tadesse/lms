@@ -5,16 +5,17 @@ namespace App\Controller;
 use App\Entity\Instructor;
 use App\Entity\InstructorCourse;
 use App\Entity\InstructorCourseStatus;
-use App\Entity\User;
+use App\Form\Filter\InstructorCourseFilterType;
 use App\Form\InstructorCourseType;
 use App\Repository\InstructorCourseRepository;
 use DateTime;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/** 
+/**
  * @Route("/instructor/course")
  */
 class InstructorCourseController extends AbstractController
@@ -22,31 +23,57 @@ class InstructorCourseController extends AbstractController
     /**
      * @Route("/", name="instructor_course_index", methods={"GET"})
      */
-    public function index(InstructorCourseRepository $instructorCourseRepository): Response
+    public function index(Request $request, PaginatorInterface $paginator, InstructorCourseRepository $instructorCourseRepository): Response
     {
+        $pageSize = 15;
         $em = $this->getDoctrine()->getManager();
 
         $teachersList = $em->getRepository(Instructor::class)->findAll();
-    //    dd($instructorCourseRepository->findAll());
-    
+
+        $st_course = new InstructorCourse();
+        $searchForm = $this->createForm(InstructorCourseFilterType::class, $st_course);
+        $searchForm->handleRequest($request);
+
+        $queryBuilder = $instructorCourseRepository->filterIC($request->query->get('course'), $request->query->get('instructor'));
+
+        $data = $paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page', 1),
+            $pageSize
+        );
+        $crs_stnumber = array();
+       $ic_student_count = $em->getRepository(instructorCourse::class)->findAll();
+       $json = "[['Course', 'number']";
+  
+       foreach ($ic_student_count as $key => $value) {
+        
+        $crs_stnumber[$value->getCourse()->getName()] =  sizeof($value->getStudentCourses());
+
+        $col =  ",['".$value->getCourse()->getName()."', ".sizeof($value->getStudentCourses())."]";
+        $col =trim(preg_replace('/\s+/', ' ', $col));
+        $json .= $col ;
+       }
+       $json .= "];";
         return $this->render('instructor_course/index.html.twig', [
-            'instructor_courses' => $instructorCourseRepository->findAll(),
+            'instructor_courses' => $data,
             'instructorsList' => $teachersList,
+            'searchForm' => $searchForm->createView(),
+            'crs_stnumber' =>$json ,
+           
         ]);
     }
 
     /**
      * @Route("/new", name="instructor_course_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
-    {
+    function new (Request $request): Response {
         $instructorCourse = new InstructorCourse();
         $form = $this->createForm(InstructorCourseType::class, $instructorCourse);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
-            $instructorCourseStatus = $entityManager->getRepository(InstructorCourseStatus::class)->find(2);//assigned but waiting
+            $instructorCourseStatus = $entityManager->getRepository(InstructorCourseStatus::class)->find(2); //assigned but waiting
             $instructorCourse->setStatus($instructorCourseStatus);
             $instructorCourse->setCreatedAt(new DateTime());
             $entityManager->persist($instructorCourse);
@@ -61,8 +88,7 @@ class InstructorCourseController extends AbstractController
         ]);
     }
 
-
-     /**
+    /**
      * @Route("/assign_instructor/{id}", name="assign_instructor", methods={"GET","POST"})
      */
     public function assignInstructor(Request $request, InstructorCourse $instructorCourse)
@@ -77,8 +103,6 @@ class InstructorCourseController extends AbstractController
 
         return $this->redirectToRoute("instructor_course_index");
     }
-
-
 
     /**
      * @Route("/{id}", name="instructor_course_show", methods={"GET"})
@@ -115,12 +139,36 @@ class InstructorCourseController extends AbstractController
      */
     public function delete(Request $request, InstructorCourse $instructorCourse): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$instructorCourse->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $instructorCourse->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($instructorCourse);
-            $entityManager->flush();
+            try
+            {
+                $entityManager->remove($instructorCourse);
+                $entityManager->flush();
+            }
+            catch(\Exception $ex)
+            {
+dd($ex);
+            }
+
+            
         }
 
         return $this->redirectToRoute('instructor_course_index', [], Response::HTTP_SEE_OTHER);
+    }
+    /**
+     * @Route("/course/diactivate/{id}", name="instructor_course_deactivate", methods={"GET","POST"})
+     */
+    public function instructorCourseDeactivate(InstructorCourse $instructorCourse, InstructorCourseRepository $instructorCourseRepository, PaginatorInterface $paginator, Request $request): Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        if ($instructorCourse->getActive()) {
+            $instructorCourse->setActive(false);
+        } else {
+            $instructorCourse->setActive(true);
+        }
+        $em->flush();
+        return $this->redirectToRoute('instructor_course_index');
+
     }
 }

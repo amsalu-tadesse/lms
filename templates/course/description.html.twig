@@ -1,0 +1,61 @@
+{% extends "anon-base.html.twig" %}
+{% block stylesheet %}
+	<link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-tabs/dist/jquery.bs4-scrolling-tabs.min.css')}}">
+	<style>
+		.card-header button {
+			text-decoration: none;
+		}
+		p.meta{
+			border-bottom: 1px solid #45698152;
+			font-size: 15px;
+			opacity: .9;
+			padding-bottom: 10px;
+		}
+
+		p.message {
+    		padding: 0px 24px;
+			font-size: 15px;
+		}
+
+		.question{
+			border-left: 3px solid blue;
+		    border-radius: 6px;	
+		}
+
+		.answer{
+			margin-left: 80px;
+			margin-right: 1rem !important;
+			border-left: 4px solid #1c4964;
+		}
+
+		.qadata{
+			float:right;
+			color:black;
+		}
+
+		textarea{
+			resize: none;
+		}
+		span.quadata{
+			color: black!important;
+		}
+	</style>
+{% endblock %}
+{% block body %}
+	<div class="container-fluid mt-3" style="min-height: 490px" ;>
+		<div class="row">
+		{% include "course/desc.html.twig" %}
+		</div>
+	</div>
+{% endblock %}
+{% block javascript %}
+	<script src="{{asset('assets/plugins/bootstrap-tabs/dist/jquery.bs4-scrolling-tabs.min.js')}}"></script>
+	<script>
+		$('.nav-tabs').scrollingTabs();
+	</script>
+{% endblock %}
+{% block nav %}
+	<a class="nav-item nav-item-temp btn btn-primary btn-sm" style="color:white" href="{{ path('app_login') }}">
+		{% trans %}Sign In{% endtrans %}
+	</a>
+{% endblock %}

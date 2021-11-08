@@ -1,55 +1,98 @@
-<header id="header" class="header-effect-shrink" data-plugin-options="{'stickyEnabled': true, 'stickyEffect': 'shrink', 'stickyEnableOnBoxed': true, 'stickyEnableOnMobile': false, 'stickyChangeLogo': true, 'stickyStartAt': 30, 'stickyHeaderContainerHeight': 70}">
-				<div class="header-body border-color-primary border-bottom-0">
-					<div class="header-container container">
-						<div class="header-row">
-							<div class="header-column">
-								<div class="header-row">
-									<div class="header-logo">
-										<a href="index.html">
-											<img alt="ECA" width="173" height="78" data-sticky-width="82" data-sticky-height="40" src="{{asset('images/eca.png')}}">
-										</a>
-									</div>
-								</div>
-							</div>
-							<div class="header-column justify-content-end">
-								<div class="header-row">
-									<div class="header-nav header-nav-line header-nav-bottom-line">
-										<div class="header-nav-main header-nav-main-square header-nav-main-dropdown-no-borders header-nav-main-effect-2 header-nav-main-sub-effect-1">
-											<nav class="collapse">
-												<ul class="nav nav-pills" id="mainNav">
-													<li class="dropdown">
-														<a class="dropdown-item dropdown-toggle active" href="/stud">
-															Courses
-														</a>
-													</li>
-													<li class="dropdown dropdown-mega">
-														<a class="dropdown-item dropdown-toggle" href="elements.html">
-															Request
-														</a>
-													</li>
-													<li class="dropdown">
-														<a class="dropdown-item dropdown-toggle" href="#">
-															User1
-															<i class="fas fa-chevron-down"></i>
-														</a>
-														<ul class="dropdown-menu">
-															<li class="dropdown-submenu">
-																<a class="dropdown-item" href="#">Profile</a>
-															</li>
-															<li>
-																<a class="dropdown-item" href="{{path('app_logout')}}">Logout</a>
-															</li>
-														</ul>
-													</li>
-												</ul>
-											</nav>
-										</div>
-
-
-									</div>
-								</div>
-							</div>
+<header id="header" class="header-effect-shrink" data-plugin-options="{'stickyEnabled': true, 'stickyEffect': 'shrink', 'stickyEnableOnBoxed': true, 'stickyEnableOnMobile': false, 'stickyChangeLogo': true, 'stickyStartAt': 30, 'stickyHeaderContainerHeight': 70}" style="height:30px;">
+	<div class="header-body border-color-primary border-bottom-0">
+		<div class="header-container container">
+			<div class="header-row">
+				<div class="header-column">
+					<div class="header-row">
+						<div class="header-logo">
+							<a href="/student">
+								<img alt="ECA" src="{{asset('images/logo-en.jpg')}}">
+							</a>
 						</div>
 					</div>
 				</div>
-			</header>
+				<div class="header-column justify-content-end">
+					<div class="header-row">
+						<div class="header-nav header-nav-line header-nav-bottom-line">
+							<div class="header-nav-main header-nav-main-square header-nav-main-dropdown-no-borders header-nav-main-effect-2 header-nav-main-sub-effect-1">
+								<nav class="collapse">
+									<ul class="nav nav-pills" id="mainNav">
+										<li class="dropdown">
+											<a class="dropdown-item dropdown-toggle" href="/student">
+												Courses
+											</a>
+										</li>
+										<li class="dropdown test" id="my_course">
+											<a class="dropdown-item" href="{{ path('selected_courses')}}">
+												{% trans %}My Courses{% endtrans %}
+												<sup>
+													<span class="badge badge-primary" id="num"></span>
+												</sup>
+											</a>
+										</li>
+										<li class="dropdown dropdown-mega">
+											<a class="dropdown-item dropdown-toggle" href="{{path('requested_courses')}}">
+												{% trans %}Requested courses{% endtrans %}
+											</a>
+										</li>
+
+										{% set activelang = app.session.get('_locale') %}
+										{% set secondlang = '' %}
+										{% set code = '' %}
+										{% if activelang =='fr' %}
+											{% set activelang = 'French' %}
+											{% set secondlang = 'English' %}
+											{% set code = 'en' %}
+										{% else %}
+											{% set activelang = 'English' %}
+											{% set secondlang = 'French' %}
+											{% set code = 'fr' %}
+										{% endif %}
+
+										<li class="dropdown">
+											<a class="dropdown-item dropdown-toggle" href="#">
+
+												<i class="fas fa-globe fa-sm"></i>
+												&nbsp;
+												{{activelang}}
+											</a>
+											<ul class="dropdown-menu dropdown-menu-sm float-right">
+												<li class="dropdown-submenu">
+													<a href="/language?lang={{code}}&&curr={{ path(app.request.attributes.get('_route'),
+																																																																			app.request.attributes.get('_route_params')) }}" class="dropdown-item">
+														<b>{{secondlang}}</b>
+													</a>
+												</li>
+											</ul>
+										</li>
+
+										<li class="dropdown">
+											<a class="dropdown-item dropdown-toggle" href="#">
+												{{app.user.username}}
+												<i class="fas fa-chevron-down"></i>
+											</a>
+											<ul class="dropdown-menu">
+												<li class="dropdown-submenu">
+													<a class="dropdown-item" href="{{path('change_password_logged_in')}}">{% trans %}Change password{% endtrans %}</a>
+												</li>
+												<li class="dropdown-submenu">
+													<a class="dropdown-item" href="{{path('app_logout')}}">{% trans %}Logout{% endtrans %}</a>
+												</li>
+											</ul>
+										</li>
+
+
+									</ul>
+								</nav>
+							</div>
+
+							<button class="btn header-btn-collapse-nav collapsed" data-bs-toggle="collapse" data-bs-target=".header-nav-main nav" aria-expanded="false">
+								<i class="fas fa-bars"></i>
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</header>

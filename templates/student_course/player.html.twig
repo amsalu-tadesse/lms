@@ -44,6 +44,31 @@
             width: 100%;
         }
         
+        .list li{
+            cursor: pointer;
+            margin: 0px;
+        }
+        .list li:hover, .active{
+            background-color: #ccc9c9;
+        }
+
+        td{
+            padding: 0px 3px;
+            line-height: 1.5em;
+        }
+        .list li, i {
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        .list.list-icons li {
+            padding-left: 9px;
+        }
+
+        .list li{
+            border-bottom: 1px solid #dadaca;
+        }
+
         #youtube,
         #video,
         #document {
@@ -51,10 +76,38 @@
             width: 100%;
             padding: 0;
         }
+
+        #intro{
+            margin-top: 63px;
+        }
+
+        .fas{
+            color: #0088cc;
+        }
+
+        #icons{
+            background: #136698;
+            width: 48px;
+            height: 44px;
+            color: white;
+            padding: 13px 16px;
+            border-radius: 100%;
+        }
         
         p,
         ul {
             color: black;
+        }
+        .disabled {
+            pointer-events:none; 
+            opacity:0.6; 
+        }
+
+        ul a h5{
+            color: #076698;
+        }
+        hr{
+            margin: 10px 0px;
         }
     </style>
 </head>
@@ -66,83 +119,188 @@
             const videos = {};
             const desc = {};
             const resource = {};
+            var control = {
+                view_at: 0,
+                num_of_list:0,
+                content_id: [],
+                viewed_content: [],
+            }
         </script>
         <div role="main" class="main">
             <section class="section border-0 m-0" style="min-height: 600px;">
                 <div class="container-fluid">
                     <div class="row">
+                    {% for label, messages in app.flashes %} 
+                        {% for message in messages %}
+                            {% if label=="danger" %}
+                                <div class="alert alert-danger alert-{{ label }} fade show" role="alert">
+                                <strong> {{ message }}</strong>
+                                <button type="button" class="close btn-primary" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                </div>
+                            {% endif %}
+                        {% endfor %} 
+                    {% endfor %}
 
-                        <div class="col-md-8">
-                            <div id="video">
-                                <video autoplay controls width="100%" height="453">
-									<source id="video-source" src="">
-								</video>
-                            </div>
-							
-                            <div id="youtube">
-                                <iframe height="453" width="100%" src="" style="display:none" id="youtube-link" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                            </div>
-                            <div id="document">
-                                <div class="card" id="text-card" style="display:none">
-                                    <div class="card-body">
-                                        <div id="html-text"></div>
+                        {% if pages_seen|length != 0 %}
+                                <script>
+                                    control.view_at = "{{pages_seen.pagesCompleted}}";
+                                </script>
+                        {% endif %}
+                        {% if contents|length == 0 %}
+                            <div class="row chapter-list">
+                                <div class="col-md-1"></div>
+                                <div class="col-md-10">
+                                    <div class="card border-0 border-radius-0 ">
+                                        <div class="card-body">
+                                            <center><p class="card-text">{% trans %}There is no content available for this chapter{% endtrans %}</p>
+                                            <a href="{{ path('course_chapters',{'id': chapter.instructorCourse.id})}}" class="btn btn-primary "><h5 class="text-light"> </i>Back to chapters list </h5></a></center>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-4">
+                        {% else %}
+                            
+                            <div class="col-md-8">
 
-                            <div class="tabs ">
-                                <ul class="nav nav-tabs tabs-primary">
-                                    <li class="nav-item" style="width: 100%; border-bottom: 1px solid blue">
-                                        <a class="nav-link active" href="#popular7" data-bs-toggle="tab">Contents</a>
-                                    </li>
-                                </ul>
-                                <div class="tab-content">
-                                    <ul class="list list-icons list-icons-style-1">
-                                        {% for content in contents %} {% if content.filename != null %}
-                                        <li data-type="{{content.id}}" content="filename">
-                                            <i class="fas fa-play"></i> {{ content.title }}
-                                        </li>
-                                        <script>
-                                            var id = "{{ content.id }}";
-                                            var link = "{{ content.filename }}";
-                                            var res = "{{ content.resource }}";
-                                            var de = "{{ content.description }}";
-                                            videos[id] = link;
-                                            desc[id] = de;
-                                            resource[id] = res;
-                                        </script>
-                                        {% elseif content.videoLink != null %}
-                                        <li data-type="{{content.id}}" content="youtube">
-                                            <i class="fas fa-play-circle"></i> {{ content.title }}
-                                        </li>
-                                        <script>
-                                            var id = "{{ content.id }}";
-                                            var link = "{{ content.videoLink }}";
-                                            var res = "{{ content.resource }}";
-                                            var de = "{{ content.description }}";
-                                            videos[id] = link;
-                                            desc[id] = de;
-                                            resource[id] = res;
-                                        </script>
-                                        {% elseif content.content != "" %}
-                                        <li data-type="{{content.id}}" content="doc">
-                                            <i class="fas fa-book"></i> {{ content.title }}
-                                        </li>
-                                        {% endif %} {% endfor %}
-                                        <li>
-                                            <a href="#" style="color:blue">
-												Chapter Quiz
-											</a>
-                                        </li>
-                                    </ul>
+                                <div height="453" width="100%" class="px-4 py-5 card" id="intro">
+                                    <div style="margin: 100px auto">
+                                    <h4>Select from contents on the right <i id="icons" class="fa fa-arrow-right"></i></h4>
+                                    </div>          
+                                </div>
+                                <div id="video">
+                                    <video autoplay controls width="100%" height="453" style="display:none">
+                                        <source id="video-source" src="">
+                                    </video>
+                                </div>
+                                
+                                <div id="youtube">
+                                    <iframe height="453" width="100%" src="" style="display:none" id="youtube-link" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                </div>
+                                <div id="document">
+                                    <div class="card" id="text-card" style="display:none; background: white;">
+                                        <div class="card-body">
+                                            <div id="html-text"></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-8" id="desc-text" style="display:none">
-                            <p id="description" style="width:100%; background-color:white;padding: 15px;"></p>
-                        </div>
+                            <div class="col-md-4">
+
+                                <div class="tabs ">
+                                    <ul class="nav nav-tabs tabs-primary">
+                                        <a href="{{ path('course_chapters',{'id': chapter.instructorCourse.id})}}"><h5> <i class="fa fa-arrow-left"></i>Back to chapters list </h5></a>
+                                        <li class="nav-item" style="width: 100%; border-bottom: 1px solid blue">
+                                            <a class="nav-link active" href="#popular7" data-bs-toggle="tab">
+                                                <span>{{chapter.topic|capitalize}}</span>
+                                                <hr>
+                                                Contents
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    
+                                    <div class="tab-content">
+                                        <ul class="list list-icons list-icons-style-1">
+                                            {% set flag = 0 %}
+                                            {% for content in contents %} 
+                                                <script>
+                                                    control.num_of_list +=1;
+                                                    control.content_id.push({{content.id}});
+                                                </script>
+                                            {% if content.filename != null %}
+                                            {% if flag < pages_seen.pagesCompleted %}
+                                            <script>
+                                                control.viewed_content.push({{content.id}});
+                                            </script>
+                                            <li data-type="{{content.id}}" content="filename" class="">
+                                                <table>
+                                                    <tr><td>
+                                                    <input type="checkbox" name="{{content.id}}" disabled checked></td><td>
+                                            {% else %}
+                                            <li data-type="{{content.id}}" content="filename" class="disabled">
+                                                <table>
+                                                    <tr><td>
+                                                    <input type="checkbox" name="{{content.id}}"disabled></td><td>
+                                            {% endif %}
+                                                    <i class="fas fa-play"></i></td><td> {{ content.title }}</td></tr>
+                                                    </table>
+                                            </li>
+                                            <script>
+                                                var id = "{{ content.id }}";
+                                                var link = "{{ content.filename }}";
+                                                var res = "{{ content.resource }}";
+                                                var de = "{{ content.description }}";
+                                                videos[id] = link;
+                                                desc[id] = de;
+                                                resource[id] = res;
+                                            </script>
+                                            {% elseif content.videoLink != null %}
+                                                {% if flag < pages_seen.pagesCompleted %}
+                                                <script>
+                                                    control.viewed_content.push({{content.id}});
+                                                </script>
+                                                <li data-type="{{content.id}}" content="youtube">
+                                                    <table>
+                                                        <tr><td>
+                                                        <input type="checkbox" name="{{content.id}}" disabled checked></td><td>
+                                                {% else %}
+                                                <li data-type="{{content.id}}" content="youtube" class="disabled">
+                                                    <table>
+                                                        <tr><td>
+                                                        <input type="checkbox" name="{{content.id}}"disabled></td><td>    
+                                                {% endif %}
+                                                        <img src="{{asset('/images/youtube.png')}}" style="margin: 0px 8px;width: 18px;"></td><td> {{ content.title }}</td></tr>
+                                                        </table>
+                                                </li>
+                                            <script>
+                                                var id = "{{ content.id }}";
+                                                var link = "{{ content.videoLink }}";
+                                                var res = "{{ content.resource }}";
+                                                var de = "{{ content.description }}";
+                                                videos[id] = link;
+                                                desc[id] = de;
+                                                resource[id] = res;
+                                            </script>
+                                            {% endif %}
+                                            
+                                            {% if content.content != "" %}
+                                                {% if flag < pages_seen.pagesCompleted %}
+                                                <script>
+                                                    control.viewed_content.push({{content.id}});
+                                                </script>
+                                                <li data-type="{{content.id}}" content="doc">
+                                                    <table>
+                                                        <tr><td>
+                                                        <input type="checkbox" name="{{content.id}}" disabled checked></td><td>
+                                                {% else %}
+                                                <li data-type="{{content.id}}" content="doc" class="disabled">
+                                                    <table>
+                                                        <tr><td>
+                                                        <input type="checkbox" name="{{content.id}}"disabled></td><td>
+                                                {% endif %}
+                                                        <i class="fas fa-book"></i></td><td> {{ content.title }}</td></tr>
+                                                        </table>
+                                                </li>
+                                            {% endif %} 
+                                                {% set flag = flag+1 %}
+                                            {% endfor %}
+                                            <li style="border-bottom: 0px;">
+                                                <a href="{{ path('course_quiz',{'id': chapter.id}) }}" id="startQuiz" style="color:blue;">
+                                                    {% trans %}Chapter{% endtrans %} Quiz
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8" id="desc-text" style="display:none">
+                                <p id="description" style="width:100%; background-color:white;padding: 15px;"></p>
+                            </div>
+        
+
+                        {% endif %}
+                        
                     </div>
                 </div>
             </section>
@@ -152,6 +310,7 @@
 
     <!-- jquery -->
     <script src=" {{asset( 'assets/plugins/jquery/jquery.js')}} "></script>
+	<script src="{{asset('assets/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 
     <!-- Theme Base, Components and Settings -->
     <script src="{{asset( 'student/js/theme.js')}} "></script>
@@ -161,78 +320,157 @@
 
     <!-- Theme Initialization Files -->
     <script src="{{asset( 'student/js/theme.init.js')}} "></script>
-   <script>
-			var selected_doc = 0;
-			$("li").on("click", function(){
-				content = $(this).attr("content");
-				var id = $(this).attr("data-type");
-				if(content === "doc")
-				{
-					if(selected_doc != id){
-						$("#youtube-link").css("display", "none");
-						$("#youtube-link").attr("src","");
-						$("#video").html("");
-						$("#text-card").css("display","block");
-						url = "/content/"+id+"/cont";
-						$.ajax({
-							url: url,
-							type: "get",
-							success: function(data)
-							{
-								console.log(data);
-							},
-							error: function(xhr)
-							{
-								if(xhr.status == 200)
-								{
-									$("#html-text").html(xhr.responseText);
-								}
-							}
-						});
-						selected_doc = id;
-					}
+   
+   <script>   
+    var selected_doc = 0;
+    console.log(control);
+    $("#startQuiz").on('click', function(e){
+        console.log(control.view_at, control.content_id.length);
+        e.preventDefault()
+            if(parseInt(control.view_at) == control.content_id.length &&  parseInt(control.view_at)!= 0)
+            {
+                window.location = $(this).attr("href");
+            }
+            else{
+                console.log("fail");
+            }
+        
+    });
 
-				}
-				else if(content === "youtube")
-				{
-				//	var iframe = $('<iframe height="453" width="100%" src="" id="youtube-link" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>');
-				//	$("#youtube").append(iframe);
-					$("#text-card").css("display","none");
-					$("#video").html("");
-					$("#youtube-link").css("display", "block");
-					$("#youtube-link").attr("src", videos[id]);
-				}
-				else if(content === "filename")
-				{	
-					$("#video").html("");
-					videoHtml = $("#video").html();
-					if(videoHtml == ""){				
-						var videoSkin = $("<video controls width='100%' height='453'></video>");
-						var source = $("<source id='video-source' src=''>");
-						videoSkin.append(source);
-					}
-					$("#video").append(videoSkin);
-					$("#youtube-link").css("display", "none");
-					$("#youtube-link").attr("src","");					
-					$("#text-card").css("display","none");
-					$("#video").css("display", "block");
-					$("#video-source").attr("src", "/images/"+videos[id]);
-				}
+    $('.alert').alert();
+    $("li").on("click", function(){
+       $("#intro").remove();
+       lists = $(".list li");
+        var id = $(this).attr("data-type");
+       if((lists.length-1) == control.num_of_list && parseInt(control.view_at) >= control.content_id.indexOf(parseInt(id)))
+        {
+            content = $(this).attr("content");
 
-				console.log(desc[id]);
-				if(desc[id] != "")				
-				{
-					//$("#description").html(desc[id]);
-					//$("#desc-text").css("display", "block");
-				}
-				else
-				{
-					console.log("hell");
-					$("#description").html("");
-					$("#desc-text").css("display", "none");
-				}
-			});
-		</script>
+            if(content === "doc")
+            {
+                if(selected_doc != id){
+                    $("#youtube-link").css("display", "none");
+                    $("#youtube-link").attr("src","");
+                    $("#video").html("");
+                    $("#text-card").css("display","block");
+                    url = "/content/"+id+"/cont";
+                    $.ajax({
+                        url: url,
+                        type: "get",
+                        success: function(data)
+                        {
+                            if(xhr.status == 200)
+                            {
+                                $("#html-text").html(xhr.responseText);
+                            }
+                        },
+                        error: function(xhr)
+                        {
+                            if(xhr.status == 200)
+                            {
+                                $("#html-text").html(xhr.responseText);
+                            }
+                        }
+                    });
+                    selected_doc = id;
+                }
+
+            }
+            else if(content === "youtube")
+            {
+            //	var iframe = $('<iframe height="453" width="100%" src="" id="youtube-link" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>');
+            //	$("#youtube").append(iframe);
+                selected_doc = 0;
+                $("#text-card").css("display","none");
+                $("#video").html("");
+                $("#youtube-link").css("display", "block");
+                $("#youtube-link").attr("src", videos[id]);
+            }
+            else if(content === "filename")
+            {	
+                $("#video").html("");
+                videoHtml = $("#video").html();
+                if(videoHtml == ""){				
+                    var videoSkin = $("<video controls width='100%' height='453'></video>");
+                    var source = $("<source id='video-source' src=''>");
+                    videoSkin.append(source);
+                }
+                $("#video").append(videoSkin);
+                $("#youtube-link").css("display", "none");
+                $("#youtube-link").attr("src","");					
+                $("#text-card").css("display","none");
+                $("#video").css("display", "block");
+                $("#video-source").attr("src", "/uploads/resources/"+videos[id]);
+            }
+
+            
+            $("input[name="+id+"]").attr("checked","checked");
+           
+            if(!control.viewed_content.includes(parseInt(id)) && control.content_id.includes(parseInt(id))){
+                updateCounter(id);
+            }
+
+            if(desc[id] != "")				
+            {
+                //$("#description").html(desc[id]);
+                //$("#desc-text").css("display", "block");
+            }
+            else
+            {
+                $("#description").html("");
+                $("#desc-text").css("display", "none");
+            }
+        }
+    });
+
+    $(document).ready(function(){
+        activeList(parseInt(control.view_at), control.content_id[0]);
+    });
+
+    function updateCounter(id)
+    {
+        $.ajax({
+            url: "{{path('update_counter',{'chapter':pages_seen.id})}}",
+            success: function()
+            {
+                num = parseInt(control.view_at);
+                control.view_at = ++num;
+                activeList(control.view_at,id);
+            },
+            error: function()
+            {
+                num = parseInt(control.view_at);
+                control.view_at = ++num;
+                activeList(control.view_at,id);
+            }
+
+        });
+    }
+
+    function activeList(num, id)
+    {
+        if(num!=0 && !control.viewed_content.includes(id)){
+            control.viewed_content.push(parseInt(id));
+        }   
+        lists = $(".list li");
+        var flag = 1;
+        if((lists.length-1) == control.num_of_list)
+        {
+
+            lists.each(function(){
+                if(flag == num+1){
+                    console.log($(this).attr('data-type'));
+                    $(this).removeClass("disabled");
+                }
+                flag++; 
+            });
+        }
+        else{
+            console.log("err");
+        }
+
+    }
+</script>
 </body>
 
 </html>

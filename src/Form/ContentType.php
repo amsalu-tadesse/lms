@@ -11,19 +11,25 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 
 
 class ContentType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $incrsid = $options['incrsid'];
+        $incrsid = $options['incrsid']; 
+        $uploadSize = $options['uploadSize']; 
+
+ 
+
         $builder
             ->add('chapter', EntityType::class, [
+                'required' => true,
                 'class' => InstructorCourseChapter::class,
                 'required' => false,
                 'placeholder' => "",
-                // 'choice_value' => 'sectionLabel',
+                // 'choice_value' => 'title',
                 'query_builder' => function (EntityRepository $er) 
                 use($incrsid){
                     $res = $er->createQueryBuilder('s')
@@ -31,12 +37,16 @@ class ContentType extends AbstractType
                              ->andWhere('ic.id = :incrsid')
                 ->setParameter('incrsid', $incrsid);
                     return $res;
-                },
+                }, 
             ]) 
             ->add('title')
-            ->add('content')
             // ->add('file')
             ->add('videoLink')
+            ->add('content', CKEditorType::class, array(
+            'config' => array(
+                'uiColor' => '#ffffff',
+             ),
+        ))
             // ->add('instructorCourse')
             ->add('filename', FileType::class, [
                 'label' => 'Resource',
@@ -52,12 +62,27 @@ class ContentType extends AbstractType
                 // in the associated entity, so you can use the PHP constraint classes
                 'constraints' => [
                     new File([
-                        'maxSize' => '250M',
-                        /*'mimeTypes' => [
+                        'maxSize' => $uploadSize.'M',
+                        'mimeTypes' => [
+                            'image/*',
+                            'video/mp4',
+                            'video/avi',
+                            'video/mpeg',
+                            'video/MOV',
+                            'video/SWF',
+                            'audio/mp3',
+                            'audio/wav',
+                            'audio/M4A',
+                            'audio/MP4',
                             'application/pdf',
-                            'application/x-pdf',
-                        ],*/
-                        'mimeTypesMessage' => 'Please upload a valid document',
+                            'application/msword',
+                            'application/vnd.ms-excel',
+                            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                            'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                            'text/plain'
+                        ],
+                        // 'mimeTypesMessage' => 'Please upload a valid PDF',
                     ])
                 ],
             ]);
@@ -66,9 +91,9 @@ class ContentType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setRequired('incrsid');
+        $resolver->setRequired('uploadSize');
         $resolver->setDefaults([
             'data_class' =>  Content::class
-            
         ]);
     }
 }

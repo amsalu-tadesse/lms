@@ -7,6 +7,19 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
 
+@font-face {
+    font-family: "Zen Antique";
+    src: url("zenantique-regular-webfont.woff") format("woff");
+}
+
+@font-face {
+    font-family: "poppins";
+    src: url("poppins-regular-webfont.woff") format("woff");
+}
+
+
+
+
 :root {
     --bs-blue: #0d6efd;
     --bs-indigo: #6610f2;
@@ -41,7 +54,7 @@
 }
 
 @media (prefers-reduced-motion:no-preference) {
-    :root {
+     :root {
         scroll-behavior: smooth
     }
 }
@@ -114,7 +127,8 @@ h2 {
 
 .h3,
 h3 {
-    font-size: calc(1.3rem + .6vw)
+    font-size: calc(1.3rem + .6vw);
+    color: #045493;
 }
 
 @media (min-width:1200px) {
@@ -126,7 +140,8 @@ h3 {
 
 .h4,
 h4 {
-    font-size: calc(1.275rem + .3vw)
+    font-size: calc(1.275rem + .3vw);
+    color: #fefefe;
 }
 
 @media (min-width:1200px) {
@@ -2941,13 +2956,13 @@ fieldset:disabled .btn {
 
 .btn-primary {
     color: #fff;
-    background-color: #0d6efd;
+    background-color: rgb(9, 49, 70);
     border-color: #0d6efd
 }
 
 .btn-primary:hover {
     color: #fff;
-    background-color: #0b5ed7;
+    background-color: rgb(9, 49, 70);
     border-color: #0a58ca
 }
 
@@ -3168,6 +3183,11 @@ fieldset:disabled .btn {
     color: #fff;
     background-color: #dc3545;
     border-color: #dc3545
+}
+
+.btn-block {
+    display: block;
+    width: 100%;
 }
 
 .btn-danger:hover {
@@ -4599,7 +4619,7 @@ fieldset:disabled .btn {
     flex-direction: column;
     min-width: 0;
     word-wrap: break-word;
-    background-color: #fff;
+    background-color: #F7F7F7;
     background-clip: border-box;
     border: 1px solid rgba(0, 0, 0, .125);
     border-radius: .25rem
@@ -4633,6 +4653,7 @@ fieldset:disabled .btn {
 }
 
 .card-body {
+    overflow: auto;
     flex: 1 1 auto;
     padding: 1rem 1rem
 }
@@ -5021,6 +5042,16 @@ fieldset:disabled .btn {
     white-space: nowrap;
     vertical-align: baseline;
     border-radius: .25rem
+}
+
+.badge-secondary {
+    color: #fff;
+    background-color: #6c757d;
+}
+
+.badge-info {
+    color: #fff;
+    background-color: #17a2b8;
 }
 
 .badge:empty {
@@ -10601,6 +10632,9 @@ fieldset:disabled .btn {
         display: none!important
     }
 }
+
+
+/*# sourceMappingURL=bootstrap.min.css.map */
 
 
 /*# sourceMappingURL=bootstrap.min.css.map */

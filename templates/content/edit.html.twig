@@ -1,15 +1,17 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Content{% endblock %}
-{% block breadcrumbhome %} Content{% endblock %}
-{% block breadcrumbcontent %} edit{% endblock %}
+{% block title %}{% trans %}Edit{% endtrans %} Content{% endblock %}
+{% block breadcrumbhome %} 
+    <a href="{{ path('content_index',{'id': incrsid}) }} ">
+	   {% trans %}Content{% endtrans %} 
+	</a>
+{% endblock %}
+{% block breadcrumbcontent %} {% trans %}Edit{% endtrans %}{% endblock %}
 
 {% block body %}
-    <h1>Edit Content</h1>
-
     {{ include('content/_form.html.twig', {'button_label': 'Update'}) }}
 
-    <a href="{{ path('content_index', {'id': incrsid}) }}">back to list</a>
+    <a href="{{ path('content_index', {'id': incrsid}) }}">{% trans %}Back to list{% endtrans %}</a>
 
     {{ include('content/_delete_form.html.twig') }}
 {% endblock %}
@@ -40,5 +42,13 @@
         $("#content_videoLink").prop('disabled', true);
         $("#content_filename").prop('disabled', false);
     });
+    
+
+    $("#ContentRadio").on("click", function() {
+    $("#content_videoLink").prop('disabled', true);
+    $("#content_filename").prop('disabled', true);
+    $("#content_content").prop('disabled', false);
+});
+
 </script>
 {% endblock %}

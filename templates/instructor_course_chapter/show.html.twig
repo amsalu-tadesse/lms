@@ -1,9 +1,13 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}InstructorCourseChapter{% endblock %}
-
+{% block breadcrumbhome %}
+    <a>
+	   {% trans %}Chapter{% endtrans %} 
+	</a> 
+{% endblock %}
+{% block breadcrumbcontent %}Show{% endblock %}
 {% block body %}
-    <h1>InstructorCourseChapter</h1>
 
     <table class="table">
         <tbody>
@@ -12,8 +16,8 @@
                 <td>{{ instructor_course_chapter.id }}</td>
             </tr>
             <tr>
-                <th>Chapter</th>
-                <td>{{ instructor_course_chapter.chapter }}</td>
+                <th>{% trans %}Chapter{% endtrans %}</th>
+                <td>{{ instructor_course_chapter.topic }}</td>
             </tr>
             <tr>
                 <th>Created_at</th>
@@ -22,7 +26,7 @@
         </tbody>
     </table>
 
-    <a href="{{ path('instructor_course_chapter_index') }}">back to list</a>
+    <a href="{{ path('instructor_course_chapter_index') }}">{% trans %}Back to list{% endtrans %}</a>
 
     <a href="{{ path('instructor_course_chapter_edit', {'id': instructor_course_chapter.id}) }}">edit</a>
 

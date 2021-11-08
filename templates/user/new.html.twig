@@ -1,9 +1,15 @@
 {% extends 'security/login.html.twig' %}
+{% block breadcrumbhome %}
+    <a href="{{ path('user_index') }} ">
+	   {% trans %}User{% endtrans %} 
+	</a> 
+{% endblock %}
+{% block breadcrumbcontent %}{% trans %}New{% endtrans %}{% endblock %}
 {% block fullbody %}
 	<div class="row">
 		<div class="card col-8 m-auto">
 			<div class="card-body login-card-body">
-				<p class="login-box-msg">Create Adminstrator Account</p>
+				<p class="login-box-msg">{% trans %}Create Adminstrator Account{% endtrans %}</p>
 
 				{{ include('user/_form.html.twig') }}
 			</div>

@@ -1,13 +1,19 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit InstructorCourse{% endblock %}
-
+{% block title %}{% trans %}Edit InstructorCourse{% endtrans %}{% endblock %}
+{% block breadcrumbhome %}
+    <a href="{{ path('instructor_course_index') }} ">
+	   {% trans %}Instructor Course{% endtrans %} 
+	</a> 
+{% endblock %}
+{% block breadcrumbcontent %}{% trans %}Edit{% endtrans %}{% endblock %}
 {% block body %}
-    <h1>Edit InstructorCourse</h1>
 
-    {{ include('instructor_course/_form.html.twig', {'button_label': 'Update'}) }}
-
-    <a href="{{ path('instructor_course_index') }}">back to list</a>
-
+    {{ include('instructor_course/_form.html.twig', {'button_label': 'Update' | trans | raw}) }}
+    <table>
+    <td>
+    <a href="{{ path('instructor_course_index') }}">{% trans %}Back to list{% endtrans %}</a>
+    </td><td>
     {{ include('instructor_course/_delete_form.html.twig') }}
+    </td></table>
 {% endblock %}

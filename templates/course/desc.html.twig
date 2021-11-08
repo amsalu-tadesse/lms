@@ -1,0 +1,126 @@
+<div class="card px-5 pt-3 " style="padding-bottom: 80px">
+    <h4 class="pt-2 pb-2" style="color:#093146">{{chapter.name}}</h4>
+    <p style="margin-bottom: 40px">{{chapter.description}}</p>
+
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" href="#tab1" role="tab" data-toggle="tab">{% trans %}Chapters{% endtrans %}</a>
+        </li>
+        {% if is_granted("ROLE_STUDENT") %}
+        <li class="nav-item">
+            <a class="nav-link" href="#tab3" role="tab" data-toggle="tab">Q&A</a>
+        </li>
+        {% endif %}
+
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane fade show active" id="tab1">
+
+            <div class="mt-5">
+                {% set flag = 0 %} {% for content in chapters %} {% if content.chapter.id == flag %} {% if content.filename != null %}
+                <li data-type="{{content.id}}" content="filename">
+                    <i class="fas fa-play"></i> {{ content.title }}
+                </li>
+                {% elseif content.videoLink != null %}
+                <li data-type="{{content.id}}" content="youtube">
+                    <i class="fas fa-play-circle"></i> {{ content.title }}
+                </li>
+                {% elseif content.content != "" %}
+                <li data-type="{{content.id}}" content="doc">
+                    <i class="fas fa-book"></i> {{ content.title }}
+                </li>
+                {% endif %} {% else %} {% if flag != 0 %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %} {% set flag = content.chapter.id %}
+
+<div id="accordion">
+    <div class="card">
+        <div class="card-header" id="headingOne">
+            <h5 class="mb-0">
+                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{content.chapter.id}}" aria-expanded="true" aria-controls="collapseOne">
+					{{ content.chapter.topic }}
+				</button>
+            </h5>
+        </div>
+
+        <div id="collapse{{content.chapter.id}}" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+            <div class="card-body">
+                <ul class="list list-icons list-icons-style-1">
+                    {% if content.filename != null %}
+                    <li data-type="{{content.id}}" content="filename">
+                        <i class="fas fa-play"></i> {{ content.title }}
+                    </li>
+                    {% elseif content.videoLink != null %}
+                    <li data-type="{{content.id}}" content="youtube">
+                        <i class="fas fa-play-circle"></i> {{ content.title }}
+                    </li>
+                    {% elseif content.content != "" %}
+                    <li data-type="{{content.id}}" content="doc">
+                        <i class="fas fa-book"></i> {{ content.title }}
+                    </li>
+                    {% endif %} {% endif %} {% endfor %} {% if flag != 0 %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+</div>
+</div>
+
+<div role="tabpanel" class="tab-pane fade show" id="tab3">
+    <div class="comments">{% for que in question %} 
+
+    {% if que.student != null %}
+        <div class="card bg-white mt-2 mx-3 question">
+            <div class="card-body">
+                <p class="meta">
+                    <span class="qadata">{{que.createdAt|date('d-m-Y')}}
+					</span> {{que.student.user.username}}
+                </p>
+                <p class="message">{{que.question}}</p>
+            </div>
+        </div>
+        {% elseif que.instructor != null %}
+
+        <div class="card bg-white mt-2 question-teacher mx-3">
+            <div class="card-body">
+                <p class="meta">
+                    <span class="qadata">{{que.createdAt|date('d-m-Y')}}
+					</span> {{que.instructor.user.username}}
+                </p>
+                <p class="message">{{que.question}}</p>
+            </div>
+        </div>
+        {% endif %} {% if que.answer != null %}
+        <div class="card bg-white mt-2 answer">
+            <div class="card-body">
+                <p class="meta">
+                    <span class="qadata">{{que.createdAt|date('d-m-Y')}}
+					</span> {{que.instructor.user.username}}
+                </p>
+                <p class="message">{{que.answer}}</p>
+            </div>
+        </div>
+        {% endif %}{% endfor %}</div><br>
+		{% if question|length > 10 %}
+			<center>
+				<a href="#" id="loadMore" parameter = "{{chapter.id}}">Load more ...</a>
+			</center>
+		{% endif %}
+		
+
+    {{form_start(form)}} {{form_widget(form)}}
+
+    <input type="hidden" name="val1" value="{{chapter.id}}"><input type="submit" class="btn btn-primary mt-1" style="min-width: 150px"> {{form_end(form)}}
+</div>
+</div>
+</div>
+</div>

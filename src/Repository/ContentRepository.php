@@ -44,8 +44,8 @@ class ContentRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('c')
             ->Join('c.chapter', 'ch')
             ->join('ch.instructorCourse', 'ic')
-            ->andWhere('ch.chapter = :val')
-            ->andWhere('ic.course = :val2')
+            ->andWhere('ch.topic = :val')
+            ->andWhere('ic.id = :val2')
             ->setParameter('val', $chapter)
             ->setParameter('val2', $course)
             ->getQuery()
@@ -76,6 +76,20 @@ class ContentRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult()
         ;
+    }
+
+    public function getChaptersWithContentForCourse($value)
+    {
+        return $this->createQueryBuilder('c')
+        ->select('c','ch')
+        ->join('c.chapter', 'ch')
+        ->join('ch.instructorCourse','ic')
+        ->where('ic.id = :val')
+        ->orderBy('ch.id')
+        ->setParameter('val', $value)
+        ->getQuery()
+        ->getResult()
+    ;
     }
     // /**
     //  * @return Content[] Returns an array of Content objects

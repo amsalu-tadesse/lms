@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Edit{% endtrans %} Quiz{% endblock %}
+{% block breadcrumbhome %}
+    <a href="{{path('quiz_index',{'id':quiz.instructorCourseChapter.instructorCourse.id})}}">
+	   {% trans %}Quiz{% endtrans %} 
+	</a> 
+{% endblock %}
+{% block breadcrumbcontent%}
+	{% trans %}Edit{% endtrans %} 
+{% endblock %}
+{% block body %}
+
+        <div class="card card-info">
+        <div class="card card-header">
+         <h3>{% trans %}Edit{% endtrans %} Quiz Details</h3>
+        </div>
+        <div class="card card-body">
+        {{ include('quiz/_form.html.twig', {'button_label': 'Update'}) }}
+         
+        </div>
+        </div>
+
+
+
+   
+
+    {# <a href="{{ path('quiz_index') }}">{% trans %}Back to list{% endtrans %}</a> #}
+
+    {{ include('quiz/_delete_form.html.twig') }}
+{% endblock %}

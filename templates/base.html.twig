@@ -6,10 +6,12 @@
     <title>
         {% block title %} {% endblock %}
     </title>
-
+    <link rel="shortcut icon" href="{{asset('images/fas.jpg')}}" type="image/x-icon"/>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {# <meta name="viewport" content="width=device-width, initial-scale=1"> #}
     <title>LMS</title>
+
+ 
 
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <link rel="stylesheet" href="{{asset('assets/plugins/fontawesome-free/css/all.min.css')}}">
@@ -18,11 +20,43 @@
     <link rel="stylesheet" href="{{asset('assets/plugins/jqvmap/jqvmap.min.css')}}"> #}
     <link rel="stylesheet" href="{{asset('assets/dist/css/adminlte.min.css')}}">
     <link rel="stylesheet" href="{{asset('assets/dist/css/custom.css')}}">
+    
     {# <link rel="stylesheet" href="{{asset('assets/plugins/overlayScrollbars/css/OverlayScrollbars.min.css')}}"> #}
     {# <link rel="stylesheet" href="{{asset('assets/plugins/daterangepicker/daterangepicker.css')}}"> #}
     {# <link rel="stylesheet" href="{{asset('assets/plugins/summernote/summernote-bs4.min.css')}}">  #}
 	{% block stylesheets %} {% endblock %}
+    <style>
+        body{
+            font-size: 15px;
+        }
+        ul.nav, table td{
+            font-size: 105%;
+        }
 
+        .dataTables_filter{
+            float: right;
+        }
+        
+        .nav-treeview .nav-item a{
+            font-size: 85%;
+            padding-left: 30px
+        }
+        .nav-icon{
+            font-size: 0.9rem !important;
+        }
+        
+        .footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+ 
+  /*color: white;*/
+  text-align: center;
+}
+       
+
+    </style>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixe">
@@ -49,10 +83,11 @@
                                  
                             </ol>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-4 float-right">
                         </div>
                         <div class="col-sm-2 float-right-end mr-0">
                          {% block backbtn %}{% endblock %}
+                        
                         </div>
                     </div>
                 </div>
@@ -114,26 +149,76 @@
         <script src="{{asset('assets/dist/js/adminlte.min.js')}}"></script>
         <script src="{{asset('assets/dist/js/demo.js')}}"></script>
         <script>
-            $.widget.bridge('uibutton', $.ui.button)
+            $.widget.bridge('uibutton', $.ui.button);
+            var inst = "{{ is_granted('ROLE_INSTRUCTOR') }}";
+            if( inst == "1"){
+                user = {{app.user.id}};
+                    $.ajax({
+                        url: "{{path('new_question_notification')}}",
+                        data: {'id': user},
+                        success: function(data){
+                            $('.navbar-badge').text(data);
+                        }
+                    }); 
+                $(document).ready(function(){
+                    user = {{app.user.id}};
+                    setInterval(function(){ 
+                        $.ajax({
+                            url: "{{path('new_question_notification')}}",
+                            data: {'id': user},
+                            success: function(data){
+                                $('.navbar-badge').text(data);
+                            }
+                        }); 
+                    }, 5000);
+                });
+            }
+
+            var adm = "{{ is_granted('ROLE_DIRECTOR') }}";
+            if( adm == "1"){
+                console.log("addmin");
+                user = {{app.user.id}};
+                    $.ajax({
+                        url: "{{path('new_course_request')}}",
+                        success: function(data){
+                            if(data != 0){
+                                $("#new_request .badge").remove();
+                                badge = $("<span class='badge badge-primary'>"+data+"</span>");
+                                $('#new_request').append(badge);
+                            }
+                        }
+                    }); 
+                $(document).ready(function(){
+                    user = {{app.user.id}};
+                    setInterval(function(){ 
+                        $.ajax({
+                            url: "{{path('new_course_request')}}",
+                            data: {'id': user},
+                            success: function(data){
+                                if(data != 0){
+                                     $("#new_request .badge").remove();
+                                    badge = $("<span class='badge badge-primary'>"+data+"</span>");
+                                    $('#new_request').append(badge);
+                                }
+                            }
+                        }); 
+                    }, 5000);
+                });
+            }
         </script>
 
         <script>
-            $(function() {
-                var url = window.location;
-                // for single sidebar menu
-                $('ul.nav-sideba
-        {#
-        <script src="{{asset('assets/dist/js/demo.js')}}"></cript> #}r a').filter(function() {
-                    return this.href == url;
-                }).addClass('active');
-
-                // for sidebar menu and treeview
-                $('ul.nav-treeview a').filter(function() {
-                    return this.href == url;
-                }).parentsUntil(".nav-sidebar > .nav-treeview").css({
-                    'display': 'block'
-                }).addClass('menu-open').prev('a').addClass('active');
-            });
+      $(function () {
+        var url = window.location;
+        // for single sidebar menu
+        $('ul.nav-sidebar a').filter(function () {
+            return this.href == url;
+        }).addClass('active');
+        // for sidebar menu and treeview
+        $('ul.nav-treeview a').filter(function () {
+            return this.href == url;
+        }).parentsUntil(".nav-sidebar > .nav-treeview").css({'display': 'block'}).addClass('menu-open').prev('a').addClass('active');
+        });
         </script>
 		{% block javascripts %}
         {% endblock %}

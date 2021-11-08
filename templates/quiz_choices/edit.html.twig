@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Edit{% endtrans %} QuizChoices{% endblock %}
+{% block breadcrumbhome %}
+    <a href="{{path('quiz_index',{'id':quizChoiz.quiz.id})}}">
+	   {% trans %}Requests{% endtrans %} 
+	</a> 
+{% endblock %}
+{% block breadcrumbcontent %}{% trans %}Rejected{% endtrans %}{% endblock %}
+
+{% block body %}
+
+    {{ include('quiz_choices/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('quiz_choices_index') }}">{% trans %}Back to list{% endtrans %}</a>
+
+    {{ include('quiz_choices/_delete_form.html.twig') }}
+{% endblock %}
