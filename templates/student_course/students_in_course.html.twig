@@ -62,9 +62,9 @@
                     
                     <div class="form-group text-blue"> 
                     {% if student_course.active %}
-                    Are you sure you want to diactivate {{student_course.student}} for the course {{student_course.instructorCourse.course}} ?
+                    Are you sure you want to <span style="color:red">diactivate</span> {{student_course.student}} for the course {{student_course.instructorCourse.course}} ?
                     {% else %}
-                     Are you sure you want to activate {{student_course.student}} for the course {{student_course.instructorCourse.course}} ?
+                     Are you sure you want to <span style="color:green">activate</span> {{student_course.student}} for the course {{student_course.instructorCourse.course}} ?
                     {% endif %}
                     
                     </div>
