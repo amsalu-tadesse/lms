@@ -47,15 +47,25 @@
 	</style>
 {% endblock %}
 {% block body %}
-	<div class="container-fluid mt-1" style="min-height: 490px" ;>
+	<br>
+	<div class="container-fluid mt-1 description-area">
 		<div class="row">
 		{% include "course/desc.html.twig" %}
 		</div>
 	</div>
 {% endblock %}
 {% block javascript %}
-	<script src="{{asset('assets/plugins/bootstrap-tabs/dist/jquery.bs4-scrolling-tabs.min.js')}}"></script>
+	<script src="{{asset('assets/plugins/bootstrap/js/bootstrap.min.js')}}"></script>
 	<script>
+	    $(document).ready(function(){
+			responsive(".description-area");
+			if(isMobile()){
+				$(".description-area").append("<br>");
+				$(".question").removeClass("mx-3");
+				$(".description-card").removeClass("px-5");
+			}
+		});
+		
 		var loadControl = {
 			start: 0,
 			end: 0,

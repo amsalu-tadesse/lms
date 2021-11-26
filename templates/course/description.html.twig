@@ -42,16 +42,15 @@
 	</style>
 {% endblock %}
 {% block body %}
-	<div class="container-fluid mt-3" style="min-height: 490px" ;>
+	<div class="container mt-3" style="min-height: 490px" ;>
 		<div class="row">
 		{% include "course/desc.html.twig" %}
 		</div>
 	</div>
 {% endblock %}
 {% block javascript %}
-	<script src="{{asset('assets/plugins/bootstrap-tabs/dist/jquery.bs4-scrolling-tabs.min.js')}}"></script>
 	<script>
-		$('.nav-tabs').scrollingTabs();
+		responsive1(".description-card");
 	</script>
 {% endblock %}
 {% block nav %}

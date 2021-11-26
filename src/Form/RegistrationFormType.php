@@ -21,16 +21,16 @@ class RegistrationFormType extends AbstractType
     {
         $builder
             ->add('firstName' ,null,[
-                'attr'=>['class'=>'form-control']
+                'attr'=>['class'=>'form-control mb-3']
             ])
             ->add('middleName' ,null,[
-                'attr'=>['class'=>'form-control']
+                'attr'=>['class'=>'form-control mb-3']
             ])
             ->add('lastName' ,null,[
-                'attr'=>['class'=>'form-control']
+                'attr'=>['class'=>'form-control mb-3']
             ])
             ->add('email' ,null,[
-                'attr'=>['class'=>'form-control']
+                'attr'=>['class'=>'form-control mb-3']
             ])
             // ->add('username' ,null,[
             //     'attr'=>['class'=>'form-control']
@@ -39,7 +39,7 @@ class RegistrationFormType extends AbstractType
                 'mapped' => false,
                 'class' => AcademicLevel::class,
                 'choice_label' => 'name',
-                'attr' => ['class' => 'form-control'],
+                'attr' => ['class' => 'form-control mb-3'],
             ])
             ->add('agreeTerms', CheckboxType::class, [
                 'attr'=>['class'=>'form-status'],

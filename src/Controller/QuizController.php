@@ -212,7 +212,7 @@ class QuizController extends AbstractController
     }
 
     /**
-     * @Route("/quiz/{id}", name="course_quiz")
+     * @Route("/quiz/{id}", name="course_quiz", requirements={"id":"\d{1,5}"})
      */
     public function quizPage(Request $request, SystemSettingRepository $setting_repo, InstructorCourseChapter $chapter, QuizQuestionsRepository $quiz_que_rep, PaginatorInterface $paginator, StudentCourseRepository $stud_course)
     {

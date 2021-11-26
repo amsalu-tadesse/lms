@@ -190,9 +190,8 @@ class CourseController extends AbstractController
                 if ($value[0]['id'] == $value1['id']) {
                     // $chapters[$key] = $value
                     $chapter_list[$key]['total_video'] = $value1['total_video'];
-                    $chapter_list[$key]['total_content'] = $value1['con'];
-                    $total_content = $value1['total_video'] + $value1['con'];
-                    $chapter_list[$key]['completed'] = ($value['pagesCompleted'] / $total_content) * 100;
+                    $chapter_list[$key]['total_content'] = $value1['total_content'];
+                    $chapter_list[$key]['completed'] = ($value['pagesCompleted'] / $value1['total_content']) * 100;
                     $flag = 2;
                     break;
                 }

@@ -22,11 +22,11 @@
     </style>
 {% endblock %}
 {% block body %}
-
+    <br>
 	<div class="container">
 		<div class="row">
 			<div class="card my-3">
-				<div class="card-body" style="padding: 20px 100px;">
+				<div class="card-body quiz_result">
 					{% for question in stud_que %}
                         {% if question.answer == null  %}
                             {% if show_un_answered_questions %}
@@ -142,4 +142,9 @@
 			</div>
 		</div>
 	</div>
+{% endblock %}
+{% block javascript %}
+    <script>
+        responsive(".container");
+    </script>
 {% endblock %}

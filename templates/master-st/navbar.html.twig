@@ -6,7 +6,9 @@
 					<div class="header-row">
 						<div class="header-logo">
 							<a href="/student">
-								<img alt="ECA" src="{{asset('images/logo-en.jpg')}}">
+								{# <img alt="ECA" src="{{asset('images/logo-en.jpg')}}" id="big-logo"> #}
+								<img alt="ECA" src="{{asset('images/fas.jpg')}}" id="big-logo">
+								<img alt="ECA" src="{{asset('images/fas.jpg')}}" id="small-logo">
 							</a>
 						</div>
 					</div>
@@ -14,24 +16,24 @@
 				<div class="header-column justify-content-end">
 					<div class="header-row">
 						<div class="header-nav header-nav-line header-nav-bottom-line">
-							<div class="header-nav-main header-nav-main-square header-nav-main-dropdown-no-borders header-nav-main-effect-2 header-nav-main-sub-effect-1">
+							<div class="header-nav-main header-nav-main-dropdown-no-borders header-nav-main-effect-2 header-nav-main-sub-effect-1">
 								<nav class="collapse">
 									<ul class="nav nav-pills" id="mainNav">
 										<li class="dropdown">
-											<a class="dropdown-item dropdown-toggle" href="/student">
+											<a href="/student">
 												Courses
 											</a>
 										</li>
-										<li class="dropdown test" id="my_course">
-											<a class="dropdown-item" href="{{ path('selected_courses')}}">
+										<li class="test dropdown" id="my_course">
+											<a href="{{ path('selected_courses')}}">
 												{% trans %}My Courses{% endtrans %}
 												<sup>
 													<span class="badge badge-primary" id="num"></span>
 												</sup>
 											</a>
 										</li>
-										<li class="dropdown dropdown-mega">
-											<a class="dropdown-item dropdown-toggle" href="{{path('requested_courses')}}">
+										<li class="dropdown">
+											<a href="{{path('requested_courses')}}">
 												{% trans %}Requested courses{% endtrans %}
 											</a>
 										</li>
@@ -57,7 +59,7 @@
 												{{activelang}}
 											</a>
 											<ul class="dropdown-menu dropdown-menu-sm float-right">
-												<li class="dropdown-submenu">
+												<li class="dropdown">
 													<a href="/language?lang={{code}}&&curr={{ path(app.request.attributes.get('_route'),
 																																																																			app.request.attributes.get('_route_params')) }}" class="dropdown-item">
 														<b>{{secondlang}}</b>
@@ -71,12 +73,12 @@
 												{{app.user.username}}
 												<i class="fas fa-chevron-down"></i>
 											</a>
-											<ul class="dropdown-menu">
+											<ul class="dropdown-menu dropdown-menu-sm float-right">
 												<li class="dropdown-submenu">
-													<a class="dropdown-item" href="{{path('change_password_logged_in')}}">{% trans %}Change password{% endtrans %}</a>
+													<a href="{{path('change_password_logged_in')}}">{% trans %}Change password{% endtrans %}</a>
 												</li>
 												<li class="dropdown-submenu">
-													<a class="dropdown-item" href="{{path('app_logout')}}">{% trans %}Logout{% endtrans %}</a>
+													<a href="{{path('app_logout')}}">{% trans %}Logout{% endtrans %}</a>
 												</li>
 											</ul>
 										</li>

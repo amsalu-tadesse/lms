@@ -35,25 +35,25 @@
         $("#content_videoLink").prop('disabled', false);
         $("#content_filename").prop('disabled', true);
         $("content_filename").prop('required',false);
-        $("#content_content").prop('disabled', true);
-      //  $("#content").prop('disabled', true);
-        $("#cke_content_content").css('display', 'none');
+        //$("#content_content").prop('disabled', true);
+        //$("#content").prop('disabled', true);
+        //$("#cke_content_content").css('display', 'none');
     });
     $("#videoFileRadio").on("click", function() {
         $("#content_videoLink").prop('disabled', true);
         $("#content_filename").prop('disabled', false);
         $("content_filename").prop('required',true);
-        $("#content_content").prop('disabled', true);
+        //$("#content_content").prop('disabled', true);
        // $("#content").prop('disabled', true);
-        $("#cke_content_content").css('display', 'none');
+        //$("#cke_content_content").css('display', 'none');
     });
-    $("#ContentRadio").on("click", function() {
+    /*$("#ContentRadio").on("click", function() {
         $("#content_videoLink").prop('disabled', true);
         $("#content_filename").prop('disabled', true);
         $("#content_content").removeAttr("disabled");
         //$("#content").prop('disabled', false);
         $("#cke_content_content").css('display', 'block');
         
-    });
+    });*/
 </script>
 {% endblock %}

@@ -14,10 +14,10 @@
 		</div>
 	{% else %}
 		{% for course in courses %}
-			<div class="card px-5 py-2 mb-2" course-id="{{course.id}}">
+			<div class="card py-2 mb-2" course-id="{{course.id}}">
 				<div class="row">
 					<div class="col-sm-11">
-						<h4>{{course.course.name}}</h4>
+						<h5>{{course.course.name}}</h5>
 						<p>{{course.course.description}}</p>
 					</div>
 					<div class="col-sm-1" style="align-self:center">
@@ -29,14 +29,14 @@
 			</div>
 		{% endfor %}
 		<div class="row mt-2 buttons">
-			<div class="col-sm-2 col-md-2">
+			<div class="col-sm-4 col-md-2">
 				{% if is_granted("ROLE_STUDENT") %}
-					<a class="btn btn-primary btn-block" href="{{path('course_apply')}}">Apply</a>
+					<a class="btn btn-primary btn-block mb-2" href="{{path('course_apply')}}">Apply</a>
 				{% else %}
-					<a class="btn btn-primary btn-block" href="{{path('app_register')}}">Apply</a>
+					<a class="btn btn-primary btn-block mb-2" href="{{path('app_register')}}">Apply</a>
 				{% endif %}
 			</div>
-			<div class="col-sm-2 col-md-2">
+			<div class="col-sm-4 col-md-3">
 				<a class="btn btn-danger btn-block" href="#" onclick="conf()">Remove All</a>
 			</div>
 		</div>

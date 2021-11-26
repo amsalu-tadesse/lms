@@ -1,4 +1,4 @@
-<div class="card px-5 pt-3 " style="padding-bottom: 80px">
+<div class="card pt-3 description-card" style="padding-bottom: 80px">
     <h4 class="pt-2 pb-2" style="color:#093146">{{chapter.name}}</h4>
     <p style="margin-bottom: 40px">{{chapter.description}}</p>
 
@@ -61,7 +61,7 @@
                     <li data-type="{{content.id}}" content="youtube">
                         <i class="fas fa-play-circle"></i> {{ content.title }}
                     </li>
-                    {% elseif content.content != "" %}
+                    {% else %}
                     <li data-type="{{content.id}}" content="doc">
                         <i class="fas fa-book"></i> {{ content.title }}
                     </li>

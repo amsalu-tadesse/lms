@@ -24,6 +24,10 @@
 {% block javascript %}
 <script src="{{asset('student/js/custom.js')}}"></script>
 <script>
+    if(!isMobile())
+    {
+        $(".card").addClass('px-5');
+    }
     var span = document.getElementsByClassName("close")[0];
     function conf()
     {

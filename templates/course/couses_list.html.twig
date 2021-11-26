@@ -1,114 +1,115 @@
-{% extends "anon-base.html.twig" %} 
+{% extends "anon-base.html.twig" %}
 
-{% block title %}{% trans %}Home{% endtrans %}{% endblock %}
-{% block breadcrumbhome %}{% trans %}Course{% endtrans %}{% endblock %}
-{% block breadcrumbcontent %}{% trans %}List{% endtrans %}{% endblock %}
-{% block stylesheet %}
-<link href="{{asset('assets/plugins/owlCarousel/dist/assets/owl.carousel.min.css')}}" rel="stylesheet"/>
-<link href="{{asset('assets/plugins/owlCarousel/dist/assets/owl.theme.default.min.css')}}" rel="stylesheet"/>
-<link href="{{asset('student/css/temp.css')}}" rel="stylesheet"/>
-
-    <style>
-        .header{
-            margin-bottom: 0px;
-        }
-        
-        .card-footer {
-            padding: .3rem 1rem;
-            display: none;
-        }
-
-        .card-body p a{
-            color: rgb(9, 49, 70);
-        }
-        
-        .card:hover .card-footer {
-            display: contents;
-        }
-
-        section.section{
-            background-image: url('/images/robot-2.jpg'); 
-            background-size: cover; 
-            background-position: center; 
-            animation-duration: 750ms; 
-            animation-delay: 300ms; 
-            animation-fill-mode: 
-            forwards; min-height: 415px; 
-        }
-
-        body {
-            --article-load-delay: 400ms
-        }
-
-        article{
-            line-height: 28px;
-            font-family: poppins;
-        }
-
-        article h1 {
-            color: white;
-            animation: article-load 300ms ease-in var(--article-load-delay);
-            animation-fill-mode: forwards;
-            transform: translateY(-20px);
-            opacity: 0;
-        } 
-
-        article p {
-            color: white;
-            animation: article-load 500ms ease-in calc(var(--article-load-delay) + 300ms);
-            animation-fill-mode: forwards;
-            transform: translateY(-20px);
-            opacity: 0;
-        }
-
-        @keyframes article-load {
-            0% {
-                transform: translateY(-20px);
-                opacity: 0;
-            }
-
-            100% {
-                transform: translateY(0px);
-                opacity: 1;
-            }
-        }
-    </style>
+{% block title %}
+	{% trans %}Home{% endtrans %}
 {% endblock %}
-{% block selected %}<span id="num"></span>{% endblock %}
+{% block breadcrumbhome %}
+	{% trans %}Course{% endtrans %}
+{% endblock %}
+{% block breadcrumbcontent %}
+	{% trans %}List{% endtrans %}
+{% endblock %}
+{% block stylesheet %}
+	<link href="{{asset('student/css/temp.css')}}" rel="stylesheet"/>
+
+	<style>
+		.header {
+			margin-bottom: 0;
+		}
+
+		.card-footer {
+			padding: 0.3rem 1rem;
+			display: none;
+		}
+
+		.card-body p a {
+			color: rgb(9, 49, 70);
+		}
+
+		.card:hover .card-footer {
+			display: contents;
+		}
+
+		section.section {
+			background-image: url('/images/robot-2.jpg');
+			background-size: cover;
+			background-position: center;
+			animation-duration: 750ms;
+			animation-delay: 300ms;
+			animation-fill-mode: forwards;
+			min-height: 415px;
+		}
+
+		body {
+			--article-load-delay: 400ms
+		}
+
+		article {
+			line-height: 28px;
+			font-family: poppins;
+		}
+
+		article h1 {
+			color: white;
+			animation: article-load 300ms ease-in var(--article-load-delay);
+			animation-fill-mode: forwards;
+			transform: translateY(-20px);
+			opacity: 0;
+		}
+
+		article p {
+			color: white;
+			animation: article-load 500ms ease-in calc(var(--article-load-delay) + 300ms);
+			animation-fill-mode: forwards;
+			transform: translateY(-20px);
+			opacity: 0;
+		}
+
+		@keyframes article-load {
+			0% {
+				transform: translateY(-20px);
+				opacity: 0;
+			}
+
+			100% {
+				transform: translateY(0px);
+				opacity: 1;
+			}
+		}
+	</style>
+{% endblock %}
+{% block selected %}
+	<span id="num"></span>
+{% endblock %}
 {% block body %}
 
-    <div class="test">
-        
-    </div>
-    <div class="jumbotron jumbotron-fluid bg-white">
-        <section class="section section-concept section-no-border section-dark section-angled section-angled-reverse pt-5 m-0">
-					<div class="section-angled-layer-bottom section-angled-layer-increase-angle bg-light" style="padding: 0;"></div>
-					<div class="container pt-lg-3 mt-0">
-						<div class="row pt-3 pb-lg-0 pb-xl-0">
-							<div class="col-lg-6 pt-4 mb-5 mb-lg-0" >
-								<article>
-                                    <h1>ARCAI</h1>
-                                        <div   style="text-align:justify">
-                                      <p>  {% trans %}The African research center for Artificial Intelligence (ARCAI) has the primary objective of undertaking cutting-edge research on artificial intelligence (AI) focusing on a human-centered approach in order to maximize the benefits and counter the challenges of development and use of artificial intelligence for the socio-economic development of the continent. {% endtrans %}</p>
-                                      </div>
-                                </article>
-							</div> 
-						</div>
+	<div class="test"></div>
+	<div class="jumbotron jumbotron-fluid bg-white">
+		<section class="section section-concept section-no-border section-dark section-angled section-angled-reverse pt-5 m-0">
+			<div class="section-angled-layer-bottom section-angled-layer-increase-angle bg-light" style="padding: 0;"></div>
+			<div class="container pt-lg-3 mt-0">
+				<div class="row pt-3 pb-lg-0 pb-xl-0">
+					<div class="col-lg-6 pt-4 mb-5 mb-lg-0">
+						<article>
+							<h1>ARCAI</h1>
+							<div style="text-align:justify">
+								<p>
+									{% trans %}The African research center for Artificial Intelligence (ARCAI) has the primary objective of undertaking cutting-edge research on artificial intelligence (AI) focusing on a human-centered approach in order to maximize the benefits and counter the challenges of development and use of artificial intelligence for the socio-economic development of the continent.
+									{% endtrans %}</p>
+							</div>
+						</article>
 					</div>
-				</section>
-                </div>
-    </div>
-    <br>
-   {% include "course/list.html.twig" %}
-{% endblock %} 
-
-{% block nav %}
-    <a class="nav-item nav-item-temp btn btn-primary btn-sm" style="color:white" href="{{ path('app_login') }}">
-        {% trans %}Sign In{% endtrans %}
-    </a> 
-{% endblock %}
+				</div>
+			</div>
+		</section>
+	</div>
+</div>
+<br>
+{% include "course/list.html.twig" %}{% endblock %}{% block nav %}
+<a class="nav-item nav-item-temp btn btn-primary btn-sm" style="color:white" href="{{ path('app_login') }}">
+	{% trans %}Sign In{% endtrans %}
+</a>{% endblock %}
 {% block javascript %}
-    <script src="{{asset('assets/plugins/owlCarousel/dist/owl.carousel.min.js')}}"></script>
     <script>
         var selected_courses = [];
         total_selected = 0;
@@ -130,7 +131,7 @@
             }
         });
         
-        $(document).ready(function(){
+       /* $(document).ready(function(){
             $('.owl-carousel').owlCarousel({
                 nav: true,
                 margin: 10,
@@ -145,7 +146,7 @@
                 navText : ['<i class="fa fa-angle-left" aria-hidden="true"></i>','<i class="fa fa-angle-right" aria-hidden="true"></i>']
 
             });
-        });
+        });*/
 
         $(".enroll").on("click", function(){
             tt = $(this).parents().eq(5);
@@ -208,7 +209,5 @@
         function eraseCookie(name) {   
             document.cookie = name +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
         }
-
-
     </script>
 {% endblock %}  

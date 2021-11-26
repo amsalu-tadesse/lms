@@ -199,12 +199,13 @@ class ContentController extends AbstractController
     {
         $content = $contentRepository->getHtmlContent($course);
         // dd($content);
-        $response = $content["content"];
+        $response['content'] = $content["content"];
+        $response['resources'] = $content["resource"];
     
         // Send all this stuff back to DataTables
         
         $returnResponse = new JsonResponse();
-        $returnResponse->setJson($response);
+        $returnResponse->setJson(json_encode($response));
     
         return $returnResponse;
     }

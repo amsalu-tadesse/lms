@@ -16,7 +16,8 @@ class QuestionAnswerType extends AbstractType
             ->add('answer',TextareaType::class,[
                 'attr'=>[
                         'class'=>'form-control',
-                        'rows'=>7
+                        'rows'=>7,
+                        'width' => '100%'
                         ]
             ])
         ;
