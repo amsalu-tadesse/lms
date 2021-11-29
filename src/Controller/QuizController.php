@@ -18,6 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use CodeItNow\BarcodeBundle\Utils\QrCode;
 
 /**
  * @Route("/quizzes")
@@ -371,11 +372,18 @@ class QuizController extends AbstractController
                                     if($last_chapter[0]->getId() == $chapter->getId())
                                     {
                                         $finalize_course = $stud_course->findOneBy(['student'=>$this->getUser()->getProfile()->getId(),'instructorCourse'=>$chapter->getInstructorCourse()->getId()]) ;
+                                        $id = $finalize_course->getId();
+                                        $url = $_SERVER['SERVER_NAME']."/certificate/".$id;
+                                        
                                         $finalize_course->setStatus(5);
+                                        $finalize_course->setQrCode($this->qrGenerator($url));
                                         $em->persist($finalize_course);
                                         $em->flush();
                                     }
                                 }
+                            }
+                            else{
+                                $this->addFlash("info", "You are faile the exam");
                             }
                             $student_quiz->setResult($res);
                             $em->persist($student_quiz);
@@ -446,14 +454,18 @@ class QuizController extends AbstractController
                                 if($last_chapter[0]->getId() == $chapter->getId())
                                 {
                                     $finalize_course = $stud_course->findOneBy(['student'=>$this->getUser()->getProfile()->getId(),'instructorCourse'=>$chapter->getInstructorCourse()->getId()]) ;
+                                    $id = $finalize_course->getId();
+                                    $url = $_SERVER['SERVER_NAME']."/certificate/".$id;
+                                    
                                     $finalize_course->setStatus(5);
+                                    $finalize_course->setQrCode($this->qrGenerator($url));
                                     $em->persist($finalize_course);
                                     $em->flush();
                                 }
                             }
                         }
                         
-                        $student_quiz->setResult($correct_answer);
+                        $student_quiz->setResult($res);
                         $em->persist($student_quiz);
                         $em->flush();
 
@@ -488,6 +500,22 @@ class QuizController extends AbstractController
         $this->addFlash("danger", "Quiz has not been prepared for this chapter");
         return $this->redirectToRoute("content_list", array('course' => $chapter->getInstructorCourse()->getId(), 'chapter' => $chapter->getTopic()));
     }
+
+    public function qrGenerator($url)
+    {
+        $qrCode = new QrCode();
+        $qrCode
+        ->setText($url)
+        ->setSize(130)
+        ->setPadding(10)
+        ->setErrorCorrection('high')
+        ->setForegroundColor(array('r' => 0, 'g' => 0, 'b' => 0, 'a' => 0))
+        ->setBackgroundColor(array('r' => 255, 'g' => 255, 'b' => 255, 'a' => 0))
+        ->setImageType(QrCode::IMAGE_TYPE_PNG);
+        return $qrCode->generate();
+        // echo '<img src="data:'.$qrCode->getContentType().';base64,'.$qrCode->generate().'" />';
+    }
+
     /**
      * @Route("/show/{id}", name="quiz_show", methods={"GET"})
      */

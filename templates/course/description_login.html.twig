@@ -1,11 +1,10 @@
 {% extends "sBase.html.twig" %}
 {% block stylesheet %}
-	<link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-tabs/dist/jquery.bs4-scrolling-tabs.min.css')}}">
 	<style>
 		.card-header button {
 			text-decoration: none;
 		}
-		p.meta{
+		p.meta {
 			border-bottom: 1px solid #45698152;
 			font-size: 15px;
 			opacity: .9;
@@ -13,36 +12,57 @@
 		}
 
 		p.message {
-    		padding: 0px 24px;
+			padding: 0 24px;
 			font-size: 15px;
 		}
 
-		.question{
+		.question {
 			border-left: 3px solid blue;
-		    border-radius: 6px;	
+			border-radius: 6px;
 		}
 
-		.answer{
+		.answer {
 			margin-left: 80px;
 			margin-right: 1rem !important;
 			border-left: 4px solid #1c4964;
 		}
 
-		.question-teacher{
+		.question-teacher {
 			border-left: 3px solid #1b4964;
-		    border-radius: 6px;
+			border-radius: 6px;
 		}
 
-		.qadata{
-			float:right;
-			color:black!important;
+		.qadata {
+			float: right;
+			color: black !important;
 		}
 
-		textarea{
+		textarea {
 			resize: none;
 		}
-		span.quadata{
-			color: black!important;
+		span.quadata {
+			color: black !important;
+		}
+
+		h4 {
+			color: black;
+		}
+
+		.modal-backdrop{
+			position: relative;
+		}
+
+		.modal-dialog{
+			min-width: 590px;
+		}
+
+		.modal-body{
+			padding: 0px;
+		}
+		.modal-content {
+			margin: 11% auto;
+			max-width: 715px;
+			padding: 6px;
 		}
 	</style>
 {% endblock %}
@@ -50,7 +70,15 @@
 	<br>
 	<div class="container-fluid mt-1 description-area">
 		<div class="row">
-		{% include "course/desc.html.twig" %}
+			{% include "course/desc.html.twig" %}
+		</div>
+	<div class="modal fade" id="largeModal" tabindex="-1" role="dialog" aria-labelledby="largeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-body">
+					<video src="" width="100%" id="video" controls>
+				</div>
+			</div>
 		</div>
 	</div>
 {% endblock %}
@@ -135,6 +163,12 @@
 				});
 			}	
 		});
+
+		function playVideo(file)
+		{
+			$("#modal-backdrop").remove();
+			$("#video").attr("src", "/uploads/videos/"+file);
+		}
 	</script>
 {% endblock %}
 {% block nav %}
@@ -142,3 +176,4 @@
 		{% trans %}Sign In{% endtrans %}
 	</a>
 {% endblock %}
+

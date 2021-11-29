@@ -14,7 +14,6 @@
 {% endblock %}
 {% block breadcrumbcontent %}
     Show
-    
 {% endblock %}
 {% block body %}
     <div class="card">
@@ -54,6 +53,18 @@
                     </tr>
                     <tr>
                         <th>
+                            {% trans %}Video{% endtrans %}
+                        </th>
+                        <td>
+                            {% if question_answer.videoAnswer %}
+                                <a href="#" type="button" data-toggle="modal" data-target="#playerModal" title="record video">
+                                    see video ...
+                                </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
                             {% trans %}Created At{% endtrans %}
                         </th>
                         <td>
@@ -89,5 +100,23 @@
                 {% endif %}
             </table>
         </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="playerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="container">
+                        <video src="/uploads/videos/{{ question_answer.videoAnswer }}"  controls width="100%"></video>
+                    </div>
+                </div>
+            </div>
+        </div></div>
     {% endblock %}
     

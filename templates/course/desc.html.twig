@@ -108,6 +108,14 @@
                 </p>
                 <p class="message">{{que.answer}}</p>
             </div>
+            {% if que.videoAnswer != null %}
+                <div class="card-footer">
+                    <!-- Modal -->
+                    <a type="button" style="float: left;color: #0d6fd2;background: #f1f1f1;" data-toggle="modal" onclick="playVideo('{{que.videoAnswer}}')" id="playerToggle" data-bs-toggle="modal" data-bs-target="#largeModal">
+                        see video ...
+                    </a>
+                </div>
+            {% endif %}
         </div>
         {% endif %}{% endfor %}</div><br>
 		{% if question|length > 10 %}
@@ -124,3 +132,4 @@
 </div>
 </div>
 </div>
+

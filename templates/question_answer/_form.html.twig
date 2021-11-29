@@ -1,7 +1,34 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <br>
-    <table class="row">
-    <td class="">
-    <button class="btn btn-primary" style="min-width:150px;">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+{{ form_errors(form)}}
+<input type="hidden" _method="PATCH">
+<div class="col-md-12">
+	<div class="form-group">
+		<label for="videoAnswer" class="mb-2">{% trans %}Video{% endtrans %}</label>&nbsp;&nbsp;
+		<!-- Button trigger modal -->
+		<a type="button" data-toggle="modal" onclick="startVideo()" id="recordToggle" data-target="#recorderModal" title="record video">
+			&nbsp;<i class="fas fa-video"></i>
+		</a>		
+		{{ form_widget(form.videoAnswer) }}
+
+		{% if question_answer.videoAnswer %}
+			<a href="#" data-toggle="modal" data-target="#player" id="ExistingVideoToggle" data="{{question_answer.videoAnswer}}"> see existing video </a>
+		{% endif %}	 
+		<br>
+		<a href="#" data-toggle="modal" data-target="#player" id="playerToggle"  onclick="play()" style="display:none;">
+			See recorded video ....
+		</a>
+	</div>
+	<br>
+	<div class="form-group">
+		<label for="answer">{% trans %}Answer{% endtrans %}</label>
+		{{ form_widget(form.answer) }}
+	</div>
+</div>
+<br>
+<table>
+	<tr>
+		<td class="">
+			<button class="btn btn-primary" style="min-width:150px;">{{ button_label|default('Save') }}</button>
+			{{ form_end(form) }}
+		</td>
+	</tr>

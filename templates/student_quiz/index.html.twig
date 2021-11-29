@@ -133,17 +133,15 @@
                                 <a href="{{path('course_chapters',{'id':chapter.instructorCourse.id})}}" class="btn btn-primary px-5 mx-2 my-2">Go to next chapters</a>
                             {% endif %}
                         {% endif %}
-                        
-                        
-                        
                     </p>
-                    
 				</div>
 			</div>
 		</div>
 	</div>
 {% endblock %}
 {% block javascript %}
+	<script src="{{asset('assets/plugins/bootstrap/js/bootstrap.min.js')}}"></script>
+
     <script>
         responsive(".container");
     </script>
