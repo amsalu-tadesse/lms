@@ -5,8 +5,10 @@ namespace App\Controller;
 use App\Entity\Instructor;
 use App\Entity\Student;
 use App\Entity\User;
+use App\Entity\SystemSetting;
 use App\Form\Filter\UserFilterType;
 use App\Form\UserType;
+use App\Repository\StudentRepository;
 use App\Repository\UserRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,6 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use App\Services\MailerService;
+use DateTime;
 
 /**
  * @Route("/user")
@@ -32,10 +35,10 @@ class UserController extends AbstractController
     /**
      * @Route("/", name="user_index", methods={"GET","POST"})
      */
-    public function index(Request $request, UserRepository $userRepository, PaginatorInterface $paginator, UserPasswordEncoderInterface $userPasswordEncoderInterface, MailerService $mservice): Response
+    public function index(StudentRepository $student_repo, Request $request, UserRepository $userRepository, PaginatorInterface $paginator, UserPasswordEncoderInterface $userPasswordEncoderInterface, MailerService $mservice): Response
     {
         // $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
+        // $this->denyAccessUnlessGranted('content_edit');
         $pageSize = 15;
 
         $user = new User();
@@ -116,8 +119,6 @@ class UserController extends AbstractController
                 $found = $entityManager->getRepository(User::class)->findOneBy(['username' => $username_new]);
 
             }
-         
-            
 
             $email = $entityManager->getRepository(User::class)->findOneBy(['email' => $user->getEmail()]);
             if ($email) {
@@ -126,8 +127,10 @@ class UserController extends AbstractController
             }
             $user->setUsername($username);
             $user->setIsActive(true);
-            $entityManager->persist($user);
-            $entityManager->flush();
+            // dd("l");
+            $user->setCreatedAt(new DateTime());
+            // $entityManager->persist($user);
+            // $entityManager->flush();
 
             if ($user->getUserType()->getId() == 3) //instructor
             {
@@ -138,7 +141,66 @@ class UserController extends AbstractController
             } else if ($user->getUserType()->getId() == 4) //student
             {
                 $student = new Student();
+                $em = $this->getDoctrine()->getManager();
+                
+                $academicLevel = $form['academicLevel']->getData()->getId();
+                if($academicLevel)
+                {
+                    if($academicLevel == 1)
+                        $prefix = $em->getRepository(SystemSetting::class)->findOneBy(['code'=>'reg_id_prefix'])->getValue();
+                    else if($academicLevel == 2)
+                        $prefix = $em->getRepository(SystemSetting::class)->findOneBy(['code'=>'masters_id_prefix'])->getValue();
+                    else if($academicLevel == 3)
+                        $prefix = $em->getRepository(SystemSetting::class)->findOneBy(['code'=>'phd_id_prefix'])->getValue();
+                    else if($academicLevel == 5)
+                        $prefix = $em->getRepository(SystemSetting::class)->findOneBy(['code'=>'hd_id_prefix'])->getValue();
+                    
+                    $last_student = $student_repo->findBy(array(),array('id'=>'DESC'),1,0);
+                    $id_digit_length = $em->getRepository(SystemSetting::class)->findOneBy(['code'=>'num_of_digits_student_id'])->getValue();
+                    $year = date("y", time());
+
+                    if($last_student){
+                        $last_student_id_array = explode("-",$last_student[0]->getStudentId());
+                        $num = $last_student_id_array[1] + 1;
+                        $numlength = strlen((string)$num);
+                        if($year == $last_student_id_array[2]){
+                            if($numlength < $id_digit_length)
+                            {
+                                $zeros_left = $id_digit_length - $numlength;
+                                $i = 0;
+                                while($i<$zeros_left)
+                                {
+                                    $num = "0".$num;
+                                    $i++;
+                                }
+                                $new_student_id = $prefix."-".$num."-".$year;
+                            }
+                        }
+                        else{
+                            $new_student_id = $prefix."-";
+                            $i = 0;
+                                while($i<($id_digit_length-1))
+                                {
+                                    $new_student_id .= "0";
+                                    $i++;
+                                }
+                            $new_student_id .= "1-".$year;
+                        }
+                    }
+                    else{
+                        $i = 0;
+                        $new_student_id = $prefix."-";
+                        while($i<($id_digit_length-1))
+                        {
+                            $new_student_id .= "0";
+                            $i++;
+                        }
+                        $new_student_id .= "1-".$year;
+                    }
+                }
+                $student->setStudentId($new_student_id);
                 $student->setUser($user);
+                $student->setAcademicLevel($form['academicLevel']->getData());
                 $entityManager->persist($student);
 
             }
@@ -148,7 +210,7 @@ class UserController extends AbstractController
             "Learning management system. Please login with the following credentials".
             " and change your password <br>username=<strong>".$user->getUsername()."</strong><br> password=<strong>".$password."</strong></p>";
             
-            $sent =  $mservice->sendEmail($this->mailer, $message, $user->getEmail(), "account confirmation");
+            // $sent =  $mservice->sendEmail($this->mailer, $message, $user->getEmail(), "account confirmation");
 
             return $this->redirectToRoute('user_index');
         }

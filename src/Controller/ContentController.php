@@ -375,20 +375,6 @@ class ContentController extends AbstractController
                 $content->setFilename($newFilename);
             }
 
-            // $new_resources = $form['resources']->getData();
-            // if($new_resources){
-            //     $json_strings = $this->resourceUploader($resources, $slugger);
-            //     $content->setResource($json_strings[0]);
-            //     $content->setResourceNames($json_strings[1]);
-            // }
-            
-            // if($exis)
-            // if(sizeof($resource_name) == sizeof($))
-            // foreach($resource_name as $resource)
-            // {
-            //     echo $resource."\n";
-            // }
-            // dd("");
             $this->getDoctrine()->getManager()->flush();
             return $this->redirectToRoute('content_index', ['id'=>$content->getChapter()->getInstructorCourse()->getId()], Response::HTTP_SEE_OTHER);
         }

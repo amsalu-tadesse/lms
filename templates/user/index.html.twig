@@ -175,6 +175,22 @@
 {% endblock %}
 {% block javascripts %}
 	<script>
+		$(document).ready(function () {
+			$("#user_userType").on("change",function () {
+				$(this).find("option:selected").each(function () {
+					var optionValue = $(this).attr("value");
+					if (optionValue == 4) 
+					{
+						$("#academicLevel").css("display","block");
+						$("#user_academicLevel").removeAttr('disabled');
+					}
+					else{
+						$("#academicLevel").css("display","none");
+						$("#user_academicLevel").attr('disabled','disabled');
+					}
+				});
+			});
+		});
 		$("form:eq(0)").on("submit", function(e){
 			$("#spinner").css("display","block");
 			$(".save").remove();

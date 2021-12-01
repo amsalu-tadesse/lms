@@ -13,6 +13,8 @@ parameters:
     globvar: 200
     uploading_directory_resources:  '%kernel.project_dir%/public/uploads/resources'
     uploading_directory_videos:  '%kernel.project_dir%/public/uploads/videos'
+    uploading_directory_images:  '%kernel.project_dir%/public/uploads/profileImages/'
+
     docroot:  '%kernel.project_dir%'
 
 services:
