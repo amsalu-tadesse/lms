@@ -331,6 +331,7 @@
                 lists = $(".list li");
                 content = $('.content-list[data-type='+lastItem+']').attr('content');
                 changePlayerContent(lists, lastItem, content);
+                $('.content-list[data-type='+lastItem+']').addClass("active");
             }
         });
     </script>

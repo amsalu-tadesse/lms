@@ -201,6 +201,7 @@ class ContentController extends AbstractController
         // dd($content);
         $response['content'] = $content["content"];
         $response['resources'] = $content["resource"];
+        $response['resource_names'] = $content['resourceNames'];
     
         // Send all this stuff back to DataTables
         
@@ -215,10 +216,8 @@ class ContentController extends AbstractController
      */
     public function new(Request $request,InstructorCourse $instructorCourse, SluggerInterface $slugger): Response
     {
-
         // $this->denyAccessUnlessGranted('content_new');
         $content = new Content();
-
         $em = $this->getDoctrine()->getManager();
  
         $uploadSize =  $em->getRepository(SystemSetting::class)->findOneBy(['code'=>'upload_size'])->getValue();
@@ -232,6 +231,7 @@ class ContentController extends AbstractController
             $brochureFile = $form->get('filename')->getData();
             $youtubeLink = $form->get('videoLink')->getData();
 
+            $resource = $form['resource']->getData();  
 
             if($youtubeLink)
             {
@@ -243,11 +243,25 @@ class ContentController extends AbstractController
                 }
                 
             }
-          
-             
 
-            // this condition is needed because the 'brochure' field is not required
-            // so the PDF file must be processed only when a file is uploaded
+            if($resource){
+                $originalFilename = pathinfo($resource->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$resource->guessExtension();
+                
+                try {
+                    $resource->move(
+                        $this->getParameter('uploading_directory_resources'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+                $originalFilename = $resource->getClientOriginalName();
+                $content->setResource($newFilename);
+                $content->setResourceNames($originalFilename);
+            }
+          
             if ($brochureFile /*&& !$youtubeLink*/) {
                 $originalFilename = pathinfo($brochureFile->getClientOriginalName(), PATHINFO_FILENAME);
                 // this is needed to safely include the file name as part of the URL
@@ -264,8 +278,6 @@ class ContentController extends AbstractController
                     // ... handle exception if something happens during file upload
                 }
 
-                // updates the 'brochureFilename' property to store the PDF file name
-                // instead of its contents
                 $content->setFilename($newFilename);
             }
  
@@ -275,6 +287,11 @@ class ContentController extends AbstractController
 
             return $this->redirectToRoute('content_index', ['id'=>$instructorCourse->getId()], Response::HTTP_SEE_OTHER);
         }
+        // else{
+        //     dd($form->getErrors());
+        // }
+        
+        
         return $this->renderForm('content/new.html.twig', [
             'content' => $content,
             'form' => $form,
@@ -296,7 +313,7 @@ class ContentController extends AbstractController
     /**
      * @Route("/{id}/edit", name="content_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Content $content): Response
+    public function edit(Request $request, Content $content, SluggerInterface $slugger): Response
     {
         // $this->denyAccessUnlessGranted('content_edit');
         $em = $this->getDoctrine()->getManager();
@@ -307,11 +324,76 @@ class ContentController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $fileName = $form['filename']->getData();
+            $youtubeLink = $form->get('videoLink')->getData();
+            $resource = $form['resource']->getData();  
 
+            if($resource){
+                $originalFilename = pathinfo($resource->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$resource->guessExtension();
+                
+                try {
+                    $resource->move(
+                        $this->getParameter('uploading_directory_resources'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+                $originalFilename = $resource->getClientOriginalName();
+                $content->setResource($newFilename);
+                $content->setResourceNames($originalFilename);
+            }
+            
+            if($youtubeLink)
+            {
+                $y = explode('=',$youtubeLink);
+                if(sizeof($y) == 2)
+                {
+                    $youtubeLink  ='https://www.youtube.com/embed/'.explode('=',$youtubeLink)[1];
+                    $content->setVideoLink( $youtubeLink);
+                }
+                
+            }
+
+            if ($fileName) {
+                $originalFilename = pathinfo($fileName->getClientOriginalName(), PATHINFO_FILENAME);
+                // this is needed to safely include the file name as part of the URL
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$fileName->guessExtension();
+
+                // Move the file to the directory where brochures are stored
+                try {
+                    $fileName->move(
+                        $this->getParameter('uploading_directory_videos'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+                $content->setFilename($newFilename);
+            }
+
+            // $new_resources = $form['resources']->getData();
+            // if($new_resources){
+            //     $json_strings = $this->resourceUploader($resources, $slugger);
+            //     $content->setResource($json_strings[0]);
+            //     $content->setResourceNames($json_strings[1]);
+            // }
+            
+            // if($exis)
+            // if(sizeof($resource_name) == sizeof($))
+            // foreach($resource_name as $resource)
+            // {
+            //     echo $resource."\n";
+            // }
+            // dd("");
+            $this->getDoctrine()->getManager()->flush();
             return $this->redirectToRoute('content_index', ['id'=>$content->getChapter()->getInstructorCourse()->getId()], Response::HTTP_SEE_OTHER);
         }
 
+        $resource = json_decode($content->getResourceNames());
         return $this->renderForm('content/edit.html.twig', [
             'content' => $content,
             'form' => $form,

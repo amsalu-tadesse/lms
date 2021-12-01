@@ -84,7 +84,7 @@ function changePlayerContent(lists, id, content) {
             $("#youtube-link").attr("src", "");
             $("#text-card").css("display", "none");
             $("#video").css("display", "block");
-            $("#video-source").attr("src", "/uploads/resources/" + videos[id]);
+            $("#video-source").attr("src", "/uploads/videos/" + videos[id]);
             getContentAndFiles(id);
         } else {
             selected_doc = 0;
@@ -116,11 +116,8 @@ function getContentAndFiles(id) {
 
             if (data.resources != null) {
                 $('.resource').html("");
-                resourses = JSON.parse(data.resources);
-                $.each(resourses, function(key, value) {
-                    res = $("<li class='list-unstyled'><a href='/uploads/" + value + "' target='_blank' style='color:#0088cc'>" + value + " </a></li>");
-                    $('.resource').append(res);
-                });
+                res = $("<li class='list-unstyled'><a href='/uploads/resources/" + data.resources + "' target='_blank' style='color:#0088cc'>" + data.resource_names + " </a></li>");
+                $('.resource').append(res);
             } else
                 $(".resource").html("<span>No Resources given</span>");
 

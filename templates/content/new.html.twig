@@ -8,6 +8,7 @@
 {% endblock %}
 {% block breadcrumbcontent %} new {% endblock %}
 {% block body %}
+    
     {{ include('content/_form.html.twig') }}
 
     <a href="{{ path('content_index', {'id': 1}) }}">{% trans %}Back to list{% endtrans %}</a>
@@ -29,8 +30,7 @@
         $("#videoLink").hide();
         $('#resourcedesc').find('label').html('Resource description details');
     } else {}*/
-</script>
-<script>
+
    $("#videoLinkRadio").on("click", function() {
         $("#content_videoLink").prop('disabled', false);
         $("#content_filename").prop('disabled', true);

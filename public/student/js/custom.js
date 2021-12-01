@@ -39,3 +39,20 @@ function isMobile() {
     else
         return false;
 }
+
+var resources = [];
+var resources_main = [];
+$("#content_resources").on("change", function() {
+    var ele = document.getElementById($(this).attr('id'));
+    var result = ele.files;
+    $("#resource-list").html("");
+    resources = [];
+    resources_main = [];
+    $.each(result, function(key, value) {
+        resources.push(value.name);
+        resources_main.push(value);
+        list = $('<li class="list-group-item" list-num=' + key + '><i class="fa fa-times-circle" onclick="removeResource(\'' + value.name + '\',' + key + ')" style="color:red;padding:7px 20px 5px 20px;"></i> ' + value.name + '</li>');
+        $("#resource-list").append(list);
+    });
+    console.log(result);
+});

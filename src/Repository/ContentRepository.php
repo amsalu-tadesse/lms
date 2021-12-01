@@ -70,7 +70,7 @@ class ContentRepository extends ServiceEntityRepository
     public function getHtmlContent($value)
     {
         return $this->createQueryBuilder('c')
-            ->select('c.content, c.resource')
+            ->select('c.content, c.resource', 'c.resourceNames')
             ->andWhere('c.id = :val')
             ->setParameter('val', $value)
             ->getQuery()

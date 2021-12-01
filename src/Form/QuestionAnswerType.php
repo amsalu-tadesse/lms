@@ -9,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 
 class QuestionAnswerType extends AbstractType
 {
@@ -35,13 +36,12 @@ class QuestionAnswerType extends AbstractType
                     ])
                 ],
             ])
-            ->add('answer',TextareaType::class,[
-                'attr'=>[
-                        'class'=>'form-control',
-                        'rows'=>7,
-                        'width' => '100%'
-                        ]
-            ])
+            ->add('answer', CKEditorType::class, array(
+                'config' => array(
+                    'uiColor' => '#ffffff',
+                    //...
+                ),
+            ));
         ;
     } 
 

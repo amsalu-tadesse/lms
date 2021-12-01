@@ -21,8 +21,6 @@ class ContentType extends AbstractType
         $incrsid = $options['incrsid']; 
         $uploadSize = $options['uploadSize']; 
 
- 
-
         $builder
             ->add('chapter', EntityType::class, [
                 'required' => true,
@@ -43,17 +41,14 @@ class ContentType extends AbstractType
             // ->add('file')
             ->add('videoLink')
             ->add('content', CKEditorType::class, array(
-            'config' => array(
-                'uiColor' => '#ffffff',
-             ),
-        ))
+                'config' => array(
+                    'uiColor' => '#ffffff',
+                ),
+            ))
             // ->add('instructorCourse')
             ->add('filename', FileType::class, [
-                'label' => 'Resource',
 
                 // unmapped means that this field is not associated to any entity property
-                'mapped' => false,
-
                 // make it optional so you don't have to re-upload the PDF file
                 // every time you edit the Product details
                 'required' => false,
@@ -70,10 +65,29 @@ class ContentType extends AbstractType
                             'video/mpeg',
                             'video/MOV',
                             'video/SWF',
-                            'audio/mp3',
-                            'audio/wav',
-                            'audio/M4A',
-                            'audio/MP4',
+                        ],
+                        // 'mimeTypesMessage' => 'Please upload a valid PDF',
+                    ])
+                ],
+            ])
+            // ->add('instructorCourse')
+            ->add('resource', FileType::class, [
+                'label' => 'Additional Resource',
+                // unmapped means that this field is not associated to any entity property
+                'mapped' => false,
+
+                // make it optional so you don't have to re-upload the PDF file
+                // every time you edit the Product details
+                'required' => false,
+                'help' => "only zip,word files, pdf, excel, image and zip are allowed (size allowed: <$uploadSize MB)",
+                // unmapped fields can't define their validation using annotations
+                // in the associated entity, so you can use the PHP constraint classes
+                'constraints' => [
+                    new File([
+                        'maxSize' => $uploadSize.'M',
+                        'mimeTypes' => [
+                            'image/*',
+                            'zip',
                             'application/pdf',
                             'application/msword',
                             'application/vnd.ms-excel',
@@ -82,7 +96,7 @@ class ContentType extends AbstractType
                             'application/vnd.openxmlformats-officedocument.presentationml.presentation',
                             'text/plain'
                         ],
-                        // 'mimeTypesMessage' => 'Please upload a valid PDF',
+                        // 'mimeTypesMessage' => "Please upload a valid Dcoument(zip,word files, pdf, excel, image and zip): size allowed: <$uploadSize MB",
                     ])
                 ],
             ]);

@@ -39,7 +39,7 @@
                             {% trans %}Question{% endtrans %}
                         </th>
                         <td>
-                            {{ question_answer.question }}
+                            {{ question_answer.question|raw }}
                         </td>
                     </tr>
 
@@ -48,7 +48,7 @@
                             {% trans %}Answer{% endtrans %}
                         </th>
                         <td>
-                            {{ question_answer.answer }}
+                            {{ question_answer.answer|raw }}
                         </td>
                     </tr>
                     <tr>

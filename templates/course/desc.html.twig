@@ -85,7 +85,7 @@
                     <span class="qadata">{{que.createdAt|date('d-m-Y')}}
 					</span> {{que.student.user.username}}
                 </p>
-                <p class="message">{{que.question}}</p>
+                <p class="message">{{que.question|raw}}</p>
             </div>
         </div>
         {% elseif que.instructor != null %}
@@ -96,7 +96,7 @@
                     <span class="qadata">{{que.createdAt|date('d-m-Y')}}
 					</span> {{que.instructor.user.username}}
                 </p>
-                <p class="message">{{que.question}}</p>
+                <p class="message">{{que.question|raw}}</p>
             </div>
         </div>
         {% endif %} {% if que.answer != null %}
@@ -106,7 +106,7 @@
                     <span class="qadata">{{que.createdAt|date('d-m-Y')}}
 					</span> {{que.instructor.user.username}}
                 </p>
-                <p class="message">{{que.answer}}</p>
+                <p class="message">{{que.answer|raw}}</p>
             </div>
             {% if que.videoAnswer != null %}
                 <div class="card-footer">
