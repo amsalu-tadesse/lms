@@ -28,8 +28,6 @@ class StudentCourseController extends AbstractController
     /**
      * @Route("/", name="student_course_index", methods={"GET"})
      */
-
-     
     public function index(StudentCourseRepository $studentCourseRepository, PaginatorInterface $paginator, Request $request, InstructorCourseRepository $course): Response
     { 
         if ($this->getUser()->getProfile() == null) {
@@ -116,15 +114,32 @@ class StudentCourseController extends AbstractController
         ]);
     }
 
-
     /**
      * @Route("/course/certificate/{id}/print", name="print_certificate", methods={"GET"})
     */
     public function printCertificate(StudentCourse $studentCourse)
     {
-        return $this->render('certificate/print.html.twig', [
-            'student_course' => $studentCourse,
-        ]);
+        $em = $this->getDoctrine()->getManager();
+        $student = $em->getRepository(Student::class)->find($studentCourse->getStudent()->getId());
+        if($student)
+        {
+            if($student->getProfileUpdated() && $student->getProfilePicture()){
+                return $this->render('certificate/print.html.twig', [
+                    'student_course' => $studentCourse,
+                ]);
+            }
+            else{
+                $student_id = $student->getStudentId();
+                $this->addFlash("info", "$student_id does not updated his/her profile");
+                return $this->redirectToRoute("finished_students_list");
+            }
+        }
+        else{
+            return $this->redirectToRoute("finished_students_list");
+        }
+
+
+        
     }
 
     /**
