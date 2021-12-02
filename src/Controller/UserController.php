@@ -43,7 +43,6 @@ class UserController extends AbstractController
         $searchForm->handleRequest($request);
 
         if ($request->request->get('edit')) {
-
             $id = $request->request->get('edit');
             $user = $userRepository->findOneBy(['id' => $id]);
             $form = $this->createForm(userType::class, $user);
@@ -70,7 +69,6 @@ class UserController extends AbstractController
         }
 
         if ($request->request->get("userid")) {
-
             $entityManager = $this->getDoctrine()->getManager();
 
             $user = $entityManager->getRepository(User::class)->find($request->request->get("userid"));
@@ -83,7 +81,6 @@ class UserController extends AbstractController
                 $entityManager->flush();
                 return $this->redirectToRoute('user_index');
             }
-
         }
 
         $form = $this->createForm(userType::class, $user);
@@ -98,7 +95,7 @@ class UserController extends AbstractController
 
             $user->setPassword($userPasswordEncoderInterface->encodePassword($user, $password));
 
-           
+
             $role = $this->getCustomRoleNames($user->getUserType()->getId());
 
             $user->setRoles([$role]);
@@ -114,10 +111,9 @@ class UserController extends AbstractController
                 $username_new = $username1 . $counter;
                 $username = $username_new;
                 $found = $entityManager->getRepository(User::class)->findOneBy(['username' => $username_new]);
-
             }
-         
-            
+
+
 
             $email = $entityManager->getRepository(User::class)->findOneBy(['email' => $user->getEmail()]);
             if ($email) {
@@ -129,25 +125,21 @@ class UserController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            if ($user->getUserType()->getId() == 3) //instructor
-            {
+            if ($user->getUserType()->getId() == 3) { //instructor
                 $instructor = new Instructor();
                 $instructor->setUser($user);
                 $entityManager->persist($instructor);
-
-            } else if ($user->getUserType()->getId() == 4) //student
-            {
+            } elseif ($user->getUserType()->getId() == 4) { //student
                 $student = new Student();
                 $student->setUser($user);
                 $entityManager->persist($student);
-
             }
             $entityManager->flush();
 
             $message = "<p style='font-size: 15px;'>Dear ".$user->getFirstName()." ".$user->getMiddleName()." You have successfully registered for ECA ".
             "Learning management system. Please login with the following credentials".
             " and change your password <br>username=<strong>".$user->getUsername()."</strong><br> password=<strong>".$password."</strong></p>";
-            
+
             $sent =  $mservice->sendEmail($this->mailer, $message, $user->getEmail(), "account confirmation");
 
             return $this->redirectToRoute('user_index');
@@ -170,7 +162,6 @@ class UserController extends AbstractController
 
     public function getCustomRoleNames($id)
     {
-
         $role = "";
 
         switch ($id) {
@@ -203,7 +194,8 @@ class UserController extends AbstractController
      * @Route("/new", name="user_new", methods={"GET","POST"})
      */
 
-    function new (Request $request, UserPasswordEncoderInterface $userPasswordEncoderInterface): Response {
+    public function new(Request $request, UserPasswordEncoderInterface $userPasswordEncoderInterface): Response
+    {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
@@ -247,7 +239,6 @@ class UserController extends AbstractController
      */
     public function edit(Request $request, User $user): Response
     {
-
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
@@ -270,10 +261,9 @@ class UserController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
-           
 
-            try
-            {
+
+            try {
                 $entityManager->remove($user);
                 $entityManager->flush();
             } catch (\Exception $ex) {
@@ -281,11 +271,8 @@ class UserController extends AbstractController
                 $message = UtilityController::getMessage($ex->getCode());
                 $this->addFlash('danger', $message);
             }
-
-
         }
 
         return $this->redirectToRoute('user_index');
     }
-
 }

@@ -138,6 +138,4 @@ class Instructor
 
         return $this;
     }
-
-   
 }

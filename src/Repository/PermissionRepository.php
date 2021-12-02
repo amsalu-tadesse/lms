@@ -23,33 +23,32 @@ class PermissionRepository extends ServiceEntityRepository
     public function findPermission($search=null)
     {
         $qb=$this->createQueryBuilder('p');
-        if($search)
+        if ($search) {
             $qb->andWhere("p.name  LIKE '%".$search."%'");
+        }
 
-            return 
+        return
             $qb->orderBy('p.id', 'ASC')
             ->getQuery()
-     
-            
+
+
         ;
     }
     public function findForUserGroup($usergroup=null)
     {
         $qb=$this->createQueryBuilder('p');
-        
-        if (sizeof($usergroup)) {
 
+        if (sizeof($usergroup)) {
             $qb->andWhere('p.id not in ( :usergroup )')
                 ->setParameter('usergroup', $usergroup);
         }
-       
 
-             
-            return $qb->orderBy('p.id', 'ASC')
+
+
+        return $qb->orderBy('p.id', 'ASC')
             ->getQuery()->getResult()
-     
+
         ;
-      
     }
 
     // /**

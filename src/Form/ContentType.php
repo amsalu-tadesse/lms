@@ -13,15 +13,14 @@ use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
 
-
 class ContentType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $incrsid = $options['incrsid']; 
-        $uploadSize = $options['uploadSize']; 
+        $incrsid = $options['incrsid'];
+        $uploadSize = $options['uploadSize'];
 
- 
+
 
         $builder
             ->add('chapter', EntityType::class, [
@@ -30,15 +29,14 @@ class ContentType extends AbstractType
                 'required' => false,
                 'placeholder' => "",
                 // 'choice_value' => 'title',
-                'query_builder' => function (EntityRepository $er) 
-                use($incrsid){
+                'query_builder' => function (EntityRepository $er) use ($incrsid) {
                     $res = $er->createQueryBuilder('s')
                              ->join('s.instructorCourse', 'ic')
                              ->andWhere('ic.id = :incrsid')
                 ->setParameter('incrsid', $incrsid);
                     return $res;
-                }, 
-            ]) 
+                },
+            ])
             ->add('title')
             // ->add('file')
             ->add('videoLink')

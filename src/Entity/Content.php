@@ -29,12 +29,12 @@ class Content
      */
     private $content;
 
-     /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    /**
+    * @ORM\Column(type="string", nullable=true)
+    */
     private $filename;
 
-   
+
     /**
      * @ORM\OneToMany(targetEntity=StudentContentReaction::class, mappedBy="content")
      */
@@ -67,7 +67,7 @@ class Content
     }
 
 
-   
+
 
     public function getId(): ?int
     {

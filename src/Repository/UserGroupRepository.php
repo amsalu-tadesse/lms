@@ -7,7 +7,6 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 // use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ManagerRegistry;
 
-
 /**
  * @method UserGroup|null find($id, $lockMode = null, $lockVersion = null)
  * @method UserGroup|null findOneBy(array $criteria, array $orderBy = null)
@@ -24,13 +23,14 @@ class UserGroupRepository extends ServiceEntityRepository
     public function findUserGroup($search=null)
     {
         $qb=$this->createQueryBuilder('u');
-        if($search)
+        if ($search) {
             $qb->andWhere("u.name  LIKE '%".$search."%'");
+        }
 
-            return 
+        return
             $qb->orderBy('u.id', 'ASC')
             ->getQuery()
-     
+
         ;
     }
 

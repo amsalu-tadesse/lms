@@ -12,25 +12,25 @@ class StudentCourseType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('createdAt' ,null,[
+            ->add('createdAt', null, [
                 'attr'=>['class'=>'form-control']
             ])
-            ->add('status' ,null,[
+            ->add('status', null, [
                 'attr'=>['class'=>'form-control']
             ])
-            ->add('active' ,null,[
+            ->add('active', null, [
                 'attr'=>['class'=>'form-control']
             ])
-            ->add('isAtPage' ,null,[
+            ->add('isAtPage', null, [
                 'attr'=>['class'=>'form-control']
             ])
-            ->add('student' ,null,[
+            ->add('student', null, [
                 'attr'=>['class'=>'form-control']
             ])
-            ->add('instructorCourse' ,null,[
+            ->add('instructorCourse', null, [
                 'attr'=>['class'=>'form-control']
             ])
-            ->add('completedAt' ,null,[
+            ->add('completedAt', null, [
                 'attr'=>['class'=>'form-control']
             ])
         ;

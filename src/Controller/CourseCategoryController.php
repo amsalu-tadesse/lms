@@ -4,11 +4,12 @@ namespace App\Controller;
 
 use App\Entity\CourseCategory;
 use App\Form\CourseCategoryType;
+use App\Controller\UtilityController;
 use App\Repository\CourseCategoryRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @Route("/course/category")
@@ -87,18 +88,16 @@ class CourseCategoryController extends AbstractController
     public function delete(Request $request, CourseCategory $courseCategory): Response
     {
         // $this->denyAccessUnlessGranted('course_category_delete');
-        if ($this->isCsrfTokenValid('delete'.$courseCategory->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $courseCategory->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
-           
 
-            try
-            {
+            try {
                 $entityManager->remove($courseCategory);
-            $entityManager->flush();
+                $entityManager->flush();
             } catch (\Exception $ex) {
                 // dd($ex);
                 $message = UtilityController::getMessage($ex->getCode());
-                $this->addFlash('danger',$message );
+                $this->addFlash('danger', $message);
             }
         }
 

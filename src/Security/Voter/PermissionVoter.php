@@ -7,11 +7,11 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
-
 class PermissionVoter extends Voter
 {
     private $session;
-    public function __construct(SessionInterface $sessionInterface ) {
+    public function __construct(SessionInterface $sessionInterface)
+    {
         $this->session=$sessionInterface;
     }
     protected function supports($attribute, $subject)
@@ -21,10 +21,13 @@ class PermissionVoter extends Voter
 
         $permission=$this->session->get("PERMISSION");
         // dd($attribute);
-        if(!$permission)
-        $permission=array();
-        if($attribute == "pat_") return true;
-       return in_array($attribute, $permission);
+        if (!$permission) {
+            $permission=array();
+        }
+        if ($attribute == "pat_") {
+            return true;
+        }
+        return in_array($attribute, $permission);
     }
 
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
@@ -32,7 +35,7 @@ class PermissionVoter extends Voter
         $permission=$this->session->get("PERMISSION");
         // dd($permission);
         $user = $token->getUser();
-       
+
         // if the user is anonymous, do not grant access
         if (!$user instanceof UserInterface) {
             return false;
@@ -41,11 +44,12 @@ class PermissionVoter extends Voter
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
             case 'pat_':
-                $matches  = preg_grep ('/^pat_(\w+)/i', $permission);
-              if($matches) 
-              return true;
-               
-               else return false;
+                $matches  = preg_grep('/^pat_(\w+)/i', $permission);
+              if ($matches) {
+                  return true;
+              } else {
+                   return false;
+               }
 
                 // logic to determine if the user can EDIT
                 // return true or false
@@ -57,11 +61,12 @@ class PermissionVoter extends Voter
         }
         /*if($user->getId()==1)
         return true;*/
-        
-        if(!$permission)
-        $permission=array();
 
-       return in_array($attribute, $permission);
+        if (!$permission) {
+            $permission=array();
+        }
+
+        return in_array($attribute, $permission);
 
         return false;
     }

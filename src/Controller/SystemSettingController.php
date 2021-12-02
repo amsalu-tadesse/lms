@@ -42,7 +42,6 @@ class SystemSettingController extends AbstractController
      */
     public function editactivesemester(Request $request): Response
     {
-
         $em = $this->getDoctrine()->getManager();
         $sem = $request->request->get("semester");
         $setting = $em->getRepository(SystemSetting::class)->findBy(['code' => 'active_semester'])[0];
@@ -54,7 +53,8 @@ class SystemSettingController extends AbstractController
     /**
      * @Route("/new", name="system_setting_new", methods={"GET","POST"})
      */
-    function new (Request $request): Response {
+    public function new(Request $request): Response
+    {
         $systemSetting = new SystemSetting();
         $form = $this->createForm(SystemSettingType::class, $systemSetting);
         $form->handleRequest($request);

@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Knp\Component\Pager\PaginatorInterface;
+
 /**
  * @Route("/academiclevel")
  */
@@ -21,7 +22,7 @@ class AcademicLevelController extends AbstractController
     public function index(AcademicLevelRepository $academicLevelRepository, Request $request, PaginatorInterface $paginator): Response
     {
         //  $this->denyAccessUnlessGranted('academic_level_list');
-        if($request->request->get('edit')){
+        if ($request->request->get('edit')) {
             $id=$request->request->get('edit');
             $academiclevel=$academiclevelRepository->findOneBy(['id'=>$id]);
             $form = $this->createForm(AcademicLevelType::class, $academiclevel);
@@ -36,7 +37,7 @@ class AcademicLevelController extends AbstractController
             $queryBuilder=$academiclevelRepository->findAcademicLevel($request->query->get('search'));
             $data=$paginator->paginate(
                 $queryBuilder,
-                $request->query->getInt('page',1),
+                $request->query->getInt('page', 1),
                 18
             );
             return $this->render('user_type/index.html.twig', [
@@ -44,7 +45,6 @@ class AcademicLevelController extends AbstractController
                 'form' => $form->createView(),
                 'edit'=>$id
             ]);
-
         }
         $academiclevel = new AcademicLevel();
         $form = $this->createForm(AcademicLevelType::class, $academiclevel);
@@ -61,7 +61,7 @@ class AcademicLevelController extends AbstractController
         $queryBuilder=$academicLevelRepository->findAcademicLevel($request->query->get('search'));
         $data=$paginator->paginate(
             $queryBuilder,
-            $request->query->getInt('page',1),
+            $request->query->getInt('page', 1),
             18
         );
         return $this->render('academic_level/index.html.twig', [
@@ -110,7 +110,7 @@ class AcademicLevelController extends AbstractController
      */
     public function edit(Request $request, AcademicLevel $academicLevel): Response
     {
-       // $this->denyAccessUnlessGranted('academic_level_edit');
+        // $this->denyAccessUnlessGranted('academic_level_edit');
         $form = $this->createForm(AcademicLevelType::class, $academicLevel);
         $form->handleRequest($request);
 
@@ -131,21 +131,19 @@ class AcademicLevelController extends AbstractController
      */
     public function delete(Request $request, AcademicLevel $academicLevel): Response
     {
-       // $this->denyAccessUnlessGranted('academic_level_delete');
+        // $this->denyAccessUnlessGranted('academic_level_delete');
         if ($this->isCsrfTokenValid('delete'.$academicLevel->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
-          
 
-            try
-            {
+
+            try {
                 $entityManager->remove($academicLevel);
                 $entityManager->flush();
             } catch (\Exception $ex) {
                 // dd($ex);
                 $message = UtilityController::getMessage($ex->getCode());
-                $this->addFlash('danger',$message );
+                $this->addFlash('danger', $message);
             }
-
         }
 
         return $this->redirectToRoute('academic_level_index', [], Response::HTTP_SEE_OTHER);

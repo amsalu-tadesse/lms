@@ -92,5 +92,4 @@ class StudentController extends AbstractController
 
         return $this->redirectToRoute('student_index', [], Response::HTTP_SEE_OTHER);
     }
-
 }

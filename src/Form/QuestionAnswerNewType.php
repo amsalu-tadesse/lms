@@ -15,27 +15,25 @@ class QuestionAnswerNewType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $inid = $options['inid'];
 
-        $inid = $options['inid']; 
- 
-         
+
         $builder
-         
+
             ->add('course', EntityType::class, [
                 'attr' => ['class'=>'form-control'],
                 'class' => InstructorCourse::class,
                 'required' => false,
                 'placeholder' => "",
                 'choice_value' => 'course',
-                'query_builder' => function (EntityRepository $er) 
-                use($inid){
+                'query_builder' => function (EntityRepository $er) use ($inid) {
                     $res = $er->createQueryBuilder('ic')
                              ->andWhere('ic.instructor = :inid')
                 ->setParameter('inid', $inid);
                     return $res;
                 },
-            ]) 
-            ->add('question',TextareaType::class,[
+            ])
+            ->add('question', TextareaType::class, [
                 'attr'=>[
                     'class'=>'form-control mt-2',
                     'rows'=>7

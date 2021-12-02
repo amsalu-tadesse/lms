@@ -18,13 +18,11 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class InstructorCourseChapterController extends AbstractController
 {
-
     /**
      * @Route("/", name="instructor_course_chapter_index", methods={"GET"})
      */
     public function index(InstructorCourseRepository $instructorCourseRepository): Response
     {
-
         $em = $this->getDoctrine()->getManager();
 
         // $teachersList = $em->getRepository(Instructor::class)->findAll();
@@ -35,7 +33,6 @@ class InstructorCourseChapterController extends AbstractController
             'instructor_courses' => $mylist,
             // 'instructorsList' => $teachersList,
         ]);
-
     }
 
     /**
@@ -69,7 +66,9 @@ class InstructorCourseChapterController extends AbstractController
     /**
      * @Route("/new/{id}", name="instructor_course_chapter_new", methods={"GET","POST"})
      */
-    function new (Request $request, InstructorCourse $instructorCourse): Response {;
+    public function new(Request $request, InstructorCourse $instructorCourse): Response
+    {
+        ;
         $incrsid = $request->get('id');
         $instructorCourseChapter = new InstructorCourseChapter();
         $form = $this->createForm(InstructorCourseChapterType::class, $instructorCourseChapter);
@@ -128,8 +127,7 @@ class InstructorCourseChapterController extends AbstractController
         if ($this->isCsrfTokenValid('delete' . $instructorCourseChapter->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
 
-            try
-            {
+            try {
                 $entityManager->remove($instructorCourseChapter);
                 $entityManager->flush();
             } catch (\Exception $ex) {
@@ -137,7 +135,6 @@ class InstructorCourseChapterController extends AbstractController
                 $message = UtilityController::getMessage($ex->getCode());
                 $this->addFlash('danger', $message);
             }
-
         }
 
         return $this->redirectToRoute('instructor_course_chapter_index', [], Response::HTTP_SEE_OTHER);

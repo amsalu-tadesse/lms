@@ -81,9 +81,9 @@ class ContentRepository extends ServiceEntityRepository
     public function getChaptersWithContentForCourse($value)
     {
         return $this->createQueryBuilder('c')
-        ->select('c','ch')
+        ->select('c', 'ch')
         ->join('c.chapter', 'ch')
-        ->join('ch.instructorCourse','ic')
+        ->join('ch.instructorCourse', 'ic')
         ->where('ic.id = :val')
         ->orderBy('ch.id')
         ->setParameter('val', $value)

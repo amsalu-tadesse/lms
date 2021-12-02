@@ -27,7 +27,7 @@ class UserProfile
      */
     private $address;
 
-   
+
 
     /**
      * @ORM\Column(type="date", nullable=true)
@@ -73,7 +73,7 @@ class UserProfile
         return $this;
     }
 
- 
+
 
     public function getBirthdate(): ?\DateTimeInterface
     {
@@ -98,6 +98,4 @@ class UserProfile
 
         return $this;
     }
-
-   
 }

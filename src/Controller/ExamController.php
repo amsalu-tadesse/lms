@@ -21,7 +21,6 @@ class ExamController extends AbstractController
      */
     public function index(ExamRepository $examRepository, PaginatorInterface $paginator, Request $request): Response
     {
-        
         $queryBuilder=$examRepository->findExam($request->query->get('search'));
         $data=$paginator->paginate(
             $queryBuilder,

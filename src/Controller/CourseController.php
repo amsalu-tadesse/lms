@@ -57,7 +57,6 @@ class CourseController extends AbstractController
                 'form' => $form->createView(),
                 'edit' => $id,
             ]);
-
         }
         $course = new Course();
         $form = $this->createForm(CourseType::class, $course);
@@ -118,8 +117,8 @@ class CourseController extends AbstractController
             }
 
             $em = $this->getDoctrine()->getManager();
-            $question = $em->getRepository(QuestionAnswer::class)->findBy(['course'=>$instructorCourse->getId()],['id'=>'desc']);
-            return $this->render('course/description_login.html.twig',[
+            $question = $em->getRepository(QuestionAnswer::class)->findBy(['course'=>$instructorCourse->getId()], ['id'=>'desc']);
+            return $this->render('course/description_login.html.twig', [
                 'chapter' => $courses,
                 'chapters' => $chaptersWithContent,
                 'question' => $question,
@@ -203,7 +202,6 @@ class CourseController extends AbstractController
                 $chapter_list[$key]['total_content'] = 0;
                 $chapter_list[$key]['completed'] = 0;
             }
-
         }
 
         $quiz = $student_quiz->getQuizesForStudent($course->getId(), $this->getUser()->getProfile()->getId());
@@ -228,16 +226,14 @@ class CourseController extends AbstractController
         if ($this->isCsrfTokenValid('delete' . $course->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
 
-            try
-            {
+            try {
                 $entityManager->remove($course);
                 $entityManager->flush();
             } catch (\Exception $ex) {
                 // dd($ex);
                 $message = UtilityController::getMessage($ex->getCode());
-                $this->addFlash('danger',$message );
+                $this->addFlash('danger', $message);
             }
-
         }
 
         return $this->redirectToRoute('course_index');

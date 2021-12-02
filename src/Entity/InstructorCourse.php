@@ -34,8 +34,8 @@ class InstructorCourse
      * @ORM\Column(type="boolean")
      */
     private $active;
- 
- 
+
+
 
     /**
      * @ORM\ManyToOne(targetEntity=Instructor::class, inversedBy="instructorCourses")
@@ -127,7 +127,7 @@ class InstructorCourse
         return $this;
     }
 
- 
+
 
     public function getInstructor(): ?Instructor
     {
@@ -284,38 +284,38 @@ class InstructorCourse
 
         return $this;
     }
-public function __toString()
-{
-    return $this->course->getName();
-}
-
-/**
- * @return Collection|QuestionAnswer[]
- */
-public function getQuestionAnswers(): Collection
-{
-    return $this->questionAnswers;
-}
-
-public function addQuestionAnswer(QuestionAnswer $questionAnswer): self
-{
-    if (!$this->questionAnswers->contains($questionAnswer)) {
-        $this->questionAnswers[] = $questionAnswer;
-        $questionAnswer->setCourse($this);
+    public function __toString()
+    {
+        return $this->course->getName();
     }
 
-    return $this;
-}
+    /**
+     * @return Collection|QuestionAnswer[]
+     */
+    public function getQuestionAnswers(): Collection
+    {
+        return $this->questionAnswers;
+    }
 
-public function removeQuestionAnswer(QuestionAnswer $questionAnswer): self
-{
-    if ($this->questionAnswers->removeElement($questionAnswer)) {
-        // set the owning side to null (unless already changed)
-        if ($questionAnswer->getCourse() === $this) {
-            $questionAnswer->setCourse(null);
+    public function addQuestionAnswer(QuestionAnswer $questionAnswer): self
+    {
+        if (!$this->questionAnswers->contains($questionAnswer)) {
+            $this->questionAnswers[] = $questionAnswer;
+            $questionAnswer->setCourse($this);
         }
+
+        return $this;
     }
 
-    return $this;
-}
+    public function removeQuestionAnswer(QuestionAnswer $questionAnswer): self
+    {
+        if ($this->questionAnswers->removeElement($questionAnswer)) {
+            // set the owning side to null (unless already changed)
+            if ($questionAnswer->getCourse() === $this) {
+                $questionAnswer->setCourse(null);
+            }
+        }
+
+        return $this;
+    }
 }

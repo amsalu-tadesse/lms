@@ -20,16 +20,16 @@ class RegistrationFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('firstName' ,null,[
+            ->add('firstName', null, [
                 'attr'=>['class'=>'form-control']
             ])
-            ->add('middleName' ,null,[
+            ->add('middleName', null, [
                 'attr'=>['class'=>'form-control']
             ])
-            ->add('lastName' ,null,[
+            ->add('lastName', null, [
                 'attr'=>['class'=>'form-control']
             ])
-            ->add('email' ,null,[
+            ->add('email', null, [
                 'attr'=>['class'=>'form-control']
             ])
             // ->add('username' ,null,[
@@ -72,7 +72,7 @@ class RegistrationFormType extends AbstractType
             //     'first_options'  => ['label' => 'Password'],
             //     'second_options' => ['label' => 'Repeat Password'],
             // ])
-            
+
         ;
     }
 

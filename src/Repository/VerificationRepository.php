@@ -38,9 +38,8 @@ class VerificationRepository extends ServiceEntityRepository
 
     public function remove($email)
     {
-
     }
-    
+
     public function findOneByEmail($value)
     {
         return $this->createQueryBuilder('v')

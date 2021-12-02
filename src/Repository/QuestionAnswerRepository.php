@@ -22,12 +22,11 @@ class QuestionAnswerRepository extends ServiceEntityRepository
     // /**
     //  * @return QuestionAnswer[] Returns an array of QuestionAnswer objects
     //  */
-    
+
     public function getQuestions($value)
     {
-        
         return $this->createQueryBuilder('q')
-            ->join('q.course','ic')
+            ->join('q.course', 'ic')
             ->andWhere('ic.instructor = :val')
             ->setParameter('val', $value)
             ->orderBy('q.createdAt', 'Desc')
@@ -39,8 +38,8 @@ class QuestionAnswerRepository extends ServiceEntityRepository
     public function getQuestionAnswer($course, $start, $end)
     {
         return $this->createQueryBuilder('q')
-            ->select('q','u.username as instructor', 'stu.username as student')
-            ->join('q.course','ic')
+            ->select('q', 'u.username as instructor', 'stu.username as student')
+            ->join('q.course', 'ic')
             ->leftJoin('q.student', 'stud')
             ->leftJoin('stud.user', 'stu')
             ->leftJoin('q.instructor', 'ins')
@@ -54,12 +53,12 @@ class QuestionAnswerRepository extends ServiceEntityRepository
             ->getArrayResult()
         ;
     }
-    
+
     public function newQuestionNotification($id)
     {
         return $this->createQueryBuilder('q')
             ->select('count(q.id) as new_questions')
-            ->join('q.instructor','inst')
+            ->join('q.instructor', 'inst')
             ->join('inst.user', 'u')
             ->where('u.id = :val')
             ->andWhere('q.notification = 0')
@@ -78,7 +77,7 @@ class QuestionAnswerRepository extends ServiceEntityRepository
             ->getQuery()
             ->execute();
     }
-    
+
     /*
     public function findOneBySomeField($value): ?QuestionAnswer
     {

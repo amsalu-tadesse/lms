@@ -13,7 +13,7 @@ class QuestionAnswerNewStudentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('question',TextareaType::class,[
+            ->add('question', TextareaType::class, [
                 'attr'=>[
                     'class'=>'form-control mt-2',
                     'placeholder'=>'Add your question here!',

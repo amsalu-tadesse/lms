@@ -19,13 +19,11 @@ use App\Entity\InstructorCourseChapter;
  */
 class MyQuizController extends AbstractController
 {
-     
      /**
      * @Route("/quizs/{id}", name="quiz", methods={"GET"})
      */
     public function quiz(InstructorCourse $instructorCourse, Request $request): Response
     {
-
         $em = $this->getDoctrine()->getManager();
         $instructorCourseChapters = $em->getRepository(InstructorCourseChapter::class)->findBy(['instructorCourse'=>$instructorCourse]);
         return $this->render('myquiz/index.html.twig', [

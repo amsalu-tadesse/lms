@@ -42,31 +42,31 @@ class InstructorCourseController extends AbstractController
             $pageSize
         );
         $crs_stnumber = array();
-       $ic_student_count = $em->getRepository(instructorCourse::class)->findAll();
-       $json = "[['Course', 'number']";
-  
-       foreach ($ic_student_count as $key => $value) {
-        
-        $crs_stnumber[$value->getCourse()->getName()] =  sizeof($value->getStudentCourses());
+        $ic_student_count = $em->getRepository(instructorCourse::class)->findAll();
+        $json = "[['Course', 'number']";
 
-        $col =  ",['".$value->getCourse()->getName()."', ".sizeof($value->getStudentCourses())."]";
-        $col =trim(preg_replace('/\s+/', ' ', $col));
-        $json .= $col ;
-       }
-       $json .= "];";
+        foreach ($ic_student_count as $key => $value) {
+            $crs_stnumber[$value->getCourse()->getName()] =  sizeof($value->getStudentCourses());
+
+            $col =  ",['".$value->getCourse()->getName()."', ".sizeof($value->getStudentCourses())."]";
+            $col =trim(preg_replace('/\s+/', ' ', $col));
+            $json .= $col ;
+        }
+        $json .= "];";
         return $this->render('instructor_course/index.html.twig', [
             'instructor_courses' => $data,
             'instructorsList' => $teachersList,
             'searchForm' => $searchForm->createView(),
             'crs_stnumber' =>$json ,
-           
+
         ]);
     }
 
     /**
      * @Route("/new", name="instructor_course_new", methods={"GET","POST"})
      */
-    function new (Request $request): Response {
+    public function new(Request $request): Response
+    {
         $instructorCourse = new InstructorCourse();
         $form = $this->createForm(InstructorCourseType::class, $instructorCourse);
         $form->handleRequest($request);
@@ -141,17 +141,12 @@ class InstructorCourseController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete' . $instructorCourse->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
-            try
-            {
+            try {
                 $entityManager->remove($instructorCourse);
                 $entityManager->flush();
+            } catch (\Exception $ex) {
+                dd($ex);
             }
-            catch(\Exception $ex)
-            {
-dd($ex);
-            }
-
-            
         }
 
         return $this->redirectToRoute('instructor_course_index', [], Response::HTTP_SEE_OTHER);
@@ -169,6 +164,5 @@ dd($ex);
         }
         $em->flush();
         return $this->redirectToRoute('instructor_course_index');
-
     }
 }

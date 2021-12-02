@@ -23,14 +23,15 @@ class ExamRepository extends ServiceEntityRepository
     public function findExam($search=null)
     {
         $qb=$this->createQueryBuilder('c');
-        if($search)
+        if ($search) {
             $qb->andWhere("c.title  LIKE '%".$search."%'");
+        }
 
-            return 
+        return
             $qb->orderBy('c.id', 'ASC')
             ->getQuery()
-     
-            
+
+
         ;
     }
 

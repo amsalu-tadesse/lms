@@ -24,7 +24,7 @@ class StudentQuestionRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('sa')
             ->join('sa.student', 'st')
             ->leftJoin('sa.question', 'qq')
-            ->join('qq.quizChoices','qc')
+            ->join('qq.quizChoices', 'qc')
             ->join('qq.quiz', 'q')
             ->where('q.id = :quiz')
             ->andWhere('st.id = :val')
@@ -38,7 +38,7 @@ class StudentQuestionRepository extends ServiceEntityRepository
 
     public function deactivateQuestions($quiz, $student)
     {
-        return $this->createQueryBuilder('sq')  
+        return $this->createQueryBuilder('sq')
                 ->update()
                 ->where('sq.question.quiz = :quiz')
                 ->andWhere('sq.student = :student')
