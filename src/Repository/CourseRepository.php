@@ -27,12 +27,45 @@ class CourseRepository extends ServiceEntityRepository
 
             return 
             $qb->orderBy('p.id', 'ASC')
-            ->getQuery()
-     
-            
-        ;
+            ->getQuery();
     }
 
+    public function courseWithStudentNumber($status = 0)
+    {
+        $courses = $this->createQueryBuilder('c');
+        
+        if($status){
+            //students who finished same course with different instructors counted as many of the courses
+            if($status == 5){
+                $courses->select('c.id', 'count(sc.student) as finished');
+                $courses->where('sc.status = 5');
+            }
+            else{
+                $courses->select('c.id', 'count(sc.student) as non_finished');
+                $courses->where('sc.status = 1');
+            }
+        }else{
+            $courses->select('c.id', 'count(sc.student) as total_student');
+        }
+
+        $courses->join('c.instructorCourses', 'ic')
+        ->join('ic.studentCourses', 'sc')
+        ->groupBy('c.id')
+        ->getQuery();
+        
+        return $courses->getDQL();
+    }
+
+    public function courseWithInstructorNumber()
+    {
+        return $this->createQueryBuilder('c')
+                ->select('c.id', 'count(distinct t.id) as totla_instructor')
+                ->join('c.instructorCourses', 'ic')
+                ->join('ic.instructor','t')
+                ->groupBy('c.id')
+                ->getQuery()
+                ->getResult();          
+    }
     // /**
     //  * @return Course[] Returns an array of Course objects
     //  */

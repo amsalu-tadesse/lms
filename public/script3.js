@@ -276,6 +276,9 @@ $("#ExistingVideoToggle").on("click", function() {
 });
 
 function removeRecorded() {
+    player = document.getElementById("recorded");
+    player.pause();
+    player.currentTime = 0;
     $("#recorded").removeAttr("src");
     $("#player").modal("hide");
     playAllowed = false;

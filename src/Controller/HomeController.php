@@ -12,8 +12,8 @@ use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Config\FrameworkConfig;
 use CodeItNow\BarcodeBundle\Utils\QrCode;
-
-
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class HomeController extends AbstractController
 {
@@ -97,6 +97,50 @@ class HomeController extends AbstractController
         return $this->render('academic_level/recorder.html.twig', ['data' => $data]);
     }
 
+    /**
+     * @Route("/excel", name="excel")
+     */
+    public function excel(){
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $writer->setPreCalculateFormulas(false);
+        $sheet->setCellValue('A1', 'Hello World !');
+
+        $writer = new Xlsx($spreadsheet);
+        $writer->save('hello world.xlsx');
+
+
+
+        $spreadsheet = new Spreadsheet();
+$Excel_writer = new Xlsx($spreadsheet);
+  
+$spreadsheet->setActiveSheetIndex(0);
+$activeSheet = $spreadsheet->getActiveSheet();
+  
+$activeSheet->setCellValue('A1', 'Product Name');
+$activeSheet->setCellValue('B1', 'Product SKU');
+$activeSheet->setCellValue('C1', 'Product Price');
+  
+$query = $db->query("SELECT * FROM products");
+  
+if($query->num_rows > 0) {
+    $i = 2;
+    while($row = $query->fetch_assoc()) {
+        $activeSheet->setCellValue('A'.$i , $row['product_name']);
+        $activeSheet->setCellValue('B'.$i , $row['product_sku']);
+        $activeSheet->setCellValue('C'.$i , $row['product_price']);
+        $i++;
+    }
+}
+  
+$filename = 'products.xlsx';
+  
+header('Content-Type: application/vnd.ms-excel');
+header('Content-Disposition: attachment;filename='. $filename);
+header('Cache-Control: max-age=0');
+$Excel_writer->save('php://output');
+        dd("");
+    }
     /**
      * @Route("/print", name="print")
      */

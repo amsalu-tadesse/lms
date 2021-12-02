@@ -43,7 +43,7 @@
 					<tr>
 						<td>{{ question_answer.id }}</td>
 						<td>{{ question_answer.course.course.name}}</td>
-						<td>{{ question_answer.question }}</td>
+						<td>{{ question_answer.question|raw }}</td>
 						<td>{{ question_answer.answer != null ? 'Yes':'no' }}</td>
 						<td>{{ question_answer.createdAt ? question_answer.createdAt|date('d-m-Y') : '' }}</td>
 						<td>

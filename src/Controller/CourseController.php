@@ -20,6 +20,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 /**
  * @Route("/course")
@@ -240,5 +242,244 @@ class CourseController extends AbstractController
         }
 
         return $this->redirectToRoute('course_index');
+    }
+
+    /**
+     * @Route("/export", name="course_export")
+     */
+    public function courseListToExcel(CourseRepository $course_repo)
+    {
+        return $this->render('report/course.html.twig',[
+            'courses' => $course_repo->findAll()
+        ]);
+    }
+
+    /**
+     * @Route("/export/detail", name="specific_course_export")
+     */
+    public function courseToPdf(CourseRepository $course_repo)
+    {
+        
+        
+
+        $req = $request->request->get('courseExport');
+        $courses = $course_repo->findAll();
+        $students = $instructors = $finished = $unfinished = array();
+        if($req){
+            $em = $this->getDoctrine()->getManager();
+            if(in_array("stu_num", $req)){
+                $items = $course_repo->courseWithStudentNumber();
+                $query = $em->createQuery($items);
+                $students = $query->getResult();
+                if($students) $students = $this->changeArrayFormat($students);
+            }
+            if(in_array("con_num", $req)){
+
+            }
+            if(in_array("ins_num", $req)){
+                $instructors = $course_repo->courseWithInstructorNumber();
+                if($instructors) $instructors = $this->changeArrayFormat($instructors);
+            }
+            if(in_array("fin_stud_num", $req)){
+                $items = $course_repo->courseWithStudentNumber(5);
+                $query = $em->createQuery($items);
+                $finished = $query->getResult();
+                if($finished) $finished = $this->changeArrayFormat($finished);
+            }
+            if(in_array("unf_stu_num", $req)){
+                $items = $course_repo->courseWithStudentNumber(1);
+                $query = $em->createQuery($items);
+                $unfinished = $query->getResult();
+                if($unfinished) $unfinished = $this->changeArrayFormat($unfinished);
+            }
+            if(in_array("cha_num", $req)){
+                
+            }
+            
+            $spreadsheet = new Spreadsheet();
+            $spreadsheet->setActiveSheetIndex(0);
+
+            $Excel_writer = new Xlsx($spreadsheet);
+
+            $activeSheet = $spreadsheet->getActiveSheet();
+
+            $activeSheet->setCellValue('A1', 'Course Name');
+            $activeSheet->setCellValue('B1', 'Course Code');
+            $activeSheet->setCellValue('C1', 'Course Category');
+            $startLetter = 'D';
+            if($students) $activeSheet->setCellValue($startLetter++."1",'Number of Students');
+            if($finished) $activeSheet->setCellValue($startLetter++."1",'Students complete the course');
+            if($unfinished) $activeSheet->setCellValue($startLetter++."1",'Students not complete the course');
+            if($instructors) $activeSheet->setCellValue($startLetter++."1",'Number of Instructors');
+
+            if($courses) {
+                $i = 2;
+                foreach($courses as $course){
+                    $activeSheet->setCellValue('A'.$i , $course->getName());
+                    $activeSheet->setCellValue('B'.$i , $course->getCode());
+                    $activeSheet->setCellValue('C'.$i , $course->getCategory()->getName());
+                    $startLetter = 'D';
+                    if($students) 
+                        if(array_key_exists($course->getId(), $students))
+                            $activeSheet->setCellValue($startLetter++.$i, $students[$course->getId()]);
+                        else
+                        $activeSheet->setCellValue($startLetter++.$i, 0);
+                    if($finished) 
+                        if(array_key_exists($course->getId(), $finished))
+                            $activeSheet->setCellValue($startLetter++.$i, $finished[$course->getId()]);
+                        else
+                            $activeSheet->setCellValue($startLetter++.$i, 0);
+
+                    if($unfinished) 
+                        if(array_key_exists($course->getId(), $unfinished))
+                            $activeSheet->setCellValue($startLetter++.$i, $unfinished[$course->getId()]);
+                        else
+                            $activeSheet->setCellValue($startLetter++.$i, 0);
+                    if($instructors) 
+                        if(array_key_exists($course->getId(), $instructors))
+                            $activeSheet->setCellValue($startLetter++.$i, $instructors[$course->getId()]); 
+                        else
+                            $activeSheet->setCellValue($startLetter++.$i, 0);       
+                    $i++;
+                }
+            }
+            $spreadsheet->getActiveSheet()->getStyle('A1:J1')->getAlignment()->setWrapText(true);
+            $spreadsheet->getActiveSheet()->getStyle('A1:A500')->getAlignment()->setWrapText(true);
+
+            $spreadsheet->getActiveSheet()->getStyle("A1:J1")->getFont()->setBold(true);
+
+            $filename = 'products.xlsx';
+            header('Content-Type: application/vnd.ms-excel');
+            header('Content-Disposition: attachment;filename='. $filename);
+            header('Cache-Control: max-age=0');
+            $Excel_writer->save('php://output');
+            exit();
+        }
+        return $this->redirectToRoute("course_export");
+
+
+
+
+
+        return $this->render('report/course.html.twig',[
+            'courses' => $course_repo->findAll()
+        ]);
+    }
+
+    /**
+     * @Route("/export/excel", name="course_list_export", methods="POST")
+     */
+    public function courseExport(CourseRepository $course_repo, Request $request)
+    {
+        $req = $request->request->get('courseExport');
+        $courses = $course_repo->findAll();
+        $students = $instructors = $finished = $unfinished = array();
+        if($req){
+            $em = $this->getDoctrine()->getManager();
+            if(in_array("stu_num", $req)){
+                $items = $course_repo->courseWithStudentNumber();
+                $query = $em->createQuery($items);
+                $students = $query->getResult();
+                if($students) $students = $this->changeArrayFormat($students);
+            }
+            if(in_array("con_num", $req)){
+
+            }
+            if(in_array("ins_num", $req)){
+                $instructors = $course_repo->courseWithInstructorNumber();
+                if($instructors) $instructors = $this->changeArrayFormat($instructors);
+            }
+            if(in_array("fin_stud_num", $req)){
+                $items = $course_repo->courseWithStudentNumber(5);
+                $query = $em->createQuery($items);
+                $finished = $query->getResult();
+                if($finished) $finished = $this->changeArrayFormat($finished);
+            }
+            if(in_array("unf_stu_num", $req)){
+                $items = $course_repo->courseWithStudentNumber(1);
+                $query = $em->createQuery($items);
+                $unfinished = $query->getResult();
+                if($unfinished) $unfinished = $this->changeArrayFormat($unfinished);
+            }
+            if(in_array("cha_num", $req)){
+                
+            }
+            
+            $spreadsheet = new Spreadsheet();
+            $spreadsheet->setActiveSheetIndex(0);
+
+            $Excel_writer = new Xlsx($spreadsheet);
+
+            $activeSheet = $spreadsheet->getActiveSheet();
+
+            $activeSheet->setCellValue('A1', 'Course Name');
+            $activeSheet->setCellValue('B1', 'Course Code');
+            $activeSheet->setCellValue('C1', 'Course Category');
+            $startLetter = 'D';
+            if($students) $activeSheet->setCellValue($startLetter++."1",'Number of Students');
+            if($finished) $activeSheet->setCellValue($startLetter++."1",'Students complete the course');
+            if($unfinished) $activeSheet->setCellValue($startLetter++."1",'Students not complete the course');
+            if($instructors) $activeSheet->setCellValue($startLetter++."1",'Number of Instructors');
+
+            if($courses) {
+                $i = 2;
+                foreach($courses as $course){
+                    $activeSheet->setCellValue('A'.$i , $course->getName());
+                    $activeSheet->setCellValue('B'.$i , $course->getCode());
+                    $activeSheet->setCellValue('C'.$i , $course->getCategory()->getName());
+                    $startLetter = 'D';
+                    if($students) 
+                        if(array_key_exists($course->getId(), $students))
+                            $activeSheet->setCellValue($startLetter++.$i, $students[$course->getId()]);
+                        else
+                        $activeSheet->setCellValue($startLetter++.$i, 0);
+                    if($finished) 
+                        if(array_key_exists($course->getId(), $finished))
+                            $activeSheet->setCellValue($startLetter++.$i, $finished[$course->getId()]);
+                        else
+                            $activeSheet->setCellValue($startLetter++.$i, 0);
+
+                    if($unfinished) 
+                        if(array_key_exists($course->getId(), $unfinished))
+                            $activeSheet->setCellValue($startLetter++.$i, $unfinished[$course->getId()]);
+                        else
+                            $activeSheet->setCellValue($startLetter++.$i, 0);
+                    if($instructors) 
+                        if(array_key_exists($course->getId(), $instructors))
+                            $activeSheet->setCellValue($startLetter++.$i, $instructors[$course->getId()]); 
+                        else
+                            $activeSheet->setCellValue($startLetter++.$i, 0);       
+                    $i++;
+                }
+            }
+            $spreadsheet->getActiveSheet()->getStyle('A1:J1')->getAlignment()->setWrapText(true);
+            $spreadsheet->getActiveSheet()->getStyle('A1:A500')->getAlignment()->setWrapText(true);
+
+            $spreadsheet->getActiveSheet()->getStyle("A1:J1")->getFont()->setBold(true);
+
+            $filename = 'products.xlsx';
+            header('Content-Type: application/vnd.ms-excel');
+            header('Content-Disposition: attachment;filename='. $filename);
+            header('Cache-Control: max-age=0');
+            $Excel_writer->save('php://output');
+            exit();
+        }
+        return $this->redirectToRoute("course_export");
+    }
+
+    function changeArrayFormat($array)
+    {
+        $result = array();
+        if($array){
+            foreach($array as $key => $value)
+            {
+                $keys = array_keys($value);
+                $result[$value[$keys[0]]] = $value[$keys[1]];
+            }
+        }
+        else{
+            $result = [];
+        }
+        return $result;
     }
 }
