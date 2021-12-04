@@ -115,11 +115,6 @@ class UserController extends AbstractController
                 $username = $username_new;
                 $found = $entityManager->getRepository(User::class)->findOneBy(['username' => $username_new]);
             }
-<<<<<<< HEAD
-
-
-=======
->>>>>>> d096ec19f1d5909d1c6be1b68678e236f6fb69aa
 
             $email = $entityManager->getRepository(User::class)->findOneBy(['email' => $user->getEmail()]);
             if ($email) {
@@ -206,13 +201,8 @@ class UserController extends AbstractController
             $message = "<p style='font-size: 15px;'>Dear ".$user->getFirstName()." ".$user->getMiddleName()." You have successfully registered for ECA ".
             "Learning management system. Please login with the following credentials".
             " and change your password <br>username=<strong>".$user->getUsername()."</strong><br> password=<strong>".$password."</strong></p>";
-<<<<<<< HEAD
-
-            $sent =  $mservice->sendEmail($this->mailer, $message, $user->getEmail(), "account confirmation");
-=======
             
             // $sent =  $mservice->sendEmail($this->mailer, $message, $user->getEmail(), "account confirmation");
->>>>>>> d096ec19f1d5909d1c6be1b68678e236f6fb69aa
 
             return $this->redirectToRoute('user_index');
         }

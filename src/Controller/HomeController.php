@@ -5,11 +5,8 @@ namespace App\Controller;
 use App\Repository\InstructorCourseRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
-<<<<<<< HEAD
-=======
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Repository\InstructorCourseRepository;
 use Ottosmops\Pdftotext\Extract;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -17,7 +14,6 @@ use Symfony\Config\FrameworkConfig;
 use CodeItNow\BarcodeBundle\Utils\QrCode;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
->>>>>>> d096ec19f1d5909d1c6be1b68678e236f6fb69aa
 
 class HomeController extends AbstractController
 {

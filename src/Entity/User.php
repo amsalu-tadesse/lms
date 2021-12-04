@@ -434,8 +434,6 @@ class User implements UserInterface
 
         return $this;
     }
-<<<<<<< HEAD
-=======
 
     public function getCreatedAt(): ?\DateTimeInterface
     {
@@ -463,5 +461,4 @@ class User implements UserInterface
 
      
 
->>>>>>> d096ec19f1d5909d1c6be1b68678e236f6fb69aa
 }

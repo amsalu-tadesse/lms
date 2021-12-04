@@ -14,10 +14,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use DateTime;
 use Knp\Component\Pager\PaginatorInterface;
-<<<<<<< HEAD
-=======
 use Symfony\Component\String\Slugger\SluggerInterface;
->>>>>>> d096ec19f1d5909d1c6be1b68678e236f6fb69aa
 
 /**
  * @Route("/question/answer")

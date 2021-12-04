@@ -96,8 +96,6 @@ class InstructorCourseRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
-<<<<<<< HEAD
-=======
 
     public function getInstructorsForCourse($id)
     {
@@ -110,5 +108,4 @@ class InstructorCourseRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
->>>>>>> d096ec19f1d5909d1c6be1b68678e236f6fb69aa
 }

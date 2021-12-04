@@ -32,15 +32,8 @@ class StudentCourseController extends AbstractController
     /**
      * @Route("/", name="student_course_index", methods={"GET"})
      */
-<<<<<<< HEAD
-
-
-    public function index(StudentCourseRepository $studentCourseRepository, PaginatorInterface $paginator, Request $request, InstructorCourseRepository $course): Response
-    {
-=======
     public function index(StudentCourseRepository $studentCourseRepository, PaginatorInterface $paginator, Request $request, InstructorCourseRepository $course): Response
     { 
->>>>>>> d096ec19f1d5909d1c6be1b68678e236f6fb69aa
         if ($this->getUser()->getProfile() == null) {
             return $this->redirectToRoute('app_login');
         }
@@ -372,27 +365,11 @@ class StudentCourseController extends AbstractController
 
         $em = $this->getDoctrine()->getManager();
         $studentCourse = $em->getRepository(StudentCourse::class)->find($stdid);
-<<<<<<< HEAD
-
-=======
->>>>>>> d096ec19f1d5909d1c6be1b68678e236f6fb69aa
 
         $chapters = $studentCourse->getInstructorCourse()->getInstructorCourseChapters();
         foreach ($chapters as $chapter) {
             $totalContents += sizeof($chapter->getContents());
         }
-<<<<<<< HEAD
-
-
-        $studentchapters = $studentCourse->getStudent()->getStudentChapters();
-
-        foreach ($studentchapters as $stdchapter) {
-            $readContents += $stdchapter->getPagesCompleted();
-        }
-
-        $contents = $totalContents ? $totalContents : 1;
-
-=======
         
         $studentchapters = $studentCourse->getStudent()->getStudentChapters();
 
@@ -403,7 +380,6 @@ class StudentCourseController extends AbstractController
         
         $contents = $totalContents ? $totalContents:1;
         
->>>>>>> d096ec19f1d5909d1c6be1b68678e236f6fb69aa
         $completion = \round(($readContents/$contents), 1)*100;
         return $completion;
     }

@@ -168,13 +168,10 @@ class InstructorCourseController extends AbstractController
             } catch (\Exception $ex) {
                 dd($ex);
             }
-<<<<<<< HEAD
-=======
             catch(\Exception $ex)
             {
                 dd($ex);
             }
->>>>>>> d096ec19f1d5909d1c6be1b68678e236f6fb69aa
         }
 
         return $this->redirectToRoute('instructor_course_index', [], Response::HTTP_SEE_OTHER);

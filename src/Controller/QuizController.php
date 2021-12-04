@@ -439,13 +439,8 @@ class QuizController extends AbstractController
                                 }
                             }
                         }
-<<<<<<< HEAD
-
-                        $student_quiz->setResult($correct_answer);
-=======
                         
                         $student_quiz->setResult($res);
->>>>>>> d096ec19f1d5909d1c6be1b68678e236f6fb69aa
                         $em->persist($student_quiz);
                         $em->flush();
                     }

@@ -191,25 +191,15 @@ class ContentController extends AbstractController
     {
         $content = $contentRepository->getHtmlContent($course);
         // dd($content);
-<<<<<<< HEAD
-        $response = $content["content"];
-
-=======
         $response['content'] = $content["content"];
         $response['resources'] = $content["resource"];
         $response['resource_names'] = $content['resourceNames'];
     
->>>>>>> d096ec19f1d5909d1c6be1b68678e236f6fb69aa
         // Send all this stuff back to DataTables
 
         $returnResponse = new JsonResponse();
-<<<<<<< HEAD
-        $returnResponse->setJson($response);
-
-=======
         $returnResponse->setJson(json_encode($response));
     
->>>>>>> d096ec19f1d5909d1c6be1b68678e236f6fb69aa
         return $returnResponse;
     }
 
@@ -235,13 +225,6 @@ class ContentController extends AbstractController
             $brochureFile = $form->get('filename')->getData();
             $youtubeLink = $form->get('videoLink')->getData();
 
-<<<<<<< HEAD
-            if ($youtubeLink) {
-                $y = explode('=', $youtubeLink);
-                if (sizeof($y) == 2) {
-                    $youtubeLink = 'https://www.youtube.com/embed/' . explode('=', $youtubeLink)[1];
-                    $content->setVideoLink($youtubeLink);
-=======
             $resource = $form['resource']->getData();  
 
             if($youtubeLink)
@@ -251,15 +234,9 @@ class ContentController extends AbstractController
                 {
                     $youtubeLink  ='https://www.youtube.com/embed/'.explode('=',$youtubeLink)[1];
                     $content->setVideoLink( $youtubeLink);
->>>>>>> d096ec19f1d5909d1c6be1b68678e236f6fb69aa
                 }
             }
 
-<<<<<<< HEAD
-            // this condition is needed because the 'brochure' field is not required
-            // so the PDF file must be processed only when a file is uploaded
-            if ($brochureFile/*&& !$youtubeLink*/) {
-=======
             if($resource){
                 $originalFilename = pathinfo($resource->getClientOriginalName(), PATHINFO_FILENAME);
                 $safeFilename = $slugger->slug($originalFilename);
@@ -279,7 +256,6 @@ class ContentController extends AbstractController
             }
           
             if ($brochureFile /*&& !$youtubeLink*/) {
->>>>>>> d096ec19f1d5909d1c6be1b68678e236f6fb69aa
                 $originalFilename = pathinfo($brochureFile->getClientOriginalName(), PATHINFO_FILENAME);
                 // this is needed to safely include the file name as part of the URL
                 $safeFilename = $slugger->slug($originalFilename);
@@ -375,9 +351,6 @@ class ContentController extends AbstractController
                 
             }
 
-<<<<<<< HEAD
-            return $this->redirectToRoute('content_index', ['id' => $content->getChapter()->getInstructorCourse()->getId()], Response::HTTP_SEE_OTHER);
-=======
             if ($fileName) {
                 $originalFilename = pathinfo($fileName->getClientOriginalName(), PATHINFO_FILENAME);
                 // this is needed to safely include the file name as part of the URL
@@ -398,7 +371,6 @@ class ContentController extends AbstractController
 
             $this->getDoctrine()->getManager()->flush();
             return $this->redirectToRoute('content_index', ['id'=>$content->getChapter()->getInstructorCourse()->getId()], Response::HTTP_SEE_OTHER);
->>>>>>> d096ec19f1d5909d1c6be1b68678e236f6fb69aa
         }
 
         $resource = json_decode($content->getResourceNames());

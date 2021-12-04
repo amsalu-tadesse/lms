@@ -21,19 +21,6 @@ class CourseRepository extends ServiceEntityRepository
 
     public function findCourse($search=null)
     {
-<<<<<<< HEAD
-        $qb=$this->createQueryBuilder('p');
-        if ($search) {
-            $qb->andWhere("p.name  LIKE '%".$search."%'");
-        }
-
-        return
-            $qb->orderBy('p.id', 'ASC')
-            ->getQuery()
-
-
-        ;
-=======
         $qb=$this->createQueryBuilder('c');
         if($search)
             // $qb->select('c','cc.name as categoy')
@@ -68,7 +55,6 @@ class CourseRepository extends ServiceEntityRepository
         ->getQuery();
         
         return $courses->getDQL();
->>>>>>> d096ec19f1d5909d1c6be1b68678e236f6fb69aa
     }
 
     public function courseWithInstructorNumber()
