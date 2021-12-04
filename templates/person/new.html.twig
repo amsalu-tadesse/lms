@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Person{% endblock %}
+
+{% block body %}
+    <h1>Create new Person</h1>
+
+    {{ include('person/_form.html.twig') }}
+
+    <a href="{{ path('person_index') }}">back to list</a>
+{% endblock %}
+
+
+
+
+{% block javascripts %}
+	<script src="{{asset('assets/dist/js/garlic.js')}}"></script>
+
+<script type="text/javascript">
+  $( '[rel=persist]' ).garlic();
+</script>
+
+
+{% endblock %}
