@@ -268,5 +268,33 @@ class StudentCourseRepository extends ServiceEntityRepository
             ->getQuery()
             ->execute();
     }
+
+    public function getStudents($course, $status, $inst)
+    {
+        $query = $this->createQueryBuilder('sc')
+                // ->select("concat(u.firstName,' ',u.middleName,' ',u.lastName) as name", "u.email",'c.name' )
+                ->join('sc.student', 'st')
+                ->join('st.user', 'u')
+                ->join('sc.instructorCourse', 'ic')
+                ->join('ic.course', 'c');
+            if($course){
+                $query->where('ic.course = :val')
+                      ->setParameter("val", $course);
+            }
+
+            if($status != 0)
+            {
+                $query->andWhere('sc.status = :val1')
+                      ->setParameter("val1", $status);
+            }
+
+            if($inst){
+                $query->andWhere('ic.instructor = :val2')
+                      ->setParameter("val2", $inst);
+            }
+        
+        $students = $query->getQuery()->getResult();
+        return $students;
+    }
 }
 

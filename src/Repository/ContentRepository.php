@@ -91,6 +91,22 @@ class ContentRepository extends ServiceEntityRepository
         ->getResult()
     ;
     }
+
+    public function getChaptersWithContentForCourse1($value)
+    {
+        return $this->createQueryBuilder('c')
+        ->select('c','ch')
+        ->join('c.chapter', 'ch')
+        ->join('ch.instructorCourse','ic')
+        ->where('ic.course = :val')
+        ->orderBy('ch.id')
+        ->setParameter('val', $value)
+        ->getQuery()
+        ->getResult()
+        ;
+    }
+
+
     // /**
     //  * @return Content[] Returns an array of Content objects
     //  */

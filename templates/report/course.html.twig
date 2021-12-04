@@ -5,29 +5,34 @@
 {% block breadcrumbcontent %}Course
 {% endblock %}
 {% block stylesheets %}
-   <style>
-      .custom-control{
-         min-height: 2.4rem;
-      }
-      .custom-control-label{
-         padding-left: 4px;
-      }
-   </style>
+	<style>
+		.custom-control {
+			min-height: 2.4rem;
+		}
+		.custom-control-label {
+			padding-left: 4px;
+		}
+	</style>
 {% endblock %}
 {% block body %}
 	<div class="container">
 		<div class="card-body">
 			<form action="{{path('course_list_export')}}" method="POST">
-				<div class="row">
-               {# <div class="col-md-12 mb-3">
-                  <center><h4>Course Report</h4></center>
-               <hr>
-               </div> #}
-               <div class="col-md-12 px-5">
-                  <h5> General Information </h5><p> All courses *</p>
-               </div>
-               <br>
-               <br>
+				<div
+					class="row">
+					{# <div class="col-md-12 mb-3">
+					                  <center><h4>Course Report</h4></center>
+					               <hr>
+					               </div> #}
+					<div class="col-md-12 px-5">
+						<h5>
+							General Information
+						</h5>
+						<p>
+							All courses *</p>
+					</div>
+					<br>
+					<br>
 					<div class="col-md-6 px-5">
 						<div class="custom-control custom-checkbox">
 							<input type="checkbox" class="custom-control-input" value="stu_num" name="courseExport[]" id="1">
@@ -35,7 +40,7 @@
 						</div>
 						<div class="custom-control custom-checkbox">
 							<input type="checkbox" class="custom-control-input" value="ins_num" name="courseExport[]" id="3">
-							<label class="custom-control-label" for="3">with number of instructor</label>
+							<label class="custom-control-label" for="3">with number of instructor teaches the course</label>
 						</div>
 						<div class="custom-control custom-checkbox">
 							<input type="checkbox" class="custom-control-input" value="cha_num" name="courseExport[]" id="6">
@@ -52,63 +57,65 @@
 							<label class="custom-control-label" for="5">with unfinished students</label>
 						</div>
 					</div>
-               <br>
+					<br>
 					<div class="col-md-6 px-5">
 						<input type="submit" class="btn btn-primary btn-sm mt-3" value="Generate">
 					</div>
 				</div>
 			</form>
 		</div>
-      <hr>
-      <div class="container">
-         <div class="row">
-            <div class="card-body">
-               <h5 class="px-5"> Specific Information </h5>
-               <br>
-               <form action="{{path('specific_course_export')}}" method="post">
-                  <div class="col-md-6 px-5">
-                     <div class="form-group">
-                     <select class="form-control">
-                        {% for course in courses %}
-                           <option value="{{course.code}}">{{course.name}}</option>
-                        {% endfor %}
-                     </select> 
-                     </div>
-                  </div>
-                  <div class="col-md-6 px-5">
-                        <p> Additional fields *</p>
-                     <br>
-                        <div class="custom-control custom-checkbox">
-                           <input type="checkbox" class="custom-control-input" value="stu_num" name="coursePdfExport[]" id="7">
-                           <label class="custom-control-label" for="7">with number of student</label>
-                        </div>
-                        <div class="custom-control custom-checkbox">
-                           <input type="checkbox" class="custom-control-input" value="ins_num" name="coursePdfExport[]" id="8">
-                           <label class="custom-control-label" for="8">with number of instructor</label>
-                        </div>
-                        <div class="custom-control custom-checkbox">
-                           <input type="checkbox" class="custom-control-input" value="cha_num" name="coursePdfExport[]" id="9">
-                           <label class="custom-control-label" for="9">with number of chapters</label>
-                        </div>
-                  </div>
+		<hr>
+		<div class="container">
+			<div class="row">
+				<div class="card-body">
+					<h5 class="px-5">
+						Specific Information
+					</h5>
+					<form action="{{path('specific_course_export')}}" method="post">
+						<div class="col-md-6 px-5">
+							<div class="form-group">
+								<select class="form-control" name="course_selected">
+									{% for course in courses %}
+										<option value="{{course.id}}">{{course.name}}</option>
+									{% endfor %}
+								</select>
+							</div>
+						</div>
+						<div class="col-md-6 px-5">
+							<p>
+								Additional fields *</p>
+							<br>
+							<div class="custom-control custom-checkbox">
+								<input type="checkbox" class="custom-control-input" value="stu_num" name="coursePdfExport[]" id="7">
+								<label class="custom-control-label" for="7">Active number of students</label>
+							</div>
+							<div class="custom-control custom-checkbox">
+								<input type="checkbox" class="custom-control-input" value="ins_inf" name="coursePdfExport[]" id="8">
+								<label class="custom-control-label" for="8">Instructors information</label>
+							</div>
+							<div class="custom-control custom-checkbox">
+								<input type="checkbox" class="custom-control-input" value="con_lis" name="coursePdfExport[]" id="9">
+								<label class="custom-control-label" for="9">List of contents</label>
+							</div>
+						</div>
 
-                  <div class="col-md-6 px-5">
-                     <br>
-                     <input type="submit" value="Generate" class="btn btn-primary btn-sm">
-                  </div>
-                  
-               </form>
-            </div>
-         </div>
-      </div>   
+						<div class="col-md-6 px-5">
+							<br>
+							<input type="submit" value="Generate" class="btn btn-primary btn-sm mb-5">
+						</div>
+
+					</form>
+				</div>
+			</div>
+		</div>
 	</div>
 </div></div>{% endblock %}{# {% extends "base.html.twig" %}
-						
-						{% block breadcrumbhome %}Report{% endblock %}
-						{% block breadcrumbcontent %}Course{% endblock %}
-						
-						{% block body %}
-						   <div class="card">
-						      kk
-						   </div>
-						{% endblock %} #}
+							
+							{% block breadcrumbhome %}Report{% endblock %}
+							{% block breadcrumbcontent %}Course{% endblock %}
+							
+							{% block body %}
+							   <div class="card">
+							      kk
+							   </div>
+							{% endblock %} #}

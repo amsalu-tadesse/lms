@@ -7,7 +7,9 @@ use App\Entity\StudentCourse;
 use App\Entity\Student;
 use App\Form\Filter\RequestFilterType;
 use App\Form\StudentCourseType;
+use App\Form\StudentReportType;
 use App\Repository\ContentRepository;
+use App\Repository\CourseRepository;
 use App\Repository\InstructorCourseRepository;
 use App\Repository\StudentChapterRepository;
 use App\Repository\StudentCourseRepository;
@@ -19,6 +21,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 /**
  * @Route("/student")
@@ -113,7 +117,101 @@ class StudentCourseController extends AbstractController
             'student_courses' => $data,
         ]);
     }
+    
+    /**
+     * @Route("/list/export", name="student_course_excel", methods={"GET", "POST"})
+    */
+    public function exportToExcel(CourseRepository $course_repo, Request $request, InstructorCourseRepository $instructorCourseRepository, PaginatorInterface $paginator, StudentCourseRepository $stud_course_repo)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $students = array();
+        $instructors = array();
+        $inst = 0;
+        $studentCourse = new StudentCourse();
+        $form = $this->createForm(StudentReportType::class, $studentCourse);
+        $form->handleRequest($request);
 
+        if($form->isSubmitted() )
+        {
+            $course = $form['courses']->getData();
+            $status = $form['status']->getData();
+            $inst = $request->request->get("instructor");
+            if($status == 0) $status = 1;
+            else if($status == 1) $status = 5;
+            else if($status == 2) $status = 0;
+
+            if(!$inst) $inst = 0; 
+            if($course)
+            {
+                $students = $stud_course_repo->getStudents($course->getId(), $status, $inst);
+            }
+
+            if($form['export']->isClicked()){
+                $spreadsheet = new Spreadsheet();
+                $spreadsheet->setActiveSheetIndex(0);
+
+                $Excel_writer = new Xlsx($spreadsheet);
+
+                $activeSheet = $spreadsheet->getActiveSheet();
+
+                $activeSheet->setCellValue('A1', 'Student Name');
+                $activeSheet->setCellValue('B1', 'Student Email');
+                $activeSheet->setCellValue('C1', 'Course Name');
+                $activeSheet->setCellValue('D1', 'Course Category');
+                $activeSheet->setCellValue('E1', 'Instructor');
+                $activeSheet->setCellValue('F1', 'Status');
+                $i = 2;
+                foreach($students as $student){
+                    $name = $student->getStudent()->getUser()->getFirstName()." ".$student->getStudent()->getUser()->getMiddleName()." ".$student->getStudent()->getUser()->getLastName();
+                    $instructorName = $student->getInstructorCourse()->getInstructor()->getUser()->getFirstName()." ".$student->getInstructorCourse()->getInstructor()->getUser()->getMiddleName()." ".$student->getInstructorCourse()->getInstructor()->getUser()->getLastName();
+                    $activeSheet->setCellValue('A'.$i , $name);
+                    $activeSheet->setCellValue('B'.$i , $student->getStudent()->getUser()->getEmail());
+                    $activeSheet->setCellValue('C'.$i , $student->getInstructorCourse()->getCourse()->getName());
+                    $activeSheet->setCellValue('D'.$i , $course->getCategory()->getName());
+                    $activeSheet->setCellValue('E'.$i , $instructorName);
+                    if($student->getStatus() == 1)
+                        $status = 'Finished';
+                    elseif($student->getStatus() == 5)
+                        $status = 'Not Finished';
+                    $activeSheet->setCellValue('F'.$i , $status);
+
+                    $i++;
+                }
+
+                $spreadsheet->getActiveSheet()->getStyle('A1:J1')->getAlignment()->setWrapText(true);
+                // $spreadsheet->getActiveSheet()->getStyle('A1:A500')->getAlignment()->setWrapText(true);
+
+                $spreadsheet->getActiveSheet()->getStyle("A1:J1")->getFont()->setBold(true);
+
+                $filename = 'student_list_'.date("d",time())."_".date("m", time())."_".date("y", time()).'.xlsx';
+                header('Content-Type: application/vnd.ms-excel');
+                header('Content-Disposition: attachment;filename='. $filename);
+                header('Cache-Control: max-age=0');
+                $Excel_writer->save('php://output');
+                exit();
+            }
+            else
+            {                
+                $instructors = $instructorCourseRepository->getInstructorsForCourse($course->getId());
+            }
+        }
+
+        $dql = "select c from App\Entity\Course c";
+        $query = $em->createQuery($dql);
+        $data = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            15
+        );
+        
+        return $this->render('report/student.html.twig',[
+            'courses' => $data,
+            'students' => $students,
+            'instructors' => $instructors,
+            'inst' => $inst,
+            'form' => $form->createView()
+        ]);
+    }
     /**
      * @Route("/course/certificate/{id}/print", name="print_certificate", methods={"GET"})
     */
@@ -136,10 +234,7 @@ class StudentCourseController extends AbstractController
         }
         else{
             return $this->redirectToRoute("finished_students_list");
-        }
-
-
-        
+        }        
     }
 
     /**
@@ -283,30 +378,25 @@ class StudentCourseController extends AbstractController
         $totalContents = 0;
         $readContents = 0;
 
-$em = $this->getDoctrine()->getManager();
-$studentCourse = $em->getRepository(StudentCourse::class)->find($stdid);
+        $em = $this->getDoctrine()->getManager();
+        $studentCourse = $em->getRepository(StudentCourse::class)->find($stdid);
 
+        $chapters = $studentCourse->getInstructorCourse()->getInstructorCourseChapters();
+        foreach ($chapters as $chapter) {
+            $totalContents += sizeof($chapter->getContents());
+        }
         
-            $chapters = $studentCourse->getInstructorCourse()->getInstructorCourseChapters();
-            foreach ($chapters as $chapter) {
-                $totalContents += sizeof($chapter->getContents());
+        $studentchapters = $studentCourse->getStudent()->getStudentChapters();
 
-            }
-            
-            
-            $studentchapters = $studentCourse->getStudent()->getStudentChapters();
-
-            foreach ($studentchapters as $stdchapter) 
-            {
-            
-                $readContents += $stdchapter->getPagesCompleted();
-            }
-            
-            $contents = $totalContents ? $totalContents:1;
-            
-            $completion = \round(($readContents/$contents), 1)*100;
-            return $completion;
-
+        foreach ($studentchapters as $stdchapter) 
+        {
+            $readContents += $stdchapter->getPagesCompleted();
+        }
+        
+        $contents = $totalContents ? $totalContents:1;
+        
+        $completion = \round(($readContents/$contents), 1)*100;
+        return $completion;
     }
 
     /**

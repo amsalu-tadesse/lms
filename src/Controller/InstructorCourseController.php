@@ -14,12 +14,32 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * @Route("/instructor/course")
  */
 class InstructorCourseController extends AbstractController
 {
+    /**
+     * @Route("/getTeachers", name="instructors_for_course", methods={"POST"})
+     */
+    public function indexf(Request $request, InstructorCourseRepository $instructorCourseRepository): Response
+    {
+        if($request->isXmlHttpRequest()) {
+            $result = array();
+            $id = $request->request->get("id");
+            $instructors = $instructorCourseRepository->getInstructorsForCourse($id);
+            
+            $returnResponse = new JsonResponse();
+            $returnResponse->setJson(json_encode($instructors));
+            return $returnResponse;
+        }
+        else{
+            die("error");
+        } 
+    }
+
     /**
      * @Route("/", name="instructor_course_index", methods={"GET"})
      */
@@ -62,6 +82,7 @@ class InstructorCourseController extends AbstractController
            
         ]);
     }
+    
 
     /**
      * @Route("/new", name="instructor_course_new", methods={"GET","POST"})
@@ -148,14 +169,13 @@ class InstructorCourseController extends AbstractController
             }
             catch(\Exception $ex)
             {
-dd($ex);
+                dd($ex);
             }
-
-            
         }
 
         return $this->redirectToRoute('instructor_course_index', [], Response::HTTP_SEE_OTHER);
     }
+
     /**
      * @Route("/course/diactivate/{id}", name="instructor_course_deactivate", methods={"GET","POST"})
      */

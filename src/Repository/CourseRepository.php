@@ -21,12 +21,13 @@ class CourseRepository extends ServiceEntityRepository
 
     public function findCourse($search=null)
     {
-        $qb=$this->createQueryBuilder('p');
+        $qb=$this->createQueryBuilder('c');
         if($search)
-            $qb->andWhere("p.name  LIKE '%".$search."%'");
-
+            // $qb->select('c','cc.name as categoy')
+            $qb->andWhere("c.name  LIKE '%".$search."%'");
+            $qb->join('c.category', 'cc');
             return 
-            $qb->orderBy('p.id', 'ASC')
+            $qb->orderBy('c.id', 'ASC')
             ->getQuery();
     }
 
@@ -65,6 +66,32 @@ class CourseRepository extends ServiceEntityRepository
                 ->groupBy('c.id')
                 ->getQuery()
                 ->getResult();          
+    }
+
+    public function findTotalActiveStudent($id)
+    {
+        return $this->createQueryBuilder('c')
+                ->select('count(sc.student) as total_student')
+                ->join('c.instructorCourses', 'ic')
+                ->join('ic.studentCourses', 'sc')
+                ->where('sc.status = 1')
+                ->andWhere('c.id = :id')
+                ->setParameter("id", $id)
+                ->getQuery()
+                ->getOneOrNullResult();
+    }
+
+    public function getChaptersCount()
+    {
+        return $this->createQueryBuilder('c')
+        ->select('c.id','count(ch.id) as total')
+        ->join('c.instructorCourses', 'ic')
+        ->join('ic.instructorCourseChapters','ch')
+        ->where('ic.active = 1')
+        ->groupBy('c.id')
+        ->getQuery()
+        ->getResult()
+        ;
     }
     // /**
     //  * @return Course[] Returns an array of Course objects

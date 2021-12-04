@@ -40,7 +40,7 @@
 			<ul
 				class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 				<!-- Add icons to the links using the .nav-icon class
-																                                                				               with font-awesome or any other icon font library -->
+																								                                                				               with font-awesome or any other icon font library -->
 				{% if is_granted('user_list') or is_granted('user_group_list') or is_granted('user_type_list') %}
 					<li class="nav-header">
 						<h6>
@@ -290,18 +290,18 @@
 				</li>
 
 				{# <li class="nav-item">
-															                                        <a href="{{ path('country_index') }}" class="nav-link">
-															                                            <i class="far fa-circle nav-icon"></i>
-															                                            <p>
-															                                                {% trans %}
-															                                                Country 
-															                                                                                                    
-															                                                {% endtrans %}
-															                                            </p>
-															                                        </a>
-															                                    </li> #}
+																							                                        <a href="{{ path('country_index') }}" class="nav-link">
+																							                                            <i class="far fa-circle nav-icon"></i>
+																							                                            <p>
+																							                                                {% trans %}
+																							                                                Country 
+																							                                                                                                    
+																							                                                {% endtrans %}
+																							                                            </p>
+																							                                        </a>
+																							                                    </li> #}
 
-
+				{# report start #}
 				{% if is_granted('student_list')  %}
 					<li class="nav-header">
 						<h6>
@@ -311,23 +311,31 @@
 							<h6></li>
 						{% endif %}
 					</li>
-					<li class="nav-item has-treeview menu-open ">
-						{% if is_granted('student_list') %}
-							<li class="nav-item">
-								<a href="{{ path('course_export')}}" class="nav-link">
-									<i class="far fa-circle nav-icon"></i>
-									<p>
-										{% trans %}
-										Course
-										{% endtrans %}
-									</p>
-								</a>
-							</li>
-
-						{% endif %}
-
-					</li>
-
+					{% if is_granted('student_list') %}
+						<li class="nav-item">
+							<a href="{{ path('course_export')}}" class="nav-link">
+								<i class="far fa-circle nav-icon"></i>
+								<p>
+									{% trans %}
+									Course
+									{% endtrans %}
+								</p>
+							</a>
+						</li>
+					{% endif %}
+					{% if is_granted('student_list') %}
+						<li class="nav-item">
+							<a href="{{ path('student_course_excel')}}" class="nav-link">
+								<i class="far fa-circle nav-icon"></i>
+								<p>
+									{% trans %}
+									Student
+									{% endtrans %}
+								</p>
+							</a>
+						</li>
+					{% endif %}
+					{# report end #}
 
 					<li class="nav-item">
 						{% if is_granted('qa_ask') or is_granted('qa_answer') %}

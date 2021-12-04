@@ -84,19 +84,18 @@
                                         <thead>
                                             <tr>
                                                 <th>
-                                                    #
-                                                                                                        											
-                                                                                                    
+                                                    #                                                   											                                               
                                                 </th>
 
                                                 {# <th>{{ knp_pagination_sortable(courses, 'Name', 'p.name') }}</th> #}
 
                                                 <th>
-                                                    {{ knp_pagination_sortable(courses, 'Name'|trans({}, 'messages'), 'p.name' )|raw }}
+                                                    {{ knp_pagination_sortable(courses, 'Name'|trans({}, 'messages'), 'c.name' )|raw }}
                                                 </th>
-
                                                 <th>
-                                                    {{ knp_pagination_sortable(courses, 'Code'|trans({}, 'messages'), 'p.code' )|raw }}
+                                                    {{ knp_pagination_sortable(courses, 'Category'|trans({}, 'messages'), 'cc.name' )|raw }}
+                                                <th>
+                                                    {{ knp_pagination_sortable(courses, 'Code'|trans({}, 'messages'), 'c.code' )|raw }}
                                                 </th>
 
                                                 <th>
@@ -123,8 +122,11 @@
                                                         {{ i }}
                                                         {% set i = i+1 %}
                                                     </td>
-                                                    <td>
+                                                    <td style="width: 25%">
                                                         {{ course.name }}
+                                                    </td>
+                                                    <td>
+                                                        {{ course.category.name }}
                                                     </td>
                                                     <td>
                                                         {{ course.code }}
