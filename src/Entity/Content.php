@@ -61,6 +61,11 @@ class Content
      */
     private $resource;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $resourceNames;
+
     public function __construct()
     {
         $this->studentContentReactions = new ArrayCollection();
@@ -187,6 +192,18 @@ class Content
     public function setResource(string $resource): self
     {
         $this->resource = $resource;
+
+        return $this;
+    }
+
+    public function getResourceNames(): ?string
+    {
+        return $this->resourceNames;
+    }
+
+    public function setResourceNames(string $resourceNames): self
+    {
+        $this->resourceNames = $resourceNames;
 
         return $this;
     }

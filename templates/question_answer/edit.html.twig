@@ -1,46 +1,118 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{% trans %}Edit{% endtrans %} QuestionAnswer{% endblock %}
+{% block title %}
+	{% trans %}Edit{% endtrans %}
+	QuestionAnswer
+{% endblock %}
 
 {% block breadcrumbhome %}
-    <a href="{{path('question_answer_index')}}">
-	   {% trans %}Q&A{% endtrans %} 
-	</a> 
+	<a href="{{path('question_answer_index')}}">
+		{% trans %}Q&A{% endtrans %}
+	</a>
 {% endblock %}
-{% block breadcrumbcontent%} {% trans %}Answer{% endtrans %} {% endblock %}
+{% block breadcrumbcontent%}
+	{% trans %}Answer{% endtrans %}
+{% endblock %}
 
 
-{% block stylesheet %}
-    table td{
-        margin: 0px 10px;
-    }
+{% block stylesheets %}
+	{# <link rel="stylesheet" href='{{asset("main.css")}}'> #}
+	<style>
+		table td{
+			margin: 0px 10px;
+		}
+
+		#recordToggle{
+			background: #2d69a5;
+			padding: 1px 11px 1px 7px;
+			color: white;
+			border-radius: 3px;
+		}
+
+		.modal-dialog{
+			min-width: fit-content;
+		}
+	</style>
 {% endblock %}
 {% block body %}
-        <div class="card px-3 py-2 mt-3">
-            <div class="card-header">
-            </div>
-            <div class="card-body">
-                {{question_answer.question}}
-            </div>
-        </div>
-        <table>
-            <tr>
-           
-      
-      
-        <td>
-            {{ include('question_answer/_form.html.twig', {'button_label': 'Update'}) }}
-            </td>
-            <td>
-            <a href="{{ path('question_answer_index') }}" class="btn btn-info">back to list</a>
-        </td>
+	<div class="card px-3 py-2 mt-3">
+		<div class="card-header"><strong>Question</strong></div>
+		<div class="card-body">
+			{{question_answer.question|raw}}
+		</div>
+	</div>
 
-        {% if question_answer.student == null %}
-            <td>
-                {{ include('question_answer/_delete_form.html.twig') }}
-            </td>
-        {% endif %}
+	<br>
 
-    </tr>
-    </table>
-{% endblock %}
+	{{ include('question_answer/_form.html.twig', {'button_label': 'Update'}) }}
+
+	<td>
+		<a href="{{ path('question_answer_index') }}" class="btn btn-info">back to list</a>
+	</td>
+
+	{% if question_answer.student == null %}
+		<td>
+			{{ include('question_answer/_delete_form.html.twig') }}
+		</td>
+	{% endif %}
+
+</tr></table>
+<!-- Modal -->
+<div class="modal fade" id="recorderModal" tabindex="-1" role="dialog" aria-labelledby="recorderModalLabel" data-keyboard="false" data-backdrop="static" aria-hidden="true">
+<div class="modal-dialog" role="document">
+	<div class="modal-content">
+		<div class="modal-body">
+			<div id="container">
+				<video id="gum" autoplay muted playsinline width="100%"></video>
+				<div>
+					<button class="btn btn-info btn-sm" id="record">Start Recording</button>
+					<button class="btn btn-warning btn-sm"  id="cancel" onclick="closeModal()">Cancel Recording</button>
+					<span style="float:right"><i id="recording-icon" class="fas fa-record-vinyl" style="color:red;display:none"></i> <span id="timer">00 : 00</span></span>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="confirmationModal" data-keyboard="false" data-backdrop="static" aria-hidden="true">
+<div class="modal-dialog" role="document" style="width: auto">
+	<div class="modal-content">
+		<div class="modal-body">
+			<div id="container">
+				<h6>Your recorded video will no longer available if you continue this action. 
+					you should downlod recorded video first for later use.<br>
+					Are you sure You want to continue?</h6>
+			</div>
+		</div>
+		<div class="modal-footer">
+        <button type="button" class="btn btn-success" onclick="selectFromFile()">Yes</button>&nbsp;&nbsp;
+        <button type="button" class="btn btn-info" data-dismiss="modal">No</button>
+      </div>
+	</div>
+</div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="player" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog" role="document" style="width: auto">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h5 class="modal-title" id="exampleModalLabel">New Recorded Video</h5>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+			<div id="container">
+				<video id="recorded" width="100%" controls></video>
+
+				<div>
+					<button id="retry" onclick="removeRecorded()" class="btn btn-sm btn-success">Remove Record</button>
+					<button id="download" class="btn btn-sm btn-info" onclick="function(e){e.preventDefault();}"><i class="fa fa-download"></i> Download</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div></div>{% endblock %}{% block javascripts %}<script src="{{asset('script3.js')}}"></script>{% endblock %}

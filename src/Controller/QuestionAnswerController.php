@@ -14,6 +14,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use DateTime;
 use Knp\Component\Pager\PaginatorInterface;
+<<<<<<< HEAD
+=======
+use Symfony\Component\String\Slugger\SluggerInterface;
+>>>>>>> d096ec19f1d5909d1c6be1b68678e236f6fb69aa
 
 /**
  * @Route("/question/answer")
@@ -118,14 +122,37 @@ class QuestionAnswerController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="question_answer_edit", methods={"GET","POST"})
+     * @Route("/{id}/edit", name="question_answer_edit", methods={"GET","POST", "PATCH"})
      */
-    public function edit(Request $request, QuestionAnswer $questionAnswer): Response
+    public function edit(Request $request, QuestionAnswer $questionAnswer, SluggerInterface $slugger): Response
     {
         $form = $this->createForm(QuestionAnswerType::class, $questionAnswer);
-        $form->handleRequest($request);
+        $form->handleRequest($request, false);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $videoAnswer = $form['videoAnswer']->getData();
+            if ($videoAnswer) {
+                $originalFilename = pathinfo($videoAnswer->getClientOriginalName(), PATHINFO_FILENAME);
+
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$videoAnswer->guessExtension();
+                try {
+                    $videoAnswer->move(
+                        $this->getParameter('uploading_directory_videos'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    
+                    // ... handle exception if something happens during file upload
+                }
+
+                // updates the 'videoAnswername' property to store the PDF file name
+                // instead of its contents
+                $questionAnswer->setVideoAnswer($newFilename);
+            }
+            else{
+                // $questionAnswer->setVideoAnswer($questionAnswer->getVideoAnswer());
+            }
             $inst = $this->getUser()->getInstructors()->getValues();
 
             $questionAnswer->setInstructor($inst[0]);

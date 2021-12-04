@@ -9,11 +9,9 @@
         body {
             background: url("/images/background-print.jpg");
         }
-        
         .graph-image img {
             display: none;
         }
-        
         @media print {
             .graph-image img {
                 display: inline;
@@ -32,13 +30,13 @@
                 size: A4 landscape;
             }
             body {
-                background-image: url("/images/background-print.jpg");
+                background-image: url("/images/background-print.jpg") ;
                 background-size: auto;
                 -o-background-size: cover;
                 background-size: cover;
             }
             .card {
-                margin: 400px 600px;
+                margin: 370px 600px;
                 width: 100%;
                 font-size: 40px;
             }
@@ -59,11 +57,11 @@
         </h2>
         <hr>
 
-
         <p> has successfully completed the training on the course of</p> 
         <h4> {{student_course.instructorCourse.course.name }} </h4>
         <p> and awarded this qualification with <b>Distinction</b> on <br> {{ 'now'|date('M d, Y') }}</p>
     </div>
+    <img src="data:image/png;base64,{{student_course.qrCode}}" style="margin-left: 60px">
 </body>
 
 </html>

@@ -1,0 +1,135 @@
+{% extends "sBase.html.twig" %}
+{% block stylesheet %}
+	<link rel="stylesheet" href="{{asset('student/css/theme-elements.css')}}">
+   <style>
+      section.section{
+         padding: 10px;
+      }
+   </style>
+{% endblock %}
+{% block body %}
+	<div class="container pt-3 pb-2">
+		<div class="card">
+			<div class="card-header">
+				<h4>
+					<center>Profile</center>
+				</h4>
+			</div>
+			<div class="card-body" style="padding: 30px">
+				<div class="row pt-2">
+					<div class="col-lg-3 mt-4 mt-lg-0">
+						{{ form_start(form) }}
+						<div class="d-flex justify-content-center mb-4">
+							<div class="profile-image-outer-container">
+								<div class="profile-image-inner-container bg-color-primary">
+									{% if user.profile.profilePicture %}
+										<img src="/uploads/profileImages/{{ user.profile.profilePicture }}" id="uploadPreview">
+									{% else %}
+										<img src="/images/blank-image.png" id="uploadPreview">
+									{% endif %}
+									<span class="profile-image-button bg-color-dark">
+										<i class="fas fa-camera text-light"></i>
+									</span>
+								</div>
+								{{ form_widget(form.profilePicture) }}
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-9">
+						{% if profile_updated %}
+							<div class="form-group row">
+								<label class="col-lg-3 col-form-label form-control-label line-height-9 pt-2 text-2 ">ID</label>
+								<div class="col-lg-9 has-success">
+									<b>{{ user.profile.studentId }}</b>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-lg-3 col-form-label form-control-label line-height-9 pt-2 text-2 ">First name</label>
+								<div class="col-lg-9 has-success">
+									<b>{{ user.firstName }}</b>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-lg-3 col-form-label form-control-label line-height-9 pt-2 text-2 ">Middle name</label>
+								<div class="col-lg-9 has-success">
+									<b>{{ user.middleName }}</b>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-lg-3 col-form-label form-control-label line-height-9 pt-2 text-2 ">Last Name</label>
+								<div class="col-lg-9 has-success">
+									<b>{{	user.lastName }}</b>
+								</div>
+							</div>
+						{% else %}
+							<p>** You have only one chance to update your name. so please check and approve carefully **</p>
+							{{ form_errors(form) }}
+							<div class="form-group row">
+								<label class="col-lg-3 col-form-label form-control-label line-height-9 pt-2 text-2 required">First name</label>
+								<div class="col-lg-9 has-success">
+									{{	form_widget(form.firstName) }}
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-lg-3 col-form-label form-control-label line-height-9 pt-2 text-2 required">Middle name</label>
+								<div class="col-lg-9 has-success">
+									{{	form_widget(form.middleName) }}
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-lg-3 col-form-label form-control-label line-height-9 pt-2 text-2 required">Last Name</label>
+								<div class="col-lg-9 has-success">
+									{{	form_widget(form.lastName) }}
+								</div>
+							</div>
+						{% endif %}
+							<div class="form-group row">
+								<label class="col-lg-3 col-form-label form-control-label line-height-9 pt-2 text-2">Email</label>
+								<div class="col-lg-9">
+									{{	form_widget(form.email) }}
+								</div>
+							</div>
+
+                     <br>
+							<div class="form-group col-lg-12">
+							{% if profile_updated %}
+								<input type="submit" value="Save" class="btn btn-primary btn-modern float-end" data-loading-text="Loading...">
+							{% else %}
+								<input type="submit" value="Approve" id="approve" class="btn btn-primary btn-modern float-end" data-loading-text="Loading...">
+							{% endif %}
+							</div>
+							{{ form_end(form) }}
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>{% endblock %}
+
+{% block javascript %}
+	<script>
+		function readURL(input) {
+			if (input.files && input.files[0]) {
+				var reader = new FileReader();
+
+				reader.onload = function (e) {
+						$('#uploadPreview').attr('src', e.target.result);
+				}
+
+				reader.readAsDataURL(input.files[0]);
+			}
+		}
+
+		$("#profile_profilePicture").change(function(){
+			readURL(this);
+		});
+
+		$("#profile_type2_profilePicture").change(function(){
+			readURL(this);
+		});
+
+		
+	</script>
+{% endblock %}

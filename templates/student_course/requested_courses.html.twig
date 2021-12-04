@@ -1,7 +1,7 @@
 {% extends 'sBase.html.twig' %}
 
-{% block title %}StudentCourse index{% endblock %}
-{% block breadcrumbhome %}studentcourse{% endblock %}
+{% block title %}Course Request index{% endblock %}
+{% block breadcrumbhome %}Course Request{% endblock %}
 {% block breadcrumbcontent %}index{% endblock %}
 
 {% block body %}
@@ -15,13 +15,13 @@
         </div>
     </div>
     <div class="card card-body">
-        <table class="table table-responsive table-striped">
+        <div class="table-responsive">
+        <table class="table table-striped">
             <thead>
                 <tr>
                     <th>Id</th>
                     <th>Course Name</th>
                     <th>{% trans %}Request Date{% endtrans %}</th>
-                    <th>status</th>
                     <th>actions</th>
                 </tr> 
             </thead>
@@ -31,7 +31,6 @@
                     <td>{{ request.id }}</td>
                     <td>{{ request.name}}
                     <td>{{ request.createdAt ? request.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                    <td>{{ request.status ? 'Yes' : 'No' }}</td>
                     <td>
                     <a 
                         href="{{ path('request_show', {'id': request.id}) }}">show
@@ -50,6 +49,7 @@
                 {% endfor %}
             </tbody>
         </table>
+        </div>
     </div>
     <div class="  pagination justify-content-center ">
 			{{ knp_pagination_render(requests) }}</div>
@@ -64,6 +64,7 @@
 {% endblock %}
 {% block javascript %}
     <script>    
+       responsive(".card-info");
        total_selected = 0;
         var json_str = getCookie('selected_courses_login');
         var arr = JSON.parse(json_str);

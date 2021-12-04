@@ -1,0 +1,135 @@
+{% extends "base.html.twig" %}
+
+{% block breadcrumbhome %}Report
+{% endblock %}
+{% block breadcrumbcontent %}Course
+{% endblock %}
+
+{% block body %}
+	<div class="container-fluid">
+		<div class="row">
+			<div class="card col-lg px-4 py-2">
+				{{form_start(form)}}
+				<div class="form-row">
+					<div class="col-sm-5">
+						<label>Course</label>
+						{{ form_widget(form.courses)}}
+					</div>
+					<div class="col">
+						<label>Student Status</label>
+
+						{{ form_widget(form.status)}}
+					</div>
+					<div class="col">
+						<label>Instructor</label>
+						<select id="student_report_instructor" name="instructor" class="form-control">
+							{% if instructors %}
+								<option value="">All</option>
+								{% for instructor in instructors %}
+									{% if inst %}
+										{% if instructor.id == inst %}
+											<option selected value="{{instructor.id}}">{{instructor.firstName}} {{instructor.middleName}} {{instructor.lastName}}</option>
+										{% else %}
+											<option value="{{instructor.id}}">{{instructor.firstName}} {{instructor.middleName}} {{instructor.lastName}}</option>
+										{% endif %}
+									{% else %}
+											<option value="{{instructor.id}}">{{instructor.firstName}} {{instructor.middleName}} {{instructor.lastName}}</option>
+									{% endif %}
+								{% endfor %}
+							{% endif %}
+						</select>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div>
+			<div class="py-2">
+				<div class='form-row'>
+               <div class="col-sm-2">
+					   {{form_widget(form.search)}}
+               </div>
+               <div class="col"></div>
+               <div class="col-sm-2">
+					   {{form_widget(form.export)}}
+               </div>
+				</div>
+			</div>
+			<br>
+			{{ form_end(form) }}
+		</div>
+	</div>
+</div>
+<div class="container">
+	<div class="table-responsive">
+		<table class="table table-striped">
+			<caption>List of Students</caption>
+			<thead>
+				<tr>
+					<th colspan="6"><center> Search Preview </center></th>
+				</tr>
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">Name</th>
+					<th scope="col">Email</th>
+					<th scope="col">Course</th>
+					<th scope="col">Instructor</th>
+					<th scope="col">Status</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for student_course in students %}
+					<tr>
+						<td>{{loop.index}}</td>
+						<td>
+							{{student_course.student.user.firstName}}
+							{{student_course.student.user.middleName}}
+							{{student_course.student.user.lastName}}
+						</td>
+						<td>
+							{{student_course.student.user.email}}
+						</td>
+						<td>{{student_course.instructorCourse.course.name}}</td>
+						<td>
+							{{student_course.instructorCourse.instructor.user.firstName}}
+							{{student_course.instructorCourse.instructor.user.middleName}}
+							{{student_course.instructorCourse.instructor.user.lastName}}
+						</td>
+						<td>
+							{% if student_course.status == 5 %}
+								Finished
+							{% elseif student_course.status == 1 %}
+								On progress
+							{% endif %}
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	<div class="float-right">{{ knp_pagination_render(courses) }}</div>
+</div>{% endblock %}
+{% block javascripts %}
+      <script> 
+      console.log(inst);
+      $("#student_report_courses").on("change", function(){
+         $selected_val = $(this).find(':selected').attr("value");
+         if(!isNaN($selected_val))
+         {
+            $.post({
+               'url': "{{ path('instructors_for_course')}}",
+               'data': {id: $selected_val},
+               success: function(data){
+                  $("#student_report_instructor").html("");
+                  if(data.length > 0)
+                  {
+                     $('#student_report_instructor').append("<option value=''>All</option>");
+                     $.each(data, function(key, value){
+                        $('#student_report_instructor').append("<option value='"+value.id+"'>"+value.firstName+" "+value.middleName+" "+value.lastName+" "+"</option>");
+                     });
+                  }
+               }
+            });
+         }
+      })
+   </script>
+{% endblock %}

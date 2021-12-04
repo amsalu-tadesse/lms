@@ -2,10 +2,12 @@
 
 namespace App\Form;
 
- use App\Entity\User;
+use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Entity\AcademicLevel;
 
 class UserType extends AbstractType
 {
@@ -18,6 +20,12 @@ class UserType extends AbstractType
             // ->add('department')
             ->add('userType')
             ->add('email')
+            ->add('academicLevel', EntityType::class, [
+                'mapped' => false,
+                'class' => AcademicLevel::class,
+                'choice_label' => 'name',
+                'attr' => ['class' => 'form-control mb-3', 'disabled' => 'disabled'],
+            ])
             // ->add('username')
             // ->add('password')
         ;

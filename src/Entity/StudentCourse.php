@@ -63,6 +63,11 @@ class StudentCourse
      */
     private $directorNotification;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $qrCode;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -172,6 +177,18 @@ class StudentCourse
     public function setDirectorNotification(bool $directorNotification): self
     {
         $this->directorNotification = $directorNotification;
+
+        return $this;
+    }
+
+    public function getQrCode(): ?string
+    {
+        return $this->qrCode;
+    }
+
+    public function setQrCode(?string $qrCode): self
+    {
+        $this->qrCode = $qrCode;
 
         return $this;
     }

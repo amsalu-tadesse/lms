@@ -96,4 +96,19 @@ class InstructorCourseRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+<<<<<<< HEAD
+=======
+
+    public function getInstructorsForCourse($id)
+    {
+        return $this->createQueryBuilder('ic')
+            ->select('i.id','u.firstName', 'u.middleName', 'u.lastName')
+            ->join('ic.instructor', 'i')
+            ->join('i.user', 'u')
+            ->where('ic.course = :val')
+            ->setParameter("val", $id)
+            ->getQuery()
+            ->getResult();
+    }
+>>>>>>> d096ec19f1d5909d1c6be1b68678e236f6fb69aa
 }

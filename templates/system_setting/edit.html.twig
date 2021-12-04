@@ -1,7 +1,12 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}{% trans %}Edit system setting{% endtrans %}{% endblock %}
-
+{% block breadcrumbhome %}
+    <a href="{{ path('system_setting_index') }} ">
+	   {% trans %}System setting{% endtrans %} 
+	</a> 
+{% endblock %}
+{% block breadcrumbcontent %}{% trans %}Edit{% endtrans %}{% endblock %}
 {% block body %}
  
 

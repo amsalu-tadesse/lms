@@ -56,7 +56,7 @@ class ContentRepository extends ServiceEntityRepository
     public function getContentsCount($value)
     {
         return $this->createQueryBuilder('c')
-            ->select('ch.id', 'count(c.videoLink) + count(c.filename) as total_video', 'count(c.content) as con')
+            ->select('ch.id', 'count(c.videoLink) + count(c.filename) as total_video', 'count(c.id) as total_content')
             ->Join('c.chapter', 'ch')
             ->join('ch.instructorCourse', 'ic')
             ->andWhere('ic.id = :val')
@@ -70,7 +70,7 @@ class ContentRepository extends ServiceEntityRepository
     public function getHtmlContent($value)
     {
         return $this->createQueryBuilder('c')
-            ->select('c.content')
+            ->select('c.content, c.resource', 'c.resourceNames')
             ->andWhere('c.id = :val')
             ->setParameter('val', $value)
             ->getQuery()
@@ -91,6 +91,22 @@ class ContentRepository extends ServiceEntityRepository
         ->getResult()
     ;
     }
+
+    public function getChaptersWithContentForCourse1($value)
+    {
+        return $this->createQueryBuilder('c')
+        ->select('c','ch')
+        ->join('c.chapter', 'ch')
+        ->join('ch.instructorCourse','ic')
+        ->where('ic.course = :val')
+        ->orderBy('ch.id')
+        ->setParameter('val', $value)
+        ->getQuery()
+        ->getResult()
+        ;
+    }
+
+
     // /**
     //  * @return Content[] Returns an array of Content objects
     //  */

@@ -20,6 +20,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+
 
 /**
  * @Route("/course")
@@ -189,9 +194,8 @@ class CourseController extends AbstractController
                 if ($value[0]['id'] == $value1['id']) {
                     // $chapters[$key] = $value
                     $chapter_list[$key]['total_video'] = $value1['total_video'];
-                    $chapter_list[$key]['total_content'] = $value1['con'];
-                    $total_content = $value1['total_video'] + $value1['con'];
-                    $chapter_list[$key]['completed'] = ($value['pagesCompleted'] / $total_content) * 100;
+                    $chapter_list[$key]['total_content'] = $value1['total_content'];
+                    $chapter_list[$key]['completed'] = ($value['pagesCompleted'] / $value1['total_content']) * 100;
                     $flag = 2;
                     break;
                 }
@@ -237,5 +241,210 @@ class CourseController extends AbstractController
         }
 
         return $this->redirectToRoute('course_index');
+    }
+
+    /**
+     * @Route("/export", name="course_export")
+     */
+    public function courseListToExcel(CourseRepository $course_repo)
+    {
+        return $this->render('report/course.html.twig',[
+            'courses' => $course_repo->findAll()
+        ]);
+    }
+
+    /**
+     * @Route("/export/detail", name="specific_course_export", methods={"POST"})
+     */
+    public function courseToPdf(CourseRepository $course_repo, ContentRepository $contentRepository, Request $request, InstructorCourseRepository $inst_course_repo)
+    {
+        $req = $request->request->get('coursePdfExport');
+        if($request->request->get("course_selected"))
+            $course = $course_repo->find($request->request->get("course_selected"));
+        if($course)
+        {
+            $contents = $contentRepository->getChaptersWithContentForCourse1($course->getId());
+            $instructor_info = array();
+            $total_student = $content_view = 0;
+            if($req)
+            {
+                if(in_array('stu_num',$req))
+                {
+                    $total_student = $course_repo->findTotalActiveStudent($course->getId());
+                    if($total_student)
+                        $total_student = $total_student['total_student'];
+                    else
+                        $total_student = 0;
+                }
+                
+                if(in_array('con_lis',$req))
+                {
+                    $content_view = 1;
+                }
+                if(in_array('ins_inf',$req))
+                {
+                    $instructor_info = $inst_course_repo->findBy(array('course'=> $course->getId()),array('id'=>'DESC'),1,0);
+                    if($instructor_info) $instructor_info = $instructor_info[0];
+                }
+            }
+
+            // Configure Dompdf according to your needs
+            $pdfOptions = new Options();
+            $pdfOptions->set('defaultFont', 'Arial');
+            
+            // Instantiate Dompdf with our options
+            $dompdf = new Dompdf($pdfOptions);
+            // Retrieve the HTML generated in our twig file
+            $html = $this->renderView('report/coursePrintTemplate.html.twig', [
+                'course' => $course,
+                'total_student' => $total_student,
+                'instructor_info' => $instructor_info,
+                'content_view' =>  $content_view,
+                'contents' => $contents
+            ]);
+        
+            // Load HTML to Dompdf
+            $dompdf->loadHtml($html);
+            
+            // (Optional) Setup the paper size and orientation 'portrait' or 'portrait'
+            $dompdf->setPaper('A4', 'portrait');
+
+            // Render the HTML as PDF
+            $dompdf->render();
+            
+            $course_name = $course->getName()."-report";
+            // Output the generated PDF to Browser (force download)
+            $dompdf->stream("$course_name", [
+                "Attachment" => true
+            ]);
+        }
+
+        return $this->render('report/course.html.twig',[
+            'courses' => $course_repo->findAll()
+        ]);
+    }
+
+
+    /**
+     * @Route("/export/excel", name="course_list_export", methods={"POST","GET"})
+     */
+    public function courseExport(CourseRepository $course_repo, Request $request)
+    {
+        $req = $request->request->get('courseExport');
+        $courses = $course_repo->findAll();
+        $students = $instructors = $finished = $unfinished = $chapter_number = array();
+        if($req){
+            $em = $this->getDoctrine()->getManager();
+            if(in_array("stu_num", $req)){
+                $items = $course_repo->courseWithStudentNumber();
+                $query = $em->createQuery($items);
+                $students = $query->getResult();
+                if($students) $students = $this->changeArrayFormat($students);
+            }
+            if(in_array("ins_num", $req)){
+                $instructors = $course_repo->courseWithInstructorNumber();
+                if($instructors) $instructors = $this->changeArrayFormat($instructors);
+            }
+            if(in_array("fin_stud_num", $req)){
+                $items = $course_repo->courseWithStudentNumber(5);
+                $query = $em->createQuery($items);
+                $finished = $query->getResult();
+                if($finished) $finished = $this->changeArrayFormat($finished);
+            }
+            if(in_array("unf_stu_num", $req)){
+                $items = $course_repo->courseWithStudentNumber(1);
+                $query = $em->createQuery($items);
+                $unfinished = $query->getResult();
+                if($unfinished) $unfinished = $this->changeArrayFormat($unfinished);
+            }
+            if(in_array("cha_num", $req)){
+                $chapter_number = $course_repo->getChaptersCount();
+                if($chapter_number) $chapter_number = $this->changeArrayFormat($chapter_number);
+            }
+        }
+        $spreadsheet = new Spreadsheet();
+        $spreadsheet->setActiveSheetIndex(0);
+
+        $Excel_writer = new Xlsx($spreadsheet);
+
+        $activeSheet = $spreadsheet->getActiveSheet();
+
+        $activeSheet->setCellValue('A1', 'Course Name');
+        $activeSheet->setCellValue('B1', 'Course Code');
+        $activeSheet->setCellValue('C1', 'Course Category');
+
+        $startLetter = 'D';
+        if($students) $activeSheet->setCellValue($startLetter++."1",'Number of Students');
+        if($finished) $activeSheet->setCellValue($startLetter++."1",'Students complete the course');
+        if($unfinished) $activeSheet->setCellValue($startLetter++."1",'Students not complete the course');
+        if($instructors) $activeSheet->setCellValue($startLetter++."1",'Number of Instructors');
+        if($chapter_number) $activeSheet->setCellValue($startLetter++."1",'Number of Chapters');
+
+        if($courses) {
+            $i = 2;
+            foreach($courses as $course){
+                $activeSheet->setCellValue('A'.$i , $course->getName());
+                $activeSheet->setCellValue('B'.$i , $course->getCode());
+                $activeSheet->setCellValue('C'.$i , $course->getCategory()->getName());
+                $startLetter = 'D';
+                if($students) 
+                    if(array_key_exists($course->getId(), $students))
+                        $activeSheet->setCellValue($startLetter++.$i, $students[$course->getId()]);
+                    else
+                    $activeSheet->setCellValue($startLetter++.$i, 0);
+                if($finished) 
+                    if(array_key_exists($course->getId(), $finished))
+                        $activeSheet->setCellValue($startLetter++.$i, $finished[$course->getId()]);
+                    else
+                        $activeSheet->setCellValue($startLetter++.$i, 0);
+
+                if($unfinished) 
+                    if(array_key_exists($course->getId(), $unfinished))
+                        $activeSheet->setCellValue($startLetter++.$i, $unfinished[$course->getId()]);
+                    else
+                        $activeSheet->setCellValue($startLetter++.$i, 0);
+                if($instructors) 
+                    if(array_key_exists($course->getId(), $instructors))
+                        $activeSheet->setCellValue($startLetter++.$i, $instructors[$course->getId()]); 
+                    else
+                        $activeSheet->setCellValue($startLetter++.$i, 0); 
+                if($chapter_number) 
+                    if(array_key_exists($course->getId(), $chapter_number))
+                        $activeSheet->setCellValue($startLetter++.$i, $chapter_number[$course->getId()]); 
+                    else
+                        $activeSheet->setCellValue($startLetter++.$i, 0);       
+                $i++;
+            }
+        
+            $spreadsheet->getActiveSheet()->getStyle('A1:J1')->getAlignment()->setWrapText(true);
+            // $spreadsheet->getActiveSheet()->getStyle('A1:A500')->getAlignment()->setWrapText(true);
+
+            $spreadsheet->getActiveSheet()->getStyle("A1:J1")->getFont()->setBold(true);
+
+            $filename = 'Course-report_'.date("d",time())."_".date("m", time())."_".date("y", time()).'.xlsx';
+            header('Content-Type: application/vnd.ms-excel');
+            header('Content-Disposition: attachment;filename='. $filename);
+            header('Cache-Control: max-age=0');
+            $Excel_writer->save('php://output');
+            exit();
+        }   
+
+        return $this->redirectToRoute("course_export");
+    }
+
+    function changeArrayFormat($array)
+    {
+        $result = array();
+        if($array){
+            foreach($array as $key => $value)
+            {
+                $keys = array_keys($value);
+                $result[$value[$keys[0]]] = $value[$keys[1]];
+            }
+        }
+        else{
+            $result = [];
+        }
+        return $result;
     }
 }

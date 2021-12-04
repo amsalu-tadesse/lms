@@ -21,6 +21,7 @@ class CourseRepository extends ServiceEntityRepository
 
     public function findCourse($search=null)
     {
+<<<<<<< HEAD
         $qb=$this->createQueryBuilder('p');
         if ($search) {
             $qb->andWhere("p.name  LIKE '%".$search."%'");
@@ -32,8 +33,80 @@ class CourseRepository extends ServiceEntityRepository
 
 
         ;
+=======
+        $qb=$this->createQueryBuilder('c');
+        if($search)
+            // $qb->select('c','cc.name as categoy')
+            $qb->andWhere("c.name  LIKE '%".$search."%'");
+            $qb->join('c.category', 'cc');
+            return 
+            $qb->orderBy('c.id', 'ASC')
+            ->getQuery();
     }
 
+    public function courseWithStudentNumber($status = 0)
+    {
+        $courses = $this->createQueryBuilder('c');
+        
+        if($status){
+            //students who finished same course with different instructors counted as many of the courses
+            if($status == 5){
+                $courses->select('c.id', 'count(sc.student) as finished');
+                $courses->where('sc.status = 5');
+            }
+            else{
+                $courses->select('c.id', 'count(sc.student) as non_finished');
+                $courses->where('sc.status = 1');
+            }
+        }else{
+            $courses->select('c.id', 'count(sc.student) as total_student');
+        }
+
+        $courses->join('c.instructorCourses', 'ic')
+        ->join('ic.studentCourses', 'sc')
+        ->groupBy('c.id')
+        ->getQuery();
+        
+        return $courses->getDQL();
+>>>>>>> d096ec19f1d5909d1c6be1b68678e236f6fb69aa
+    }
+
+    public function courseWithInstructorNumber()
+    {
+        return $this->createQueryBuilder('c')
+                ->select('c.id', 'count(distinct t.id) as totla_instructor')
+                ->join('c.instructorCourses', 'ic')
+                ->join('ic.instructor','t')
+                ->groupBy('c.id')
+                ->getQuery()
+                ->getResult();          
+    }
+
+    public function findTotalActiveStudent($id)
+    {
+        return $this->createQueryBuilder('c')
+                ->select('count(sc.student) as total_student')
+                ->join('c.instructorCourses', 'ic')
+                ->join('ic.studentCourses', 'sc')
+                ->where('sc.status = 1')
+                ->andWhere('c.id = :id')
+                ->setParameter("id", $id)
+                ->getQuery()
+                ->getOneOrNullResult();
+    }
+
+    public function getChaptersCount()
+    {
+        return $this->createQueryBuilder('c')
+        ->select('c.id','count(ch.id) as total')
+        ->join('c.instructorCourses', 'ic')
+        ->join('ic.instructorCourseChapters','ch')
+        ->where('ic.active = 1')
+        ->groupBy('c.id')
+        ->getQuery()
+        ->getResult()
+        ;
+    }
     // /**
     //  * @return Course[] Returns an array of Course objects
     //  */

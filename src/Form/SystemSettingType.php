@@ -12,9 +12,13 @@ class SystemSettingType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            // ->add('code')
-            ->add('value')
-            ->add('description')
+            // ->add('code') 
+            ->add('value',null, [
+                'label' => 'Value'
+            ])
+            ->add('description',null,[
+                'label' => 'Code Description'
+            ])
             // ->add('active')
             // ->add('value')
         ;

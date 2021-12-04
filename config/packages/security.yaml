@@ -50,7 +50,8 @@ security:
         - { path: ^/reset-password, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/password, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/email, roles: IS_AUTHENTICATED_ANONYMOUSLY }        
+        - { path: ^/email, roles: IS_AUTHENTICATED_ANONYMOUSLY }     
+        - { path: ^/upload, roles: IS_AUTHENTICATED_ANONYMOUSLY }        
         - { path: ^/language, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/course/library, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/course/detail/*, roles: IS_AUTHENTICATED_ANONYMOUSLY }

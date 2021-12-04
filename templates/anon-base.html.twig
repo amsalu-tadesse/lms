@@ -34,17 +34,17 @@
 				background: -webkit-linear-gradient(90deg, hsla(213, 77%, 14%, 1) 0%, hsla(202, 27%, 45%, 1) 100%);
 				filter: progid: DXImageTransform.Microsoft.gradient(startColorstr="#08203E", endColorstr="#557C93", GradientType=1);
 			}
-			 .card-body{
-            overflow: hidden;
-        }
+			.card-body {
+				overflow: hidden;
+			}
 		</style>
 		{% block stylesheet %}{% endblock %}
 	</head>
 	<body>
 		<div class="container-fluid  bg-white mb-0">
-			<div class="row px-5 header">
+			<div class="row header">
 				<div class="col-xs-7 col-sm-5 col-md-6">
-					<a href="/"><img src="{{ asset('/images/logo-en.jpg')}}" class="logo" ></a>
+					<a href="/"><img src="{{ asset('/images/logo-en.jpg')}}" class="logo"></a>
 				</div>
 				<div class="col-xs-5 col-sm-7 col-md-6">
 					<div class="banner hidden-xs hidden-sm">
@@ -54,9 +54,11 @@
 						<a class="nav-item" href="{{ path('home') }}">{% trans %}Home{% endtrans %}</a>
 
 						<a class="nav-item test" id="my_course" href="{{ path('selected_courses') }}">{% trans %}My Courses{% endtrans %}<sup>
-								<span class="badge badge-secondary"> {% block selected %}{% endblock %}
-									</span>
-									<sup></a>
+								<span class="badge badge-secondary"> 
+									{% block selected %}{% endblock %}
+								</span>
+									<sup>
+						</a>
 									{% block nav %}{% endblock %}
 									{% set activelang = app.session.get('_locale') %}
 									{% set secondlang = '' %}
@@ -71,9 +73,9 @@
 										{% set code = 'fr' %}
 									{% endif %}
 
-										<a href="/language?lang={{code}}&&curr={{ path(app.request.attributes.get('_route'),app.request.attributes.get('_route_params')) }}" class="nav-item">
-                                                <b>{{secondlang}}</b>
-                                            </a>
+									<a href="/language?lang={{code}}&&curr={{ path(app.request.attributes.get('_route'),app.request.attributes.get('_route_params')) }}" class="nav-item">
+										<b>{{secondlang}}</b>
+									</a>
 
 								</div>
 							</div>
@@ -88,23 +90,26 @@
 					<script src="{{asset('assets/plugins/popper/popper.min.js')}}"></script>
 
 					<!-- Bootstrap 4 -->
-					<script src="{{ asset( 'assets/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+					<script src="{{ asset( 'assets/plugins/bootstrap/js/bootstrap.min.js') }}"></script>
+					<script src="{{ asset( 'student/js/custom.js') }}"></script>
+
 					{% block javascript %}{% endblock %}
 
 				</body>
-                <script>
-                $(document).ready(function(){
-                        var json_str = getCookie('selected_courses');
-                        var arr = JSON.parse(json_str);
-                        cookie_length = arr.length;
-                        if(cookie_length > 0){
-                            $("#my_course").removeClass("test");   
-                        }
-                        else{
-                            $("#my_course").addClass("test");
-                        }
-                    });
-                </script>
+				<script>
+					responsive1(".header");
+					$(document).ready(function(){
+						var json_str = getCookie('selected_courses');
+						var arr = JSON.parse(json_str);
+						cookie_length = arr.length;
+						if(cookie_length > 0){
+							$("#my_course").removeClass("test");   
+						}
+						else{
+							$("#my_course").addClass("test");
+						}
+					});
+				</script>
 			</html>
 		</body>
 	</html>

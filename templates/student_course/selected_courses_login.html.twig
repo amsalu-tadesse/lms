@@ -2,6 +2,8 @@
 {% block title %}Requested courses
 {% endblock %}
 {% block stylesheet %}
+	<link href="{{asset('assets/plugins/owlCarousel/dist/assets/owl.theme.default.min.css')}}" rel="stylesheet"/>
+
     <style>
         h4{
             color: #454672;
@@ -9,18 +11,18 @@
     </style>
 {% endblock %}
 {% block body %}
-  <div class="toast" style="position: absolute;">
-
-    <div class="toast-body">
-      Some text inside the toast body
-    </div>
-  </div>
-    <div class="pt-3">
+    <br>
+    <div class="selected_courses pt-3">
 	    {% include "course/request_courses.html.twig" %}
     </div>
 {% endblock %}
 {% block javascript %}
     <script>
+        responsive(".selected_courses");
+        if(!isMobile())
+        {
+            $(".card").addClass("px-5");
+        }
         var span = document.getElementsByClassName("close")[0];
 
         function conf()

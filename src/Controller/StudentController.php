@@ -3,13 +3,17 @@
 namespace App\Controller;
 
 use App\Entity\Student;
+use App\Entity\User;
 use App\Form\StudentType;
+use App\Form\ProfileType;
+use App\Form\ProfileType2;
 use App\Repository\StudentRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 /**
  * @Route("/studentf")
@@ -23,6 +27,58 @@ class StudentController extends AbstractController
     {
         return $this->render('student/index.html.twig', [
             'students' => $studentRepository->findAll(),
+        ]);
+    }
+
+    /**
+     * @Route("/profile", name="student_profile", methods={"GET","POST"})
+     */
+    public function profile(StudentRepository $studentRepository, Request $request, SluggerInterface $slugger): Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user = $em->getRepository(User::class)->find($this->getUser()->getId());
+
+        if($user->getProfile()->getProfileUpdated())
+            $form = $this->createForm(ProfileType2::class, $user);
+        else
+            $form = $this->createForm(ProfileType::class, $user);
+
+        $form->handleRequest($request);
+        $updated = $user->getProfile()->getProfileUpdated();
+
+        if($form->isSubmitted() && $form->isValid())
+        {
+            $em->persist($user);
+            $em->flush();
+            $image = $form['profilePicture']->getData();
+            $student = $em->getRepository(Student::class)->findOneBy(['user'=>$this->getUser()->getId()]);
+            
+            $student->setProfileUpdated(1);
+            if($image)
+            {
+                $originalFilename = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$image->guessExtension();
+
+                try {
+                    $image->move(
+                        $this->getParameter('uploading_directory_images'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+                $student->setProfilePicture($newFilename);   
+            }
+            $em->persist($student);
+            $em->flush();
+
+            return $this->redirectToRoute("student_profile");
+        }
+        return $this->render('user/profile.html.twig', [
+            'user' => $user,
+            'profile_updated' => $updated,
+            'form' => $form->createView()
         ]);
     }
 

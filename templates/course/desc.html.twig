@@ -1,4 +1,4 @@
-<div class="card px-5 pt-3 " style="padding-bottom: 80px">
+<div class="card pt-3 description-card" style="padding-bottom: 80px">
     <h4 class="pt-2 pb-2" style="color:#093146">{{chapter.name}}</h4>
     <p style="margin-bottom: 40px">{{chapter.description}}</p>
 
@@ -61,7 +61,7 @@
                     <li data-type="{{content.id}}" content="youtube">
                         <i class="fas fa-play-circle"></i> {{ content.title }}
                     </li>
-                    {% elseif content.content != "" %}
+                    {% else %}
                     <li data-type="{{content.id}}" content="doc">
                         <i class="fas fa-book"></i> {{ content.title }}
                     </li>
@@ -85,7 +85,7 @@
                     <span class="qadata">{{que.createdAt|date('d-m-Y')}}
 					</span> {{que.student.user.username}}
                 </p>
-                <p class="message">{{que.question}}</p>
+                <p class="message">{{que.question|raw}}</p>
             </div>
         </div>
         {% elseif que.instructor != null %}
@@ -96,7 +96,7 @@
                     <span class="qadata">{{que.createdAt|date('d-m-Y')}}
 					</span> {{que.instructor.user.username}}
                 </p>
-                <p class="message">{{que.question}}</p>
+                <p class="message">{{que.question|raw}}</p>
             </div>
         </div>
         {% endif %} {% if que.answer != null %}
@@ -106,8 +106,16 @@
                     <span class="qadata">{{que.createdAt|date('d-m-Y')}}
 					</span> {{que.instructor.user.username}}
                 </p>
-                <p class="message">{{que.answer}}</p>
+                <p class="message">{{que.answer|raw}}</p>
             </div>
+            {% if que.videoAnswer != null %}
+                <div class="card-footer">
+                    <!-- Modal -->
+                    <a type="button" style="float: left;color: #0d6fd2;background: #f1f1f1;" data-toggle="modal" onclick="playVideo('{{que.videoAnswer}}')" id="playerToggle" data-bs-toggle="modal" data-bs-target="#largeModal">
+                        see video ...
+                    </a>
+                </div>
+            {% endif %}
         </div>
         {% endif %}{% endfor %}</div><br>
 		{% if question|length > 10 %}
@@ -124,3 +132,4 @@
 </div>
 </div>
 </div>
+

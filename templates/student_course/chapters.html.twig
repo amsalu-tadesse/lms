@@ -51,7 +51,7 @@
 									<h4 class="card-title card-title-custom mb-1 text-4 font-weight-bold">{{chapter.topic}}</h4>
 								</a>
 								<p class="card-text" style="padding: 14px 0px 0px;">{% trans %}Videos{% endtrans %} : {{ chapter.total_video }}
-									<ff style="margin-left:30px;">{% trans %}Text{% endtrans %} : {{ chapter.total_content }}</ff>
+									<ff style="margin-left:30px;">{% trans %}Text{% endtrans %} : {{ chapter.total_content - chapter.total_video }}</ff>
 								</p>
 							</div>
 							<div class="card-footer bg-color-grey text-1 text-uppercase">
@@ -126,4 +126,10 @@
 		{% endif %}
 	</div>
 	<div class="mb-3"></div>
+{% endblock %}
+{% block javascript %}
+	<script>
+		responsive(".page-title");
+		
+	</script>
 {% endblock %}

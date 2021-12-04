@@ -60,6 +60,21 @@ class Student
      */
     private $questionAnswers;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $student_id;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $profilePicture;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $profileUpdated;
+
     public function __construct()
     {
         $this->studentCourses = new ArrayCollection();
@@ -280,6 +295,42 @@ class Student
                 $questionAnswer->setStudent(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getStudentId(): ?string
+    {
+        return $this->student_id;
+    }
+
+    public function setStudentId(string $student_id): self
+    {
+        $this->student_id = $student_id;
+
+        return $this;
+    }
+
+    public function getProfilePicture(): ?string
+    {
+        return $this->profilePicture;
+    }
+
+    public function setProfilePicture(?string $profilePicture): self
+    {
+        $this->profilePicture = $profilePicture;
+
+        return $this;
+    }
+
+    public function getProfileUpdated(): ?bool
+    {
+        return $this->profileUpdated;
+    }
+
+    public function setProfileUpdated(bool $profileUpdated): self
+    {
+        $this->profileUpdated = $profileUpdated;
 
         return $this;
     }

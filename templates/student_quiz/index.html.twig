@@ -22,11 +22,11 @@
     </style>
 {% endblock %}
 {% block body %}
-
+    <br>
 	<div class="container">
 		<div class="row">
 			<div class="card my-3">
-				<div class="card-body" style="padding: 20px 100px;">
+				<div class="card-body quiz_result">
 					{% for question in stud_que %}
                         {% if question.answer == null  %}
                             {% if show_un_answered_questions %}
@@ -133,13 +133,16 @@
                                 <a href="{{path('course_chapters',{'id':chapter.instructorCourse.id})}}" class="btn btn-primary px-5 mx-2 my-2">Go to next chapters</a>
                             {% endif %}
                         {% endif %}
-                        
-                        
-                        
                     </p>
-                    
 				</div>
 			</div>
 		</div>
 	</div>
+{% endblock %}
+{% block javascript %}
+	<script src="{{asset('assets/plugins/bootstrap/js/bootstrap.min.js')}}"></script>
+
+    <script>
+        responsive(".container");
+    </script>
 {% endblock %}

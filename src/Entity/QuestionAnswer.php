@@ -64,6 +64,11 @@ class QuestionAnswer
      */
     private $notification;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $videoAnswer;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -197,6 +202,18 @@ class QuestionAnswer
     public function setNotification(bool $notification): self
     {
         $this->notification = $notification;
+
+        return $this;
+    }
+
+    public function getVideoAnswer(): ?string
+    {
+        return $this->videoAnswer;
+    }
+
+    public function setVideoAnswer(?string $videoAnswer): self
+    {
+        $this->videoAnswer = $videoAnswer;
 
         return $this;
     }
