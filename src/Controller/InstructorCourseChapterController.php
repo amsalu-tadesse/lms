@@ -23,6 +23,7 @@ class InstructorCourseChapterController extends AbstractController
      */
     public function index(InstructorCourseRepository $instructorCourseRepository): Response
     {
+        $this->denyAccessUnlessGranted('chapter_list');
         $em = $this->getDoctrine()->getManager();
 
         // $teachersList = $em->getRepository(Instructor::class)->findAll();
@@ -40,6 +41,7 @@ class InstructorCourseChapterController extends AbstractController
      */
     public function contentList(InstructorCourse $instructorCourse, Request $request): Response
     {
+        $this->denyAccessUnlessGranted('chapter_list');
         $em = $this->getDoctrine()->getManager();
         $instructorCourseChapters = $em->getRepository(InstructorCourseChapter::class)->findBy(['instructorCourse' => $instructorCourse]);
         return $this->render('instructor_course_chapter/index.html.twig', [
@@ -54,6 +56,7 @@ class InstructorCourseChapterController extends AbstractController
      */
     public function quiz(InstructorCourse $instructorCourse, Request $request): Response
     {
+        $this->denyAccessUnlessGranted('quiz_list');
         $em = $this->getDoctrine()->getManager();
         $instructorCourseChapters = $em->getRepository(InstructorCourseChapter::class)->findBy(['instructorCourse' => $instructorCourse]);
         return $this->render('quiz/index.html.twig', [
@@ -68,7 +71,7 @@ class InstructorCourseChapterController extends AbstractController
      */
     public function new(Request $request, InstructorCourse $instructorCourse): Response
     {
-        ;
+        $this->denyAccessUnlessGranted('chapter_create');
         $incrsid = $request->get('id');
         $instructorCourseChapter = new InstructorCourseChapter();
         $form = $this->createForm(InstructorCourseChapterType::class, $instructorCourseChapter);
@@ -95,6 +98,7 @@ class InstructorCourseChapterController extends AbstractController
      */
     public function show(InstructorCourseChapter $instructorCourseChapter): Response
     {
+        $this->denyAccessUnlessGranted('chapter_list');
         return $this->render('instructor_course_chapter/show.html.twig', [
             'instructor_course_chapter' => $instructorCourseChapter,
         ]);
@@ -105,6 +109,7 @@ class InstructorCourseChapterController extends AbstractController
      */
     public function edit(Request $request, InstructorCourseChapter $instructorCourseChapter): Response
     {
+        $this->denyAccessUnlessGranted('chapter_edit');
         $form = $this->createForm(InstructorCourseChapterType::class, $instructorCourseChapter);
         $form->handleRequest($request);
 
@@ -124,6 +129,7 @@ class InstructorCourseChapterController extends AbstractController
      */
     public function delete(Request $request, InstructorCourseChapter $instructorCourseChapter): Response
     {
+        $this->denyAccessUnlessGranted('chapter_delete');
         if ($this->isCsrfTokenValid('delete' . $instructorCourseChapter->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
 

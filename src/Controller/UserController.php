@@ -124,9 +124,9 @@ class UserController extends AbstractController
             $user->setUsername($username);
             $user->setIsActive(true);
             // dd("l");
-            $user->setCreatedAt(new DateTime());
-            // $entityManager->persist($user);
-            // $entityManager->flush();
+             $user->setCreatedAt(new DateTime());
+             $entityManager->persist($user);
+             $entityManager->flush();
 
             if ($user->getUserType()->getId() == 3) { //instructor
                 $instructor = new Instructor();
@@ -202,7 +202,7 @@ class UserController extends AbstractController
             "Learning management system. Please login with the following credentials".
             " and change your password <br>username=<strong>".$user->getUsername()."</strong><br> password=<strong>".$password."</strong></p>";
             
-            // $sent =  $mservice->sendEmail($this->mailer, $message, $user->getEmail(), "account confirmation");
+            $sent =  $mservice->sendEmail($this->mailer, $message, $user->getEmail(), "account confirmation");
 
             return $this->redirectToRoute('user_index');
         }

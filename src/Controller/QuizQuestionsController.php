@@ -22,6 +22,7 @@ class QuizQuestionsController extends AbstractController
      */
     public function index(QuizQuestionsRepository $quizQuestionsRepository, Quiz $quiz): Response
     {
+        $this->denyAccessUnlessGranted('quiz_list');
         return $this->render('quiz_questions/index.html.twig', [
             'quiz_questions' => $quizQuestionsRepository->findBy(['quiz' => $quiz]),
             'quiz' => $quiz,
@@ -33,6 +34,7 @@ class QuizQuestionsController extends AbstractController
      */
     public function new(Request $request, Quiz $quiz): Response
     {
+        $this->denyAccessUnlessGranted('quiz_create');
         $quizQuestion = new QuizQuestions();
         $form = $this->createForm(QuizQuestionsType::class, $quizQuestion);
         $form->handleRequest($request);
@@ -89,6 +91,7 @@ class QuizQuestionsController extends AbstractController
      */
     public function show(QuizQuestions $quizQuestion): Response
     {
+        $this->denyAccessUnlessGranted('quiz_list');
         return $this->render('quiz_questions/show.html.twig', [
             'quiz_question' => $quizQuestion,
         ]);
@@ -109,11 +112,15 @@ class QuizQuestionsController extends AbstractController
      */
     public function edit(Request $request, QuizQuestions $quizQuestion): Response
     {
+        
+        $this->denyAccessUnlessGranted('quiz_edit');
         $form = $this->createForm(QuizQuestionsType::class, $quizQuestion);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $postedData = $request->request->all();
+          
+          
             unset($postedData['quiz_questions']);
 
             $entityManager = $this->getDoctrine()->getManager();
@@ -121,8 +128,11 @@ class QuizQuestionsController extends AbstractController
             $answer = null;
             $existingIds = array();
 
-
+         
             foreach ($postedData as $letter => $description) {
+                 
+                $description = htmlspecialchars($description);
+               
                 if ($letter=="answer") {
                     $answer = $description;
                     $quizQuestion->setAnswer($answer);
@@ -180,6 +190,7 @@ class QuizQuestionsController extends AbstractController
      */
     public function delete(Request $request, QuizQuestions $quizQuestion): Response
     {
+        $this->denyAccessUnlessGranted('quiz_delete');
         if ($this->isCsrfTokenValid('delete' . $quizQuestion->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
 

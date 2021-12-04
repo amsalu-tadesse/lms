@@ -20,41 +20,21 @@ class SystemSettingController extends AbstractController
      */
     public function index(SystemSettingRepository $systemSettingRepository): Response
     {
+        $this->denyAccessUnlessGranted('system_setting_list');
         return $this->render('system_setting/index.html.twig', [
             'system_settings' => $systemSettingRepository->findAll(),
         ]);
     }
 
-    /**
-     * @Route("/activesemester", name="activesemester", methods={"GET"})
-     */
-    public function readActiveSemeter(): Response
-    {
-        $em = $this->getDoctrine()->getManager();
-        $setting = $em->getRepository(SystemSetting::class)->findBy(['code' => 'active_semester'])[0];
-        return $this->render('system_setting/active_semester.html.twig', [
-            'systemsettings' => $setting,
-        ]);
-    }
+ 
 
-    /**
-     * @Route("/editactivesemester", name="editactivesemester", methods={"POST"})
-     */
-    public function editactivesemester(Request $request): Response
-    {
-        $em = $this->getDoctrine()->getManager();
-        $sem = $request->request->get("semester");
-        $setting = $em->getRepository(SystemSetting::class)->findBy(['code' => 'active_semester'])[0];
-        $setting->setValue($sem);
-        $em->flush();
-        return $this->redirectToRoute("activesemester");
-    }
-
+   
     /**
      * @Route("/new", name="system_setting_new", methods={"GET","POST"})
      */
     public function new(Request $request): Response
     {
+        $this->denyAccessUnlessGranted('system_setting_new');
         $systemSetting = new SystemSetting();
         $form = $this->createForm(SystemSettingType::class, $systemSetting);
         $form->handleRequest($request);
@@ -78,6 +58,7 @@ class SystemSettingController extends AbstractController
      */
     public function show(SystemSetting $systemSetting): Response
     {
+        $this->denyAccessUnlessGranted('system_setting_list');
         return $this->render('system_setting/show.html.twig', [
             'system_setting' => $systemSetting,
         ]);
@@ -88,6 +69,7 @@ class SystemSettingController extends AbstractController
      */
     public function edit(Request $request, SystemSetting $systemSetting): Response
     {
+        $this->denyAccessUnlessGranted('system_setting_edit');
         $form = $this->createForm(SystemSettingType::class, $systemSetting);
         $form->handleRequest($request);
 
@@ -112,6 +94,7 @@ class SystemSettingController extends AbstractController
      */
     public function delete(Request $request, SystemSetting $systemSetting): Response
     {
+        $this->denyAccessUnlessGranted('system_setting_delete');
         if ($this->isCsrfTokenValid('delete' . $systemSetting->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($systemSetting);

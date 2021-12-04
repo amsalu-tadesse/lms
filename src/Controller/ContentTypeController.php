@@ -20,6 +20,7 @@ class ContentTypeController extends AbstractController
      */
     public function index(ContentTypeRepository $contentTypeRepository): Response
     {
+        $this->denyAccessUnlessGranted('content_new');
         return $this->render('content_type/index.html.twig', [
             'content_types' => $contentTypeRepository->findAll(),
         ]);

@@ -30,6 +30,7 @@ class QuizController extends AbstractController
      */
     public function index(QuizRepository $quizRepository, InstructorCourse $instructorCourse): Response
     {
+        $this->denyAccessUnlessGranted('quiz_list');
         $chapters = $instructorCourse->getInstructorCourseChapters();
         $quizzes = array();
         foreach ($chapters as $chapter) {
@@ -48,6 +49,7 @@ class QuizController extends AbstractController
      */
     public function new(Request $request, InstructorCourse $instructorCourse): Response
     {
+        $this->denyAccessUnlessGranted('quiz_create');
         $quiz = new Quiz();
         // $form = $this->createForm(QuizType::class, $quiz);
 
@@ -502,6 +504,7 @@ class QuizController extends AbstractController
      */
     public function edit(Request $request, Quiz $quiz): Response
     {
+        $this->denyAccessUnlessGranted('quiz_edit');
         $chapters = $quiz->getInstructorCourseChapter()->getInstructorCourse()->getInstructorCourseChapters();
         // unset($chapters[$quiz->getInstructorCourseChapter()]);
         $registeredChaptersid = array();
@@ -545,6 +548,7 @@ class QuizController extends AbstractController
      */
     public function delete(Request $request, Quiz $quiz): Response
     {
+        $this->denyAccessUnlessGranted('quiz_delete');
         if ($this->isCsrfTokenValid('delete' . $quiz->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
 

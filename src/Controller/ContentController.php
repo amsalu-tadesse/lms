@@ -30,7 +30,7 @@ class ContentController extends AbstractController
      */
     public function index(ContentRepository $contentRepository, Request $request, InstructorCourse $instructorCourse, PaginatorInterface $paginator): Response
     {
-        // $this->denyAccessUnlessGranted('content_list');
+        $this->denyAccessUnlessGranted('content_list');
         if ($request->request->get('edit')) {
             $id = $request->request->get('edit');
             $content = $contentRepository->findOneBy(['id' => $id]);
@@ -208,7 +208,7 @@ class ContentController extends AbstractController
      */
     public function new(Request $request, InstructorCourse $instructorCourse, SluggerInterface $slugger): Response
     {
-        // $this->denyAccessUnlessGranted('content_new');
+        $this->denyAccessUnlessGranted('content_create');
         $content = new Content();
         $em = $this->getDoctrine()->getManager();
 
@@ -224,15 +224,30 @@ class ContentController extends AbstractController
 
             $brochureFile = $form->get('filename')->getData();
             $youtubeLink = $form->get('videoLink')->getData();
+            $brochureFile = htmlspecialchars($brochureFile);
+            $youtubeLink = htmlspecialchars($youtubeLink);
+
+
 
             $resource = $form['resource']->getData();  
 
             if($youtubeLink)
             {
                 $y = explode('=',$youtubeLink);
-                if(sizeof($y) == 2)
+                if(sizeof($y) >= 2)
                 {
-                    $youtubeLink  ='https://www.youtube.com/embed/'.explode('=',$youtubeLink)[1];
+                   // $youtubeLink  ='https://www.youtube.com/embed/'.explode('=',$youtubeLink)[1];
+                    $last = explode('&',$y[1]);
+                    if(sizeof($last) >= 2)
+                    {
+                        $youtubeLink  ='https://www.youtube.com/embed/'.$last[0];
+
+                    }
+                    else 
+                    {
+                        $youtubeLink  ='https://www.youtube.com/embed/'.$y[1];
+
+                    }
                     $content->setVideoLink( $youtubeLink);
                 }
             }
@@ -296,6 +311,7 @@ class ContentController extends AbstractController
      */
     public function show(Content $content): Response
     {
+        $this->denyAccessUnlessGranted('content_list');
         return $this->render('content/show.html.twig', [
             'content' => $content,
             'incrsid' => $content->getChapter()->getInstructorCourse()->getId(),
@@ -307,7 +323,7 @@ class ContentController extends AbstractController
      */
     public function edit(Request $request, Content $content, SluggerInterface $slugger): Response
     {
-        // $this->denyAccessUnlessGranted('content_edit');
+        $this->denyAccessUnlessGranted('content_edit');
         $em = $this->getDoctrine()->getManager();
 
         $uploadSize = $em->getRepository(SystemSetting::class)->findOneBy(['code' => 'upload_size'])->getValue();
@@ -386,7 +402,7 @@ class ContentController extends AbstractController
      */
     public function delete(Request $request, Content $content): Response
     {
-        // $this->denyAccessUnlessGranted('content_delete');
+        $this->denyAccessUnlessGranted('content_delete');
         $instid = $content->getChapter()->getInstructorCourse()->getId();
 
         if ($this->isCsrfTokenValid('delete' . $content->getId(), $request->request->get('_token'))) {
