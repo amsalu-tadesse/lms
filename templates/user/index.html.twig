@@ -168,7 +168,7 @@
 						</div>
 						<!-- /.card-body -->
 						<br>
-						<button id="submit" class="btn btn-primary" style="display:none">{% trans %}Print{% endtrans %}</button>
+						<button id="submit" class="btn btn-primary btn-sm" style="display:none">{% trans %}Print{% endtrans %}</button>
 					</div>
 				</div>
 
@@ -176,4 +176,22 @@
 			<!-- /.card-body -->
 		</div>
 	</div>
+{% endblock %}
+
+{% block javascripts %}
+	<script>
+		$("#user_userType").on("change", function(){
+			$selected_val = $(this).find(':selected').attr("value");
+			if($selected_val == 4)
+			{
+				$("#academicLevel").css("display", "block");
+				$("#user_academicLevel").removeAttr("disabled");
+			}
+			else{
+				$("#academicLevel").css("display","none");
+				$("#user_academicLevel").attr("disabled","disabled");
+			}
+		});
+	</script>
+	
 {% endblock %}

@@ -93,7 +93,7 @@ class UserController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $password = $user->getPassword();
             if (!$password) {
-                $password = rand(223232, 998999);
+                $password = $this->rand_string();
             }
 
             $user->setPassword($userPasswordEncoderInterface->encodePassword($user, $password));
@@ -124,9 +124,9 @@ class UserController extends AbstractController
             $user->setUsername($username);
             $user->setIsActive(true);
             // dd("l");
-             $user->setCreatedAt(new DateTime());
-             $entityManager->persist($user);
-             $entityManager->flush();
+            $user->setCreatedAt(new DateTime());
+            $entityManager->persist($user);
+            $entityManager->flush();
 
             if ($user->getUserType()->getId() == 3) { //instructor
                 $instructor = new Instructor();
@@ -191,6 +191,7 @@ class UserController extends AbstractController
                         $new_student_id .= "1-".$year;
                     }
                 }
+                $student->setProfileUpdated(0);
                 $student->setStudentId($new_student_id);
                 $student->setUser($user);
                 $student->setAcademicLevel($form['academicLevel']->getData());
@@ -225,7 +226,6 @@ class UserController extends AbstractController
     public function getCustomRoleNames($id)
     {
         $role = "";
-
         switch ($id) {
             case '1':
                 # code...
@@ -266,7 +266,7 @@ class UserController extends AbstractController
             // $user->setPassword($userPasswordEncoderInterface->encodePassword($user,$user->getPassword()));
             $password = $user->getPassword();
             if (!$password) {
-                $password = rand(223232, 998999);
+                $password = $this->rand_string();
             }
 
             $user->setPassword($userPasswordEncoderInterface->encodePassword($user, $password));
@@ -323,9 +323,8 @@ class UserController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
-
-
-            try {
+            try
+            {
                 $entityManager->remove($user);
                 $entityManager->flush();
             } catch (\Exception $ex) {
@@ -336,5 +335,19 @@ class UserController extends AbstractController
         }
 
         return $this->redirectToRoute('user_index');
+    }
+
+    function rand_string() {
+		$small_letter = $this->shuffle_string("abcdefghijklmnopqrstuvwxyz",3);
+		$capital_letter = $this->shuffle_string("ABCDEFGHJKLMNOPQRSTUVWXYZ",1);
+		$number = $this->shuffle_string("1234567890",3);
+		$symbol = $this->shuffle_string("@&",1);
+		$password = $capital_letter.$small_letter.$symbol.$number;
+		return $password;
+    }
+
+    function shuffle_string($str, $length)
+    {
+        return substr(str_shuffle($str),0,$length);
     }
 }

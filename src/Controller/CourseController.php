@@ -100,12 +100,12 @@ class CourseController extends AbstractController
     /**
      * @Route("/detail/{id}", name="course_description")
      */
-    public function courseDetail(InstructorCourse $instructorCourse, InstructorCourseRepository $course_repo, ContentRepository $content, Request $request): Response
+    public function courseDetail(InstructorCourse $instructorCourse, InstructorCourseRepository $course_repo, InstructorCourseChapterRepository $chapter, Request $request): Response
     {
   
 
         $courses = $course_repo->findCoursesSortByCategory($instructorCourse->getId());
-        $chaptersWithContent = $content->getChaptersWithContentForCourse($instructorCourse->getId());
+        $chaptersWithContent = $chapter->getChaptersWithContentForCourse($instructorCourse->getId());
         $questionAnswer = new QuestionAnswer();
         $form = $this->createForm(QuestionAnswerNewStudentType::class, $questionAnswer);
         $form->handleRequest($request);
@@ -123,6 +123,7 @@ class CourseController extends AbstractController
                 $em->flush();
             }
 
+            
             $em = $this->getDoctrine()->getManager();
             $question = $em->getRepository(QuestionAnswer::class)->findBy(['course'=>$instructorCourse->getId()], ['id'=>'desc']);
             return $this->render('course/description_login.html.twig', [

@@ -32,7 +32,7 @@
             <div class="card card-header">
                 <div class="row">
                     <div class="col-md-6 ">
-                        <h3>
+                        <h3 class="card-title">
                             {{ instructor_course.course | capitalize }}
                             course chapters list
                         </h3>
@@ -41,7 +41,7 @@
                     <div class="col-md-6">
 					{% if is_granted('chapter_create') %}
 					
-                        <a href="{{ path('instructor_course_chapter_new', {'id': instructor_course.id }) }}" class="btn btn-primary" style="float:right">
+                        <a href="{{ path('instructor_course_chapter_new', {'id': instructor_course.id }) }}" class="btn btn-primary btn-sm" style="float:right">
                             {% trans %}
                             add chapter
                             {% endtrans %}
