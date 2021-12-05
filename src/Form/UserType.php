@@ -18,7 +18,9 @@ class UserType extends AbstractType
             ->add('middleName')
             ->add('lastName')
             // ->add('department')
-            ->add('userType')
+            ->add('userType',null, [
+                'required' => true,
+            ])
             ->add('email')
             ->add('academicLevel', EntityType::class, [
                 'mapped' => false,

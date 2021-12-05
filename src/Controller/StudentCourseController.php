@@ -8,7 +8,7 @@ use App\Entity\Student;
 use App\Form\Filter\RequestFilterType;
 use App\Form\StudentCourseType;
 use App\Form\StudentReportType;
-use App\Repository\ContentRepository;
+use App\Repository\InstructorCourseChapterRepository;
 use App\Repository\CourseRepository;
 use App\Repository\InstructorCourseRepository;
 use App\Repository\StudentChapterRepository;
@@ -602,11 +602,11 @@ class StudentCourseController extends AbstractController
     /**
      * @Route("/request/{id}", name="request_show", methods={"GET"})
      */
-    public function requestShow($id, StudentCourseRepository $studentCourseRepository, ContentRepository $content): Response
+    public function requestShow($id, StudentCourseRepository $studentCourseRepository, InstructorCourseChapterRepository $chapter): Response
     {
         $request = $studentCourseRepository->findRequest($this->getUser()->getProfile()->getId(), $id);
 
-        $chaptersWithContent = $content->getChaptersWithContentForCourse($request['instructor_course_id']);
+        $chaptersWithContent = $chapter->getChaptersWithContentForCourse($request['instructor_course_id']);
 
         return $this->render('student_course/request_show.html.twig', [
             'courses' => $request,

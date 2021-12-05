@@ -7,7 +7,9 @@ use App\Entity\Student;
 use App\Entity\StudentCourse;
 use App\Entity\InstructorCourse;
 use App\Entity\UserType;
+use App\Entity\SystemSetting;
 use App\Entity\AcademicLevel;
+use App\Repository\StudentRepository;
 use App\Repository\VerificationRepository;
 use App\Form\RegistrationFormType;
 use App\Security\EmailVerifier;
@@ -107,7 +109,7 @@ class RegistrationController extends AbstractController
      *  @Route("/verification", name="app_register_main")
      * 
      */
-    public function registere(Request $request, VerificationRepository $ver_repo, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, UserAuthenticator $authenticator, MailerService $mservice): Response
+    public function registere(Request $request, VerificationRepository $ver_repo, StudentRepository $student_repo, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, UserAuthenticator $authenticator, MailerService $mservice): Response
     {
         $form_data = $request->cookies->get("form_data");
         $form_data = json_decode($form_data, true);
@@ -136,7 +138,7 @@ class RegistrationController extends AbstractController
                     ]);
                 }
                 else{
-                    $pass = rand(223232, 998999);
+                    $pass = $this->rand_string();
                     $user->setPassword(
                         $passwordEncoder->encodePassword(
                             $user,
@@ -164,6 +166,7 @@ class RegistrationController extends AbstractController
                     }
                     $user->setUsername($username);
                     $user->setIsVerified(1);
+                    $user->setCreatedAt(new DateTime());
                     $user->setEmail($form_data['email']);
 
                     $em->persist($user);
@@ -175,13 +178,75 @@ class RegistrationController extends AbstractController
                     $stmt = $conn->prepare($sql);
                     $stmt->execute(array('email' => $form_data['email']));
 
+                    $student = new Student();
+                    $student->setAcademicLevel($em->getRepository(AcademicLevel::class)->find($form_data['academicLevel']));
+                    $student->setUser($user);
+
+                    //student_id
+                    $academicLevel = $form_data['academicLevel'];
+                    if($academicLevel)
+                    {
+                        if($academicLevel == 1)
+                            $prefix = $em->getRepository(SystemSetting::class)->findOneBy(['code'=>'reg_id_prefix'])->getValue();
+                        else if($academicLevel == 2)
+                            $prefix = $em->getRepository(SystemSetting::class)->findOneBy(['code'=>'masters_id_prefix'])->getValue();
+                        else if($academicLevel == 3)
+                            $prefix = $em->getRepository(SystemSetting::class)->findOneBy(['code'=>'phd_id_prefix'])->getValue();
+                        else if($academicLevel == 5)
+                            $prefix = $em->getRepository(SystemSetting::class)->findOneBy(['code'=>'hd_id_prefix'])->getValue();
+                        
+                        $last_student = $student_repo->findBy(array(),array('id'=>'DESC'),1,0);
+                        $id_digit_length = $em->getRepository(SystemSetting::class)->findOneBy(['code'=>'num_of_digits_student_id'])->getValue();
+                        $year = date("y", time());
+
+                        if($last_student){
+                            $last_student_id_array = explode("-",$last_student[0]->getStudentId());
+                            $num = $last_student_id_array[1] + 1;
+                            $numlength = strlen((string)$num);
+                            if($year == $last_student_id_array[2]){
+                                if($numlength < $id_digit_length)
+                                {
+                                    $zeros_left = $id_digit_length - $numlength;
+                                    $i = 0;
+                                    while($i<$zeros_left)
+                                    {
+                                        $num = "0".$num;
+                                        $i++;
+                                    }
+                                    $new_student_id = $prefix."-".$num."-".$year;
+                                }
+                            }
+                            else{
+                                $new_student_id = $prefix."-";
+                                $i = 0;
+                                    while($i<($id_digit_length-1))
+                                    {
+                                        $new_student_id .= "0";
+                                        $i++;
+                                    }
+                                $new_student_id .= "1-".$year;
+                            }
+                        }
+                        else{
+                            $i = 0;
+                            $new_student_id = $prefix."-";
+                            while($i<($id_digit_length-1))
+                            {
+                                $new_student_id .= "0";
+                                $i++;
+                            }
+                            $new_student_id .= "1-".$year;
+                        }
+                    }
+                    $student->setProfileUpdated(0);
+                    $student->setStudentId($new_student_id);
+
+                    //clear cookie
                     $cookie = new Cookie('form_data', "",time());
                     $response->headers->setCookie($cookie);
                     $response->sendHeaders();
                     
-                    $student = new Student();
-                    $student->setAcademicLevel($em->getRepository(AcademicLevel::class)->find($form_data['academicLevel']));
-                    $student->setUser($user);
+
                     $em->persist($student);
                     $em->flush();
 
@@ -248,5 +313,19 @@ class RegistrationController extends AbstractController
         $this->addFlash('success', 'Your email address has been verified.');
 
         return $this->redirectToRoute('app_register');
+    }
+
+    function rand_string() {
+		$small_letter = $this->shuffle_string("abcdefghijklmnopqrstuvwxyz",3);
+		$capital_letter = $this->shuffle_string("ABCDEFGHJKLMNOPQRSTUVWXYZ",1);
+		$number = $this->shuffle_string("1234567890",3);
+		$symbol = $this->shuffle_string("@&",1);
+		$password = $capital_letter.$small_letter.$symbol.$number;
+		return $password;
+    }
+
+    function shuffle_string($str, $length)
+    {
+        return substr(str_shuffle($str),0,$length);
     }
 }

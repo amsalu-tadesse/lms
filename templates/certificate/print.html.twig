@@ -28,6 +28,8 @@
         @media print {
             @page {
                 size: A4 landscape;
+                margin: 0;
+                padding: 0;
             }
             body {
                 background-image: url("/images/background-print.jpg") ;
@@ -35,14 +37,21 @@
                 -o-background-size: cover;
                 background-size: cover;
             }
+            html,body{
+                margin:0px;
+                padding: 0px;
+            }
             .card {
-                margin: 370px 600px;
+                margin: 370px 0px 0px 600px;
                 width: 100%;
                 font-size: 40px;
             }
 
             p{
                 width: 900px;
+            }
+            a{
+                font-size: 14px;
             }
         }
     </style>
@@ -62,6 +71,7 @@
         <p> and awarded this qualification with <b>Distinction</b> on <br> {{ 'now'|date('M d, Y') }}</p>
     </div>
     <img src="data:image/png;base64,{{student_course.qrCode}}" style="margin-left: 60px">
+    <p><a style="color:white; font-size: 14px"; href="#">http://localhost/12/certificate</a></p>
 </body>
 
 </html>

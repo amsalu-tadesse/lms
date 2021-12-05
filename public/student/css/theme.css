@@ -1567,7 +1567,7 @@ html.sticky-header-enabled.sticky-header-active #header .header-logo-sticky-chan
     #header .header-nav-main nav>ul>li.dropdown .dropdown-menu li.dropdown-submenu>a .fa-chevron-down {
         display: none;
     }
-    #header .header-nav-main nav>ul>li.dropdown .dropdown-menu li.dropdown-submenu>a:after {
+    /* #header .header-nav-main nav>ul>li.dropdown .dropdown-menu li.dropdown-submenu>a:after {
         font-family: 'Font Awesome 5 Free';
         content: "\f054";
         font-weight: 900;
@@ -1578,7 +1578,7 @@ html.sticky-header-enabled.sticky-header-active #header .header-logo-sticky-chan
         right: 20px;
         transform: translateY(-50%);
         transition: all .2s ease-out;
-    }
+    } */
     #header .header-nav-main nav>ul>li.dropdown .dropdown-menu li.dropdown-submenu>.dropdown-menu {
         left: 100%;
         display: block;
