@@ -171,7 +171,7 @@
             $.widget.bridge('uibutton', $.ui.button);
             var inst = "{{ is_granted('ROLE_INSTRUCTOR') }}";
             if( inst == "1"){
-                user = {{app.user.id}};
+                user = {{1}};
                     $.ajax({
                         url: "{{path('new_question_notification')}}",
                         data: {'id': user},
@@ -179,8 +179,9 @@
                             $('.navbar-badge').text(data);
                         }
                     }); 
+                    
                 $(document).ready(function(){
-                    user = {{app.user.id}};
+                    user = {{app.user.getInstructors().getValues()[0].getId()}};
                     setInterval(function(){ 
                         $.ajax({
                             url: "{{path('new_question_notification')}}",

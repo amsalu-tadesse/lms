@@ -10,6 +10,7 @@ use App\Entity\QuestionAnswer;
 use App\Form\CourseType;
 use App\Form\QuestionAnswerNewStudentType;
 use App\Repository\ContentRepository;
+use App\Repository\StudentCourseRepository;
 use App\Repository\CourseRepository;
 use App\Repository\InstructorCourseChapterRepository;
 use App\Repository\InstructorCourseRepository;
@@ -101,16 +102,23 @@ class CourseController extends AbstractController
     /**
      * @Route("/detail/{id}", name="course_description")
      */
-    public function courseDetail(InstructorCourse $instructorCourse, InstructorCourseRepository $course_repo, InstructorCourseChapterRepository $chapter, Request $request): Response
+    public function courseDetail(StudentCourseRepository $stud_course_repo, InstructorCourse $instructorCourse, InstructorCourseRepository $course_repo, InstructorCourseChapterRepository $chapter, Request $request): Response
     {
         $courses = $course_repo->findCoursesSortByCategory($instructorCourse->getId());
         $chaptersWithContent = $chapter->getChaptersWithContentForCourse($instructorCourse->getId());
+
         $questionAnswer = new QuestionAnswer();
         $form = $this->createForm(QuestionAnswerNewStudentType::class, $questionAnswer);
         $form->handleRequest($request);
+        $qa = $que_allowed = false; 
 
         if ($this->isGranted("ROLE_STUDENT")) {
-            if ($form->isSubmitted() && $form->isValid()) {
+
+        $student_course = $stud_course_repo->findOneBy(array('instructorCourse'=>$instructorCourse->getId(),'student'=>$this->getUser()->getProfile()->getId()));
+        if($student_course){
+            $que_allowed = true;
+        } 
+        if ($form->isSubmitted() && $form->isValid()) {
                 $questionAnswer->setStudent($this->getUser()->getProfile());
                 $questionAnswer->setQuestion($form['question']->getData());
                 $questionAnswer->setCreatedAt(new DateTime());
@@ -120,6 +128,9 @@ class CourseController extends AbstractController
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($questionAnswer);
                 $em->flush();
+                $qa = true;
+                $questionAnswer = new QuestionAnswer();
+                $form = $this->createForm(QuestionAnswerNewStudentType::class, $questionAnswer);
             }
 
             
@@ -129,12 +140,16 @@ class CourseController extends AbstractController
                 'chapter' => $courses,
                 'chapters' => $chaptersWithContent,
                 'question' => $question,
+                'qa' => $qa,
+                'que_allowed' => $que_allowed,
                 'form' => $form->createView(),
             ]);
         }
 
         return $this->render('course/description.html.twig', [
             'chapter' => $courses,
+            'qa' => $qa,
+            'que_allowed' => $que_allowed,
             'question' => [],
             'form' => $form->createView(),
             'chapters' => $chaptersWithContent,

@@ -24,7 +24,6 @@ class InstructorCourseChapterController extends AbstractController
      */
     public function index(InstructorCourseRepository $instructorCourseRepository): Response
     {
-
         $em = $this->getDoctrine()->getManager();
 
         // $teachersList = $em->getRepository(Instructor::class)->findAll();

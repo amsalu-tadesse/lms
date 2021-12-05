@@ -89,8 +89,6 @@ class QuestionAnswerController extends AbstractController
 
         $form = $this->createForm(QuestionAnswerNewType::class, $questionAnswer, array('inid' => $inid));
 
-
-        // $form = $this->createForm(QuestionAnswerNewType::class, $questionAnswer);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if($this->isGranted('ROLE_INSTRUCTOR'))
