@@ -41,7 +41,7 @@ class InstructorCourseChapterController extends AbstractController
      */
     public function contentList(InstructorCourse $instructorCourse, Request $request): Response
     {
-        $this->denyAccessUnlessGranted('chapter_list');
+        
         $em = $this->getDoctrine()->getManager();
         $instructorCourseChapters = $em->getRepository(InstructorCourseChapter::class)->findBy(['instructorCourse' => $instructorCourse]);
         return $this->render('instructor_course_chapter/index.html.twig', [

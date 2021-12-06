@@ -185,8 +185,7 @@ class CourseController extends AbstractController
      */
     public function chapters(InstructorCourse $course, StudentQuizRepository $student_quiz, ContentRepository $contentRepository, InstructorCourseChapterRepository $chaptersRepository): Response
     {
-        $this->denyAccessUnlessGranted('chapter_list');
-        $chapters = $chaptersRepository->findChapters($course->getId(), $this->getUser()->getProfile()->getId());
+         $chapters = $chaptersRepository->findChapters($course->getId(), $this->getUser()->getProfile()->getId());
         $contents = $contentRepository->getContentsCount($course->getId());
         $chapter_list = array();
 
