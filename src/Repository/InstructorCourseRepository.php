@@ -74,6 +74,7 @@ class InstructorCourseRepository extends ServiceEntityRepository
         $id = (int)$id;
         if($id==0){
             return $qb->Where('c.status = 1')
+                ->andWhere('ic.active = 1')
                 ->orderBy('c.category')
                 ->getQuery()
                 ->getResult()
@@ -82,6 +83,7 @@ class InstructorCourseRepository extends ServiceEntityRepository
         else{
             return $qb->where('ic.id = :val')
             ->setParameter('val', $id)
+            ->andWhere('ic.active = 1')
             ->getQuery()
             ->getOneOrNullResult()
         ;

@@ -113,8 +113,7 @@ class CourseController extends AbstractController
         $qa = $que_allowed = false; 
 
         if ($this->isGranted("ROLE_STUDENT")) {
-
-        $student_course = $stud_course_repo->findOneBy(array('instructorCourse'=>$instructorCourse->getId(),'student'=>$this->getUser()->getProfile()->getId()));
+        $student_course = $stud_course_repo->findBy(array('instructorCourse'=>$instructorCourse->getId(),'student'=>$this->getUser()->getProfile()->getId(), 'status'=> array("1","5"),'active'=>1));
         if($student_course){
             $que_allowed = true;
         } 
@@ -133,7 +132,6 @@ class CourseController extends AbstractController
                 $form = $this->createForm(QuestionAnswerNewStudentType::class, $questionAnswer);
             }
 
-            
             $em = $this->getDoctrine()->getManager();
             $question = $em->getRepository(QuestionAnswer::class)->findBy(['course'=>$instructorCourse->getId()],['id'=>'desc']);
             return $this->render('course/description_login.html.twig',[

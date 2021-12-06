@@ -32,43 +32,51 @@
 	{% else %}
 		<div role="tabpanel" class="tab-pane active fade show mt-5" id="tab1">
 	{% endif %}
-			{% for chapter in chapters %}
-				<div class="">
-					<div id="accordion">
-						<div class="card">
-							<div class="card-header" id="heading{{chapter.id}}">
-								<h5 class="mb-0">
-									<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse{{chapter.id}}" aria-expanded="false" aria-controls="collapseThree">
-										{{ chapter.topic }}
-									</button>
-								</h5>
-							</div>
-							<div id="collapse{{chapter.id}}" class="collapse" aria-labelledby="heading{{chapter.id}}" data-parent="#accordion">
-								<div class="card-body">
-									{% for content in chapter.contents %}
-										{% if content.filename != null %}
-											<li>
-												<i class="fas fa-play"></i>
-												{{ content.title }}
-											</li>
-										{% elseif content.videoLink != null %}
-											<li>
-												<i class="fas fa-play-circle"></i>
-												{{ content.title }}
-											</li>
-										{% elseif content.content != "" %}
-											<li>
-												<i class="fas fa-book"></i>
-												{{ content.title }}
-											</li>
-										{% endif %}
-									{% endfor %}
+			{% if chapters %}
+				{% for chapter in chapters %}
+					<div class="">
+						<div id="accordion">
+							<div class="card">
+								<div class="card-header" id="heading{{chapter.id}}">
+									<h5 class="mb-0">
+										<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse{{chapter.id}}" aria-expanded="false" aria-controls="collapseThree">
+											{{ chapter.topic }}
+										</button>
+									</h5>
+								</div>
+								<div id="collapse{{chapter.id}}" class="collapse" aria-labelledby="heading{{chapter.id}}" data-parent="#accordion">
+									<div class="card-body">
+										{% for content in chapter.contents %}
+											{% if content.filename != null %}
+												<li>
+													<i class="fas fa-play"></i>
+													{{ content.title }}
+												</li>
+											{% elseif content.videoLink != null %}
+												<li>
+													<i class="fas fa-play-circle"></i>
+													{{ content.title }}
+												</li>
+											{% elseif content.content != "" %}
+												<li>
+													<i class="fas fa-book"></i>
+													{{ content.title }}
+												</li>
+											{% endif %}
+										{% endfor %}
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
+				{% endfor %}
+			{% else %}
+				<div class="card-body">
+					<p> No chapters created </p>
 				</div>
-			{% endfor %}
+			{% endif %}
+			
+			
 
 		</div>
 		{% if qa %}

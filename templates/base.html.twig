@@ -181,16 +181,20 @@
                     }); 
                     
                 $(document).ready(function(){
-                    user = {{app.user.getInstructors().getValues()[0].getId()}};
-                    setInterval(function(){ 
-                        $.ajax({
-                            url: "{{path('new_question_notification')}}",
-                            data: {'id': user},
-                            success: function(data){
-                                $('.navbar-badge').text(data);
-                            }
-                        }); 
-                    }, 5000);
+                    var inst_obj = "{{app.user.getInstructors().getValues()|join(', ')}}";
+                    
+                        {% if app.user.getInstructors().getValues() %}
+                            user = {{app.user.getInstructors().getValues()[0].getId()}};
+                            setInterval(function(){ 
+                                $.ajax({
+                                    url: "{{path('new_question_notification')}}",
+                                    data: {'id': user},
+                                    success: function(data){
+                                        $('.navbar-badge').text(data);
+                                    }
+                                }); 
+                            }, 5000);
+                        {% endif %}
                 });
             }
 
