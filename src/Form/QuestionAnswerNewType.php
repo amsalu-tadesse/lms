@@ -33,15 +33,6 @@ class QuestionAnswerNewType extends AbstractType
                 ->setParameter('inid', $inid);
                     return $res;
                 },
-<<<<<<< HEAD
-            ])
-            ->add('question', TextareaType::class, [
-                'attr'=>[
-                    'class'=>'form-control mt-2',
-                    'rows'=>7
-                    ]
-            ])
-=======
             ]) 
             ->add('question', CKEditorType::class, array(
                 'config' => array(
@@ -49,7 +40,6 @@ class QuestionAnswerNewType extends AbstractType
                     //...
                 ),
             ));
->>>>>>> 714b03afd891c174c9a43b712a3da491aea2374d
         ;
     }
 
