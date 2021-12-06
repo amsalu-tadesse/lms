@@ -10,6 +10,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 
 class QuestionAnswerNewType extends AbstractType
 {
@@ -21,7 +22,7 @@ class QuestionAnswerNewType extends AbstractType
         $builder
 
             ->add('course', EntityType::class, [
-                'attr' => ['class'=>'form-control'],
+                'attr' => ['class'=>'form-control mb-4'],
                 'class' => InstructorCourse::class,
                 'required' => false,
                 'placeholder' => "",
@@ -32,6 +33,7 @@ class QuestionAnswerNewType extends AbstractType
                 ->setParameter('inid', $inid);
                     return $res;
                 },
+<<<<<<< HEAD
             ])
             ->add('question', TextareaType::class, [
                 'attr'=>[
@@ -39,6 +41,15 @@ class QuestionAnswerNewType extends AbstractType
                     'rows'=>7
                     ]
             ])
+=======
+            ]) 
+            ->add('question', CKEditorType::class, array(
+                'config' => array(
+                    'uiColor' => '#ffffff',
+                    //...
+                ),
+            ));
+>>>>>>> 714b03afd891c174c9a43b712a3da491aea2374d
         ;
     }
 

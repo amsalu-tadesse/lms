@@ -433,7 +433,7 @@ class StudentCourseController extends AbstractController
 
             $temp["status"] = '<a href="#" data-toggle="modal" id="' . $value['id'] . '" onclick="changeStatus(\'' . $value['name'] . '\',' . $value['id'] . ',' . $value['active'] . ')" data-target="#modal-delete">' .
                 "<i class='fas $icon' style='color:$color'></i></a>";
-            $temp["actions"] = '<a href="/student/' . $value['student'] . '" class="btn btn-primary">show</a>';
+            $temp["actions"] = '<a href="/student/' . $value['student'] . '" class="btn btn-primary btn-sm">show</a>';
             $Response[] = $temp;
 
             unset($temp);

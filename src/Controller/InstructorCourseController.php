@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Instructor;
 use App\Entity\InstructorCourse;
+use App\Entity\Course;
 use App\Entity\InstructorCourseStatus;
 use App\Form\Filter\InstructorCourseFilterType;
 use App\Form\InstructorCourseType;
@@ -87,15 +88,29 @@ class InstructorCourseController extends AbstractController
     /**
      * @Route("/new", name="instructor_course_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
-    {
-        $this->denyAccessUnlessGranted('instructor_course_new');
-        $instructorCourse = new InstructorCourse();
-        $form = $this->createForm(InstructorCourseType::class, $instructorCourse);
+    function new (Request $request): Response {
+        $entityManager = $this->getDoctrine()->getManager();
+        $instructorCourse1 = new InstructorCourse();
+        
+        $course = $entityManager->getRepository(Course::class)->findAll();
+        $instructorCourse = $entityManager->getRepository(InstructorCourse::class)->findBy(array('active'=>1));
+        
+        $free_courses = array();
+        foreach($course as $key => $value)
+        {
+            $flag = true;
+            foreach($instructorCourse as $key1 => $value1)
+            {   
+                if($value->getId() == $value1->getCourse()->getId())
+                    $flag = false;
+            }
+
+            if($flag) $free_courses[] = $value->getId(); 
+        }
+        $form = $this->createForm(InstructorCourseType::class, $instructorCourse1, array('courses'=> $free_courses));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
             $instructorCourseStatus = $entityManager->getRepository(InstructorCourseStatus::class)->find(2); //assigned but waiting
             $instructorCourse->setStatus($instructorCourseStatus);
             $instructorCourse->setCreatedAt(new DateTime());

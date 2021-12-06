@@ -58,9 +58,7 @@ class QuestionAnswerRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('q')
             ->select('count(q.id) as new_questions')
-            ->join('q.instructor', 'inst')
-            ->join('inst.user', 'u')
-            ->where('u.id = :val')
+            ->where('q.instructor = :val')
             ->andWhere('q.notification = 0')
             ->setParameter('val', $id)
             ->getQuery()

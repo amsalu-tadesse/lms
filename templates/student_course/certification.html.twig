@@ -14,7 +14,7 @@
 
 	<div class="card card-info">
 		<div class="card card-header">
-<h4>{% trans %}List of students ready for Certification{% endtrans %}</h4>
+			<h4 class="card-title">{% trans %}List of students ready for Certification{% endtrans %}</h4>
 		</div>
 		<div class="card card-body">
 			<table class="table ">
@@ -31,17 +31,17 @@
 					{% for student_course in student_courses %}
 						<tr>
 							<td>{{ loop.index }}</td>
-                            <td>
-                                {{ student_course.student.user.firstName }}
-                                {{ student_course.student.user.middleName }}
-                                {{ student_course.student.user.lastName }}
-                            </td>
-                            <td>
-                                {{student_course.instructorCourse.course.name}}
-                            </td>
+							<td>
+								{{ student_course.student.user.firstName }}
+								{{ student_course.student.user.middleName }}
+								{{ student_course.student.user.lastName }}
+							</td>
+							<td>
+								{{student_course.instructorCourse.course.name}}
+							</td>
 							<td>{{ student_course.completedAt ? student_course.completedAt|date('Y-m-d H:i:s') : '' }}</td>
 							<td>
-								<a href="{{path('print_certificate',{'id': student_course.id})}}" class="btn btn-primary">Certificate</a>
+								<a href="{{path('print_certificate',{'id': student_course.id})}}" class="btn btn-primary btn-sm">Certificate</a>
 							</td>
 						</tr>
 					{% else %}
@@ -52,11 +52,13 @@
 				</tbody>
 			</table>
 		</div>
-		<div class="  pagination justify-content-center "> {{ knp_pagination_render(student_courses) }}</div>
+		<div class="  pagination justify-content-center ">
+			{{ knp_pagination_render(student_courses) }}</div>
 
 		<div class="float-right pl-5 pb-2">
 
-			{% trans %}Total result{% endtrans %}: {{ student_courses.getTotalItemCount }}
+			{% trans %}Total result{% endtrans %}:
+			{{ student_courses.getTotalItemCount }}
 		</div>
 	</div>
 

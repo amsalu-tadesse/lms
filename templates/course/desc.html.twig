@@ -5,59 +5,85 @@
 	<!-- Nav tabs -->
 	<ul class="nav nav-tabs" role="tablist">
 		<li class="nav-item">
-			<a class="nav-link active" href="#tab1" role="tab" data-toggle="tab">{% trans %}Chapters{% endtrans %}</a>
+			{% if qa %}
+				<a class="nav-link" href="#tab1" role="tab" data-toggle="tab">{% trans %}Chapters{% endtrans %}</a>
+			{% else %}
+				<a class="nav-link active" href="#tab1" role="tab" data-toggle="tab">{% trans %}Chapters{% endtrans %}</a>
+			{% endif %}
 		</li>
 		{% if is_granted("ROLE_STUDENT") %}
-			<li class="nav-item">
-				<a class="nav-link" href="#tab3" role="tab" data-toggle="tab">Q&A</a>
-			</li>
+			{% if qa %}
+				<li class="nav-item">
+					<a class="nav-link active" href="#tab3" role="tab" data-toggle="tab">Q&A</a>
+				</li>
+			{% else %}
+				<li class="nav-item">
+					<a class="nav-link " href="#tab3" role="tab" data-toggle="tab">Q&A</a>
+				</li>
+			{% endif %}
 		{% endif %}
 
 	</ul>
 
 	<!-- Tab panes -->
 	<div class="tab-content">
-		<div role="tabpanel" class="tab-pane fade show active mt-5" id="tab1">
-			{% for chapter in chapters %}
-				<div class="">
-					<div id="accordion">
-						<div class="card">
-							<div class="card-header" id="heading{{chapter.id}}">
-								<h5 class="mb-0">
-									<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse{{chapter.id}}" aria-expanded="false" aria-controls="collapseThree">
-										{{ chapter.topic }}
-									</button>
-								</h5>
-							</div>
-							<div id="collapse{{chapter.id}}" class="collapse" aria-labelledby="heading{{chapter.id}}" data-parent="#accordion">
-								<div class="card-body">
-									{% for content in chapter.contents %}
-										{% if content.filename != null %}
-											<li>
-												<i class="fas fa-play"></i>
-												{{ content.title }}
-											</li>
-										{% elseif content.videoLink != null %}
-											<li>
-												<i class="fas fa-play-circle"></i>
-												{{ content.title }}
-											</li>
-										{% elseif content.content != "" %}
-											<li>
-												<i class="fas fa-book"></i>
-												{{ content.title }}
-											</li>
-										{% endif %}
-									{% endfor %}
+	{% if qa %}
+		<div role="tabpanel" class="tab-pane fade show mt-5" id="tab1">
+	{% else %}
+		<div role="tabpanel" class="tab-pane active fade show mt-5" id="tab1">
+	{% endif %}
+			{% if chapters %}
+				{% for chapter in chapters %}
+					<div class="">
+						<div id="accordion">
+							<div class="card">
+								<div class="card-header" id="heading{{chapter.id}}">
+									<h5 class="mb-0">
+										<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse{{chapter.id}}" aria-expanded="false" aria-controls="collapseThree">
+											{{ chapter.topic }}
+										</button>
+									</h5>
+								</div>
+								<div id="collapse{{chapter.id}}" class="collapse" aria-labelledby="heading{{chapter.id}}" data-parent="#accordion">
+									<div class="card-body">
+										{% for content in chapter.contents %}
+											{% if content.filename != null %}
+												<li>
+													<i class="fas fa-play"></i>
+													{{ content.title }}
+												</li>
+											{% elseif content.videoLink != null %}
+												<li>
+													<i class="fas fa-play-circle"></i>
+													{{ content.title }}
+												</li>
+											{% elseif content.content != "" %}
+												<li>
+													<i class="fas fa-book"></i>
+													{{ content.title }}
+												</li>
+											{% endif %}
+										{% endfor %}
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
+				{% endfor %}
+			{% else %}
+				<div class="card-body">
+					<p> No chapters created </p>
 				</div>
-			{% endfor %}
+			{% endif %}
+			
+			
 
 		</div>
-		<div role="tabpanel" class="tab-pane fade show" id="tab3">
+		{% if qa %}
+			<div role="tabpanel" class="tab-pane fade show active mt-5" id="tab3">
+		{% else %}
+			<div role="tabpanel" class="tab-pane fade show mt-5" id="tab3">
+		{% endif %}
 			<div class="comments">
 				{% for que in question %}
 
@@ -100,7 +126,7 @@
 									class="card-footer">
 									<!-- Modal -->
 									<a type="button" style="float: left;color: #0d6fd2;background: #f1f1f1;" data-toggle="modal" onclick="playVideo('{{que.videoAnswer}}')" id="playerToggle" data-bs-toggle="modal" data-bs-target="#largeModal">
-										see video ...
+										<i class="fa fa-play" style="color:currentColor;font-weight:600"> </i>&nbsp; play video ... 
 									</a>
 								</div>
 							{% endif %}
@@ -113,6 +139,15 @@
 					<a href="#" id="loadMore" parameter="{{chapter.id}}">Load more ...</a>
 				</center>
 			{% endif %}
-			{{form_start(form)}}{{form_widget(form)}}<input type="hidden" name="val1" value="{{chapter.id}}"><input type="submit" class="btn btn-primary mt-1" style="min-width: 150px">{{form_end(form)}}</div>
+
+			{% if que_allowed %}
+				{{form_start(form)}}
+					{{form_widget(form)}}
+					<input type="hidden" name="val1" value="{{chapter.id}}">
+					<input type="submit" class="btn btn-primary mt-1" style="min-width: 150px" value="send">
+				{{form_end(form)}}
+			{% endif %}
+			
+			</div>
 	</div>
 </div></div>

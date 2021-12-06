@@ -85,6 +85,10 @@
 {% block javascript %}
 	<script src="{{asset('assets/plugins/bootstrap/js/bootstrap.min.js')}}"></script>
 	<script>
+		 
+		if ( window.history.replaceState ) {
+			window.history.replaceState( null, null, window.location.href );
+		}
 	    $(document).ready(function(){
 			responsive(".description-area");
 			if(isMobile()){
@@ -103,6 +107,7 @@
 		$("#loadMore").on("click",function(e){	
 			e.preventDefault();
 			id = $(this).attr("parameter");
+
 			loadControl.start = loadControl.round * 10;
 			loadControl.end = loadControl.start+10;
 			if(loadControl.more){
@@ -156,12 +161,16 @@
 									$(".comments").append(mainContainer);
 								}
 						});
+						loadControl.round++;
 					},
 					error: function(data){
 						console.log("lksjdf");
 					}
 				});
-			}	
+			}	else{
+				$("#loadMore").text("");
+			}
+
 		});
 
 		function playVideo(file)
