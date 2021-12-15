@@ -45,6 +45,7 @@ security:
         # - { path: ^/profile, roles: ROLE_USER }
 
         - { path: ^/certificate/*, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/error, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/aboutUs, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/account/passwordReset, roles: IS_AUTHENTICATED_ANONYMOUSLY }

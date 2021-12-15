@@ -54,18 +54,11 @@ class StudentCourseRepository extends ServiceEntityRepository
     public function findCourses($value)
     {
         return $this->createQueryBuilder('s')
-<<<<<<< HEAD
             ->select('s.id as sid', 'ic.id','c.name','c.description', 's.status', 'u.firstName', 'u.middleName', 'u.lastName', 'st.student_id')
             ->join('s.instructorCourse', 'ic')
             ->join('ic.instructor', 'i')
             ->join('s.student', 'st')
             ->join('i.user','u')
-=======
-            ->select('ic.id', 'c.name', 'c.description', 's.status', 'u.firstName', 'u.middleName', 'u.lastName')
-            ->join('s.instructorCourse', 'ic')
-            ->join('ic.instructor', 'i')
-            ->join('i.user', 'u')
->>>>>>> f852e5d663153c1586c729af0977bf3786edc225
             ->join('ic.course', 'c')
             ->Where('s.student = :val')
             ->andWhere('s.active = 1')
@@ -170,7 +163,6 @@ class StudentCourseRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()
         ;
-<<<<<<< HEAD
     } 
     
     public function getStudentCertificate($student, $id)
@@ -187,9 +179,6 @@ class StudentCourseRepository extends ServiceEntityRepository
             ->getOneOrNullResult()
         ;
     } 
-=======
-    }
->>>>>>> f852e5d663153c1586c729af0977bf3786edc225
 
     public function count($t)
     {

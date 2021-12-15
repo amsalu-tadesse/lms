@@ -147,6 +147,7 @@ class HomeController extends AbstractController
         $Excel_writer->save('php://output');
         dd("");
     }
+    
     /**
      * @Route("/print", name="print")
      */
@@ -154,5 +155,4 @@ class HomeController extends AbstractController
     {
         return $this->render("certificate/print.html.twig");
     }
-     
 }
