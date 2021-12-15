@@ -68,6 +68,11 @@ class StudentCourse
      */
     private $qrCode;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $qrUrl;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -189,6 +194,18 @@ class StudentCourse
     public function setQrCode(?string $qrCode): self
     {
         $this->qrCode = $qrCode;
+
+        return $this;
+    }
+
+    public function getQrUrl(): ?string
+    {
+        return $this->qrUrl;
+    }
+
+    public function setQrUrl(?string $qrUrl): self
+    {
+        $this->qrUrl = $qrUrl;
 
         return $this;
     }

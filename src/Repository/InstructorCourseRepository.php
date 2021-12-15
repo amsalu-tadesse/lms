@@ -83,7 +83,7 @@ class InstructorCourseRepository extends ServiceEntityRepository
         else{
             return $qb->where('ic.id = :val')
             ->setParameter('val', $id)
-            ->andWhere('ic.active = 1')
+            // ->andWhere('ic.active = 1')
             ->getQuery()
             ->getOneOrNullResult()
         ;

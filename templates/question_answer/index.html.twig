@@ -31,10 +31,11 @@
 			<thead>
 				<tr>
 					<th>Id</th>
-					<th>Course</th>
-					<th>Question</th>
-					<th>IsAnswered</th>
-					<th>CreatedAt</th>
+					<th style="width: 25%">Course</th>
+					<th style="width: 25%">Question</th>
+					<th>Text Answer</th>
+					<th>Video Answer</th>
+					<th >Created At</th>
 					<th>actions</th>
 				</tr>
 			</thead>
@@ -45,9 +46,10 @@
 						<td>{{ question_answer.course.course.name}}</td>
 						<td>{{ question_answer.question|raw }}</td>
 						<td>{{ question_answer.answer != null ? 'Yes':'no' }}</td>
+						<td>{{ question_answer.videoAnswer != null ? 'Yes':'no' }}</td>
 						<td>{{ question_answer.createdAt ? question_answer.createdAt|date('d-m-Y') : '' }}</td>
 						<td>
-							<a href="{{ path('question_answer_show', {'id': question_answer.id}) }}" class="btn-sm btn btn-success">show</a>
+							{# <a href="{{ path('question_answer_show', {'id': question_answer.id}) }}" class="btn-sm btn btn-success">show</a> #}
 							<a href="{{ path('question_answer_edit', {'id': question_answer.id}) }}" class="btn-sm btn btn-info">Answer</a>
 						</td>
 					</tr>

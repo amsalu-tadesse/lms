@@ -69,6 +69,11 @@ class QuestionAnswer
      */
     private $videoAnswer;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $updatedAt;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -214,6 +219,18 @@ class QuestionAnswer
     public function setVideoAnswer(?string $videoAnswer): self
     {
         $this->videoAnswer = $videoAnswer;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

@@ -373,9 +373,10 @@ class QuizController extends AbstractController
                                     {
                                         $finalize_course = $stud_course->findOneBy(['student'=>$this->getUser()->getProfile()->getId(),'instructorCourse'=>$chapter->getInstructorCourse()->getId()]) ;
                                         $id = $finalize_course->getId();
-                                        $url = $_SERVER['SERVER_NAME']."/certificate/".$id;
-                                        
+                                        $url = $_SERVER['SERVER_NAME']."/certificate/".$this->getUser()->getProfile()->getStudentId()."/".$id;
                                         $finalize_course->setStatus(5);
+                                        $finalize_course->setCompletedAt(new DateTime);
+                                        $finalize_course->setQrUrl($url);
                                         $finalize_course->setQrCode($this->qrGenerator($url));
                                         $em->persist($finalize_course);
                                         $em->flush();
@@ -455,9 +456,10 @@ class QuizController extends AbstractController
                                 {
                                     $finalize_course = $stud_course->findOneBy(['student'=>$this->getUser()->getProfile()->getId(),'instructorCourse'=>$chapter->getInstructorCourse()->getId()]) ;
                                     $id = $finalize_course->getId();
-                                    $url = $_SERVER['SERVER_NAME']."/certificate/".$id;
-                                    
+                                    $url = $_SERVER['SERVER_NAME']."/certificate/".$this->getUser()->getProfile()->getStudentId()."/".$id;
                                     $finalize_course->setStatus(5);
+                                    $finalize_course->setCompletedAt(new DateTime);
+                                    $finalize_course->setQrUrl($url);
                                     $finalize_course->setQrCode($this->qrGenerator($url));
                                     $em->persist($finalize_course);
                                     $em->flush();

@@ -36,7 +36,7 @@
 {% endblock %}
 {% block body %}
 	<div class="card px-3 py-2 mt-3">
-		<div class="card-header"><strong>Question</strong></div>
+		<div class="card-header"><strong>{{question_answer.student.user.username}}</strong><span style="float:right">{{ question_answer.createdAt ? question_answer.createdAt|date('d-m-Y') : '' }}</span></div>
 		<div class="card-body">
 			{{question_answer.question|raw}}
 		</div>
@@ -99,7 +99,7 @@
 <div class="modal-dialog" role="document" style="width: auto">
 	<div class="modal-content">
 		<div class="modal-header">
-			<h5 class="modal-title" id="exampleModalLabel">New Recorded Video</h5>
+			<h5 class="modal-title" id="exampleModalLabel">Recorded Video</h5>
 			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 				<span aria-hidden="true">&times;</span>
 			</button>

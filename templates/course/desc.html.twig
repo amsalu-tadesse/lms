@@ -115,7 +115,13 @@
 						<div class="card bg-white mt-2 answer">
 							<div class="card-body">
 								<p class="meta">
-									<span class="qadata">{{que.createdAt|date('d-m-Y')}}
+									<span class="qadata">
+										{% if que.updatedAt %}
+											updated at - {{que.updatedAt|date('d-m-Y')}}
+										{% else %}
+											{{que.answeredAt|date('d-m-Y')}}
+										{% endif %}
+										
 									</span>
 									{{que.instructor.user.username}}
 								</p>

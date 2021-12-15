@@ -160,7 +160,10 @@ class QuestionAnswerController extends AbstractController
             $inst = $this->getUser()->getInstructors()->getValues();
             
             $questionAnswer->setInstructor($inst[0]);
-            $questionAnswer->setAnsweredAt(new DateTime);
+            if($questionAnswer->getAnsweredAt())
+                $questionAnswer->setUpdatedAt(new DateTime);
+            else
+                $questionAnswer->setAnsweredAt(new DateTime);
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('question_answer_index', [], Response::HTTP_SEE_OTHER);

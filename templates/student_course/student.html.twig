@@ -64,14 +64,15 @@
 									</p>
 									<p></p>
 								</div>
+							</a>
 								{% if course.status == 5 %}
 									<div class="card-footer" style="display:block">
 										<span style="color: green; font-size: 20px;">Completed
 											<i class="fa fa-check"></i>
 										</span>
+										<span style="float: right;background:none;"><a href="/certificate/{{course.student_id}}/{{course.sid}}">certificate</a></span>
 									</div>
 								{% endif %}
-							</a>
 						</div>
 					</div>
 				{% endif %}
