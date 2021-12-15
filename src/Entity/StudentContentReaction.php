@@ -38,7 +38,7 @@ class StudentContentReaction
      */
     private $message;
 
-   
+
 
     public function getId(): ?int
     {
@@ -92,6 +92,4 @@ class StudentContentReaction
 
         return $this;
     }
-
- 
 }

@@ -13,12 +13,12 @@ class RequestFilterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('student' ,EmailType::class,[
+            ->add('student', EmailType::class, [
                 'attr'=>['class'=>'form-control'],
                 'mapped' => false,
                 'required' => false
             ])
-            ->add('instructorCourse' ,null,[
+            ->add('instructorCourse', null, [
                 'attr'=>['class'=>'form-control'],
                 'label'=>'course'
             ])

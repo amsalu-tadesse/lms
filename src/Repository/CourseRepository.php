@@ -109,5 +109,4 @@ class CourseRepository extends ServiceEntityRepository
         ;
     }
     */
-
 }

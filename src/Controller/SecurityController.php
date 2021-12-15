@@ -21,7 +21,6 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 use Symfony\Component\Dotenv\Dotenv;
 
-
 class SecurityController extends AbstractController
 {
     /**
@@ -49,13 +48,12 @@ class SecurityController extends AbstractController
     public function emailVerification(Request $request, MailerInterface $mailer, MailerService $mservice): Response
     {
         //ForgotPasswordType
-        if($request->isMethod('post')){
-
+        if ($request->isMethod('post')) {
             $em = $this->getDoctrine()->getManager();
             $email = $request->request->get('email');
             $ver = new Verification();
             $ver->setEmail($email);
-            $code = rand(23412,99999);
+            $code = rand(23412, 99999);
             $ver->setVerificationCode($code);
             $date = date('Y-m-d H:i', time());
             $date = new \DateTime('@'.strtotime("$date + 3 hours"));
@@ -68,13 +66,15 @@ class SecurityController extends AbstractController
 
             $error = '';
 
-            return $this->render('security/verification-code.html.twig', 
-                    [
+            return $this->render(
+                'security/verification-code.html.twig',
+                [
                         'error' => $error,
                         'email' => $email
-                    ]);
+                    ]
+            );
         }
-        
+
         $error = "";
         return $this->render('security/email-verification.html.twig', ['error' => $error]);
     }
@@ -85,34 +85,27 @@ class SecurityController extends AbstractController
     public function emailVer(VerificationRepository $ver_repo, Request $request): Response
     {
         $ver_validation = $ver_repo->findOneByEmail($request->request->get("email"));
-        if(sizeof($ver_validation)>0)
-        {
-            if($ver_validation[0]['verificationCode'] == $request->request->get("code"))
-            {
+        if (sizeof($ver_validation)>0) {
+            if ($ver_validation[0]['verificationCode'] == $request->request->get("code")) {
                 $now = new \DateTime();
-                if($now>$ver_validation[0]['verificationExpiry'])
-                {
+                if ($now>$ver_validation[0]['verificationExpiry']) {
                     return $this->render('security/verification-code.html.twig', [
                         'email' => $request->request->get('email'),
                         "error" => "verification code expired"
                     ]);
-                }
-                else{
+                } else {
                     $request->getSession()->set('password_change_email', $request->request->get("email"));
                     return $this->redirectToRoute("password_change");
                 }
-            }
-            else{
+            } else {
                 return $this->render('security/verification-code.html.twig', [
                     'email' => $request->request->get('ddataaa'),
                     "error" => "Wrong verification code"
                 ]);
             }
-        }
-        else{
+        } else {
             return $this->render('security/email-verification.html.twig', ['error' => "Email not found"]);
         }
-        
     }
 
     /**
@@ -125,17 +118,15 @@ class SecurityController extends AbstractController
         $form->handleRequest($request);
 
         $email = $request->getSession()->get('password_change_email');
-        if($email == null)
-        {
+        if ($email == null) {
             return $this->redirectToRoute('app_login');
-        }        
+        }
         if ($form->isSubmitted() && $form->isValid()) {
-    
             $entityManager = $this->getDoctrine()->getManager();
 
             $user = $entityManager->getRepository(User::class)->findOneBy(array('email' => $email));
             $user->setPassword($passwordEncoder->encodePassword($user, $form['plainPassword']->getData()));
-            
+
             $entityManager->persist($user);
             $entityManager->flush();
 
@@ -148,7 +139,7 @@ class SecurityController extends AbstractController
         ]);
     }
 
-        /**
+    /**
      * @Route("/password/change", name="change_password", methods={"GET","POST"})
      */
     public function passwordChange(Request $request, UserPasswordEncoderInterface $passwordEncoder)
@@ -156,9 +147,8 @@ class SecurityController extends AbstractController
         $user = new User();
         $form = $this->createForm(ForgotPasswordType::class, $user);
         $form->handleRequest($request);
-       
+
         if ($form->isSubmitted() && $form->isValid()) {
-    
             $entityManager = $this->getDoctrine()->getManager();
             $user = $this->getUser();
             $user->setPassword($passwordEncoder->encodePassword($user, $form['plainPassword']->getData()));
@@ -183,45 +173,47 @@ class SecurityController extends AbstractController
         $user = new User();
         $form = $this->createForm(PasswordChangeType::class, $user);
         $form->handleRequest($request);
-       
+
         if ($form->isSubmitted() && $form->isValid()) {
             $checkPass = $passwordEncoder->isPasswordValid($this->getUser(), $form['password']->getData());
-            if($checkPass){
+            if ($checkPass) {
                 $entityManager = $this->getDoctrine()->getManager();
                 $user = $this->getUser();
                 $user->setPassword($passwordEncoder->encodePassword($user, $form['plainPassword']->getData()));
                 $user->setLastLogin(new DateTime());
                 $entityManager->persist($user);
                 $entityManager->flush();
-            }
-            else{
-                if($this->isGranted('ROLE_STUDENT'))
+            } else {
+                if ($this->isGranted('ROLE_STUDENT')) {
                     return $this->renderForm('security/change_password_logged_in_student.html.twig', [
                         'form' => $form,
                         'error' => "Incorrect Old password"
                     ]);
-                else
+                } else {
                     return $this->renderForm('security/change_password_logged_in.html.twig', [
                         'form' => $form,
                         'error' => "Incorrect Old password"
                     ]);
+                }
             }
-            if($this->isGranted('ROLE_STUDENT'))
+            if ($this->isGranted('ROLE_STUDENT')) {
                 return $this->redirectToRoute('student_course_index');
-            else
+            } else {
                 return $this->redirectToRoute('home');
+            }
         }
 
-        if($this->isGranted('ROLE_STUDENT'))
+        if ($this->isGranted('ROLE_STUDENT')) {
             return $this->renderForm('security/change_password_logged_in_student.html.twig', [
                 'form' => $form,
                 'error' => ""
             ]);
-        else
+        } else {
             return $this->renderForm('security/change_password_logged_in.html.twig', [
                 'form' => $form,
                 'error' => ""
             ]);
+        }
     }
     /**
      * @Route("/logout", name="app_logout")
@@ -230,46 +222,46 @@ class SecurityController extends AbstractController
     {
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
-/*
-    public function isAllowed(User $user=null, $action)
-    {
-        if ($user==null) {
-            throw new AccessDeniedException();
+    /*
+        public function isAllowed(User $user=null, $action)
+        {
+            if ($user==null) {
+                throw new AccessDeniedException();
+            }
+            if ($user->hasRole('ROLE_ADMIN')) {
+                return true;
+            }
+            if ($user->getUserGroup()) {
+                foreach ($user->getUserGroup()[0]->getPermission() as $key => $perm) {
+                    if ($action==$perm->getName()) {
+                        return true;
+                    }
+                }
+                throw new AccessDeniedException();
+            } else {
+                throw new AccessDeniedException();
+            }
+            // Do what you need, $this->entityManager holds a reference to your entity manager
         }
-        if ($user->hasRole('ROLE_ADMIN')) {
-            return true;
-        }
-        if ($user->getUserGroup()) {
-            foreach ($user->getUserGroup()[0]->getPermission() as $key => $perm) {
+        public function isAllowedTwig(User $user, $action)
+        {
+            if (!$user) {
+                return false;
+            }
+            if ($user->hasRole('ROLE_ADMIN')) {
+                return true;
+            }
+            if (!$user->getUserGroup()) {
+                return false;
+            }
+            foreach ($user->getUserGroup()->getPermission() as $key => $perm) {
                 if ($action==$perm->getName()) {
                     return true;
                 }
             }
-            throw new AccessDeniedException();
-        } else {
-            throw new AccessDeniedException();
-        }
-        // Do what you need, $this->entityManager holds a reference to your entity manager
-    }
-    public function isAllowedTwig(User $user, $action)
-    {
-        if (!$user) {
-            return false;
-        }
-        if ($user->hasRole('ROLE_ADMIN')) {
-            return true;
-        }
-        if (!$user->getUserGroup()) {
-            return false;
-        }
-        foreach ($user->getUserGroup()->getPermission() as $key => $perm) {
-            if ($action==$perm->getName()) {
-                return true;
-            }
-        }
 
-        return false;
-    
-        //
-    }*/
+            return false;
+
+            //
+        }*/
 }

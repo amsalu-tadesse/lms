@@ -46,6 +46,7 @@ class InstructorCourseController extends AbstractController
      */
     public function index(Request $request, PaginatorInterface $paginator, InstructorCourseRepository $instructorCourseRepository): Response
     {
+        $this->denyAccessUnlessGranted('instructor_course_list');
         $pageSize = 15;
         $em = $this->getDoctrine()->getManager();
 
@@ -63,24 +64,23 @@ class InstructorCourseController extends AbstractController
             $pageSize
         );
         $crs_stnumber = array();
-       $ic_student_count = $em->getRepository(instructorCourse::class)->findAll();
-       $json = "[['Course', 'number']";
-  
-       foreach ($ic_student_count as $key => $value) {
-        
-        $crs_stnumber[$value->getCourse()->getName()] =  sizeof($value->getStudentCourses());
+        $ic_student_count = $em->getRepository(instructorCourse::class)->findAll();
+        $json = "[['Course', 'number']";
 
-        $col =  ",['".$value->getCourse()->getName()."', ".sizeof($value->getStudentCourses())."]";
-        $col =trim(preg_replace('/\s+/', ' ', $col));
-        $json .= $col ;
-       }
-       $json .= "];";
+        foreach ($ic_student_count as $key => $value) {
+            $crs_stnumber[$value->getCourse()->getName()] =  sizeof($value->getStudentCourses());
+
+            $col =  ",['".$value->getCourse()->getName()."', ".sizeof($value->getStudentCourses())."]";
+            $col =trim(preg_replace('/\s+/', ' ', $col));
+            $json .= $col ;
+        }
+        $json .= "];";
         return $this->render('instructor_course/index.html.twig', [
             'instructor_courses' => $data,
             'instructorsList' => $teachersList,
             'searchForm' => $searchForm->createView(),
             'crs_stnumber' =>$json ,
-           
+
         ]);
     }
     
@@ -131,6 +131,7 @@ class InstructorCourseController extends AbstractController
      */
     public function assignInstructor(Request $request, InstructorCourse $instructorCourse)
     {
+        $this->denyAccessUnlessGranted('instructor_course_assign');
         $em = $this->getDoctrine()->getManager();
         $instId = $request->request->get("instructor");
         $instructor = $em->getRepository(Instructor::class)->find($instId);
@@ -147,6 +148,7 @@ class InstructorCourseController extends AbstractController
      */
     public function show(InstructorCourse $instructorCourse): Response
     {
+        $this->denyAccessUnlessGranted('instructor_course_list');
         return $this->render('instructor_course/show.html.twig', [
             'instructor_course' => $instructorCourse,
         ]);
@@ -157,6 +159,7 @@ class InstructorCourseController extends AbstractController
      */
     public function edit(Request $request, InstructorCourse $instructorCourse): Response
     {
+        $this->denyAccessUnlessGranted('instructor_course_edit');
         $form = $this->createForm(InstructorCourseType::class, $instructorCourse);
         $form->handleRequest($request);
 
@@ -177,12 +180,14 @@ class InstructorCourseController extends AbstractController
      */
     public function delete(Request $request, InstructorCourse $instructorCourse): Response
     {
+        $this->denyAccessUnlessGranted('instructor_course_delete');
         if ($this->isCsrfTokenValid('delete' . $instructorCourse->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
-            try
-            {
+            try {
                 $entityManager->remove($instructorCourse);
                 $entityManager->flush();
+            } catch (\Exception $ex) {
+                dd($ex);
             }
             catch(\Exception $ex)
             {
@@ -198,6 +203,7 @@ class InstructorCourseController extends AbstractController
      */
     public function instructorCourseDeactivate(InstructorCourse $instructorCourse, InstructorCourseRepository $instructorCourseRepository, PaginatorInterface $paginator, Request $request): Response
     {
+        $this->denyAccessUnlessGranted('instructor_course_deactivate');
         $em = $this->getDoctrine()->getManager();
         if ($instructorCourse->getActive()) {
             $instructorCourse->setActive(false);
@@ -206,6 +212,5 @@ class InstructorCourseController extends AbstractController
         }
         $em->flush();
         return $this->redirectToRoute('instructor_course_index');
-
     }
 }

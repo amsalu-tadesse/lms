@@ -12,12 +12,12 @@ class UserFilterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('firstName',null,array('required' => false))
-            ->add('middleName',null,array('required' => false))
-            ->add('lastName',null,array('required' => false))
-            ->add('userType',null,array('required' => false))
-            ->add('email',null,array('required' => false))
-            ->add('username',null,array('required' => false))
+            ->add('firstName', null, array('required' => false))
+            ->add('middleName', null, array('required' => false))
+            ->add('lastName', null, array('required' => false))
+            ->add('userType', null, array('required' => false))
+            ->add('email', null, array('required' => false))
+            ->add('username', null, array('required' => false))
         ;
     }
 

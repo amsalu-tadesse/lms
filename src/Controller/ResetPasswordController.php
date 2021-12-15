@@ -44,7 +44,6 @@ class ResetPasswordController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-         
             return $this->processSendingPasswordResetEmail(
                 $form->get('email')->getData(),
                 $mailer
@@ -165,10 +164,10 @@ class ResetPasswordController extends AbstractController
 
             return $this->redirectToRoute('app_check_email');
         }
- 
-         /*comment the following line if you want to send the token by email...also uncomment the method return type to RedirectResponse*/
+
+        /*comment the following line if you want to send the token by email...also uncomment the method return type to RedirectResponse*/
         return $this->render('reset_password/email.html.twig', ['resetToken'=>$resetToken,'tokenLifetime'=>$this->resetPasswordHelper->getTokenLifetime()]);
-        
+
         $email = (new TemplatedEmail())
             ->from(new Address('dawit120@gmail.com', 'Amsalu Tadesse'))
             ->to($user->getEmail())
@@ -179,9 +178,9 @@ class ResetPasswordController extends AbstractController
                 'tokenLifetime' => $this->resetPasswordHelper->getTokenLifetime(),
             ])
         ;
-// dd($email);
+        // dd($email);
         $mailer->send($email);
-// dd("44");
+        // dd("44");
         return $this->redirectToRoute('app_check_email');
     }
 }

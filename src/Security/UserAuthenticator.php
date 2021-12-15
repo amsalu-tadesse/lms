@@ -94,14 +94,12 @@ class UserAuthenticator extends AbstractFormLoginAuthenticator implements Passwo
     {
         $user=$this->user;
         $role = $user->getRoles()[0];
-        if($role === "ROLE_USER" || $role == "ROLE_STUDENT"){}
-        else{
-            if(!$user->getLastLogin()){
-
+        if ($role === "ROLE_USER" || $role == "ROLE_STUDENT") {
+        } else {
+            if (!$user->getLastLogin()) {
                 return new RedirectResponse($this->urlGenerator->generate('change_password'));
-            }
-            else if($user->getIsActive()==false){
-                return new RedirectResponse($this->urlGenerator->generate('user_show',['id'=>$user->getId()]));
+            } elseif ($user->getIsActive()==false) {
+                return new RedirectResponse($this->urlGenerator->generate('user_show', ['id'=>$user->getId()]));
             }
         }
 
@@ -109,25 +107,25 @@ class UserAuthenticator extends AbstractFormLoginAuthenticator implements Passwo
         $this->entityManager->flush();
         $permissions=[];
 
-        if($user->getId()==1){
+        if ($user->getId()==1) {
             $permission=$this->entityManager->getRepository(Permission::class)->findAll();
             foreach ($permission as $key => $value1) {
                 $permissions[]=$value1->getCode();
             }
-        }
-        else {
+        } else {
             //role to be added
             /*$groups=$this->entityManager->getRepository(UserGroup::class)->findBy(['users'=>$this->user,'isActive'=>1]) ;*/$groups=$this->user->getUserGroup();
             // addUserGroup
             // dd($groups);
-            foreach ($groups as $key => $value) { 
-                if(!$value->getIsActive()) continue;
-                $permission=$value->getPermission();
-                
-                foreach ($permission as $key => $value1) {
-                $permissions[]=$value1->getCode();
+            foreach ($groups as $key => $value) {
+                if (!$value->getIsActive()) {
+                    continue;
                 }
+                $permission=$value->getPermission();
 
+                foreach ($permission as $key => $value1) {
+                    $permissions[]=$value1->getCode();
+                }
             }
         }
         $request->getSession()->set(
@@ -135,23 +133,23 @@ class UserAuthenticator extends AbstractFormLoginAuthenticator implements Passwo
             $permissions
         );
         return new RedirectResponse($this->urlGenerator->generate('home'));
-       /* if($role === "ROLE_STUDENT")
-        {
-            if(!$user->isVerified())
-            {
-                return new RedirectResponse($this->urlGenerator->generate('app_logout'));
-            }
-            return new RedirectResponse($this->urlGenerator->generate('student_course_index'));
-        }
-        else 
-        {
-            return new RedirectResponse($this->urlGenerator->generate('admin_home'));
-        }*/
+        /* if($role === "ROLE_STUDENT")
+         {
+             if(!$user->isVerified())
+             {
+                 return new RedirectResponse($this->urlGenerator->generate('app_logout'));
+             }
+             return new RedirectResponse($this->urlGenerator->generate('student_course_index'));
+         }
+         else
+         {
+             return new RedirectResponse($this->urlGenerator->generate('admin_home'));
+         }*/
 
 
-     //   else if($role == "ROLE_ADMIN")
-           
-    
+        //   else if($role == "ROLE_ADMIN")
+
+
         // For example : return new RedirectResponse($this->urlGenerator->generate('some_route'));
         throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
     }

@@ -10,7 +10,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
-
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
@@ -73,7 +72,7 @@ class User implements UserInterface
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $lastLogin;
- 
+
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
@@ -90,9 +89,9 @@ class User implements UserInterface
      */
     private $role;
 
-    
 
-      /**
+
+    /**
      * @ORM\ManyToMany(targetEntity="App\Entity\UserGroup", inversedBy="users")
      */
     private $userGroup;
@@ -160,8 +159,8 @@ class User implements UserInterface
         return $this;
     }
 
-   
-    
+
+
     /**
      * @see UserInterface
      */
@@ -213,11 +212,11 @@ class User implements UserInterface
         // $this->plainPassword = null;
     }
 
-   
 
-   
-    
-    
+
+
+
+
 
     public function getUserType(): ?UserType
     {
@@ -267,7 +266,7 @@ class User implements UserInterface
         return $this;
     }
 
-     
+
     public function __toString()
     {
         return $this->firstName." ".$this->middleName." ".$this->lastName;
@@ -345,11 +344,11 @@ class User implements UserInterface
         return $this;
     }
 
-     
 
-     /**
-     * @return Collection|UserGroup[]
-     */
+
+    /**
+    * @return Collection|UserGroup[]
+    */
     public function getUserGroup(): Collection
     {
         return $this->userGroup;

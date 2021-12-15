@@ -11,7 +11,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class UtilityController extends AbstractController
 {
-
     public static function getMessage($code)
     {
         $message = '';
@@ -29,12 +28,12 @@ class UtilityController extends AbstractController
         return $message;
     }
 
-     /**
-     * @Route("/getsummary/{id}", name="getsummary", methods={"GET"})
-     */
+    /**
+    * @Route("/getsummary/{id}", name="getsummary", methods={"GET"})
+    */
     public static function getSummary(InstructorCourse $instructorCourse, Request $request): Response
     {
-        if($request->isXmlHttpRequest()) {
+        if ($request->isXmlHttpRequest()) {
             $result = array();
             $arr = array();
             $all = $instructorCourse->getInstructorCourseChapters();
@@ -42,40 +41,30 @@ class UtilityController extends AbstractController
                 $contents =  $chapter->getContents();
                 $cnt = array('video'=>0, 'youtube'=>0,'others'=>0);
                 foreach ($contents as  $content) {
-                    if($content->getFileName())
-                    {
+                    if ($content->getFileName()) {
                         $cnt['video'] ++;
-                    }
-                    elseif($content->getVideoLink())
-                    {
+                    } elseif ($content->getVideoLink()) {
                         $cnt['youtube'] ++;
-                    }
-                    else {
+                    } else {
                         $cnt['others'] ++;
                     }
                 }
-                
+
                 $temp = array(
                     'chapter'=> $chapter->getTopic(),
-                    'quiz'=> $chapter->getQuizzes()?"YES":"NO",
+                    'quiz'=> $chapter->getQuizzes() ? "YES" : "NO",
                     'contents'=> $cnt
             );
                 $arr[]=$temp;
             }
 
             // dd( $arr);
-            $returnResponse = new JsonResponse(); 
+            $returnResponse = new JsonResponse();
             $returnResponse->setJson(json_encode($arr));
-    
+
             return $returnResponse;
-
-
-        }
-        else{
+        } else {
             die("error");
-        }    
+        }
     }
-
-
-
 }

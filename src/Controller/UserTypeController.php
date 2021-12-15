@@ -21,8 +21,10 @@ class UserTypeController extends AbstractController
      */
     public function index(UserTypeRepository $usertypeRepository, Request $request, PaginatorInterface $paginator): Response
     {
+        $this->denyAccessUnlessGranted('user_type_list');
 
-        if ($request->request->get('edit')) {
+        if ($request->request->get('edit') ) {
+            $this->denyAccessUnlessGranted('user_type_edit');
             $id = $request->request->get('edit');
             $usertype = $usertypeRepository->findOneBy(['id' => $id]);
             $form = $this->createForm(UserTypeType::class, $usertype);
@@ -45,8 +47,8 @@ class UserTypeController extends AbstractController
                 'form' => $form->createView(),
                 'edit' => $id,
             ]);
-
         }
+        $this->denyAccessUnlessGranted('user_type_create');
         $usertype = new UserType();
         $form = $this->createForm(UserTypeType::class, $usertype);
         $form->handleRequest($request);
@@ -77,11 +79,11 @@ class UserTypeController extends AbstractController
      */
     public function delete(Request $request, UserType $usertype): Response
     {
+        $this->denyAccessUnlessGranted('user_type_delete');
         if ($this->isCsrfTokenValid('delete' . $usertype->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
 
-            try
-            {
+            try {
                 $entityManager->remove($usertype);
                 $entityManager->flush();
             } catch (\Exception $ex) {
@@ -89,7 +91,6 @@ class UserTypeController extends AbstractController
                 $message = UtilityController::getMessage($ex->getCode());
                 $this->addFlash('danger', $message);
             }
-
         }
 
         return $this->redirectToRoute('usertype_index');

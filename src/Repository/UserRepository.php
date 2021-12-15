@@ -17,7 +17,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
-    public function __construct(ManagerRegistry $registry) 
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, User::class);
     }
@@ -39,40 +39,35 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     public function filterUser($fname, $mname, $lname, $username, $userType)
     {
         $q =  $this->createQueryBuilder('u');
-            
-            // ->innerJoin('u.department','dt')  
-            if($fname !="")
-            {
-                $q->Where('u.firstName LIKE :firstName')
-                  ->setParameter('firstName', '%'.$fname.'%');
-            }
-            if($mname !="")
-            {
-                $q->andWhere('u.middleName LIKE :middleName')
-                ->setParameter('middleName', '%'.$mname.'%');
-            }
-            
-            if($lname !="")
-            {
-                $q->andWhere('u.lastName LIKE :lastName')
-                  ->setParameter('lastName', '%'.$lname.'%');
-            }
 
-            if($userType !="")
-            {
-                $q->join('u.userType','ut')
+        // ->innerJoin('u.department','dt')
+        if ($fname !="") {
+            $q->Where('u.firstName LIKE :firstName')
+                  ->setParameter('firstName', '%'.$fname.'%');
+        }
+        if ($mname !="") {
+            $q->andWhere('u.middleName LIKE :middleName')
+                ->setParameter('middleName', '%'.$mname.'%');
+        }
+
+        if ($lname !="") {
+            $q->andWhere('u.lastName LIKE :lastName')
+                  ->setParameter('lastName', '%'.$lname.'%');
+        }
+
+        if ($userType !="") {
+            $q->join('u.userType', 'ut')
                 ->andWhere('u.userType = :username')
                 ->setParameter('username', $userType);
-            }
+        }
 
 
-            if($username !="")
-            {
-                $q->andWhere('u.username = :username')
+        if ($username !="") {
+            $q->andWhere('u.username = :username')
                 ->setParameter('username', $userType);
-            }
+        }
 
-            $q->orderBy('u.id', 'ASC')
+        $q->orderBy('u.id', 'ASC')
             ->getQuery()
             ->getResult()
         ;
@@ -81,7 +76,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     // /**
     //  * @return User[] Returns an array of User objects
     //  */
-    
+
     // public function findUser($value)
     // {
     //     return $this->createQueryBuilder('u')
@@ -93,7 +88,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     //         ->getResult()
     //     ;
     // }
-    
+
     public function checkEmail($email)
     {
         return $this->createQueryBuilder('u')
@@ -101,7 +96,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->setParameter('val', $value)
             ->getQuery()
             ->getOneOrNullResult()
-        ; 
+        ;
     }
     /*
     public function findOneBySomeField($value): ?User

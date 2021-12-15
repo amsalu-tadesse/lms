@@ -22,7 +22,7 @@ class SystemSetting
      */
     private $code;
 
-   
+
     /**
      * @ORM\Column(type="text", nullable=true)
      */

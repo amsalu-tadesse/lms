@@ -21,14 +21,15 @@ class InstructorCourseStatusRepository extends ServiceEntityRepository
     public function findInstructorCourseStatus($search=null)
     {
         $qb=$this->createQueryBuilder('p');
-        if($search)
+        if ($search) {
             $qb->andWhere("p.name  LIKE '%".$search."%'");
+        }
 
-            return 
+        return
             $qb->orderBy('p.id', 'ASC')
             ->getQuery()
-     
-            
+
+
         ;
     }
     // /**

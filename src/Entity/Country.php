@@ -30,7 +30,7 @@ class Country
     private $description;
 
 
-   
+
 
     public function getId(): ?int
     {
@@ -61,7 +61,7 @@ class Country
         return $this;
     }
 
-     
+
     public function __toString()
     {
         return $this->name;

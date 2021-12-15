@@ -46,7 +46,6 @@ class UserController extends AbstractController
         $searchForm->handleRequest($request);
 
         if ($request->request->get('edit')) {
-
             $id = $request->request->get('edit');
             $user = $userRepository->findOneBy(['id' => $id]);
             $form = $this->createForm(userType::class, $user);
@@ -73,7 +72,6 @@ class UserController extends AbstractController
         }
 
         if ($request->request->get("userid")) {
-
             $entityManager = $this->getDoctrine()->getManager();
 
             $user = $entityManager->getRepository(User::class)->find($request->request->get("userid"));
@@ -86,7 +84,6 @@ class UserController extends AbstractController
                 $entityManager->flush();
                 return $this->redirectToRoute('user_index');
             }
-
         }
 
         $form = $this->createForm(userType::class, $user);
@@ -101,7 +98,7 @@ class UserController extends AbstractController
 
             $user->setPassword($userPasswordEncoderInterface->encodePassword($user, $password));
 
-           
+
             $role = $this->getCustomRoleNames($user->getUserType()->getId());
 
             $user->setRoles([$role]);
@@ -117,7 +114,6 @@ class UserController extends AbstractController
                 $username_new = $username1 . $counter;
                 $username = $username_new;
                 $found = $entityManager->getRepository(User::class)->findOneBy(['username' => $username_new]);
-
             }
 
             $email = $entityManager->getRepository(User::class)->findOneBy(['email' => $user->getEmail()]);
@@ -132,14 +128,11 @@ class UserController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            if ($user->getUserType()->getId() == 3) //instructor
-            {
+            if ($user->getUserType()->getId() == 3) { //instructor
                 $instructor = new Instructor();
                 $instructor->setUser($user);
                 $entityManager->persist($instructor);
-
-            } else if ($user->getUserType()->getId() == 4) //student
-            {
+            } elseif ($user->getUserType()->getId() == 4) { //student
                 $student = new Student();
                 $em = $this->getDoctrine()->getManager();
                 
@@ -203,7 +196,6 @@ class UserController extends AbstractController
                 $student->setUser($user);
                 $student->setAcademicLevel($form['academicLevel']->getData());
                 $entityManager->persist($student);
-
             }
             $entityManager->flush();
 
@@ -264,7 +256,8 @@ class UserController extends AbstractController
      * @Route("/new", name="user_new", methods={"GET","POST"})
      */
 
-    function new (Request $request, UserPasswordEncoderInterface $userPasswordEncoderInterface): Response {
+    public function new(Request $request, UserPasswordEncoderInterface $userPasswordEncoderInterface): Response
+    {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
@@ -308,7 +301,6 @@ class UserController extends AbstractController
      */
     public function edit(Request $request, User $user): Response
     {
-
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 

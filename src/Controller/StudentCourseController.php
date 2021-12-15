@@ -58,7 +58,7 @@ class StudentCourseController extends AbstractController
      */
     public function courseRequest(Request $request, StudentCourseRepository $studentCourseRepository, PaginatorInterface $paginator): Response
     {
-        if($this->isGranted("ROLE_ADMIN") || $this->isGranted("ROLE_DIRECTOR")){
+        if ($this->isGranted("ROLE_ADMIN") || $this->isGranted("ROLE_DIRECTOR")) {
             $studentCourseRepository->updateNotification();
         }
         $st_course = new StudentCourse();
@@ -105,8 +105,8 @@ class StudentCourseController extends AbstractController
     */
     public function finishedCourses(StudentCourseRepository $stud_course_repo, PaginatorInterface $paginator, Request $request)
     {
-        $queryBuilder = $stud_course_repo->findBy(['status'=>5],['id'=>'DESC']);
-        
+        $queryBuilder = $stud_course_repo->findBy(['status'=>5], ['id'=>'DESC']);
+
         $data = $paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page', 1),
@@ -312,60 +312,45 @@ class StudentCourseController extends AbstractController
         $json = "[['Student', 'Completion']";
         foreach ($queryBuilder as $studentCourse) {
             $stdid = $studentCourse->getId();
-        
-        $comp = $this->getCompletion($stdid);
 
-        if($comp==0)
-        {
-            $completion['0%'] ++;
-        }
-        elseif ($comp < 25) {
-            $completion['1-24%'] ++;
-        }
+            $comp = $this->getCompletion($stdid);
 
-        elseif ($comp < 50) {
-            # code...
-            $completion['25-49%'] ++;
-        }
-        elseif ($comp < 75) {
-            # code...
-            $completion['50-74%'] ++;
-        }
-
-        elseif ($comp < 100) {
-            # code...
-            $completion['75-99%'] ++;
-        }
-
-        elseif ($comp =100) {
-            # code...
-            $completion['100%'] ++;
-        }
-
-        else{
-            # code...
+            if ($comp==0) {
+                $completion['0%'] ++;
+            } elseif ($comp < 25) {
+                $completion['1-24%'] ++;
+            } elseif ($comp < 50) {
+                # code...
+                $completion['25-49%'] ++;
+            } elseif ($comp < 75) {
+                # code...
+                $completion['50-74%'] ++;
+            } elseif ($comp < 100) {
+                # code...
+                $completion['75-99%'] ++;
+            } elseif ($comp =100) {
+                # code...
+                $completion['100%'] ++;
+            } else {
+                # code...
+            }
         }
 
 
-        }
-
-
-        foreach($completion as $key=>$value)
-        {
-        
-         $col =  ",['".$key."', ".$value."]";
-         $col =trim(preg_replace('/\s+/', ' ', $col));
-         $json .= $col ;
-    
+        foreach ($completion as $key=>$value) {
+            $col =  ",['".$key."', ".$value."]";
+            $col =trim(preg_replace('/\s+/', ' ', $col));
+            $json .= $col ;
         }
 
 
         $json .= "];";
-        
-  
 
-        return $this->render('student_course/students_in_course.html.twig'
-            , [
+
+
+        return $this->render(
+            'student_course/students_in_course.html.twig',
+            [
                 'student_courses' => $data,
                 'instructor_course' => $instructorCourse,
                 'completion'=>$json,
@@ -416,14 +401,12 @@ class StudentCourseController extends AbstractController
             $orders = $request->request->get('order');
             $columns = $request->request->get('columns');
             $instcrs = $request->request->get('id');
-             
-        } else // If the request is not a POST one, die hard
-        {
+        } else { // If the request is not a POST one, die hard
             die;
         }
 
         // Get results from the Repository
-        $results = $studentCourseRepository->getRequiredDTData($start, $length, $orders, $search, $columns,$instcrs);
+        $results = $studentCourseRepository->getRequiredDTData($start, $length, $orders, $search, $columns, $instcrs);
         // Returned objects are of type Town
         $objects = $results["results"];
         // dd($objects);
@@ -439,7 +422,7 @@ class StudentCourseController extends AbstractController
         $Response = array();
         $temp = array();
         foreach ($objects as $key => $value) {
-            
+
             // dd($this->getCompletion($value['id']));
             $temp["id"] = $value['id'];
             $temp["name"] = $value["name"];
@@ -520,45 +503,40 @@ class StudentCourseController extends AbstractController
     /**
     * @Route("/approveMultiple", name="approve_multiple", methods={"GET","POST"})
     */
-   public function requestApproveMultiple(StudentCourseRepository $stud_cour_repo, PaginatorInterface $paginator, Request $request): Response
-   {
-       $ids = array();
-       $ids = explode(",",$request->request->get('checked_list')[0]);
-       $em = $this->getDoctrine()->getManager();
-       foreach($ids as $id)
-       {
-           $stud_course = $stud_cour_repo->find($id);
-           if($stud_course != null)
-           {
-               $stud_course->setStatus(1);
-               $em->persist($stud_course);
-               $em->flush();
-           }
-       }
-       return $this->redirectToRoute("course_request");
-   }
+    public function requestApproveMultiple(StudentCourseRepository $stud_cour_repo, PaginatorInterface $paginator, Request $request): Response
+    {
+        $ids = array();
+        $ids = explode(",", $request->request->get('checked_list')[0]);
+        $em = $this->getDoctrine()->getManager();
+        foreach ($ids as $id) {
+            $stud_course = $stud_cour_repo->find($id);
+            if ($stud_course != null) {
+                $stud_course->setStatus(1);
+                $em->persist($stud_course);
+                $em->flush();
+            }
+        }
+        return $this->redirectToRoute("course_request");
+    }
 
-   /**
-    * @Route("/rejectMultiple", name="reject_multiple", methods={"GET","POST"})
-    */
+    /**
+     * @Route("/rejectMultiple", name="reject_multiple", methods={"GET","POST"})
+     */
     public function requestRejectMultiple(StudentCourseRepository $stud_cour_repo, PaginatorInterface $paginator, Request $request): Response
     {
-       $ids = array();
-       $ids = explode(",",$request->request->get('checked_list')[0]);
-       $em = $this->getDoctrine()->getManager();
+        $ids = array();
+        $ids = explode(",", $request->request->get('checked_list')[0]);
+        $em = $this->getDoctrine()->getManager();
 
-       foreach($ids as $key => $value)
-       {
-           $stud_course = $stud_cour_repo->find($value);
-           if($stud_course != null)
-           {
-               $stud_course->setStatus(2);
-               $em->persist($stud_course);
-               $em->flush();
-           }
-       }
-       return $this->redirectToRoute("course_request");
- 
+        foreach ($ids as $key => $value) {
+            $stud_course = $stud_cour_repo->find($value);
+            if ($stud_course != null) {
+                $stud_course->setStatus(2);
+                $em->persist($stud_course);
+                $em->flush();
+            }
+        }
+        return $this->redirectToRoute("course_request");
     }
 
     /**
@@ -575,7 +553,7 @@ class StudentCourseController extends AbstractController
         $em->flush();
 
         $returnResponse = new JsonResponse();
-        $returnResponse->setJson($status); 
+        $returnResponse->setJson($status);
 
         return $returnResponse; // return $this->redirectToRoute('course_request');
     }
@@ -584,7 +562,6 @@ class StudentCourseController extends AbstractController
      */
     public function updater($chapter, StudentChapterRepository $student_chapter)
     {
-
         $em = $this->getDoctrine()->getManager();
         $stud_chap = $student_chapter->getProgress1($chapter, $this->getUser()->getProfile()->getId());
         $conn = $this->getDoctrine()->getManager()
@@ -638,13 +615,13 @@ class StudentCourseController extends AbstractController
             'student_courses' => $data,
             'instructor_course' => $studentCourse->getInstructorCourse(),
         ]);
-
     }
 
     /**
      * @Route("/new", name="student_course_new", methods={"GET","POST"})
      */
-    function new (Request $request): Response {
+    public function new(Request $request): Response
+    {
         $studentCourse = new StudentCourse();
         $form = $this->createForm(StudentCourseType::class, $studentCourse);
         $form->handleRequest($request);
@@ -755,18 +732,16 @@ class StudentCourseController extends AbstractController
      */
     public function notification(StudentCourseRepository $stud_course_repo, Request $request): Response
     {
-        if($request->isXmlHttpRequest()) {
+        if ($request->isXmlHttpRequest()) {
             $result = array();
             $questions = $stud_course_repo->newCourseRequest();
-            
+
             $returnResponse = new JsonResponse();
             $returnResponse->setJson($questions['new_requests']);
-    
+
             return $returnResponse;
-            
-        }
-        else{
+        } else {
             die("error");
-        }   
+        }
     }
 }

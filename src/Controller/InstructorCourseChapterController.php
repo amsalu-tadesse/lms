@@ -18,7 +18,6 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class InstructorCourseChapterController extends AbstractController
 {
-
     /**
      * @Route("/", name="instructor_course_chapter_index", methods={"GET"})
      */
@@ -34,7 +33,6 @@ class InstructorCourseChapterController extends AbstractController
             'instructor_courses' => $mylist,
             // 'instructorsList' => $teachersList,
         ]);
-
     }
 
     /**
@@ -42,6 +40,7 @@ class InstructorCourseChapterController extends AbstractController
      */
     public function contentList(InstructorCourse $instructorCourse, Request $request): Response
     {
+        
         $em = $this->getDoctrine()->getManager();
         $instructorCourseChapters = $em->getRepository(InstructorCourseChapter::class)->findBy(['instructorCourse' => $instructorCourse]);
         return $this->render('instructor_course_chapter/index.html.twig', [
@@ -56,6 +55,7 @@ class InstructorCourseChapterController extends AbstractController
      */
     public function quiz(InstructorCourse $instructorCourse, Request $request): Response
     {
+        $this->denyAccessUnlessGranted('quiz_list');
         $em = $this->getDoctrine()->getManager();
         $instructorCourseChapters = $em->getRepository(InstructorCourseChapter::class)->findBy(['instructorCourse' => $instructorCourse]);
         return $this->render('quiz/index.html.twig', [
@@ -68,7 +68,9 @@ class InstructorCourseChapterController extends AbstractController
     /**
      * @Route("/new/{id}", name="instructor_course_chapter_new", methods={"GET","POST"})
      */
-    function new (Request $request, InstructorCourse $instructorCourse): Response {;
+    public function new(Request $request, InstructorCourse $instructorCourse): Response
+    {
+        $this->denyAccessUnlessGranted('chapter_create');
         $incrsid = $request->get('id');
         $instructorCourseChapter = new InstructorCourseChapter();
         $form = $this->createForm(InstructorCourseChapterType::class, $instructorCourseChapter);
@@ -95,6 +97,7 @@ class InstructorCourseChapterController extends AbstractController
      */
     public function show(InstructorCourseChapter $instructorCourseChapter): Response
     {
+        $this->denyAccessUnlessGranted('chapter_list');
         return $this->render('instructor_course_chapter/show.html.twig', [
             'instructor_course_chapter' => $instructorCourseChapter,
         ]);
@@ -105,6 +108,7 @@ class InstructorCourseChapterController extends AbstractController
      */
     public function edit(Request $request, InstructorCourseChapter $instructorCourseChapter): Response
     {
+        $this->denyAccessUnlessGranted('chapter_edit');
         $form = $this->createForm(InstructorCourseChapterType::class, $instructorCourseChapter);
         $form->handleRequest($request);
 
@@ -124,11 +128,11 @@ class InstructorCourseChapterController extends AbstractController
      */
     public function delete(Request $request, InstructorCourseChapter $instructorCourseChapter): Response
     {
+        $this->denyAccessUnlessGranted('chapter_delete');
         if ($this->isCsrfTokenValid('delete' . $instructorCourseChapter->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
 
-            try
-            {
+            try {
                 $entityManager->remove($instructorCourseChapter);
                 $entityManager->flush();
             } catch (\Exception $ex) {
@@ -136,7 +140,6 @@ class InstructorCourseChapterController extends AbstractController
                 $message = UtilityController::getMessage($ex->getCode());
                 $this->addFlash('danger', $message);
             }
-
         }
 
         return $this->redirectToRoute('instructor_course_chapter_index', [], Response::HTTP_SEE_OTHER);

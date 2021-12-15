@@ -20,6 +20,7 @@ class QuizChoicesController extends AbstractController
      */
     public function index(QuizChoicesRepository $quizChoicesRepository): Response
     {
+        $this->denyAccessUnlessGranted('quiz_list');
         return $this->render('quiz_choices/index.html.twig', [
             'quiz_choices' => $quizChoicesRepository->findAll(),
         ]);
@@ -30,6 +31,7 @@ class QuizChoicesController extends AbstractController
      */
     public function new(Request $request): Response
     {
+        $this->denyAccessUnlessGranted('quiz_create');
         $quizChoice = new QuizChoices();
         $form = $this->createForm(QuizChoicesType::class, $quizChoice);
         $form->handleRequest($request);
@@ -53,6 +55,7 @@ class QuizChoicesController extends AbstractController
      */
     public function show(QuizChoices $quizChoice): Response
     {
+        $this->denyAccessUnlessGranted('quiz_list');
         return $this->render('quiz_choices/show.html.twig', [
             'quiz_choice' => $quizChoice,
         ]);
@@ -63,6 +66,7 @@ class QuizChoicesController extends AbstractController
      */
     public function edit(Request $request, QuizChoices $quizChoice): Response
     {
+        $this->denyAccessUnlessGranted('quiz_edit');
         $form = $this->createForm(QuizChoicesType::class, $quizChoice);
         $form->handleRequest($request);
 
@@ -83,6 +87,7 @@ class QuizChoicesController extends AbstractController
      */
     public function delete(Request $request, QuizChoices $quizChoice): Response
     {
+        $this->denyAccessUnlessGranted('quiz_delete');
         if ($this->isCsrfTokenValid('delete'.$quizChoice->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($quizChoice);

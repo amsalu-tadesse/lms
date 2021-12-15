@@ -175,7 +175,7 @@ class InstructorCourseChapter
         return $this;
     }
 
- 
+
 
     /**
      * @return Collection|Quiz[]

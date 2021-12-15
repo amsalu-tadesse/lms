@@ -17,7 +17,7 @@ class QuizChoices
      */
     private $id;
 
- 
+
     /**
      * @ORM\Column(type="string", length=255)
      */
@@ -39,7 +39,7 @@ class QuizChoices
         return $this->id;
     }
 
- 
+
 
     public function getLetter(): ?string
     {

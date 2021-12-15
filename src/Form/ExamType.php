@@ -12,19 +12,19 @@ class ExamType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('instruction' ,null,[
+            ->add('instruction', null, [
                 'attr'=>['class'=>'form-control']
             ])
-            ->add('percentage' ,null,[
+            ->add('percentage', null, [
                 'attr'=>['class'=>'form-control']
             ])
-            ->add('passvalue' ,null,[
+            ->add('passvalue', null, [
                 'attr'=>['class'=>'form-control']
             ])
-            ->add('active' ,null,[
+            ->add('active', null, [
                 'attr'=>['class'=>'form-status']
             ])
-            ->add('instructorCourse' ,null,[
+            ->add('instructorCourse', null, [
                 'attr'=>['class'=>'form-control']
             ])
         ;

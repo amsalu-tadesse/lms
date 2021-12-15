@@ -1,6 +1,8 @@
-<?php 
+<?php
+
 
 // src/EventSubscriber/LocaleSubscriber.php
+
 namespace App\Subscribers;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -29,9 +31,11 @@ class LocaleSubscriber implements EventSubscriberInterface
         } else {
             // if no explicit locale has been set on this request, use one from the session
             $locale = $request->getSession()->get('_locale');
-            if(!$locale) $locale = 'en';
+            if (!$locale) {
+                $locale = 'en';
+            }
 
-        $request->setLocale($locale, 'en'/*$this->defaultLocale*/);
+            $request->setLocale($locale, 'en'/*$this->defaultLocale*/);
         }
     }
 

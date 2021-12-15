@@ -19,25 +19,24 @@ class PermissionController extends AbstractController
     /**
      * @Route("/", name="permission_index", methods={"GET","POST"})
      */
-    public function index(PermissionRepository $permissionRepository,Request $request, PaginatorInterface $paginator): Response
+    public function index(PermissionRepository $permissionRepository, Request $request, PaginatorInterface $paginator): Response
     {
-
-        if($request->request->get('edit')){
+        if ($request->request->get('edit')) {
             $id=$request->request->get('edit');
             $permission=$permissionRepository->findOneBy(['id'=>$id]);
             $form = $this->createForm(PermissionType::class, $permission);
             $form->handleRequest($request);
-    
+
             if ($form->isSubmitted() && $form->isValid()) {
                 $this->getDoctrine()->getManager()->flush();
-    
+
                 return $this->redirectToRoute('permission_index');
             }
 
             $queryBuilder=$permissionRepository->findPermission($request->query->get('search'));
             $data=$paginator->paginate(
                 $queryBuilder,
-                $request->query->getInt('page',1),
+                $request->query->getInt('page', 1),
                 18
             );
             return $this->render('permission/index.html.twig', [
@@ -45,7 +44,6 @@ class PermissionController extends AbstractController
                 'form' => $form->createView(),
                 'edit'=>$id
             ]);
-
         }
         $permission = new Permission();
         $form = $this->createForm(PermissionType::class, $permission);
@@ -58,11 +56,11 @@ class PermissionController extends AbstractController
 
             return $this->redirectToRoute('permission_index');
         }
-        
+
         $queryBuilder=$permissionRepository->findPermission($request->query->get('search'));
         $data=$paginator->paginate(
             $queryBuilder,
-            $request->query->getInt('page',1),
+            $request->query->getInt('page', 1),
             18
         );
         return $this->render('permission/index.html.twig', [
@@ -70,8 +68,8 @@ class PermissionController extends AbstractController
             'form' => $form->createView(),
             'edit'=>false
         ]);
-    }  
- 
+    }
+
     /**
      * @Route("/{id}", name="permission_delete", methods={"DELETE"})
      */

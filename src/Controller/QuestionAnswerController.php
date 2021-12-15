@@ -17,7 +17,7 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 /**
- * @Route("/question/answer") 
+ * @Route("/question/answer")
  */
 class QuestionAnswerController extends AbstractController
 {
@@ -26,19 +26,14 @@ class QuestionAnswerController extends AbstractController
      */
     public function index(QuestionAnswerRepository $questionAnswerRepository, QuestionAnswerRepository $que_ans_repo, Request $request, InstructorRepository $inst_repo, PaginatorInterface $paginator): Response
     {
-
         $instructor = $inst_repo->findOneBy(['user'=>$this->getUser()->getId()]);
-        if($instructor)
-        {
+        if ($instructor) {
             $questions = $questionAnswerRepository->getQuestions($instructor->getId());
-        }
-        else 
-        {
+        } else {
             $questions = array();
         }
-        if(!$instructor)
-        {
-            $this->addFlash('warning','Only Instructor can use Q&A');
+        if (!$instructor) {
+            $this->addFlash('warning', 'Only Instructor can use Q&A');
             return $this->redirectToRoute('home');
         }
         $question_answer = $que_ans_repo->updateNotification(['instructor'=>$instructor->getId()]);
@@ -51,31 +46,29 @@ class QuestionAnswerController extends AbstractController
         return $this->render('question_answer/index.html.twig', [
             'question_answers' => $data,
         ]);
-    } 
+    }
 
     /**
      * @Route("/load", name="question_answer_load_more", methods={"GET"})
      */
     public function loadMore(QuestionAnswerRepository $questionAnswerRepository, Request $request): Response
     {
-        if($request->isXmlHttpRequest()) {
+        if ($request->isXmlHttpRequest()) {
             $result = array();
-            $questions = $questionAnswerRepository->getQuestionAnswer($request->query->get('course'), $request->query->get('start'),$request->query->get('end'));
-            foreach($questions as $key => $value)
-            {
+            $questions = $questionAnswerRepository->getQuestionAnswer($request->query->get('course'), $request->query->get('start'), $request->query->get('end'));
+            foreach ($questions as $key => $value) {
                 $result[$key] = $value[0];
                 $result[$key]['date'] = $result[$key]['createdAt']->format('d-m-Y');
                 $result[$key]['instructor'] = $value['instructor'];
                 $result[$key]['student'] = $value['student'];
             }
-            $returnResponse = new JsonResponse(); 
+            $returnResponse = new JsonResponse();
             $returnResponse->setJson(json_encode($result));
-    
+
             return $returnResponse;
-        }
-        else{
+        } else {
             die("error");
-        }        
+        }
     }
 
     /**
@@ -91,14 +84,12 @@ class QuestionAnswerController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if($this->isGranted('ROLE_INSTRUCTOR'))
-            {
+            if ($this->isGranted('ROLE_INSTRUCTOR')) {
                 $inst = $inst_repo->findOneBy(array('user'=>$this->getUser()->getId()));
                 $questionAnswer->setInstructor($inst);
-            
-            }
-            elseif($this->isGranted('ROLE_STUDENT'))
+            } elseif ($this->isGranted('ROLE_STUDENT')) {
                 $questionAnswer->setStudent($this->getUser()->getProfile());
+            }
             $questionAnswer->setCreatedAt(new DateTime());
             $questionAnswer->setIsReply(0);
             $questionAnswer->setNotification(0);
@@ -158,12 +149,16 @@ class QuestionAnswerController extends AbstractController
                 // $questionAnswer->setVideoAnswer($questionAnswer->getVideoAnswer());
             }
             $inst = $this->getUser()->getInstructors()->getValues();
-            
+
             $questionAnswer->setInstructor($inst[0]);
+<<<<<<< HEAD
             if($questionAnswer->getAnsweredAt())
                 $questionAnswer->setUpdatedAt(new DateTime);
             else
                 $questionAnswer->setAnsweredAt(new DateTime);
+=======
+            $questionAnswer->setAnsweredAt(new DateTime());
+>>>>>>> f852e5d663153c1586c729af0977bf3786edc225
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('question_answer_index', [], Response::HTTP_SEE_OTHER);
@@ -180,18 +175,17 @@ class QuestionAnswerController extends AbstractController
      */
     public function notification(QuestionAnswerRepository $questionAnswerRepository, Request $request): Response
     {
-        if($request->isXmlHttpRequest()) {
+        if ($request->isXmlHttpRequest()) {
             $result = array();
             $questions = $questionAnswerRepository->newQuestionNotification($request->query->get('id'));
-        
+
             $returnResponse = new JsonResponse();
             $returnResponse->setJson($questions['new_questions']);
-    
+
             return $returnResponse;
-        }
-        else{
+        } else {
             die("error");
-        }   
+        }
     }
 
     /**

@@ -23,7 +23,7 @@ class QuizQuestionsRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('qq')
             ->select('qq', 'cc')
-            ->leftJoin('qq.quizChoices','cc')
+            ->leftJoin('qq.quizChoices', 'cc')
             ->where('qq.quiz = :id')
             ->setParameter('id', $chpater)
             ->orderBy(' cc.id,qq.id', "desc")

@@ -33,9 +33,9 @@ class Quiz
      * @ORM\Column(type="float", nullable=true)
      */
     private $passvalue;
- 
 
-    
+
+
     /**
      * @ORM\ManyToOne(targetEntity=InstructorCourseChapter::class, inversedBy="quizzes")
      * @ORM\JoinColumn(nullable=false)
@@ -52,7 +52,7 @@ class Quiz
      */
     private $name;
 
-  
+
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -175,7 +175,7 @@ class Quiz
         return $this;
     }
 
-    
+
 
     public function getName(): ?string
     {

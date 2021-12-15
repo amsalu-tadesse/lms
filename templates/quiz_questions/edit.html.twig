@@ -3,98 +3,124 @@
 {% block title %}Edit Quiz Questions
 {% endblock %}
 {% block breadcrumbhome %}
-    <a href="{{path('quiz_index',{'id':quiz_question.quiz.id})}}">
-	   {% trans %}Quiz{% endtrans %} 
-	</a> / 
-	 <a href="{{path('quiz_questions_index',{'id':quiz_question.quiz.id})}}">
-	   {% trans %}Questions{% endtrans %} 
-	</a> 
+<a href="{{path('quiz_index',{'id':quiz_question.quiz.id})}}">
+	{% trans %}Quiz{% endtrans %}
+</a> /
+<a href="{{path('quiz_questions_index',{'id':quiz_question.quiz.id})}}">
+	{% trans %}Questions{% endtrans %}
+</a>
 {% endblock %}
 {% block breadcrumbcontent %}{% trans %}Edit{% endtrans %}{% endblock %}
 
 {% block body %} {{ include('quiz_questions/_form.html.twig', {'button_label': 'Update'}) }}
-	{# {% set descriptions = [] %}
-		 {% for choice in quiz_question.quizChoices %}
-		    {% set id = choice.id %}
-		    {% set items = {'letter': choice.letter, 'description': choice.description} %}
-		    {% set descriptions = descriptions|merge({(id):items}) %}
-		{% endfor %}  #}
+{# {% set descriptions = [] %}
+{% for choice in quiz_question.quizChoices %}
+{% set id = choice.id %}
+{% set items = {'letter': choice.letter, 'description': choice.description} %}
+{% set descriptions = descriptions|merge({(id):items}) %}
+{% endfor %} #}
 
-	{# <a href="{{ path('quiz_questions_index') }}">{% trans %}Back to list{% endtrans %}</a> #} {{ include('quiz_questions/_delete_form.html.twig') }}
+{# <a href="{{ path('quiz_questions_index') }}">{% trans %}Back to list{% endtrans %}</a> #} {{
+include('quiz_questions/_delete_form.html.twig') }}
 {% endblock %}
 
-	{% block javascripts %}
+{% block javascripts %}
 
-		<script>
-$('tr').remove();
-var descriptions = {{ choicelist | raw }}
-var answ = "{{ answer }}";
-var counter = 0;
-
-
-for (var i = 0; i < descriptions.length; i++) {
-var letter = descriptions[i].letter;
-var desc = descriptions[i].description;
-var ans
-var temp = null;
-if (answ == letter) {
-temp = "checked";
-}
-var del = '';
-
-if (counter > 1) {
-var del = '<td><a   class="btn btn-xs"> <span class="fa fa-trash" style="color:red;" onclick="removerow(this)"></span> </a></td>';
-}
-var newRow = jQuery('<tr><td>' + letter + '&nbsp;&nbsp;<input type="radio" name="answer" value="' + letter + '" ' + temp + '></td><td><div class="form-group"> <textarea id="' + letter + '" name="' + letter + '" class="form-control"  rows="3"  required>' + desc + '</textarea></div></td>' + del + '</tr>');
-jQuery('table.authors-list').append(newRow);
-
-counter++;
-
-}
+<script>
+	$('tr').remove();
+	var descriptions = {{ choicelist | raw }}
+	var answ = "{{ answer }}";
+	var counter = 0;
 
 
-jQuery('a.add-author').click(function (event) {
-event.preventDefault();
+	for (var i = 0; i < descriptions.length; i++) {
+		var letter = descriptions[i].letter;
+		var desc = descriptions[i].description;
+		var ans
+		var temp = null;
+		if (answ == letter) {
+			temp = "checked";
+		}
+		var del = '';
 
-if (counter == 9) {
-document.getElementById("dynamic").style.background = 'red';
+		if (counter > 1) {
+			var del = '<td><a   class="btn btn-xs"> <span class="fa fa-trash" style="color:red;" onclick="removerow(this)"></span> </a></td>';
+		}
+		/*var newRow = jQuery('<tr><td>' + letter + '&nbsp;&nbsp;<input type="radio" name="answer" value="' + letter + '" ' + temp + '></td><td><div class="form-group"> <textarea id="' + letter + '" name="' + letter + '" class="form-control"  rows="3"  required>' + desc + '</textarea></div></td>' + del + '</tr>');*/
+		var newRow = jQuery('<tr><td>' + letter + '&nbsp;&nbsp;<input type="radio" name="answer" value="' + letter + '" ' + temp + '></td><td><div class="form-group"> <textarea id="' + letter + '" name="' + letter + '" class="form-control"  rows="3"  required>' + desc + '</textarea></div></td></tr>');
 
-}
-if (counter > 9) {
-document.getElementById("dynamic").style.background = 'red';
+		jQuery('table.authors-list').append(newRow);
 
-alert("Maximum number reached");
-} else {
+		counter++;
 
-
-var newRow = jQuery('<tr><td>' + getChars(counter) + '&nbsp;&nbsp;<input type="radio" name="answer" value="' + getChars(counter) + '"></td><td><div class="form-group"> <textarea id="' + getChars(counter) + '" name="' + getChars(counter) + '" class="form-control"  rows="3"  required></textarea></div></td><td><a   class="btn btn-xs"> <span class="fa fa-trash" style="color:red;" onclick="removerow(this)"></span> </a></td></tr>');
-jQuery('table.authors-list').append(newRow);
-} counter++;
-});
-
-function removerow(x) {
-x.parentNode.parentNode.parentNode.remove();
-counter--;
-}
-	</script>
+	}
 
 
-		<script>
+	jQuery('a.add-author').click(function (event) {
+		event.preventDefault();
+		counter++;
+		if (counter == 9) {
+			document.getElementById("dynamic").style.background = 'red';
+
+		}
+		if (counter > 9) {
+			document.getElementById("dynamic").style.background = 'red';
+
+			alert("Maximum number reached");
+			counter--
+		} else {
 
 
-function getChars(x) {
-var arr = [
-'',
-'B',
-'C',
-'D',
-'E',
-'F',
-'G',
-'H',
-'I',
-'J'
-];
-return arr[x];
-}
+			/*var newRow = jQuery('<tr><td>' + getChars(counter) + '&nbsp;&nbsp;<input type="radio" name="answer" value="' + getChars(counter) + '"></td><td><div class="form-group"> <textarea id="' + getChars(counter) + '" name="' + getChars(counter) + '" class="form-control"  rows="3"  required></textarea></div></td><td><a   class="btn btn-xs"> <span class="fa fa-trash" style="color:red;" onclick="removerow(this)"></span> </a></td></tr>');*/
+			var newRow = jQuery('<tr><td>' + getChars(counter) + '&nbsp;&nbsp;<input type="radio" name="answer" value="' + getChars(counter) + '"></td><td><div class="form-group"> <textarea id="' + getChars(counter) + '" name="' + getChars(counter) + '" class="form-control"  rows="3"  required></textarea></div></td></tr>');
+
+			jQuery('table.authors-list').append(newRow);
+		}
+
+	});
+
+	/*function removerow(x) {
+		x.parentNode.parentNode.parentNode.remove();
+		counter--;
+	}*/
+
+
+	function removelastrow() {
+		if (counter > 2) {
+			$('#mytable tr:last').remove();
+			counter--;
+		}
+
+
+		if (counter <= 9) {
+			document.getElementById("dynamic").style.background = '#17a2b8';
+
+		}
+
+
+	}
+
+
+</script>
+
+
+<script>
+
+
+	function getChars(x) {
+		var arr = [
+			'',
+			'A',
+			'B',
+			'C',
+			'D',
+			'E',
+			'F',
+			'G',
+			'H',
+			'I',
+			'J'
+		];
+		return arr[x];
+	}
 </script>{% endblock %}

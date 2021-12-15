@@ -20,7 +20,7 @@ class PasswordChangeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('password',PasswordType::class,[
+            ->add('password', PasswordType::class, [
                 'mapped'=>false,
                 'label' => 'Old Password',
                 'attr'=>['class'=>'form-control mb-1', 'data-parsley-minlength'=>'8'],
@@ -54,7 +54,7 @@ class PasswordChangeType extends AbstractType
                 'first_options'  => ['label' => 'Password'],
                 'second_options' => ['label' => 'Repeat Password'],
             ])
-            
+
         ;
     }
 

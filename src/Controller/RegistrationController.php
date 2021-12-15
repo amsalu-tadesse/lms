@@ -46,7 +46,6 @@ class RegistrationController extends AbstractController
      */
     public function register(Request $request, MailerInterface $mailer, MailerService $mservice): Response
     {
-
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
@@ -57,8 +56,7 @@ class RegistrationController extends AbstractController
             // if(empt)
 
             $user_valid = $em->getRepository(User::class)->findBy(array('email'=>$form['email']->getData()));
-            if($user_valid == null)
-            {
+            if ($user_valid == null) {
                 $response = new Response();
                 $form_data = array();
                 // $form_data['username'] = $form['username']->getData();
@@ -67,15 +65,15 @@ class RegistrationController extends AbstractController
                 $form_data['lastName'] = $form['lastName']->getData();
                 $form_data['email'] = $form['email']->getData();
                 $form_data['academicLevel'] = $form['academicLevel']->getData()->getId();
-                
+
                 //write form data to cookie
-                $cookie = new Cookie('form_data', json_encode($form_data) ,time()*60*60);
+                $cookie = new Cookie('form_data', json_encode($form_data), time()*60*60);
                 $response->headers->setCookie($cookie);
                 $response->sendHeaders();
 
                 $ver = new Verification();
                 $ver->setEmail($form_data['email']);
-                $code = rand(23412,99999);
+                $code = rand(23412, 99999);
                 $ver->setVerificationCode($code);
                 $date = date('Y-m-d H:i', time());
                 $date = new \DateTime('@'.strtotime("$date + 3 hours"));
@@ -90,8 +88,7 @@ class RegistrationController extends AbstractController
                     'email' => $form_data['email'],
                     "error" => ""
                 ]);
-            }
-            else{
+            } else {
                 return $this->render('registration/register.html.twig', [
                     'registrationForm' => $form->createView(),
                     'message' => 'This email is already registered. please use another email'
@@ -107,15 +104,14 @@ class RegistrationController extends AbstractController
 
     /**
      *  @Route("/verification", name="app_register_main")
-     * 
+     *
      */
     public function registere(Request $request, VerificationRepository $ver_repo, StudentRepository $student_repo, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, UserAuthenticator $authenticator, MailerService $mservice): Response
     {
         $form_data = $request->cookies->get("form_data");
         $form_data = json_decode($form_data, true);
 
-        if(empty($form_data))
-        {
+        if (empty($form_data)) {
             return $this->redirectToRoute("app_register");
         }
 
@@ -123,15 +119,12 @@ class RegistrationController extends AbstractController
         $user = new User();
         $em = $this->getDoctrine()->getManager();
         $form = $this->createForm(RegistrationFormType::class, $user);
-        
+
         $ver_validation = $ver_repo->findOneByEmail($form_data['email']);
-        if(sizeof($ver_validation)>0 && sizeof($form_data)>0)
-        {
-            if($ver_validation[0]['verificationCode'] == $request->request->get("ver_code"))
-            {
+        if (sizeof($ver_validation)>0 && sizeof($form_data)>0) {
+            if ($ver_validation[0]['verificationCode'] == $request->request->get("ver_code")) {
                 $now = new \DateTime();
-                if($now>$ver_validation[0]['verificationExpiry'])
-                {
+                if ($now>$ver_validation[0]['verificationExpiry']) {
                     return $this->render('registration/confirmation_email.html.twig', [
                         'email' => $form_data['email'],
                         "error" => "verification code expired"
@@ -162,7 +155,6 @@ class RegistrationController extends AbstractController
                         $username_new = $username1 . $counter;
                         $username = $username_new;
                         $found = $entityManager->getRepository(User::class)->findOneBy(['username' => $username_new]);
-
                     }
                     $user->setUsername($username);
                     $user->setIsVerified(1);
@@ -174,7 +166,7 @@ class RegistrationController extends AbstractController
 
                     $conn = $this->getDoctrine()->getManager()->getConnection();
                     $sql = "delete from verification where email = :email";
-                
+
                     $stmt = $conn->prepare($sql);
                     $stmt->execute(array('email' => $form_data['email']));
 
@@ -252,11 +244,10 @@ class RegistrationController extends AbstractController
 
                     $selected_courses = $request->cookies->get("selected_courses");
                     $selected_courses = json_decode($selected_courses, true);
-                    if($selected_courses != null){
+                    if ($selected_courses != null) {
                         $selected_courses_size = sizeof($selected_courses);
 
-                        foreach($selected_courses as $sel_cor)
-                        {
+                        foreach ($selected_courses as $sel_cor) {
                             $st_course = new StudentCourse();
                             $st_course->setStudent($student);
                             $st_course->setInstructorCourse($em->getRepository(InstructorCourse::class)->find($sel_cor));
@@ -269,20 +260,19 @@ class RegistrationController extends AbstractController
                             $em->flush();
                         }
 
-                        $cookie = new Cookie('selected_courses', "",time());
+                        $cookie = new Cookie('selected_courses', "", time());
                         $response->headers->setCookie($cookie);
                         $response->sendHeaders();
                     }
-                    
+
                     $message = "<p style='font-size: 15px;'>Dear ".$user->getFirstName()." ".$user->getMiddleName()." You have successfully registered for ECA ".
                                "Learning management system. Please login with the following credentials".
                                " and change your password <br>username=<strong>".$user->getUsername()."</strong><br> password=<strong>$pass</strong></p>";
                     $sent =  $mservice->sendEmail($this->mailer, $message, $user->getEmail(), "account confirmation");
-                    
+
                     return $this->render('registration/notification.html.twig');
                 }
-            }
-            else{
+            } else {
                 return $this->render('registration/confirmation_email.html.twig', [
                     'email' => $form_data['email'],
                     "error" => "Wrong verification code"

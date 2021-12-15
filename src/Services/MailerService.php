@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Services;
 
@@ -10,14 +10,10 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mime\Email;
 
-
-class MailerService 
+class MailerService
 {
-   
-    public function sendEmail(MailerInterface $mailer, $message,  $receiver,$payment)
+    public function sendEmail(MailerInterface $mailer, $message, $receiver, $payment)
     {
-       
-      
         $email = (new Email())
             ->from('dawit120@gmail.com')
             ->to($receiver)
@@ -30,22 +26,19 @@ class MailerService
             // ->text('My first for Payroll notification')
             ->html($message);
 
-            
-            try { 
-              
-                $mailer->send($email);
-                
-            } catch (Exception $e) {
-                dd($e);
-                
-               return 0; //new Response('<html><body><p>Connection Problem</b></body></html>');
+
+        try {
+            $mailer->send($email);
+        } catch (Exception $e) {
+            dd($e);
+
+            return 0; //new Response('<html><body><p>Connection Problem</b></body></html>');
 //die;
-            }
+        }
 
 
-           
 
-         return 1; //new Response('<html><body>Email sent successfully1</body></html>');
-       
+
+        return 1; //new Response('<html><body>Email sent successfully1</body></html>');
     }
 }

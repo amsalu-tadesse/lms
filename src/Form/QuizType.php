@@ -26,7 +26,7 @@ class QuizType extends AbstractType
             ->add('instruction')
             ->add('percentage')
             ->add('passvalue')
-            ->add('duration',null,[
+            ->add('duration', null, [
                 'label' => 'Durationa(in minutes)'
             ])
 
@@ -34,43 +34,32 @@ class QuizType extends AbstractType
             ->add('instructorCourseChapter', EntityType::class, [
                 'class' => InstructorCourseChapter::class,
                 'required' => false,
-                'placeholder' => "", 
+                'placeholder' => "",
                 // 'choice_value' => 'title',
-                'query_builder' => function (EntityRepository $er) 
-                use($unregisteredChaptersid){
-
-
+                'query_builder' => function (EntityRepository $er) use ($unregisteredChaptersid) {
                     $chapter = '';
-                    if($unregisteredChaptersid !='')
-                    {
+                    if ($unregisteredChaptersid !='') {
                         foreach ($unregisteredChaptersid as $value) {
-                                            
-                            if($chapter == '')
-                            {
+                            if ($chapter == '') {
                                 $chapter = $value;
-                            }
-                            else 
-                            {
+                            } else {
                                 $chapter .= ','.$value;
                             }
                         }
                     }
-                            
+
 
                     // dd($chapter);
 
                     $res = $er->createQueryBuilder('s');
-                    if($chapter != '')
-                    {
-                        $res = $res->leftjoin ('App:Quiz', 'q', 'WITH', 'q.instructorCourseChapter = s.id')
+                    if ($chapter != '') {
+                        $res = $res->leftjoin('App:Quiz', 'q', 'WITH', 'q.instructorCourseChapter = s.id')
                         ->andWhere('s.id in ('.$chapter.') ');
-                    }
-                    else 
-                    {
+                    } else {
                         $res = $res->andWhere('false');
                     }
-                      
-             
+
+
                     return $res;
                 },
             ])
@@ -80,7 +69,7 @@ class QuizType extends AbstractType
             ])
             ->add('active')
             ->add('isMandatory')
-            ->add('activeQuestions',null, [
+            ->add('activeQuestions', null, [
                 'attr' =>['placeholder' => 'total number of questions visible for the student']
             ])
         ;
@@ -90,7 +79,7 @@ class QuizType extends AbstractType
     {
         $resolver->setRequired('unregisteredChaptersid');
         $resolver->setDefaults([
-            'data_class' => Quiz::class, 
+            'data_class' => Quiz::class,
         ]);
     }
 }

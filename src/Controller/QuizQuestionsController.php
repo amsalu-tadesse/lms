@@ -22,6 +22,7 @@ class QuizQuestionsController extends AbstractController
      */
     public function index(QuizQuestionsRepository $quizQuestionsRepository, Quiz $quiz): Response
     {
+        $this->denyAccessUnlessGranted('quiz_list');
         return $this->render('quiz_questions/index.html.twig', [
             'quiz_questions' => $quizQuestionsRepository->findBy(['quiz' => $quiz]),
             'quiz' => $quiz,
@@ -31,22 +32,24 @@ class QuizQuestionsController extends AbstractController
     /**
      * @Route("/new/{id}", name="quiz_questions_new", methods={"GET","POST"})
      */
-    function new (Request $request, Quiz $quiz): Response {
+    public function new(Request $request, Quiz $quiz): Response
+    {
+        $this->denyAccessUnlessGranted('quiz_create');
         $quizQuestion = new QuizQuestions();
         $form = $this->createForm(QuizQuestionsType::class, $quizQuestion);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $postedData = $request->request->all();
-          
+
             unset($postedData['quiz_questions']);
 
-           /* if (!array_key_exists(strtoupper($form->getData()->getAnswer()), $postedData)) {
-                end($postedData); // move the internal pointer to the end of the array
-                $key = key($postedData);
-                $this->addFlash('danger', 'Please enter the correct answer ranged from A to ' . $key);
-                return $this->redirectToRoute('quiz_questions_new', ['id' => $quiz->getId()]);
-            }*/
+            /* if (!array_key_exists(strtoupper($form->getData()->getAnswer()), $postedData)) {
+                 end($postedData); // move the internal pointer to the end of the array
+                 $key = key($postedData);
+                 $this->addFlash('danger', 'Please enter the correct answer ranged from A to ' . $key);
+                 return $this->redirectToRoute('quiz_questions_new', ['id' => $quiz->getId()]);
+             }*/
 
             $entityManager = $this->getDoctrine()->getManager();
             $quizQuestion->setQuiz($quiz);
@@ -55,10 +58,9 @@ class QuizQuestionsController extends AbstractController
             $entityManager->flush();
 
             $answer = null;
- 
+
             foreach ($postedData as $letter => $description) {
-                if($letter=="answer")
-                {
+                if ($letter=="answer") {
                     $answer = $description;
                     $quizQuestion->setAnswer($answer);
                     continue;
@@ -69,11 +71,9 @@ class QuizQuestionsController extends AbstractController
                 $choice->setDescription($description);
                 $choice->setQuestion($quizQuestion);
                 $entityManager->persist($choice);
-                 
-               
-            } 
-           
-         
+            }
+
+
             $entityManager->flush();
 
             return $this->redirectToRoute('quiz_questions_index', ['id' => $quiz->getId()], Response::HTTP_SEE_OTHER);
@@ -91,6 +91,7 @@ class QuizQuestionsController extends AbstractController
      */
     public function show(QuizQuestions $quizQuestion): Response
     {
+        $this->denyAccessUnlessGranted('quiz_list');
         return $this->render('quiz_questions/show.html.twig', [
             'quiz_question' => $quizQuestion,
         ]);
@@ -111,59 +112,58 @@ class QuizQuestionsController extends AbstractController
      */
     public function edit(Request $request, QuizQuestions $quizQuestion): Response
     {
-       
+        
+        $this->denyAccessUnlessGranted('quiz_edit');
         $form = $this->createForm(QuizQuestionsType::class, $quizQuestion);
         $form->handleRequest($request);
-       
+
         if ($form->isSubmitted() && $form->isValid()) {
             $postedData = $request->request->all();
-             unset($postedData['quiz_questions']);
-        
+          
+          
+            unset($postedData['quiz_questions']);
+
             $entityManager = $this->getDoctrine()->getManager();
 
             $answer = null;
             $existingIds = array();
 
- 
+         
             foreach ($postedData as $letter => $description) {
-                if($letter=="answer")
-                {
+                 
+                $description = htmlspecialchars($description);
+               
+                if ($letter=="answer") {
                     $answer = $description;
                     $quizQuestion->setAnswer($answer);
                     continue;
                 }
 
                 $choice = $entityManager->getRepository(QuizChoices::class)->findOneBy(['letter'=>$letter,'question'=>$quizQuestion->getId()]);
-                if(!$choice)
-                {
+                if (!$choice) {
                     $choice = new QuizChoices();
-                }
-                else 
-                {
+                } else {
                     $existingIds[] = $choice->getId();
                 }
-               
+
                 $choice->setLetter($letter);
                 $choice->setDescription($description);
                 $choice->setQuestion($quizQuestion);
                 $entityManager->persist($choice);
-               
-            } 
+            }
 
 
 
-           
+
             $allChoicesInDb = $entityManager->getRepository(QuizChoices::class)->findBy(['question'=>$quizQuestion->getId()]);
 
-          
+
             foreach ($allChoicesInDb as $ch) {
-                 
-                 if(!in_array($ch->getId(), $existingIds))
-                 {
+                if (!in_array($ch->getId(), $existingIds)) {
                     $entityManager->remove($ch);
-                 }
+                }
             }
-         
+
             $entityManager->flush();
 
             return $this->redirectToRoute('quiz_questions_index', ['id'=>$quizQuestion->getQuiz()->getId()], Response::HTTP_SEE_OTHER);
@@ -174,14 +174,14 @@ class QuizQuestionsController extends AbstractController
         }
         // dd($quizQuestion->getQuizChoices() );
 
-       
+
 
         return $this->renderForm('quiz_questions/edit.html.twig', [
             'quiz_question' => $quizQuestion,
             'choicelist' => json_encode($choicelist),
             'answer' =>$quizQuestion->getAnswer(),
             'form' => $form,
-            
+
         ]);
     }
 
@@ -190,12 +190,12 @@ class QuizQuestionsController extends AbstractController
      */
     public function delete(Request $request, QuizQuestions $quizQuestion): Response
     {
+        $this->denyAccessUnlessGranted('quiz_delete');
         if ($this->isCsrfTokenValid('delete' . $quizQuestion->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
-          
 
-            try
-            {
+
+            try {
                 $entityManager->remove($quizQuestion);
                 $entityManager->flush();
             } catch (\Exception $ex) {
@@ -203,8 +203,6 @@ class QuizQuestionsController extends AbstractController
                 $message = UtilityController::getMessage($ex->getCode());
                 $this->addFlash('danger', $message);
             }
-
-
         }
 
         return $this->redirectToRoute('quiz_questions_index', [], Response::HTTP_SEE_OTHER);

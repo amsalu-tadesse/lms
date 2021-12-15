@@ -19,25 +19,24 @@ class InstructorCourseStatusController extends AbstractController
     /**
      * @Route("/", name="instructorCourseStatus_index", methods={"GET","POST"})
      */
-    public function index(InstructorCourseStatusRepository $instructorCourseStatusRepository,Request $request, PaginatorInterface $paginator): Response
+    public function index(InstructorCourseStatusRepository $instructorCourseStatusRepository, Request $request, PaginatorInterface $paginator): Response
     {
-
-        if($request->request->get('edit')){
+        if ($request->request->get('edit')) {
             $id=$request->request->get('edit');
             $instructorCourseStatus=$instructorCourseStatusRepository->findOneBy(['id'=>$id]);
             $form = $this->createForm(InstructorCourseStatusType::class, $instructorCourseStatus);
             $form->handleRequest($request);
-    
+
             if ($form->isSubmitted() && $form->isValid()) {
                 $this->getDoctrine()->getManager()->flush();
-    
+
                 return $this->redirectToRoute('instructorCourseStatus_index');
             }
 
             $queryBuilder=$instructorCourseStatusRepository->findInstructorCourseStatus($request->query->get('search'));
             $data=$paginator->paginate(
                 $queryBuilder,
-                $request->query->getInt('page',1),
+                $request->query->getInt('page', 1),
                 18
             );
             return $this->render('instructor_course_status/index.html.twig', [
@@ -45,7 +44,6 @@ class InstructorCourseStatusController extends AbstractController
                 'form' => $form->createView(),
                 'edit'=>$id
             ]);
-
         }
         $instructorCourseStatus = new InstructorCourseStatus();
         $form = $this->createForm(InstructorCourseStatusType::class, $instructorCourseStatus);
@@ -58,11 +56,11 @@ class InstructorCourseStatusController extends AbstractController
 
             return $this->redirectToRoute('instructorCourseStatus_index');
         }
-        
+
         $queryBuilder=$instructorCourseStatusRepository->findInstructorCourseStatus($request->query->get('search'));
         $data=$paginator->paginate(
             $queryBuilder,
-            $request->query->getInt('page',1),
+            $request->query->getInt('page', 1),
             18
         );
         return $this->render('instructor_course_status/index.html.twig', [
@@ -70,8 +68,8 @@ class InstructorCourseStatusController extends AbstractController
             'form' => $form->createView(),
             'edit'=>false
         ]);
-    }  
- 
+    }
+
     /**
      * @Route("/{id}", name="instructorCourseStatus_delete", methods={"DELETE"})
      */
