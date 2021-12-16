@@ -311,7 +311,7 @@ class QuizController extends AbstractController
                 $student_quiz = $em->getRepository(StudentQuiz::class)->findOneBy(array('student' => $this->getUser()->getProfile()->getId(), 'quiz' => $quiz->getId(),'active'=>1));
                 $last_chapter =  $em->getRepository(InstructorCourseChapter::class)->findBy(array('instructorCourse'=>$chapter->getInstructorCourse()->getId()), array('id'=>'DESC'), 1, 0);
 
-                if ($student_quiz->getResult() != null) {
+                if ($student_quiz && $student_quiz->getResult() != null) {
                     $test_taken = true;
                 }
                 $now = new DateTime(date("Y-m-d H:i:s", time()));

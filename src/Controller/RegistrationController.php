@@ -61,6 +61,7 @@ class RegistrationController extends AbstractController
                 $form_data = array();
                 // $form_data['username'] = $form['username']->getData();
                 $form_data['firstName'] = $form['firstName']->getData();
+                $form_data['sex'] = $form['sex']->getData();
                 $form_data['middleName'] = $form['middleName']->getData();
                 $form_data['lastName'] = $form['lastName']->getData();
                 $form_data['email'] = $form['email']->getData();
@@ -142,6 +143,7 @@ class RegistrationController extends AbstractController
                     $user->setIsActive(true);
                     $user->setUserType($em->getRepository(UserType::class)->find(4));
                     $user->setFirstName($form_data['firstName']);
+                    $user->setSex($form_data['sex']);
                     $user->setMiddleName($form_data['middleName']);
                     $user->setLastName($form_data['lastName']);
                     $entityManager = $this->getDoctrine()->getManager();

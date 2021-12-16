@@ -135,6 +135,7 @@ class StudentCourseController extends AbstractController
         {
             $course = $form['courses']->getData();
             $status = $form['status']->getData();
+            $sex = $form['sex']->getData();
             $inst = $request->request->get("instructor");
             if($status == 0) $status = 1;
             else if($status == 1) $status = 5;
@@ -143,7 +144,7 @@ class StudentCourseController extends AbstractController
             if(!$inst) $inst = 0; 
             if($course)
             {
-                $students = $stud_course_repo->getStudents($course->getId(), $status, $inst);
+                $students = $stud_course_repo->getStudents($course->getId(), $status, $inst, $sex);
             }
 
             if($form['export']->isClicked()){
@@ -196,17 +197,15 @@ class StudentCourseController extends AbstractController
             }
         }
 
-        $dql = "select c from App\Entity\Course c";
-        $query = $em->createQuery($dql);
         $data = $paginator->paginate(
-            $query,
+            $students,
             $request->query->getInt('page', 1),
             15
         );
         
         return $this->render('report/student.html.twig',[
-            'courses' => $data,
-            'students' => $students,
+            'courses' => $course_repo->findAll(),
+            'students' => $data,
             'instructors' => $instructors,
             'inst' => $inst,
             'form' => $form->createView()

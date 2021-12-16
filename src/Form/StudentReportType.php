@@ -30,6 +30,15 @@ class StudentReportType extends AbstractType
                      'UnFinished' => 0,
                   ],
                   ])
+                ->add('sex', ChoiceType::class,[
+                    'mapped' => false,
+                    'required' => false,
+                    'attr' => ['class'=>'form-control'],
+                    'choices'  => [
+                        'Male' => 'm',
+                        'Female' => 'f',
+                    ],
+                ])
                ->add('search', SubmitType::class, ['label' => 'Search', 'attr' => ['class'=>'btn btn-primary']])
                ->add('export', SubmitType::class, ['label' => 'Export To Excel','attr' => ['class'=>'btn btn-success']]);          
     }

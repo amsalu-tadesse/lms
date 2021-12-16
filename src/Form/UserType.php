@@ -8,6 +8,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use App\Entity\AcademicLevel;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+
 
 class UserType extends AbstractType
 {
@@ -17,7 +19,14 @@ class UserType extends AbstractType
             ->add('firstName')
             ->add('middleName')
             ->add('lastName')
-            // ->add('department')
+            ->add('sex' ,ChoiceType::class,[
+                'required' => true,
+                'attr'=>['class'=>'form-control'],
+                'choices'  => [
+                    'Male' => "m",
+                    'Female' => "f",
+                 ],
+            ])
             ->add('userType',null, [
                 'required' => true,
             ])

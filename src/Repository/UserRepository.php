@@ -36,7 +36,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->flush();
     }
 
-    public function filterUser($fname, $mname, $lname, $username, $userType)
+    public function filterUser($fname, $mname, $lname, $sex, $userType)
     {
         $q =  $this->createQueryBuilder('u');
 
@@ -62,14 +62,13 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         }
 
 
-        if ($username !="") {
-            $q->andWhere('u.username = :username')
-                ->setParameter('username', $userType);
+        if ($sex !="") {
+            $q->andWhere('u.sex = :sex')
+                ->setParameter('sex', $sex);
         }
 
         $q->orderBy('u.id', 'ASC')
             ->getQuery()
-            ->getResult()
         ;
         return $q;
     }

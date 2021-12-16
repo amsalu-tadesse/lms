@@ -31,7 +31,6 @@ class QuestionAnswerRepository extends ServiceEntityRepository
             ->setParameter('val', $value)
             ->orderBy('q.createdAt', 'Desc')
             ->getQuery()
-            ->getResult()
         ;
     }
 

@@ -54,8 +54,7 @@ class InstructorCourseRepository extends ServiceEntityRepository
         }
 
         $q->orderBy('ic.id', 'ASC')
-            ->getQuery()
-             ->getResult();
+            ->getQuery();
 
         return $q;
     }

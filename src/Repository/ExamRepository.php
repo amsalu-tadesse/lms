@@ -30,8 +30,6 @@ class ExamRepository extends ServiceEntityRepository
         return
             $qb->orderBy('c.id', 'ASC')
             ->getQuery()
-
-
         ;
     }
 

@@ -22,7 +22,13 @@
 			<div class="card-body">
 				<div class="row">
 					<div class="col-md-12">
-						<div class="card card-info {{edit?'':'collapsed-card'}}">
+						{% if edit %}
+							<div class="card card-info">
+						{% elseif not form.vars.valid %}
+							<div class="card card-info">
+						{% else %}
+							<div class="card card-info collapsed-card">
+						{% endif %}
 							<div class="card-header">
 								<h3 class="card-title">
 									{% if edit  %}
@@ -78,8 +84,8 @@
 						</div>
 						<div class="col-sm-2">
 							<div class="form-group">
-								<label class="col-sm-12 control-label no-padding-right">{% trans %}Username{% endtrans %}</label>
-								{{ form_widget(searchForm.username,{'attr':{'class':'form-control'},'full_name':'userName','value': app.request.get('userName')}) }}
+								<label class="col-sm-12 control-label no-padding-right">{% trans %}Sex{% endtrans %}</label>
+								{{ form_widget(searchForm.sex,{'attr':{'class':'form-control'},'full_name':'sex','value': app.request.get('sex')}) }}
 								<div class="help-block with-errors"></div>
 							</div>
 						</div>
@@ -114,6 +120,7 @@
 												<th>{% trans %}Name{% endtrans %}</th>
 												<th>{% trans %}Username{% endtrans %}</th>
 												<th>{% trans %}Email{% endtrans %}</th>
+												<th>{% trans %}Sex{% endtrans %}</th>
 												<th>{% trans %}User Type{% endtrans %}</th>
 												<th>{% trans %}Action{% endtrans %}</th>
 											</tr>
@@ -125,6 +132,7 @@
 													<td>{{ user.firstName ~ ' ' ~ user.middleName ~ ' '~ user.lastName }}</td>
 													<td>{{ user.username }}</td>
 													<td>{{ user.email }}</td>
+													<td>{{ user.sex == "m" ? 'male': 'female' }}</td>
 													<td>{{ user.userType | trans | raw}}</td>
 													{# <td>{{ user.department }}</td> #}
 

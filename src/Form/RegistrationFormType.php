@@ -7,6 +7,7 @@ use App\Entity\AcademicLevel;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -32,9 +33,14 @@ class RegistrationFormType extends AbstractType
             ->add('email' ,null,[
                 'attr'=>['class'=>'form-control mb-3']
             ])
-            // ->add('username' ,null,[
-            //     'attr'=>['class'=>'form-control']
-            // ])
+            ->add('sex' ,ChoiceType::class,[
+                'required' => true,
+                'attr'=>['class'=>'form-control'],
+                'choices'  => [
+                    'Male' => "m",
+                    'Female' => "f",
+                 ],
+            ])
             ->add('academicLevel', EntityType::class, [
                 'mapped' => false,
                 'class' => AcademicLevel::class,

@@ -11,7 +11,7 @@
 			<div class="card col-lg px-4 py-2">
 				{{form_start(form)}}
 				<div class="form-row">
-					<div class="col-sm-5">
+					<div class="col-sm-4">
 						<label>Course</label>
 						{{ form_widget(form.courses)}}
 					</div>
@@ -19,6 +19,11 @@
 						<label>Student Status</label>
 
 						{{ form_widget(form.status)}}
+					</div>
+					<div class="col">
+						<label>Sex</label>
+
+						{{ form_widget(form.sex)}}
 					</div>
 					<div class="col">
 						<label>Instructor</label>
@@ -106,7 +111,7 @@
 			</tbody>
 		</table>
 	</div>
-	<div class="float-right">{{ knp_pagination_render(courses) }}</div>
+	<div class="float-right">{{ knp_pagination_render(students) }}</div>
 </div>{% endblock %}
 {% block javascripts %}
       <script> 

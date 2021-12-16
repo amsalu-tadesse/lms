@@ -64,7 +64,6 @@ class StudentCourseRepository extends ServiceEntityRepository
             ->andWhere('s.active = 1')
             ->setParameter('val', $value)
             ->getQuery()
-            ->getResult()
         ;
     }
 
@@ -126,8 +125,7 @@ class StudentCourseRepository extends ServiceEntityRepository
                 ->setParameter('course', $course);
         }
         $q->orderBy('sc.id', 'ASC')
-            ->getQuery()
-            ->getResult();
+            ->getQuery();
 
         return $q;
     }
@@ -161,7 +159,6 @@ class StudentCourseRepository extends ServiceEntityRepository
             ->andWhere('s.status = 0')
             ->setParameter('val', $value)
             ->getQuery()
-            ->getResult()
         ;
     } 
     
@@ -286,7 +283,7 @@ class StudentCourseRepository extends ServiceEntityRepository
             ->execute();
     }
 
-    public function getStudents($course, $status, $inst)
+    public function getStudents($course, $status, $inst, $sex)
     {
         $query = $this->createQueryBuilder('sc')
                 // ->select("concat(u.firstName,' ',u.middleName,' ',u.lastName) as name", "u.email",'c.name' )
@@ -297,6 +294,12 @@ class StudentCourseRepository extends ServiceEntityRepository
             if($course){
                 $query->where('ic.course = :val')
                       ->setParameter("val", $course);
+            }
+
+            if($sex)
+            {
+                $query->andWhere('u.sex = :val5')
+                      ->setParameter("val5", $sex);
             }
 
             if($status != 0)
@@ -310,7 +313,6 @@ class StudentCourseRepository extends ServiceEntityRepository
                       ->setParameter("val2", $inst);
             }
         
-        $students = $query->getQuery()->getResult();
-        return $students;
+        return $query->getQuery();
     }
 }

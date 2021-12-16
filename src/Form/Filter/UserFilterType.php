@@ -6,6 +6,7 @@ use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class UserFilterType extends AbstractType
 {
@@ -18,7 +19,14 @@ class UserFilterType extends AbstractType
             // ->add('department',null,array('required' => false))
             ->add('userType', null, array('required' => false))
             // ->add('store',null,array('required' => false))
-            ->add('username', null, array('required' => false))
+            ->add('sex' ,ChoiceType::class,[
+                'required' => false,
+                'attr'=>['class'=>'form-control'],
+                'choices'  => [
+                    'Male' => "m",
+                    'Female' => "f",
+                 ],
+            ])
         ;
     }
 
