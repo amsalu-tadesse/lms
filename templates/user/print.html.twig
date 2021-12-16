@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<title>:: {% trans %}Print{% endtrans %} ::</title>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+
+
+		<link
+		rel="icon" href="favicon.ico" type="image/x-icon">
+		<!-- VENDOR CSS -->
+		<link rel="stylesheet" href="{{ asset('assets/vendor/bootstrap/css/bootstrap.min.css') }}">
+		<link
+		rel="stylesheet" href="{{ asset('assets/vendor/font-awesome/css/font-awesome.min.css') }}">
+
+		<!-- MAIN CSS -->
+		<link rel="stylesheet" href="{{ asset('assets/css/main.css') }}">
+		<link rel="stylesheet" href="{{ asset('assets/css/color_skins.css') }}">
+	</head>
+
+	<body
+		class="theme-cyan">
+		<!-- WRAPPER -->
+		<div id="wrapper">
+			<div class="vertical-align-wrap">
+				<div class="vertical-align-middle auth-main">
+					<div class="auth-box">
+						<div class="top"></div>
+						<div class="card">
+							<div class="header">
+								<p class="lead">{% trans %}Credentials{% endtrans %}</p>
+                                <ul class="header-dropdown">
+				<li>
+					<a href="javascript:void(0);" onclick="window.print();">
+						<i class="icon-printer"></i>
+					</a>
+				</li>
+			</ul>
+							</div>
+							<div class="body">
+								{% block body %}
+
+							
+									<p>
+									 
+									<hr>
+									<small class="text-muted">Password:
+								{% trans %}{% endtrans %}</small>
+									<p>
+										{{ password }}</p>
+									<hr>
+
+
+								{% endblock %}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- END WRAPPER -->
+	</body>
+</html>

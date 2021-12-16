@@ -1,0 +1,93 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}QuizQuestions index
+{% endblock %}
+{% block breadcrumbhome %}
+    <a href="#">
+	   {% trans %}Quiz{% endtrans %} 
+	</a> 
+{% endblock %} 
+{% block breadcrumbcontent %}{% trans %}Questions{% endtrans %}{% endblock %}
+
+{% block body %}
+
+
+	<div class="card card-info">
+		<div class="card card-header">
+
+			<div class="row">
+				<div class="col-md-6">
+					<h3 class="card-title">Questions List</h3>
+				</div>
+				<div class="col-md-6">
+					<a href="{{ path('quiz_questions_new',{id:quiz.id}) }}" class="btn btn-primary btn-sm" style="float:right"><span class="fa fa-plus"></span> &nbsp; Add question</a>
+
+				</div>
+			</div>
+
+		</div>
+		<div
+			class="card card-body">
+	
+			<div id="accordion">
+
+
+				{% for quiz_question in quiz_questions %}
+
+
+					{# <pre> {{ dump(quiz_question) }}
+									</pre> #}
+					<div class="card card-secondary11">
+						<div class="card-header">
+
+							<h4 class="card-title w-100">
+								<a class="collapsed" data-toggle="collapse" href="#collapse{{quiz_question.id}}" aria-expanded="false"> {{loop.index}}.{{ quiz_question.question | raw }}
+								</a>
+
+								<a class="btn btn-sm   float-right btn-warning" href="{{path('quiz_questions_edit',{'id':quiz_question.id})}}">
+									<span class="fa fa-edit"></span>Edit</a>
+
+							</h4>
+
+						</div>
+						<div id="collapse{{quiz_question.id}}" class="collapse" data-parent="#accordion" style="">
+							<div class="card-body">
+							<table class="table">
+
+								{% for choice in quiz_question.quizChoices %}
+									
+										<tr>
+											<td >
+											
+											{{choice.letter}}
+											{% if quiz_question.answer | upper == choice.letter | upper %}
+										<span class="fa fa-check" style="color:green"></span>
+										      {% endif %}
+
+											  
+											
+											</td>
+											<td> {{choice.description}}</td>
+										</tr>
+								
+								{% endfor %}
+							</table>
+							</div>
+						</div>
+					</div>
+
+				{% else %}
+					<tr>
+						<td colspan="4">no records found</td>
+					</tr>
+				{% endfor %}
+
+
+			</div>
+
+
+		</div>
+	</div>
+
+	{# <a href="{{ path('quiz_questions_new') }}">Create new</a> #}
+{% endblock %}

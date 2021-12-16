@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}UserGroup
+{% endblock %}
+{% block stylesheets %}
+
+	<link rel="stylesheet" href="{{asset('assets/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css')}}">
+{% endblock %}
+{% block body %}
+    {{ dump(permission)}}
+    {# {% for per in permission.permission %} #}
+        {# {{per.name}} #}
+    {# {% endfor %} #}
+{% endblock %}
+{% block javascripts %}
+
+	<script src="{{asset('assets/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js')}}"></script>
+	<script>
+		$(function () {
+$('.duallistbox').bootstrapDualListbox();
+})
+	</script>
+{% endblock %}

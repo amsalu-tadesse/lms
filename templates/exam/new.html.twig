@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Exam{% endblock %}
+{% block breadcrumbhome %}
+    <a href="{{ path('exam_index') }} ">
+	   {% trans %}Exam{% endtrans %} 
+	</a> 
+{% endblock %}
+{% block breadcrumbcontent %}new{% endblock %}
+{% block body %}
+<div class="card card-info">
+    <div class="card card-header">
+        <div class="row">
+            <div class="col-md-6">
+                <h3 class="card-title">New Exam</h3>
+            </div>
+        </div>
+    </div>
+    <div class="card card-body">
+        {{ include('exam/_form.html.twig') }}
+        <br>
+
+        <div class="col-md-2">
+            <a href="{{ path('exam_index') }}" class="btn btn-primary btn-block">{% trans %}Back to list{% endtrans %}</a>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,71 @@
+
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{% trans %}Questions{% endtrans %}
+{% endblock %}
+{% block breadcrumbhome %}
+    <a href="">
+	   {% trans %}Q&A{% endtrans %} 
+	</a> 
+{% endblock %}
+{% block breadcrumbcontent %}Index{% endblock %}
+{% block body %}
+	<div class="card card-info">
+		<div class="card card-header">
+			<div class="row">
+				<div class="col-md-6">
+					<h3 class="card-title">{% trans %}Questions{% endtrans %}</h3>
+				</div>
+				<div class="col-md-6">
+					<a href="{{ path('question_answer_new') }}" class="btn btn-primary btn-sm" style="float:right">
+						{% trans %}
+						    Add Question
+						{% endtrans %}
+					</a>
+				</div>
+			</div>
+		</div>
+		<div class="card card-body">
+            <table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th style="width: 25%">Course</th>
+					<th style="width: 25%">Question</th>
+					<th>Text Answer</th>
+					<th>Video Answer</th>
+					<th >Created At</th>
+					<th>actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for question_answer in question_answers %}
+					<tr>
+						<td>{{ question_answer.id }}</td>
+						<td>{{ question_answer.course.course.name}}</td>
+						<td>{{ question_answer.question|raw }}</td>
+						<td>{{ question_answer.answer != null ? 'Yes':'no' }}</td>
+						<td>{{ question_answer.videoAnswer != null ? 'Yes':'no' }}</td>
+						<td>{{ question_answer.createdAt ? question_answer.createdAt|date('d-m-Y') : '' }}</td>
+						<td>
+							{# <a href="{{ path('question_answer_show', {'id': question_answer.id}) }}" class="btn-sm btn btn-success">show</a> #}
+							<a href="{{ path('question_answer_edit', {'id': question_answer.id}) }}" class="btn-sm btn btn-info">Answer</a>
+						</td>
+					</tr>
+				{% else %}
+					<tr>
+						<td colspan="7">no records found</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	<div class="  pagination justify-content-center "> {{ knp_pagination_render(question_answers) }}</div>
+
+	<div class="float-right pl-5 pb-2">
+
+		{% trans %}Total result{% endtrans %}: {{ question_answers.getTotalItemCount }}
+	</div>
+</div>{% endblock %}
+

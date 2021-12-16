@@ -1,0 +1,88 @@
+{% extends "sBase.html.twig" %}
+{% block stylesheet %}
+	<link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-tabs/dist/jquery.bs4-scrolling-tabs.min.css')}}">
+	<style>
+		.card-header button {
+			text-decoration: none;
+		}
+
+		h4 {
+			color: black;
+		}
+	</style>
+{% endblock %}
+{% block body %}
+	<div class="container-fluid mt-3" style="min-height: 490px" ;>
+		<div class="row">
+
+			<div class="card px-5 pt-3 mt-2" style="padding-bottom: 80px">
+				<h4 class="pt-2 pb-2">{{courses.name}}</h4>
+				<p style="margin-bottom: 40px">{{courses.description}}</p>
+
+				<!-- Nav tabs -->
+				<ul class="nav nav-tabs" role="tablist">
+					<li class="nav-item">
+						<a class="nav-link active" href="#tab1" role="tab" data-toggle="tab">{% trans %}Chapters{% endtrans %}</a>
+					</li>
+				</ul>
+
+				<!-- Tab panes -->
+				<div class="tab-content">
+					<div role="tabpanel" class="tab-pane fade show active" id="tab1">
+					{% for chapter in chapters %}
+						<div class="">
+							<div id="accordion">
+								<div class="card">
+									<div class="card-header" id="heading{{chapter.id}}">
+										<h5 class="mb-0">
+											<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse{{chapter.id}}" aria-expanded="false" aria-controls="collapseThree">
+												{{ chapter.topic }}
+											</button>
+										</h5>
+									</div>
+									<div id="collapse{{chapter.id}}" class="collapse" aria-labelledby="heading{{chapter.id}}" data-parent="#accordion">
+										<div class="card-body">
+											{% for content in chapter.contents %}
+												{% if content.filename != null %}
+													<li>
+														<i class="fas fa-play"></i>
+														{{ content.title }}
+													</li>
+												{% elseif content.videoLink != null %}
+													<li>
+														<i class="fas fa-play-circle"></i>
+														{{ content.title }}
+													</li>
+												{% elseif content.content != "" %}
+													<li>
+														<i class="fas fa-book"></i>
+														{{ content.title }}
+													</li>
+												{% endif %}
+											{% endfor %}
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					{% endfor %}
+					<br>
+					<div class="col-sm-3">
+						<a href="{{ path('request_delete',{'id':courses.id})}}" class="btn btn-danger">{% trans %}cancel request{% endtrans %}</a>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+{% endblock %}
+{% block javascript %}
+	<script src="{{asset('assets/plugins/bootstrap/js/bootstrap.min.js')}}"></script>
+	<script>
+		$('.nav-tabs').scrollingTabs();
+	</script>
+{% endblock %}
+{% block nav %}
+	<a class="nav-item nav-item-temp btn btn-primary btn-sm" style="color:white" href="{{ path('app_login') }}">
+		Sign In</a>
+{% endblock %}

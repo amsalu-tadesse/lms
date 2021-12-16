@@ -1,0 +1,148 @@
+{% extends "sBase.html.twig" %}
+
+{% block stylesheet %}
+    <style>
+        body {
+			font-size: 15px;
+		}
+        .card{
+            background-color: white;
+        }
+        label {
+            font-size: 16px;
+        }
+
+        .result{
+            font-size: 23px;
+            color: white;
+            text-align-last: center;
+            background: #1a5c5c;
+            padding: 10px 20px;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+    <br>
+	<div class="container">
+		<div class="row">
+			<div class="card my-3">
+				<div class="card-body quiz_result">
+					{% for question in stud_que %}
+                        {% if question.answer == null  %}
+                            {% if show_un_answered_questions %}
+							    <h5 class="py-3">{{question.question|raw}}</h5>
+                                <input type="hidden" id="parameter" value="{{question.id}}">
+                                {% for choice in question.question.quizChoices %}
+                                    <div class="d-flex flex-column px-4 py-1">
+                                        <label class="d-flex align-items-center text-color-grey mb-0" for="shipping_method{{choice.id}}">
+                                            {% if choice.letter == question.answer %}
+                                                <script>
+                                                    checked = 1;
+                                                </script>
+                                                <input disabled id="shipping_method{{choice.id}}" type="radio" class="me-2"  checked="checked" value="{{choice.letter}}">
+                                                {{choice.letter}}) &nbsp;&nbsp;
+                                                {{ choice.description}} &nbsp; 
+                                                {% if question.answer == question.question.answer %}
+                                                    <span style="color:green"><i class="fa fa-check"></i></span>
+                                                {% else %}
+                                                    <span style="color:red"><i class="fa fa-times"></i></span>
+                                                {% endif %}
+                                            {% else %}
+                                                <input disabled id="shipping_method{{choice.id}}" type="radio" class="me-2"  value="{{choice.letter}}">
+                                                {{choice.letter}}) &nbsp;&nbsp;
+                                                {{ choice.description}} &nbsp;
+                                            {% endif %}
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                                {# <div class="d-flex flex-column px-4 py-1"> #}
+                                    {# {% if question.answer == question.question.answer %}
+                                        <span style="color:green">Corect Answer: <b>{{question.question.answer}}</b></span>
+                                    {% else %}
+                                        <span style="color:red">Corect Answer: <b>{{question.question.answer}}</b></span>
+                                    {% endif %} #}
+                                {# </div> #}
+                            {% endif %}
+                        {% else %}
+                            <h5 class="py-3">{{question.question|raw}}</h5>
+                                <input type="hidden" id="parameter" value="{{question.id}}">
+                                {% for choice in question.question.quizChoices %}
+                                    <div class="d-flex flex-column px-4 py-1">
+                                        <label class="d-flex align-items-center text-color-grey mb-0" for="shipping_method{{choice.id}}">
+                                            {% if choice.letter == question.answer %}
+                                                <input disabled id="shipping_method{{choice.id}}" type="radio" class="me-2"  checked="checked" value="{{choice.letter}}">
+                                                {{ choice.letter }}) &nbsp;&nbsp;
+                                                {{ choice.description }} &nbsp;
+                                                {% if question.answer == question.question.answer %}
+                                                    <span style="color:green"><i class="fa fa-check"></i></span>
+                                                {% else %}
+                                                    <span style="color:red"><i class="fa fa-times"></i></span>
+                                                {% endif %}
+                                            {% else %}
+                                                <input disabled id="shipping_method{{choice.id}}" type="radio" class="me-2"  value="{{choice.letter}}">
+                                                {{choice.letter}}) &nbsp;&nbsp;
+                                                {{ choice.description}}
+                                            {% endif %}
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                        {% endif %}
+					{% endfor %}
+                    <br>
+                    <p class="result">Result: {{correct_answer}}
+                        <br>
+                        <br>
+                        {% set flag = true %}
+                        {% if quiz.passValue > student_quiz.result %}
+                            {% if quiz.noOfRetakeAllowed > student_quiz.trial %}
+                                You failed this quiz. <a href="{{path('retake_exam',{'id':chapter.id})}}" class="btn btn-info"> click here to retake exam</a>
+                            {% else %}
+                        
+                                {% if last %}
+                                    {% for label, messages in app.flashes %} 
+                                        {% for message in messages %}
+                                            {% set flag = false %}
+                                            <div class="alert alert-{{ label }} fade show" role="alert">
+                                            <strong> {{ message }}</strong>
+                                            <button type="button" class="close btn-primary" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            </div>
+                                        {% endfor %} 
+                                    {% endfor %}
+                                    <a href="{{path('student_course_index')}}" class="btn btn-primary"> Go to home page</a>
+                                {% else %}
+                                    <a href="{{path('course_chapters',{'id':chapter.instructorCourse.id})}}" class="btn btn-primary px-5 mx-2 my-2">Go to next chapters</a>
+                                {% endif %}
+                            {% endif %}
+                        {% else %}
+                            {% if last %}
+                                {% for label, messages in app.flashes %} 
+                                    {% for message in messages %}
+                                        {% set flag = false %}
+                                        <div class="alert alert-{{ label }} fade show" role="alert">
+                                        <strong> {{ message }}</strong>
+                                        <button type="button" class="close btn-primary" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        </div>
+                                    {% endfor %} 
+                                {% endfor %}
+                                <a href="{{path('student_course_index')}}" class="btn btn-primary"> Go to home page</a>
+                            {% else %}
+                                <a href="{{path('course_chapters',{'id':chapter.instructorCourse.id})}}" class="btn btn-primary px-5 mx-2 my-2">Go to next chapters</a>
+                            {% endif %}
+                        {% endif %}
+                    </p>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+{% block javascript %}
+	<script src="{{asset('assets/plugins/bootstrap/js/bootstrap.min.js')}}"></script>
+
+    <script>
+        responsive(".container");
+    </script>
+{% endblock %}

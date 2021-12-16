@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Content{% endtrans %} Show{% endblock %}
+{% block breadcrumbhome %}
+    <a href="{{ path('content_index',{'id': incrsid}) }} ">
+	   {% trans %}Content{% endtrans %} 
+	</a> 
+{% endblock %}
+{% block breadcrumbcontent %}{% trans %}Show{% endtrans %}{% endblock %}
+{% block body %}
+<div class="card card-info">
+<div class="card card-header">
+      <h1>Content</h1>
+
+</div>
+<div class="card card-body">
+<table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ content.id }}</td>
+            </tr>
+            <tr>
+                <th>{% trans %}Chapter{% endtrans %}</th>
+                <td>{{ content.chapter }}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ content.title }}</td>
+            </tr>
+            <tr>
+                <th>Content</th>
+                <td>{{ content.content | raw}}</td>
+            </tr>
+            <tr>
+                <th>File</th>
+                <td><a href="{{ asset('uploads/resources/' ~ content.filename) }}">View file</a></td>
+            </tr>
+            <tr>
+                <th>VideoLink</th>
+                <td>{{ content.videoLink }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+</div>
+    
+    <a href="{{ path('content_index',{'id': incrsid}) }}">{% trans %}Back to list{% endtrans %}</a>
+
+    <a href="{{ path('content_edit', {'id': content.id}) }}">edit</a>
+
+    {{ include('content/_delete_form.html.twig') }}
+{% endblock %}

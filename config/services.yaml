@@ -1,0 +1,57 @@
+
+    # App\:
+    #     resource: '../src/*'
+    #     exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+ 
+    # App\Controller\:
+    #     resource: '../src/Controller'
+    #     tags: ['controller.service_arguments']
+
+
+parameters:
+    locale: 'en'
+    globvar: 200
+    uploading_directory_resources:  '%kernel.project_dir%/public/uploads/resources'
+    uploading_directory_videos:  '%kernel.project_dir%/public/uploads/videos'
+    uploading_directory_images:  '%kernel.project_dir%/public/uploads/profileImages/'
+    contact_mail: '%env(resolve:CONTACT_MAIL)%'
+    sender_mail: '%env(resolve:MAILJET_SENDER_EMAIL)%'
+    sender_mail_key: '%env(resolve:MAILJET_APIKEY_PUBLIC)%'
+    sender_mail_secret: '%env(resolve:MAILJET_APIKEY_PRIVATE)%'
+
+    docroot:  '%kernel.project_dir%'
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        public: true
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/*'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+            - '../src/Tests/'
+
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones
+    App\Subscribers\LocaleSubscriber:
+        arguments:
+            $defaultLocale: '%locale%'
+
+    
+    # App\Subscribers\SearchIndexer:
+    #     tags:
+    #         - { name: doctrine.event_listener, event: postPersist }
+    # App\Subscribers\SearchIndexer2:
+    #     tags:
+    #         - { name: doctrine.event_listener, event: postPersist, connection: default }
+    App\Subscribers\SearchIndexerSubscriber:
+        tags:
+            # - { name: doctrine.event_subscriber, event: postUpdate }
+            - { name: doctrine.event_subscriber, event: postUpdate }

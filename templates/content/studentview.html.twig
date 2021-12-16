@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Content{% endtrans %} index
+{% endblock %}
+{% block breadcrumbhome %}
+	<a href="{{ path('content_index',{'id': incrsid}) }} ">
+	   {% trans %}Content{% endtrans %} 
+	</a> 
+{% endblock %}
+{% block breadcrumbcontent %}{% trans %}Student View{% endtrans %}{% endblock %}
+{% block body %}
+	<div class="row">
+
+		<div class="col-7 col-sm-9">
+
+			<div class="card card-info">
+				<div class="card card-header">
+					<h4>Lesson
+					</h4>
+				</div>
+				<div class="card card-body">
+
+					<div class="tab-content" id="cont-tabContent">
+						{% for content in contents %}
+							<div class="tab-pane fade" id="cont-{{content.id}}" role="tabpanel" aria-labelledby="cont-{{content.id}}-tab">
+								{{content.content}}
+							</div>
+
+						{% endfor %}
+
+					</div>
+				</div>
+			</div>
+
+
+		</div>
+
+		<div class="col-5 col-sm-3">
+			<div class="card card-info">
+				<div class="card card-header">
+					<h4>Outline
+					</h4>
+				</div>
+				<div class="card card-body">
+					<div class="nav flex-column nav-tabs nav-tabs-right h-100" id="cont-tab" role="tablist" aria-orientation="vertical">
+
+						{% for content in contents %}
+							<a class="nav-link" id="cont-{{content.id}}-tab" data-toggle="pill" href="#cont-{{content.id}}" role="tab" aria-controls="cont-{{content.id}}" aria-selected="true">{{content.title}}</a>
+						{% endfor %}
+
+					</div>
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+
+
+{% endblock %}
+{% block javascripts %}
+	<script>
+
+		$(document).ready(function () { // $("#placeholder").html("hhhhhhhhhhhhh");
+});
+	</script>
+{% endblock %}

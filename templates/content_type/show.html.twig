@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ContentType{% endblock %}
+{% block breadcrumbhome %}
+    <a href="{{ path('content_type_index') }} ">
+	   {% trans %}Content Type{% endtrans %} 
+	</a> 
+{% endblock %}
+{% block breadcrumbcontent %}{% trans %}Show{% endtrans %}{% endblock %}
+{% block body %}
+    <h1>ContentType</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ content_type.id }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ content_type.name }}</td>
+            </tr>
+            <tr>
+                <th>{% trans %}Description{% endtrans %}</th>
+                <td>{{ content_type.description }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('content_type_index') }}">{% trans %}Back to list{% endtrans %}</a>
+
+    <a href="{{ path('content_type_edit', {'id': content_type.id}) }}">edit</a>
+
+    {{ include('content_type/_delete_form.html.twig') }}
+{% endblock %}

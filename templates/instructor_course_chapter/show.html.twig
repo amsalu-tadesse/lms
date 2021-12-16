@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}InstructorCourseChapter{% endblock %}
+{% block breadcrumbhome %}
+    <a>
+	   {% trans %}Chapter{% endtrans %} 
+	</a> 
+{% endblock %}
+{% block breadcrumbcontent %}Show{% endblock %}
+{% block body %}
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ instructor_course_chapter.id }}</td>
+            </tr>
+            <tr>
+                <th>{% trans %}Chapter{% endtrans %}</th>
+                <td>{{ instructor_course_chapter.topic }}</td>
+            </tr>
+            <tr>
+                <th>Created_at</th>
+                <td>{{ instructor_course_chapter.createdAt ? instructor_course_chapter.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('instructor_course_chapter_index') }}">{% trans %}Back to list{% endtrans %}</a>
+
+    <a href="{{ path('instructor_course_chapter_edit', {'id': instructor_course_chapter.id}) }}">edit</a>
+
+    {{ include('instructor_course_chapter/_delete_form.html.twig') }}
+{% endblock %}

@@ -1,0 +1,33 @@
+<?php
+
+namespace App\Form;
+
+use App\Entity\SystemSetting;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
+class SystemSettingType extends AbstractType
+{
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+        $builder
+            // ->add('code') 
+            ->add('value',null, [
+                'label' => 'Value'
+            ])
+            ->add('description',null,[
+                'label' => 'Code Description'
+            ])
+            // ->add('active')
+            // ->add('value')
+        ;
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'data_class' => SystemSetting::class,
+        ]);
+    }
+}

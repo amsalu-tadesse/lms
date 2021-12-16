@@ -1,0 +1,177 @@
+{% extends "anon-base.html.twig" %}
+{% block stylesheet %}
+	<style>
+		body {
+			background-image: url('/images/lms-login4.jpg');
+		}
+
+		.login-left-text p {
+			max-width: 590px;
+			color: white;
+			font-weight: 400;
+			font-size: 16px;
+			text-align: justify;
+			font-family: poppins;
+			height: 341px;
+			overflow: hidden;
+		}
+
+		{
+			color: white;
+			font-weight: 400;
+			font-size: 16px;
+			text-align: justify;
+			font-family: poppins;
+		}
+
+		h2,
+		h4 {
+			color: white;
+			line-height: 42px;
+			font-weight: 700;
+			font-family: "Zen antique"
+		}
+		.card {
+			font-family: poppins;
+		}
+
+		#myBtn {
+			color: #23405e;
+			font-size: 14px;
+			border: 1px solid #9d9393;
+		}
+
+		@media(min-width: 1200px) {
+			.container,
+			.container-lg,
+			.container-md,
+			.container-sm,
+			.container-xl {
+				max-width: 1214px;
+			}
+		}
+	</style>
+{% endblock %}
+{% block body %}
+	<div class="container" style="min-height: 500px;margin-top:-36px !important">
+		<div style=" clear: both;"></div>
+		<div class="row">
+
+			<div class="col-sm-12 col-md-7">
+				<div class="login-left-text">
+					<h2>ARCAI</h2>
+					<p id="login_text">
+						{% trans %}The African research center for Artificial Intelligence (ARCAI) has the primary objective of undertaking cutting-edge research on artificial intelligence (AI) focusing on a human-centered approach in order to maximize the benefits and counter the challenges of development and use of artificial intelligence for the socio-economic development of the continent.The Center will undertake research on the legal, ethical, economic and societal implications of Artificial Intelligence technologies, as well as develop artificial intelligence-based tools, products and services to help the African continent as a whole adopt the implementation of this emerging technology in their efforts to meet national development aspirations and the Sustainable Development Goals (SDGs) as internationally agreed. The creation of this Regional Center on Artificial Intelligence with the support of ECA and its partners will make Congo a major technology hub in Central Africa. The anticipated objectives of the research center could also be:-serving researchers all over Africa and beyond by providing state of the art AI laboratories, engaging researchers on industrial projects in the areas of Artificial Intelligence that will guarantee the socio-economic development of the continent, encouraging and supporting different AI start-ups and initiatives, promoting standard and real problem solving research works in the areas of AI , disseminating knowledge and expertise in the areas of AI , carrying out advanced interdisciplinary research in the broad areas of Artificial Intelligence.{% endtrans %}
+					</p>
+					<button id="myBtn">Read more</button>
+				</div>
+			</div>
+			<div class="col-sm-12 col-md-5" style="margin-top: 50px;">
+				<div class="row">
+					<div class="banner hidden-xs hidden-sm">
+						<div class="card">
+							<div class="card-body login-card-body">
+								<p class="login-box-msg">{% trans %}Sign in to start your session{% endtrans %}</p>
+								{% for label, messages in app.flashes %}
+									{% for message in messages %}
+										<div class="row alert alert-{{ label }} alert-dismissible">
+											{{ message }}
+										</div>
+									{% endfor %}
+								{% endfor %}
+								<form method="post">
+
+									{% if error %}
+										<div class="alert alert-danger alert-dismissible">
+
+											<i class="icon fas fa-ban"></i>
+											{{ error.messageKey|trans(error.messageData, 'security') }}
+										</div>
+									{% endif %}
+									{% if app.user %}
+										<div class="mb-3">
+											You are logged in as
+											{{ app.user.username }},
+											<a href="{{ path( 'app_logout') }}">Logout</a>
+										</div>
+									{% endif %}
+									<div class="form-group mb-4">
+										<label>
+											{% trans %}Username{% endtrans %}: *</label>
+										<input type="text" class="form-control" name="username" placeholder="" value="{{ last_username }}">
+									</div>
+
+									<div class="form-group mb-3">
+										<label>Password: *</label>
+										<input type="password" class="form-control" placeholder="" name="password" required>
+									</div>
+									<br/>
+									<div
+										class="row">
+										<!-- {#
+										                                        <div class="col-8">
+										                                            <div class="icheck-primary">
+										                                                <input type="checkbox" name="_remember_me" id="remember">
+										
+										                                                <label for="remember">
+																									Remember Me
+																								</label>
+										                                            </div>
+										                                        </div>
+										                                        #} -->
+										<div class="col-xs-12">
+											<button type="submit" class="btn btn-primary form-control">{% trans %}Sign In{% endtrans %}</button>
+										</div>
+									</div>
+
+									<div class="row mt-3 mb-2">
+										<div class="col-xs-12">
+											<div class="row">
+												<div class="col-6">
+													<a href="{{path('email_verification')}}">{% trans %}Forgot Password{% endtrans %}?</a>
+												</div>
+												<div class="col-6">
+													<a href="{{ path('app_register')}}" style="float: right;">{% trans %}Create Account{% endtrans %}</a>
+												</div>
+											</div>
+										</div>
+									</div>
+									<input type="hidden" name="_csrf_token" value="{{ csrf_token( 'authenticate') }}">
+								</form>
+							</div>
+							<!-- /.login-card-body -->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+{% block nav %}
+	<a class="nav-item btn btn-primary btn-sm" style="color:white" href="/register">{% trans %}Sign up{% endtrans %}
+	</a>
+
+{% endblock %}
+{% block javascript %}
+
+    <script>
+        var control = {
+            selected: 1
+        }
+
+        $("#myBtn").on("click", function(){
+            console.log(control.selected);
+            if(control.selected == 1){
+                $("#login_text").css("height", "auto");
+                control.selected = 0;
+                $("#myBtn").text("Read Less");
+            }
+            else{
+                $("#login_text").css("height", "341px");
+                control.selected = 1;
+                $("#myBtn").text("Read More");
+            }
+            
+        });
+    </script>
+{% endblock %}

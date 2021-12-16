@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Quiz Questions{% endblock %}
+{% block breadcrumbhome %}
+    <a href="{{path('quiz_index',{'id':id})}}">
+	   {% trans %}Quiz{% endtrans %} 
+	</a> / 
+	 <a href="#">
+	   {% trans %}Questions{% endtrans %} 
+	</a> 
+{% endblock %}
+{% block breadcrumbcontent %}{% trans %}New{% endtrans %}{% endblock %}
+
+{% block body %}
+
+    {{ include('quiz_questions/_form.html.twig') }}
+
+    {# <a href="{{ path('quiz_questions_index') }}">{% trans %}Back to list{% endtrans %}</a> #}
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    var counter = 2;
+    jQuery('a.add-author').click(function(event){
+        event.preventDefault();
+        counter++;
+      
+        if(counter == 9)
+        {
+            document.getElementById("dynamic").style.background='red';
+ 
+        }
+        if(counter > 9)
+        {
+            document.getElementById("dynamic").style.background='red';
+
+            alert("Maximum number reached");
+            counter--;
+        }
+        else 
+        {
+            document.getElementById("dynamic").style.background='#17a2b8';
+      /*  var newRow = jQuery('<tr><td>'+getChars(counter)+'&nbsp;&nbsp;<input type="radio" name="answer" value="'+getChars(counter)+'"></td><td><div class="form-group"> <textarea id="'+getChars(counter)+'" name="'+getChars(counter)+'" class="form-control"  rows="3"  required></textarea></div></td><td><a   class="btn btn-xs"> <span class="fa fa-trash" style="color:red;" onclick="removerow(this)"></span> </a></td></tr>');*/
+        var newRow = jQuery('<tr><td>'+getChars(counter)+'&nbsp;&nbsp;<input type="radio" name="answer" value="'+getChars(counter)+'"></td><td><div class="form-group"> <textarea id="'+getChars(counter)+'" name="'+getChars(counter)+'" class="form-control"  rows="3"  required></textarea></div></tr>');
+
+
+            jQuery('table.authors-list').append(newRow);
+        }
+        
+    });
+
+    function getChars(x)
+    {
+        var arr = ['','A','B','C','D','E','F','G','H','I','J'];
+        return arr[x];
+    }
+
+   /* function removerow(x)
+    {
+       x.parentNode.parentNode.parentNode.remove();
+       counter--;
+     
+    }*/
+
+    function removelastrow()
+    { 
+        if(counter > 2)
+        {
+            $('#mytable tr:last').remove();
+            counter--;
+        }
+        
+       
+        if(counter <= 9)
+        {
+            document.getElementById("dynamic").style.background='#17a2b8';
+ 
+        }
+       
+     
+    }
+</script>
+
+{% endblock %}
+

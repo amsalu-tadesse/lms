@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Hello HomeController{% endtrans %}!{% endblock %}
+{% block breadcrumbhome %}{% trans %}Home{% endtrans %}{% endblock %}
+{% block breadcrumbcontent %}{% trans %}Index{% endtrans %}{% endblock %}
+{% block body %}
+ <div class="card card-info">
+  <div class="card card-header">
+  <h3 class="card-title">{% trans %}Welcome to ECA Learning managent system{% endtrans %}</h3>
+
+ </div>
+  <div class="card card-body">
+  <p>{% trans %}ECS learning management system is a system that automates the learning and student evaluation in Africa.{% endtrans %}</p>
+
+ </div>
+ </div>
+ 
+{% endblock %}

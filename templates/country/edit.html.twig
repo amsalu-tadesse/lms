@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Edit Country{% endtrans %}{% endblock %}
+{% block breadcrumbhome %}
+    <a href="{{ path('country_index') }} ">
+	   {% trans %}Country{% endtrans %} 
+	</a> 
+{% endblock %}
+{% block breadcrumbcontent %}{% trans %}Edit{% endtrans %}{% endblock %}
+{% block body %}
+    {# <h1>{% trans %}Edit Country{% endtrans %}</h1> #}
+
+    {{ include('country/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('country_index') }}">{% trans %}Back to list{% endtrans %}</a>
+
+    {{ include('country/_delete_form.html.twig') }}
+{% endblock %}

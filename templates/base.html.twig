@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>
+        {% block title %} {% endblock %}
+    </title>
+    <link rel="shortcut icon" href="{{asset('images/fas.jpg')}}" type="image/x-icon"/>
+    <meta charset="utf-8">
+    {# <meta name="viewport" content="width=device-width, initial-scale=1"> #}
+    <title>LMS</title>
+
+ 
+
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" href="{{asset('assets/plugins/fontawesome-free/css/all.min.css')}}">
+    {# <link rel="stylesheet" href="{{asset('assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css')}}"> #}
+    <link rel="stylesheet" href="{{asset('assets/plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}"> {#
+    <link rel="stylesheet" href="{{asset('assets/plugins/jqvmap/jqvmap.min.css')}}"> #}
+    <link rel="stylesheet" href="{{asset('assets/dist/css/adminlte.min.css')}}">
+    <link rel="stylesheet" href="{{asset('assets/dist/css/custom.css')}}">
+    
+    {# <link rel="stylesheet" href="{{asset('assets/plugins/overlayScrollbars/css/OverlayScrollbars.min.css')}}"> #}
+    {# <link rel="stylesheet" href="{{asset('assets/plugins/daterangepicker/daterangepicker.css')}}"> #}
+    {# <link rel="stylesheet" href="{{asset('assets/plugins/summernote/summernote-bs4.min.css')}}">  #}
+	{% block stylesheets %} {% endblock %}
+    <style>
+        body{
+            font-size: 14px;
+        }
+        ul.nav, table td{
+            font-size: 105%;
+        }
+
+        .dataTables_filter{
+            float: right;
+        }
+        
+        .nav-treeview .nav-item a{
+            font-size: 85%;
+            padding-left: 30px
+        }
+        .nav-icon{
+            font-size: 0.9rem !important;
+        }
+        
+        .footer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            
+            /*color: white;*/
+            text-align: center;
+        }    
+        
+        @media(min-width: 768px){
+            body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav) 
+            .content-wrapper, body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav) 
+            .main-footer, body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav) .main-header {
+                        margin-left: 223px;
+            }
+            .main-sidebar, .main-sidebar::before
+            {
+                width: 223px;
+            }  
+            body{
+                line-height: 1.3;
+            }  
+        }
+
+        h6{
+            font-size: 0.8rem;
+            font-family: sans-serif;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixe">
+
+
+    <div class="wrapper">
+        {% include 'master/navbar.html.twig' %} {% include 'master/sidebar.html.twig' %}
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2"> 
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                               
+										{% block breadcrumbhome %}{% endblock %}
+									 </li>
+                                <li class="breadcrumb-item active">
+                                    {% block breadcrumbcontent %}{% endblock %}
+                                </li>
+                                 
+                            </ol>
+                        </div>
+                        <div class="col-sm-4 float-right">
+                        </div>
+                        <div class="col-sm-2 float-right-end mr-0">
+                         {% block backbtn %}{% endblock %}
+                        
+                        </div>
+                    </div>
+                </div>
+                <!-- /.container-fluid -->
+            </div>
+            <!-- /.content-header -->
+
+            <!-- Main content -->
+            <section class="content">
+
+                <div class="row">
+                    <div class="col-md-12">
+
+                        {% for label, messages in app.flashes %} {% for message in messages %}
+                        <div class="row alert alert-{{ label }} alert-dismissible">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                            <h4 class="mr-4">
+                                <i class="icon fa fa-{% if label=='success' %}check {% else %}ban {% endif %}"></i> Alert!
+                            </h4>
+                            {{ message }}
+
+                        </div>
+
+
+                        {% endfor %} {% endfor %}
+
+                    </div>
+                </div>
+                <div class="container-fluid">
+                    <div class="row">
+                        <!-- left column -->
+                        <div class="col-md-12">
+                            {% block body %} {% endblock %}
+                        </div>
+                        <!--/.col (left) -->
+                        <!-- right column -->
+                        <div class="col-md-6"></div>
+                        <!--/.col (right) -->
+                    </div>
+                    <!-- /.row -->
+                </div>
+                <!-- /.container-fluid -->
+            </section>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+
+        <script src="{{asset('assets/plugins/jquery/jquery.js')}}"></script>
+        <script src="{{asset('assets/plugins/jquery-ui/jquery-ui.min.js')}}"></script>
+        <script src="{{asset('assets/plugins/bootstrap/js/bootstrap.min.js')}}"></script>
+        <script src="{{asset('assets/plugins/chart.js/Chart.min.js')}}"></script>
+        {# <script src="{{asset('assets/plugins/sparklines/sparkline.js')}}"></script> #}
+        <script src="{{asset('assets/plugins/jquery-knob/jquery.knob.min.js')}}"></script>
+        {# <script src="{{asset('assets/plugins/moment/moment.min.js')}}"></script> #}
+        <script src="{{asset('assets/plugins/daterangepicker/daterangepicker.js')}}"></script>
+        {# <script src="{{asset('assets/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')}}"></script> #}
+        {# <script src="{{asset('assets/plugins/summernote/summernote-bs4.min.js')}}"></script> #}
+        {# <script src="{{asset('assets/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')}}"></script> #}
+        <script src="{{asset('assets/dist/js/adminlte.min.js')}}"></script>
+        <script src="{{asset('assets/dist/js/demo.js')}}"></script>
+        <script>
+            $.widget.bridge('uibutton', $.ui.button);
+            var inst = "{{ is_granted('ROLE_INSTRUCTOR') }}";
+            if( inst == "1"){
+                user = {{1}};
+                    $.ajax({
+                        url: "{{path('new_question_notification')}}",
+                        data: {'id': user},
+                        success: function(data){
+                            $('.navbar-badge').text(data);
+                        }
+                    }); 
+                    
+                $(document).ready(function(){
+                    var inst_obj = "{{app.user.getInstructors().getValues()|join(', ')}}";
+                    
+                        {% if app.user.getInstructors().getValues() %}
+                            user = {{app.user.getInstructors().getValues()[0].getId()}};
+                            setInterval(function(){ 
+                                $.ajax({
+                                    url: "{{path('new_question_notification')}}",
+                                    data: {'id': user},
+                                    success: function(data){
+                                        $('.navbar-badge').text(data);
+                                    }
+                                }); 
+                            }, 5000);
+                        {% endif %}
+                });
+            }
+
+            var adm = "{{ is_granted('ROLE_DIRECTOR') }}";
+            if( adm == "1"){
+                console.log("addmin");
+                user = {{app.user.id}};
+                    $.ajax({
+                        url: "{{path('new_course_request')}}",
+                        success: function(data){
+                            if(data != 0){
+                                $("#new_request .badge").remove();
+                                badge = $("<span class='badge badge-primary'>"+data+"</span>");
+                                $('#new_request').append(badge);
+                            }
+                        }
+                    }); 
+                $(document).ready(function(){
+                    user = {{app.user.id}};
+                    setInterval(function(){ 
+                        $.ajax({
+                            url: "{{path('new_course_request')}}",
+                            data: {'id': user},
+                            success: function(data){
+                                if(data != 0){
+                                     $("#new_request .badge").remove();
+                                    badge = $("<span class='badge badge-primary'>"+data+"</span>");
+                                    $('#new_request').append(badge);
+                                }
+                            }
+                        }); 
+                    }, 5000);
+                });
+            }
+        </script>
+
+        <script>
+      $(function () {
+        var url = window.location;
+        // for single sidebar menu
+        $('ul.nav-sidebar a').filter(function () {
+            return this.href == url;
+        }).addClass('active');
+        // for sidebar menu and treeview
+        $('ul.nav-treeview a').filter(function () {
+            return this.href == url;
+        }).parentsUntil(".nav-sidebar > .nav-treeview").css({'display': 'block'}).addClass('menu-open').prev('a').addClass('active');
+        });
+        </script>
+		{% block javascripts %}
+        {% endblock %}
+        {% include 'master/footer.html.twig' %}
+
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-dark">
+            <!-- Control sidebar content goes here -->
+        </aside>
+        <!-- /.control-sidebar -->
+    </div>
+    <!-- ./wrapper -->
+
+</body>
+
+</html>

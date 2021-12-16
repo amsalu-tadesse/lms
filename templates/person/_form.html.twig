@@ -1,0 +1,10 @@
+{{ form_start(form,{'attr':{'data-persist':'garlic'}}) }}
+    {{ form_widget(form.name,{'attr':{'data-storage':'false'}}) }}
+    {{ form_widget(form.address) }}
+    {{ form_widget(form.age) }}
+    {{ form_widget(form.color) }}
+    {{ form_widget(form.isStudent) }}
+    {{ form_widget(form.history) }}
+    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}
+ 

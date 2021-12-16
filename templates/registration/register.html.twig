@@ -1,0 +1,130 @@
+{% extends 'anon-base.html.twig' %}
+
+{% block title %}Register
+{% endblock %}
+{% block stylesheet %}
+	<style>
+		.row {
+			padding: 20px;
+		}
+
+		input.password-field {
+			margin-bottom: 20px;
+		}
+
+		.close {
+			float: right;
+			background: #045493;
+			color: white;
+			border: 0;
+			padding: 3px 11px;
+		}
+	</style>
+{% endblock %}
+{% block body %}
+	<div class="container">
+		{% for flashError in app.flashes('verify_email_error') %}
+			<div class="alert alert-danger" role="alert">{{ flashError }}</div>
+		{% endfor %}
+
+		<h3 class="text-light">{% trans %}
+			Sign up to Create Account{% endtrans %}</h3>
+		<div class="card" style="background:white">
+			<div class="card-body">
+				{% if message != "" %}
+					<div class="alert alert-danger alert-dismissible fade show" role="alert">
+						{{message}}
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+				{% endif %}
+
+				{{ form_start(registrationForm) }}
+				<div class="row">
+					<div class="col-sm-4">
+						{{ form_row(registrationForm.firstName,{'label':'First Name'|trans}) }}
+					<div class="help-block text-danger">{{form_errors(registrationForm.firstName)}}</div>
+
+					</div>
+					<div class="col-sm-4">
+						{{ form_row(registrationForm.middleName,{'label':'Last Name'|trans}) }}
+					<div class="help-block text-danger">{{form_errors(registrationForm.middleName)}}</div>
+
+					</div>
+					{# <div class="col-sm-4">
+						{{ form_row(registrationForm.lastName,{'label':'Last Name'|trans}) }}
+					</div> #}
+				</div>
+				<div class="row">
+					<div class="col-sm-4">
+						{# {{ form_row(registrationForm.email, {'label':'Email'|trans}) }}
+					<div class="help-block text-danger">{{form_errors(registrationForm.email)}}</div>
+ #}
+
+					{{form_label(registrationForm.email,'Email' | trans | raw)}}
+			{{ form_widget(registrationForm.email,{'attr':{'class':form_errors(registrationForm.email)? 'form-control  is-invalid':'form-control ','placeholder':" Enter username"|trans}}) }}
+			<div class="help-block text-danger">{{form_errors(registrationForm.email)}}</div>
+
+
+					</div>
+
+
+
+
+					<div class="col-sm-4">
+						{{ form_row(registrationForm.academicLevel,{'label':'academic level'|trans}) }}
+					<div class="help-block text-danger">{{form_errors(registrationForm.academicLevel)}}</div>
+
+
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-4">
+						{{ form_row(registrationForm.sex, {'label':'Sex'|trans}) }}
+					</div>
+				</div>
+				<br>
+				{# <div class="row">
+                    <div class="col-sm-4">
+                        {{ form_row(registrationForm.plainPassword, {
+                            label: 'Password'
+                        }) }}
+                    </div>
+                </div> #}
+				<div class="row py-0">
+					<div class="form-group">
+						{{ form_widget(registrationForm.agreeTerms)}}
+						&nbsp;&nbsp;{% trans %}I agree to{% endtrans %}
+						<a target="_blank" href="{{path('temsandconditions')}}">
+							{% trans %}terms and conditions{% endtrans %}</a>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-2">
+						<button class="buttonload btn btn-primary btn-block" id="spinner" style="display:none">
+							<i class="fa fa-spinner fa-spin"></i>
+							{% trans %}Signing Up{% endtrans %}
+						</button>
+						<button type="submit" class="btn btn-primary btn-block" id="submit">{% trans %}Sign up{% endtrans %}</button>
+					</div>
+				</div>
+				{{ form_end(registrationForm) }}
+			</div>
+		</div>
+	</div>
+{% endblock %}
+{% block nav %}
+	<a class="nav-item nav-item-temp btn btn-primary btn-sm" style="color:white" href="{{ path('app_login') }}">
+		{% trans %}Sign In{% endtrans %}
+	</a>
+{% endblock %}
+{% block javascript %}
+	<script>
+		$("form").on("submit", function () {
+        $("#spinner").css("display", "block");
+        $("#submit").remove();
+        });
+	</script>
+{% endblock %}

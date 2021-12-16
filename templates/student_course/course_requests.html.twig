@@ -1,0 +1,331 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% trans %}
+    Course Requests
+    {% endtrans %}
+{% endblock %}
+{% block breadcrumbhome %}
+    {% trans %}
+    Requests
+    {% endtrans %}
+{% endblock %}
+{% block breadcrumbcontent %}
+    {% trans %}
+    index
+    {% endtrans %}
+{% endblock %}
+
+{% block stylesheets %}
+    <style>
+		.col-sm-4, .col-sm-2{
+			padding: 0px 10px;
+		}
+	</style>
+{% endblock %}
+{% block body %}
+
+    <div class="card card-info">
+        <div class="card card-header">
+            <div class="row">
+                <div class="col-md-6">
+                    <h3 class="card-title">
+                        {% trans %}
+                        Request list
+                        {% endtrans %}
+                    </h3>
+                </div>
+                <div class="col-md-6"></div>
+            </div>
+        </div>
+        <div class="card card-body">
+            <div class="col-xs-12 col-md-12">
+                {{ form_start(searchForm,{'attr': {'role':'form'}, 'method': 'GET'}) }}
+                <div class="row">
+
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="col-sm-12 control-label">
+                                {{ form_label(searchForm.student) }}
+                            </label>
+                            {{ form_widget(searchForm.student,{'attr':{'class':'form-control', 'placeholder': "Enter email"},'full_name':'student','value':app.request.get('student') }) }}
+                            {# <input type="text" class="form-control" student="name"/> #}
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="col-sm-12 control-label ">
+                                {{ form_label(searchForm.instructorCourse) }}
+                            </label>
+                            {{ form_widget(searchForm.instructorCourse,{'attr':{'class':'form-control'},'full_name':'instructorCourse','value': app.request.get('instructorCourse')}) }}
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2">
+                        <div class="form-group">
+                            <label class="col-sm-12 control-label no-padding-right"></label>
+                            <button class="btn btn-info" style="margin-top:15px;width:100%;">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {{ form_end(searchForm) }}
+            </div>
+            <table class="table ">
+                <thead>
+                    <tr>
+                        <th>
+                            #
+                        </th>
+                        <th>
+                            Id
+                        </th>
+                        <th>
+                            {% trans %}
+                            Student
+                            {% endtrans %}
+                        </th>
+                        <th>
+                            {% trans %}
+                            Course
+                            {% endtrans %}
+                        </th>
+                        <th>
+                            {% trans %}
+                            Date
+                            {% endtrans %}
+                        </th>
+                        <th>
+							{% if is_granted("approve_course_request") %}
+							
+
+                            {% trans %}
+                            Actions
+                            {% endtrans %}
+							{% endif %}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <script type="text/javascript"> 
+							$allItems = [];
+						</script>
+                    {% for student_course in student_courses %}
+                        <script type="text/javascript">
+									$allItems.push({{ student_course.id }});
+								</script>
+                        <tr>
+                            <td>
+                                <input type="checkbox" value="{{ student_course.id }}"></td>
+                                <td>
+                                    {{ loop.index }}
+                                </td>
+                                <td>
+                                    {{ student_course.student }}
+                                </td>
+                                <td>
+                                    {{ student_course.instructorCourse.course.name }}
+                                </td>
+                                <td>
+                                    {{ student_course.createdAt ? student_course.createdAt|date('Y-m-d H:i:s') : '' }}
+                                </td>
+
+                                {% if is_granted("approve_course_request") %}
+
+                                    <td>
+                                        <a href="{{ path('course_request_activate',{id:student_course.id}) }}" type="accept" data-course="{{ student_course.instructorCourse.course.name }}" data-stud="{{ student_course.student }}" class="confBtn">
+                                            <i class="btn btn-success btn-sm">
+                                                Accept
+                                            </i>
+                                        </a>
+                                        <a href="{{ path('course_request_deactivate',{id:student_course.id}) }}" data-course="{{ student_course.instructorCourse.course.name }}" data-stud="{{ student_course.student }}" type="reject" class="confBtn">
+                                            <i class="btn btn-danger btn-sm">
+                                                Reject
+                                            </i>
+                                        </a>
+                                    </td>
+                                {% endif %}
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="6">
+                                    {% trans %}
+                                    No records found
+                                    {% endtrans %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </form>
+                </tbody>
+            </table>
+            <div class="row">
+                <div class="col-sm-2">
+                    <button class="btn btn-primary confM" type="accept" style="display:none;margin:10px 0px 30px;width: 100%;">
+                        Accept 
+                    </button>
+                </div>
+                <div class="col-sm-2">
+                    <button class="btn btn-danger confM" type="reject" style="display:none;margin:10px 0px 30px; width: 100%;">
+                        Reject 
+                    </button>
+                </div>
+            </div>
+            <div class="  pagination justify-content-center ">
+                {{ knp_pagination_render(student_courses) }}
+            </div>
+
+            <div class="float-right pl-5 pb-2">
+
+                {% trans %}
+                Total result
+                {% endtrans %}
+                :
+                					
+                {{ student_courses.getTotalItemCount }}
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title text-bold"></h4>
+                    <button type="button" class="close btn btn-primary" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">
+                            &times;
+                        </span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="form-group text-blue">
+                        Are you sure you want to 
+                        <span id="text"></span>
+                        <u>
+                            <span id="student"></span>
+                        </u>
+                        for the course
+                        								
+                        <span id="course"></span>
+                        ?
+                        							
+                    </div>
+
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-warning" data-dismiss="modal">
+                        NO
+                    </button>
+
+                    <button onclick="approve()" type="submit" id="paynow" class="btn btn-success">
+                        <i class="fa fa-arrow-alt-circle-right m-1"></i>
+                        Yes
+                        							
+                    </button>
+                </div>
+            </div>
+        <!-- /.modal-content -->
+        </div>
+    <!-- /.modal-dialog -->
+    </div>
+
+    <form id="secondForm" action="" method="post">
+        <input type="hidden" name="checked_list[]" id="selected_list"></form>
+    {% endblock %}
+    {% block javascripts %}
+        <script>
+			$selected = {
+				type: 0,
+				url: "",
+			};
+			$items = [];
+
+			$(".confBtn").on("click", function(e){
+				e.preventDefault();
+				$selected.url = $(this).attr("href");
+				$("#student").text($(this).attr("data-stud"));
+				$("#course").text($(this).attr("data-course"));
+				$("#modal").modal("show");
+				$selected.type = $(this).attr("type");
+				if($selected.type.localeCompare("accept")==0){
+					$(".modal-title").text("Registering a student");
+					$("#text").text("register");
+					$(".modal-title").css("color","#28a745");
+				}
+				else{
+					$(".modal-title").text("Rejecting a student");
+					$("#text").text("reject");
+					$(".modal-title").css("color","red");
+				}
+			});
+
+			$(".confM").on("click", function(e){
+				e.preventDefault();
+				$("#student").text($items.length+ " students ");
+				$("#modal").modal("show");
+				$selected.type = $(this).attr("type");
+				if($selected.type.localeCompare("accept")==0){
+					$(".modal-title").text("Registering a student");
+					$("#text").text("register");
+					$(".modal-title").css("color","#28a745");
+				}
+				else{
+					$(".modal-title").text("Rejecting a student");
+					$("#text").text("reject");
+					$(".modal-title").css("color","red");
+				}
+			});
+
+			$(document).ready(function(){
+				$('input:checkbox').prop('checked', false);        
+			});
+			
+			$("input[type='checkbox']").change(function () {
+				if (this.checked) {
+					$items.push(parseInt($(this).val()));
+				} else {
+					index = $items.indexOf($(this).val());
+					if (index > -2) {
+						$items.splice(index, 1);
+					}	
+				}
+				if ($items.length > 0) {
+					$(".confM").css("display", "block");
+				} else {
+					$(".confM").css("display", "none");
+				}
+				console.log($items);
+			});
+
+			function approve()
+			{
+				if($items.length > 0 ){
+					count = $items.length;
+					$check = 1;
+					for ($i = 0; $i < count; $i ++) {
+						if (!$allItems.includes($items[$i])) {
+							$check = 0;
+						}
+					}
+
+					if($check)
+					{
+						if($selected.type.localeCompare("accept") == 0)
+							$("#secondForm").attr("action","/student/approveMultiple");
+						else
+							$("#secondForm").attr("action","/student/rejectMultiple");
+						
+						$("#selected_list").val($items);
+						$("#secondForm").submit();
+					} 
+				}
+				else
+					window.location = $selected.url;
+			}
+		</script>
+    {% endblock %}
+    

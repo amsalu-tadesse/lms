@@ -1,0 +1,188 @@
+{% extends "sBase.html.twig" %}
+{% block stylesheet %}
+	<style>
+		.card-header button {
+			text-decoration: none;
+		}
+		p.meta {
+			border-bottom: 1px solid #45698152;
+			font-size: 15px;
+			opacity: .9;
+			padding-bottom: 10px;
+		}
+
+		p.message {
+			padding: 0 24px;
+			font-size: 15px;
+		}
+
+		.question {
+			border-left: 3px solid blue;
+			border-radius: 6px;
+		}
+
+		.answer {
+			margin-left: 80px;
+			margin-right: 1rem !important;
+			border-left: 4px solid #1c4964;
+		}
+
+		.question-teacher {
+			border-left: 3px solid #1b4964;
+			border-radius: 6px;
+		}
+
+		.qadata {
+			float: right;
+			color: black !important;
+		}
+
+		textarea {
+			resize: none;
+		}
+		span.quadata {
+			color: black !important;
+		}
+
+		h4 {
+			color: black;
+		}
+
+		.modal-backdrop{
+			position: relative;
+		}
+
+		.modal-dialog{
+			min-width: 590px;
+		}
+
+		.modal-body{
+			padding: 0px;
+		}
+		.modal-content {
+			margin: 11% auto;
+			max-width: 690px;
+			padding: 6px;
+		}
+	</style>
+{% endblock %}
+{% block body %}
+	<br>
+	<div class="container-fluid mt-1 description-area">
+		<div class="row">
+			{% include "course/desc.html.twig" %}
+		</div>
+	<div class="modal fade" id="largeModal" tabindex="-1" role="dialog" aria-labelledby="largeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-body">
+					<video src="" width="100%" id="video" controls>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+{% block javascript %}
+	<script src="{{asset('assets/plugins/bootstrap/js/bootstrap.min.js')}}"></script>
+	<script>
+		 
+		if ( window.history.replaceState ) {
+			window.history.replaceState( null, null, window.location.href );
+		}
+	    $(document).ready(function(){
+			responsive(".description-area");
+			if(isMobile()){
+				$(".description-area").append("<br>");
+				$(".question").removeClass("mx-3");
+				$(".description-card").removeClass("px-5");
+			}
+		});
+		
+		var loadControl = {
+			start: 0,
+			end: 0,
+			round: 1,
+			more: true,
+		}
+		$("#loadMore").on("click",function(e){	
+			e.preventDefault();
+			id = $(this).attr("parameter");
+
+			loadControl.start = loadControl.round * 10;
+			loadControl.end = loadControl.start+10;
+			if(loadControl.more){
+				$.ajax({
+					url: '{{path("question_answer_load_more")}}',
+					data:{start:loadControl.start, end:loadControl.end, course:id },
+					success: function(data){
+						if(data.length == 0)
+						{
+							loadControl.more = false;
+						}
+
+						$.each(data, function(i, question) {
+							if(question.student != null)
+							{
+								var mainContainer = $('<div class="card bg-white mt-2 mx-3 question">'+
+												'</div>');
+								var container = $('<div class="card-body"></div>');
+
+								var html = $('<p class="meta"><span class="qadata">'
+											+question.date+'</span>'+question.student
+											+'</p><p class="message">'+question.question+'</p>');
+								container.append(html);
+								mainContainer.append(container);
+								$(".comments").append(mainContainer);
+							}
+							else if(question.instructor != null)
+							{
+								var mainContainer = $('<div class="card bg-white mt-2 mx-3 question-teacher">'+
+												'</div>');
+								var container = $('<div class="card-body"></div>');
+
+								var html = $('<p class="meta"><span class="qadata">'
+											+question.date+'</span>'+question.student
+											+'</p><p class="message">'+question.question+'</p>');
+								container.append(html);
+								mainContainer.append(container);
+								$(".comments").append(mainContainer);
+							}
+
+							if(question.answer != null)
+								{
+									var mainContainer = $('<div class="card bg-white mt-2 answer"></div>');
+									var container = $('<div class="card-body"></div>');
+
+									var html = $('<p class="meta"><span class="qadata">'
+												+question.date+'</span>'+question.instructor
+												+'</p><p class="message">'+question.answer+'</p>');
+									container.append(html);
+									mainContainer.append(container);
+									$(".comments").append(mainContainer);
+								}
+						});
+						loadControl.round++;
+					},
+					error: function(data){
+						console.log("lksjdf");
+					}
+				});
+			}	else{
+				$("#loadMore").text("");
+			}
+
+		});
+
+		function playVideo(file)
+		{
+			$("#modal-backdrop").remove();
+			$("#video").attr("src", "/uploads/videos/"+file);
+		}
+	</script>
+{% endblock %}
+{% block nav %}
+	<a class="nav-item nav-item-temp btn btn-primary btn-sm" style="color:white" href="{{ path('app_login') }}">
+		{% trans %}Sign In{% endtrans %}
+	</a>
+{% endblock %}
+

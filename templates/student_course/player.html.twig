@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Basic -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>
+        course-player
+    </title>
+
+
+    <meta name="keywords" content="HTML5 Template" />
+    <meta name="description" content="Porto - Responsive HTML5 Template">
+    <meta name="author" content="okler.net">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{{asset('images/eca.png')}}" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="images">
+
+    <!-- Mobile Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, shrink-to-fit=no">
+
+    <!-- Web Fonts  -->
+    <link id="googleFonts" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800%7CShadows+Into+Light&display=swap" rel="stylesheet" type="text/css">
+
+    <!-- Vendor CSS -->
+    <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}">
+    <link rel="stylesheet" href="{{asset('assets/plugins/fontawesome-free/css/all.min.css')}}">
+    <script src=" {{asset( 'assets/plugins/jquery/jquery.js')}} "></script>
+
+    <!-- Theme CSS -->
+    <link rel="stylesheet" href="{{asset('student/css/theme.css')}}">
+    <!-- Theme Custom CSS -->
+    <link rel="stylesheet" href="{{asset('student/css/custom.css')}}">
+    <link rel="stylesheet" href="{{asset('student/css/default.css')}}">
+    <link rel="stylesheet" href="{{asset('student/css/theme-elements.css')}}">
+    <link rel="stylesheet" href="{{asset('student/css/player.css')}}">
+
+</head>
+
+<body>
+    <div class="body">
+        {% include 'master-st/navbar.html.twig' %}
+        <script>
+            const videos = {};
+            var control = {
+                view_at: 0,
+                num_of_list:0,
+                content_id: [],
+                viewed_content: [],
+            }
+        </script>
+        <br>
+        <div role="main" class="main">
+            <section class="section border-0 m-0" style="min-height: 600px;">
+                <div class="container-fluid">
+                    {% for label, messages in app.flashes %} 
+                        {% for message in messages %}
+                            {% if label=="danger" %}
+                                <div class="alert alert-danger alert-{{ label }} fade show" role="alert">
+                                <strong> {{ message }}</strong>
+                                <button type="button" class="close btn-primary" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                </div>
+                            {% endif %}
+                        {% endfor %} 
+                    {% endfor %}
+
+                        {% if pages_seen|length != 0 %}
+                                <script>
+                                    control.view_at = "{{pages_seen.pagesCompleted}}";
+                                </script>
+                        {% endif %}
+                        {% if contents|length == 0 %}
+                            <div class="row chapter-list">
+                                <div class="col-md-1"></div>
+                                <div class="col-md-10">
+                                    <div class="card border-0 border-radius-0 ">
+                                        <div class="card-body">
+                                            <center><p class="card-text">{% trans %}There is no content available for this chapter{% endtrans %}</p>
+                                            <a href="{{ path('course_chapters',{'id': chapter.instructorCourse.id})}}" class="btn btn-primary "><h5 class="text-light"> </i>Back to chapters list </h5></a></center>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% else %}
+
+                        <div class="row">  
+                            <div class="col-md-4">
+                                    <div class="tabs accordion">
+                                        <ul class="nav nav-tabs tabs-primary">
+                                            <a href="{{ path('course_chapters',{'id': chapter.instructorCourse.id})}}" id="heading"><h5> <i class="fa fa-arrow-left"></i>Back to chapters list </h5></a>
+                                            <li class="nav-item" id="content-collpse" style="width: 100%; border-bottom: 1px solid blue" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                                <a class="nav-link" href="#popular7" data-bs-toggle="tab">
+                                                    <span>{{chapter.topic|capitalize}}</span>
+                                                    <hr>
+                                                    Contents <i class="fa fa-chevron-down" id="content-collapse-icon" style="float:right"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                        
+                                        <div class="tab-content collapse show" id="collapseOne" aria-labelledby="headingOne" data-parent=".accordion">
+                                            <ul class="list list-icons list-icons-style-1">
+                                                {% set flag = 0 %}
+                                                {% for content in contents %} 
+                                                    <script>
+                                                        control.num_of_list +=1;
+                                                        control.content_id.push({{content.id}});
+                                                    </script>
+                                                {% if content.filename != null %}
+                                                    {% if flag < pages_seen.pagesCompleted %}
+                                                        {% if flag == (pages_seen.pagesCompleted-1) %}
+                                                            <script>
+                                                                control.viewed_content.push({{content.id}});
+                                                            </script>
+                                                            <li class="content-list active" data-type="{{content.id}}" content="filename">
+                                                                <table>
+                                                                    <tr><td>
+                                                                    <input type="checkbox" name="{{content.id}}" disabled checked></td><td>
+                                                        {% else %}    
+                                                            <script>
+                                                                control.viewed_content.push({{content.id}});
+                                                            </script>
+                                                            <li class="content-list" data-type="{{content.id}}" content="filename">
+                                                                <table>
+                                                                    <tr><td>
+                                                                    <input type="checkbox" name="{{content.id}}" disabled checked></td><td>
+                                                        {% endif %}
+                                                    {% else %}
+                                                    <li class="content-list" data-type="{{content.id}}" content="filename" class="disabled">
+                                                        <table>
+                                                            <tr><td>
+                                                            <input type="checkbox" name="{{content.id}}"disabled></td><td>
+                                                    {% endif %}
+                                                        <i class="fas fa-play"></i></td><td> {{ content.title }}</td></tr>
+                                                        </table>
+                                                    </li>
+                                                    <script>
+                                                        var id = "{{ content.id }}";
+                                                        var link = "{{ content.filename }}";
+                                                        videos[id] = link;
+                                                    </script>
+                                                {% elseif content.videoLink != null %}
+                                                    {% if flag < pages_seen.pagesCompleted %}
+                                                        {% if flag == (pages_seen.pagesCompleted-1) %}
+                                                            <script>
+                                                                control.viewed_content.push({{content.id}});
+                                                            </script>
+                                                            <li class="content-list active" data-type="{{content.id}}" content="youtube">
+                                                                <table>
+                                                                    <tr><td>
+                                                                    <input type="checkbox" name="{{content.id}}" disabled checked></td><td>
+                                                        {% else %}    
+                                                            <script>
+                                                                control.viewed_content.push({{content.id}});
+                                                            </script>
+                                                            <li class="content-list" data-type="{{content.id}}" content="youtube">
+                                                                <table>
+                                                                    <tr><td>
+                                                                    <input type="checkbox" name="{{content.id}}" disabled checked></td><td>
+                                                        {% endif %}
+                                                    {% else %}
+                                                        <li class="content-list" data-type="{{content.id}}" content="youtube" class="disabled">
+                                                            <table>
+                                                                <tr><td>
+                                                                <input type="checkbox" name="{{content.id}}"disabled></td><td>    
+                                                    {% endif %}
+                                                    <img src="{{asset('/images/youtube.png')}}" style="margin: 0px 8px;width: 18px;"></td><td> {{ content.title }}</td></tr>
+                                                    </table>
+                                                    </li>
+                                                    <script>
+                                                        var id = "{{ content.id }}";
+                                                        var link = "{{ content.videoLink }}";
+                                                        videos[id] = link;
+                                                    </script>
+                                                {% else %}
+                                                    {% if flag < pages_seen.pagesCompleted %}
+                                                        {% if flag == (pages_seen.pagesCompleted-1) %}
+                                                            <script>
+                                                                control.viewed_content.push({{content.id}});
+                                                            </script>
+                                                            <li class="content-list active" data-type="{{content.id}}" content="none">
+                                                                <table>
+                                                                    <tr><td>
+                                                                    <input type="checkbox" name="{{content.id}}" disabled checked></td><td>
+                                                        {% else %}    
+                                                            <script>
+                                                                control.viewed_content.push({{content.id}});
+                                                            </script>
+                                                            <li class="content-list" data-type="{{content.id}}" content="none">
+                                                                <table>
+                                                                    <tr><td>
+                                                                    <input type="checkbox" name="{{content.id}}" disabled checked></td><td>
+                                                        {% endif %}
+                                                    {% else %}
+                                                    <li class="content-list" data-type="{{content.id}}" content="none" class="disabled">
+                                                        <table>
+                                                            <tr><td>
+                                                            <input type="checkbox" name="{{content.id}}"disabled></td><td>    
+                                                    {% endif %}
+                                                            <i class="fa fa-book"></i></td><td> 
+                                                            {{ content.title }}</td></tr>
+                                                            </table>
+                                                    </li>
+                                                    <script>
+                                                        var id = "{{ content.id }}";
+                                                        var link = "{{ content.videoLink }}";
+                                                        videos[id] = link;
+                                                    </script>
+                                                {% endif %}
+                                                    {% set flag = flag+1 %}
+                                                {% endfor %}
+                                                <li style="border-bottom: 0px;">
+                                                    <a href="{{ path('course_quiz',{'id': chapter.id}) }}" id="startQuiz" style="color:blue;">
+                                                        {% trans %}Chapter{% endtrans %} Quiz
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                            <div class="col-md-8">
+                                <div class="col-md-12">
+                                    <div height="453" width="100%" class="px-4 py-5 card" id="intro">
+                                        <div style="margin: 100px auto">
+                                        <h4>Select from contents from the list <i id="icons" class="fa fa-play"></i></h4>
+                                        </div>          
+                                    </div>
+                                    <div id="video">
+                                        {# <div class="d-flex justify-content-center">
+                                            <div class="spinner-grow text-muted"></div>
+                                        </div> #}
+                                        <video autoplay controls width="100%" height="453" style="display:none">
+                                            <source id="video-source" src="">
+                                        </video>
+                                    </div>
+                                    
+                                    <div id="youtube">
+                                        <iframe height="453" width="100%" src="" style="display:none" id="youtube-link" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                    </div>
+                                    {# <div id="document">
+                                        <div class="card" id="text-card" style="display:none; background: white;">
+                                            <div class="card-body">
+                                                <div id="html-text"></div>
+                                            </div>
+                                        </div>
+                                    </div> #}
+                                </div>
+                                <div class="col-md-12  py-2" id="desc-text" >
+                                    <div class="container card">
+                                        <div class="tabs ">
+                                            <ul class="nav nav-tabs tabs-primary">
+                                                <li class="nav-item" style="border-bottom: 1px solid blue">
+                                                    <a class="nav-link" href="#content" data-bs-toggle="tab">
+                                                        Description
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item" style="border-bottom: 1px solid blue">
+                                                    <a class="nav-link" href="#resource" data-bs-toggle="tab">
+                                                        Resources
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                            
+                                            <div class="tab-content">
+                                            <div id="content" class="tab-pane active">
+                                                    <div class="d-flex justify-content-center">
+                                                        <div class="spinner-border" role="status" style="display:none">
+                                                            <span class="sr-only">Loading...</span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="content"></div>
+                                            </div>
+                                            <div id="resource" class="tab-pane">
+                                                    <div class="resource"></div>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        
+                    </div>
+                </div>
+            </section>
+        </div>
+        {% include 'master-st/footer.html.twig' %}
+    </div>
+
+    <!-- jquery -->
+	<script src="{{asset('assets/plugins/bootstrap/js/bootstrap1.bundle.min.js')}}"></script>
+	<script src="{{asset('assets/plugins/bootstrap/js/bootstrap.min.js')}}"></script>
+
+    <!-- Theme Base, Components and Settings -->
+    <script src="{{asset( 'student/js/theme.js')}} "></script>
+
+    <!-- Theme Custom -->
+    <script src="{{asset( 'student/js/custom.js')}} "></script>
+
+    <!-- Theme Initialization Files -->
+    <script src="{{asset( 'student/js/theme.init.js')}} "></script>
+    <script src="{{asset( 'student/js/player.js')}} "></script>
+    <script>   
+        responsive(".main");
+        function updateCounter(id) {
+            $.ajax({
+                url: "{{path('update_counter',{'chapter':pages_seen.id})}}",
+                success: function() {
+                    num = parseInt(control.view_at);
+                    control.view_at = ++num;
+                    activeList(control.view_at, id);
+                },
+                error: function() {
+                    num = parseInt(control.view_at);
+                    control.view_at = ++num;
+                    activeList(control.view_at, id);
+                }
+            });
+        }
+
+        $(window).ready(function()
+        {
+            if(control.viewed_content.length != 0 ){
+                var lastItem = control.viewed_content.pop();
+                control.viewed_content.push(lastItem);
+                lists = $(".list li");
+                content = $('.content-list[data-type='+lastItem+']').attr('content');
+                changePlayerContent(lists, lastItem, content);
+                $('.content-list[data-type='+lastItem+']').addClass("active");
+            }
+        });
+    </script>
+</body>
+
+</html>

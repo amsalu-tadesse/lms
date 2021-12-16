@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Edit{% endtrans %} Content{% endblock %}
+{% block breadcrumbhome %} 
+    <a href="{{ path('content_index',{'id': incrsid}) }} ">
+	   {% trans %}Content{% endtrans %} 
+	</a>
+{% endblock %}
+{% block breadcrumbcontent %} {% trans %}Edit{% endtrans %}{% endblock %}
+
+{% block body %}
+    {{ include('content/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <table>
+       <tr>
+           <td>  <a href="{{ path('content_index', {'id': incrsid}) }}" class="btn btn-info">{% trans %}Back to list{% endtrans %}</a></td>
+           <td>{{ include('content/_delete_form.html.twig') }}</td>
+       </tr>
+    </table>
+    <hr>
+    <br>
+  
+
+    
+{% endblock %}
+{% block javascripts %}
+<script>
+
+    var type = 0;
+    if (type == 1) {
+        $("#content").show();
+        $("#videoLink").show();
+        $('#filename').find('label').html('Video');
+        $('#resourcedesc').find('label').html('Video description details');
+    } else if (type == 2) {
+        $("#content").show();
+        $("#videoLink").hide();
+        $('#resourcedesc').find('label').html('Resource description details');
+    } else {}
+    $("#videoLinkRadio").on("click", function() {
+        $("#content_videoLink").prop('disabled', false);
+        $("#content_filename").prop('disabled', true);
+    });
+    $("#videoFileRadio").on("click", function() {
+        $("#content_videoLink").prop('disabled', true);
+        $("#content_filename").prop('disabled', false);
+    });
+    
+
+    $("#ContentRadio").on("click", function() {
+    $("#content_videoLink").prop('disabled', true);
+    $("#content_filename").prop('disabled', true);
+    $("#content_content").prop('disabled', false);
+});
+
+</script>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Country index{% endtrans %}{% endblock %}
+{% block breadcrumbhome %}
+    <a href="{{ path('country_index') }} ">
+	   {% trans %}Country{% endtrans %} 
+	</a> 
+{% endblock %}
+{% block breadcrumbcontent %}{% trans %}Index{% endtrans %}{% endblock %}
+{% block body %}
+<a href="{{ path('country_new') }}" class="btn btn-success mb-2"><span class="fa fa-plus"></span> {% trans %}Create new{% endtrans %}</a>
+
+        <div class="card card-info">
+        <div class="card card-header">
+    <h3 class="card-title">{% trans %}Country index{% endtrans %}</h3>
+    </div>
+
+    
+    <div class="card card-body">
+    <table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>{% trans %}Name{% endtrans %}</th>
+            <th>{% trans %}Action{% endtrans %}</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for country in countries %}
+        <tr>
+            <td>{{ country.id }}</td>
+            <td>{{ country.name }}</td>
+            <td>
+                <a href="{{ path('country_edit', {'id': country.id}) }}">{% trans %}Edit{% endtrans %}</a>
+            </td>
+        </tr>
+    {% else %} 
+        <tr>
+            <td colspan="4">{% trans %}No records found{% endtrans %}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+    </div>
+
+  
+
+{% endblock %}

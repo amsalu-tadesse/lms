@@ -1,0 +1,239 @@
+.main {
+    background: hsla(213, 77%, 14%, 1);
+    background: linear-gradient(90deg, hsla(213, 77%, 14%, 1) 0%, hsla(202, 27%, 45%, 1) 100%);
+    background: -moz-linear-gradient(90deg, hsla(213, 77%, 14%, 1) 0%, hsla(202, 27%, 45%, 1) 100%);
+    background: -webkit-linear-gradient(90deg, hsla(213, 77%, 14%, 1) 0%, hsla(202, 27%, 45%, 1) 100%);
+    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#08203E", endColorstr="#557C93", GradientType=1);
+}
+
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.dropdown a {
+    font-family: poppins;
+}
+
+card-title {
+    color: #0078d4e6;
+}
+
+.page-title {
+    color: #ffffff;
+    padding: 26px 0px 15px;
+}
+
+.chapter-list {
+    margin-top: 15px;
+}
+
+.card-title-custom {
+    color: #0078d4e6;
+}
+
+img.logo {
+    margin-top: 10px;
+    max-width: 100%;
+}
+
+img {
+    vertical-align: middle;
+}
+
+.lms-name {
+    color: #234672;
+    margin-top: 20px;
+}
+
+.banner {
+    padding-top: 5px;
+}
+
+.login-box-msg,
+.register-box-msg {
+    margin: 0;
+    padding: 0 20px 20px;
+    text-align: center;
+}
+
+.header {
+    margin-bottom: 47px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #045493;
+}
+
+.navigations {
+    margin-top: 10px;
+}
+
+.navigations a {
+    margin-right: 15px;
+    color: #454672;
+}
+
+a {
+    text-decoration: none;
+}
+
+.form-status {
+    width: 22px;
+    height: 22px;
+}
+
+.card-body p a {
+    font-size: 17px;
+}
+
+.card-body p span {
+    font-size: 14px;
+    padding-left: 12px;
+    color: #585555;
+}
+
+.list.list-icons li {
+    position: relative;
+    padding-left: 25px;
+}
+
+.list {
+    list-style: none;
+}
+
+.list li {
+    margin-bottom: 13px;
+}
+
+li {
+    line-height: 24px;
+}
+
+.list.list-icons li>[class*="fa-"]:first-child,
+.list.list-icons li a:first-child>[class*="fa-"]:first-child,
+.list.list-icons li>.icons:first-child,
+.list.list-icons li a:first-child>.icons:first-child {
+    color: #0088CC;
+    border-color: #0088CC;
+}
+
+.list.list-icons li>[class*="fa-"]:first-child,
+.list.list-icons li>.icons:first-child,
+.list.list-icons li a:first-child>[class*="fa-"]:first-child,
+.list.list-icons li a:first-child>.icons:first-child {
+    position: absolute;
+    left: 0;
+    top: 5px;
+}
+
+.owl-prev,
+.owl-next {
+    display: none;
+}
+
+.card-footer a {
+    font-size: 16px;
+    border-radius: 1px;
+    float: right;
+    color: white;
+    padding: 4px 18px;
+    background: #045493;
+    text-align: center;
+}
+
+.owl-prev,
+.owl-next {
+    width: 15px;
+    height: 100px;
+    position: absolute;
+    top: 38%;
+    transform: translateY(-50%);
+    border: 0px solid black;
+}
+
+.owl-carousel:hover .owl-prev,
+.owl-carousel:hover .owl-next {
+    display: block;
+}
+
+.selected-card {
+    border: 2px solid blue;
+    background: #d4dce3e6;
+}
+
+.owl-prev {
+    left: -20px;
+}
+
+.owl-next {
+    right: -20px;
+}
+
+.owl-prev i,
+.owl-next i {
+    transform: scale(2, 2);
+    color: #ffffff;
+}
+
+.card-body p a {
+    font-size: 17px;
+}
+
+.card-body p span {
+    font-size: 12px;
+    padding-left: 12px;
+    color: #fffcfc;
+}
+
+
+/* The Modal (background) */
+
+.modal {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    /* Stay in place */
+    z-index: 1;
+    /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    /* Full width */
+    height: 100%;
+    /* Full height */
+    overflow: auto;
+    /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0);
+    /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Black w/ opacity */
+}
+
+
+/* Modal Content/Box */
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    max-width: 550px;
+    min-width: 350px;
+    /* Could be more or less, depending on screen size */
+}
+
+
+/* The Close Button */
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}

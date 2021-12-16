@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Country{% endtrans %}{% endblock %}
+{% block breadcrumbhome %}
+    <a href="{{ path('country_index') }} ">
+	   {% trans %}Country{% endtrans %} 
+	</a> 
+{% endblock %}
+{% block breadcrumbcontent %}{% trans %}Show{% endtrans %}{% endblock %}
+{% block body %}
+    <h1>{% trans %}Country{% endtrans %}</h1>
+ 
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ country.id }}</td>
+            </tr>
+            <tr>
+                <th>{% trans %}Name{% endtrans %}</th>
+                <td>{{ country.name }}</td>
+            </tr>
+            <tr>
+                <th>{% trans %}Description{% endtrans %}</th>
+                <td>{{ country.description }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('country_index') }}">{% trans %}Back to list{% endtrans %}</a>
+
+    <a href="{{ path('country_edit', {'id': country.id}) }}">{% trans %}Edit{% endtrans %}</a>
+
+    {{ include('country/_delete_form.html.twig') }}
+{% endblock %}
