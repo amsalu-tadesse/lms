@@ -20,7 +20,7 @@ class UserType extends AbstractType
         $builder
             ->add('firstName')
             ->add('middleName')
-            ->add('lastName')
+            // ->add('lastName')
             ->add('sex' ,ChoiceType::class,[
                 'required' => true,
                 'attr'=>['class'=>'form-control'],

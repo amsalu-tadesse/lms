@@ -14,13 +14,10 @@ parameters:
     uploading_directory_resources:  '%kernel.project_dir%/public/uploads/resources'
     uploading_directory_videos:  '%kernel.project_dir%/public/uploads/videos'
     uploading_directory_images:  '%kernel.project_dir%/public/uploads/profileImages/'
-<<<<<<< HEAD
     contact_mail: '%env(resolve:CONTACT_MAIL)%'
     sender_mail: '%env(resolve:MAILJET_SENDER_EMAIL)%'
     sender_mail_key: '%env(resolve:MAILJET_APIKEY_PUBLIC)%'
     sender_mail_secret: '%env(resolve:MAILJET_APIKEY_PRIVATE)%'
-=======
->>>>>>> d534a8f60e11b613dbed8279f5425cd2dff3f14b
 
     docroot:  '%kernel.project_dir%'
 
