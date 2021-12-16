@@ -4,12 +4,18 @@ namespace App\Controller;
 
 use App\Entity\Instructor;
 use App\Entity\Student;
+<<<<<<< HEAD
 use App\Entity\SystemSetting;
 use App\Entity\User;
+=======
+use App\Entity\User;
+use App\Entity\SystemSetting;
+>>>>>>> d534a8f60e11b613dbed8279f5425cd2dff3f14b
 use App\Form\Filter\UserFilterType;
 use App\Form\UserType;
 use App\Repository\StudentRepository;
 use App\Repository\UserRepository;
+<<<<<<< HEAD
 use App\Services\MailerService;
 use DateTime;
 use Knp\Component\Pager\PaginatorInterface;
@@ -31,6 +37,17 @@ use Symfony\Component\Mailer\Transport;
 use Symfony\Component\Mailer\Mailer;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
+=======
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use App\Services\MailerService;
+use DateTime;
+>>>>>>> d534a8f60e11b613dbed8279f5425cd2dff3f14b
 
 /**
  * @Route("/user")
@@ -45,6 +62,7 @@ class UserController extends AbstractController
     }
 
     /**
+<<<<<<< HEAD
      * @Route("/themail", name="themail", methods={"GET","POST"})
      */
 
@@ -99,6 +117,11 @@ class UserController extends AbstractController
      * @Route("/", name="user_index", methods={"GET","POST"})
      */
     public function index(StudentRepository $student_repo, Request $request, UserRepository $userRepository, PaginatorInterface $paginator, UserPasswordEncoderInterface $userPasswordEncoderInterface, MailerService $mservice, ContainerInterface $container): Response
+=======
+     * @Route("/", name="user_index", methods={"GET","POST"})
+     */
+    public function index(StudentRepository $student_repo, Request $request, UserRepository $userRepository, PaginatorInterface $paginator, UserPasswordEncoderInterface $userPasswordEncoderInterface, MailerService $mservice): Response
+>>>>>>> d534a8f60e11b613dbed8279f5425cd2dff3f14b
     {
         // $this->denyAccessUnlessGranted('ROLE_ADMIN');
         // $this->denyAccessUnlessGranted('content_edit');
@@ -195,6 +218,7 @@ class UserController extends AbstractController
             } elseif ($user->getUserType()->getId() == 4) { //student
                 $student = new Student();
                 $em = $this->getDoctrine()->getManager();
+<<<<<<< HEAD
 
                 $academicLevel = $form['academicLevel']->getData()->getId();
                 if ($academicLevel) {
@@ -243,6 +267,62 @@ class UserController extends AbstractController
                             $i++;
                         }
                         $new_student_id .= "1-" . $year;
+=======
+                
+                $academicLevel = $form['academicLevel']->getData()->getId();
+                if($academicLevel)
+                {
+                    if($academicLevel == 1)
+                        $prefix = $em->getRepository(SystemSetting::class)->findOneBy(['code'=>'reg_id_prefix'])->getValue();
+                    else if($academicLevel == 2)
+                        $prefix = $em->getRepository(SystemSetting::class)->findOneBy(['code'=>'masters_id_prefix'])->getValue();
+                    else if($academicLevel == 3)
+                        $prefix = $em->getRepository(SystemSetting::class)->findOneBy(['code'=>'phd_id_prefix'])->getValue();
+                    else if($academicLevel == 5)
+                        $prefix = $em->getRepository(SystemSetting::class)->findOneBy(['code'=>'hd_id_prefix'])->getValue();
+                    
+                    $last_student = $student_repo->findBy(array(),array('id'=>'DESC'),1,0);
+                    $id_digit_length = $em->getRepository(SystemSetting::class)->findOneBy(['code'=>'num_of_digits_student_id'])->getValue();
+                    $year = date("y", time());
+
+                    if($last_student){
+                        $last_student_id_array = explode("-",$last_student[0]->getStudentId());
+                        $num = $last_student_id_array[1] + 1;
+                        $numlength = strlen((string)$num);
+                        if($year == $last_student_id_array[2]){
+                            if($numlength < $id_digit_length)
+                            {
+                                $zeros_left = $id_digit_length - $numlength;
+                                $i = 0;
+                                while($i<$zeros_left)
+                                {
+                                    $num = "0".$num;
+                                    $i++;
+                                }
+                                $new_student_id = $prefix."-".$num."-".$year;
+                            }
+                        }
+                        else{
+                            $new_student_id = $prefix."-";
+                            $i = 0;
+                                while($i<($id_digit_length-1))
+                                {
+                                    $new_student_id .= "0";
+                                    $i++;
+                                }
+                            $new_student_id .= "1-".$year;
+                        }
+                    }
+                    else{
+                        $i = 0;
+                        $new_student_id = $prefix."-";
+                        while($i<($id_digit_length-1))
+                        {
+                            $new_student_id .= "0";
+                            $i++;
+                        }
+                        $new_student_id .= "1-".$year;
+>>>>>>> d534a8f60e11b613dbed8279f5425cd2dff3f14b
                     }
                 }
                 $student->setProfileUpdated(0);
@@ -253,6 +333,7 @@ class UserController extends AbstractController
             }
             $entityManager->flush();
 
+<<<<<<< HEAD
             $message = "<p style='font-size: 15px;'>Dear " . $user->getFirstName() . " " . $user->getMiddleName() . " You have successfully registered for ECA " .
             "Learning management system. Please login with the following credentials" .
             " and change your password <br>username=<strong>" . $user->getUsername() . "</strong><br> password=<strong>" . $password . "</strong></p>";
@@ -260,6 +341,13 @@ class UserController extends AbstractController
             $sent = $mservice->sendEmail($this->mailer, $message, $user->getEmail(), "account confirmation");
 
             /*$mail->contactForm($user->getEmail(), $container->getParameter('contact_mail'), 'Contact au sujet de', "details here...");*/
+=======
+            $message = "<p style='font-size: 15px;'>Dear ".$user->getFirstName()." ".$user->getMiddleName()." You have successfully registered for ECA ".
+            "Learning management system. Please login with the following credentials".
+            " and change your password <br>username=<strong>".$user->getUsername()."</strong><br> password=<strong>".$password."</strong></p>";
+            
+            $sent =  $mservice->sendEmail($this->mailer, $message, $user->getEmail(), "account confirmation");
+>>>>>>> d534a8f60e11b613dbed8279f5425cd2dff3f14b
 
             return $this->redirectToRoute('user_index');
         }
@@ -312,7 +400,12 @@ class UserController extends AbstractController
      * @Route("/new", name="user_new", methods={"GET","POST"})
      */
 
+<<<<<<< HEAD
     function new (Request $request, UserPasswordEncoderInterface $userPasswordEncoderInterface): Response {
+=======
+    public function new(Request $request, UserPasswordEncoderInterface $userPasswordEncoderInterface): Response
+    {
+>>>>>>> d534a8f60e11b613dbed8279f5425cd2dff3f14b
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
@@ -392,6 +485,7 @@ class UserController extends AbstractController
         return $this->redirectToRoute('user_index');
     }
 
+<<<<<<< HEAD
     public function rand_string()
     {
         $small_letter = $this->shuffle_string("abcdefghijklmnopqrstuvwxyz", 3);
@@ -405,5 +499,19 @@ class UserController extends AbstractController
     public function shuffle_string($str, $length)
     {
         return substr(str_shuffle($str), 0, $length);
+=======
+    function rand_string() {
+		$small_letter = $this->shuffle_string("abcdefghijklmnopqrstuvwxyz",3);
+		$capital_letter = $this->shuffle_string("ABCDEFGHJKLMNOPQRSTUVWXYZ",1);
+		$number = $this->shuffle_string("1234567890",3);
+		$symbol = $this->shuffle_string("@&",1);
+		$password = $capital_letter.$small_letter.$symbol.$number;
+		return $password;
+    }
+
+    function shuffle_string($str, $length)
+    {
+        return substr(str_shuffle($str),0,$length);
+>>>>>>> d534a8f60e11b613dbed8279f5425cd2dff3f14b
     }
 }

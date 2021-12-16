@@ -23,48 +23,6 @@ class HomeController extends AbstractController
      */
     public function index(InstructorCourseRepository $course)
     {
-        /*$count = 1;
-        $html='';
-        for ($i=50002; $i<=50025; $i++)
-        {
-            $html .='
-            <br>
-        ############################# SITE '.$count.' #################################### <br>
-        &lt;VirtualHost *:'.$i.'&gt;<br>
-        ServerName htmlsite<br>
-        ServerAlias www/html/site'.$count.'<br>
-        #Redirect permanent / https://html/site'.$count.'<br>
-        ServerAdmin info@html/site'.$count.'<br>
-        DocumentRoot /var/www/html/site'.$count.'<br>
-        &lt;Directory "/var/www/html/site'.$count.'"&gt;<br>
-        Options FollowSymLinks<br>
-        AllowOverride All<br>
-        Order allow,deny<br>
-        Allow from all<br>
-        SetEnvIf Remote_Addr "127.0.0.1" dontlog<br>
-        SetEnvIf Remote_Addr "::1" dontlog<br>
-        RewriteEngine on<br>
-        RewriteBase /<br>
-        RewriteCond %{REQUEST_FILENAME} !-f<br>
-        RewriteCond %{REQUEST_FILENAME} !-d<br>
-        RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]<br>
-        RewriteCond %{SERVER_NAME} =site'.$count.'/site'.$count.' [OR]<br>
-        RewriteCond %{SERVER_NAME} =site'.$count.'<br>
-        RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [END,NE,R=permanent] <br>
-        &lt;/Directory&gt;<br>
-        ErrorLog ${APACHE_LOG_DIR}/site'.$count.'_error.log <br>
-        CustomLog ${APACHE_LOG_DIR}/site'.$count.'_access.log combined env=!dontlog <br>
-        &lt;/VirtualHost&gt;
-       <br>
-       
-       <br>';
-       $count ++;
-
-        }
-        echo $html;
-        dd($html);*/
-
-
         if (!$this->isGranted('IS_AUTHENTICATED_FULLY')) {
             $courses = $course->findCoursesSortByCategory();
             return $this->render('course/couses_list.html.twig', [
