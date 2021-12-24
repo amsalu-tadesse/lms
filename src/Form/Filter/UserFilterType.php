@@ -8,7 +8,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class UserFilterType extends AbstractType
+class userFilterType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
