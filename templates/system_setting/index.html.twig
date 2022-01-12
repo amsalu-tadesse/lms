@@ -25,7 +25,11 @@
                 <td>{{ system_setting.id }}</td>
                 <td>{{ system_setting.code }}</td>
                 {# <td>{{ system_setting.code }}</td> #}
-                <td>{{ system_setting.value }}</td>
+                {% if system_setting.code == "show_un_answered_questions" %}
+                    <td>{{ system_setting.value == 1 ? "Yes": "No" }}</td>
+                {% else %}
+                    <td>{{ system_setting.value}}</td>
+                {% endif %}
                 <td>{{ system_setting.description }}</td>
            
                 <td>

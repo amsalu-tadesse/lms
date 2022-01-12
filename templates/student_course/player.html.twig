@@ -9,10 +9,8 @@
         course-player
     </title>
 
-
-    <meta name="keywords" content="HTML5 Template" />
-    <meta name="description" content="Porto - Responsive HTML5 Template">
-    <meta name="author" content="okler.net">
+    <meta name="keywords" content="Learning Management System" />
+    <meta name="description" content="LMS for african artificial inteligence research center">
 
     <!-- Favicon -->
     <link rel="shortcut icon" href="{{asset('images/eca.png')}}" type="image/x-icon" />
@@ -36,7 +34,7 @@
     <link rel="stylesheet" href="{{asset('student/css/default.css')}}">
     <link rel="stylesheet" href="{{asset('student/css/theme-elements.css')}}">
     <link rel="stylesheet" href="{{asset('student/css/player.css')}}">
-
+    
 </head>
 
 <body>
@@ -51,7 +49,6 @@
                 viewed_content: [],
             }
         </script>
-        <br>
         <div role="main" class="main">
             <section class="section border-0 m-0" style="min-height: 600px;">
                 <div class="container-fluid">
@@ -79,8 +76,17 @@
                                 <div class="col-md-10">
                                     <div class="card border-0 border-radius-0 ">
                                         <div class="card-body">
-                                            <center><p class="card-text">{% trans %}There is no content available for this chapter{% endtrans %}</p>
-                                            <a href="{{ path('course_chapters',{'id': chapter.instructorCourse.id})}}" class="btn btn-primary "><h5 class="text-light"> </i>Back to chapters list </h5></a></center>
+                                            <center>
+                                            <p class="card-text">{% trans %}There is no content available for this chapter{% endtrans %}</p>
+                                            {% if final %}
+                                                    <a href="{{ path('course_quiz',{'id': chapter.id}) }}"  class="btn btn-primary" style="width: 200px;">
+                                                        <h5 class="text-light">{% trans %}Final{% endtrans %} Quiz</h5>
+                                                    </a>
+                                                {% endif %}
+                                            <a href="{{ path('course_chapters',{'id': chapter.instructorCourse.id})}}" class="btn btn-primary ">
+                                            <h5 class="text-light"> </i>Back to chapters list </h5></a>
+                                                
+                                            </center>
                                         </div>
                                     </div>
                                 </div>
@@ -306,7 +312,7 @@
     <script src="{{asset( 'student/js/theme.init.js')}} "></script>
     <script src="{{asset( 'student/js/player.js')}} "></script>
     <script>   
-        responsive(".main");
+        responsive(".text-light");
         function updateCounter(id) {
             $.ajax({
                 url: "{{path('update_counter',{'chapter':pages_seen.id})}}",

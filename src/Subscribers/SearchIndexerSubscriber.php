@@ -20,7 +20,7 @@ class SearchIndexerSubscriber implements EventSubscriber
             Events::postPersist,
             Events::postUpdate,
             Events::postRemove,
-            Events::preRemove,
+            // Events::preRemove,
             Events::preUpdate,
            
         ];

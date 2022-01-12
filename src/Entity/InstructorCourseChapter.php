@@ -210,4 +210,9 @@ class InstructorCourseChapter
     {
         return $this->topic;
     }
+
+    public function getAllFields()
+    {
+        return get_object_vars($this);
+    }
 }

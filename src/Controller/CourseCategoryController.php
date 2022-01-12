@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Services\LogService;
 
 /**
  * @Route("/course/category")
@@ -30,7 +31,7 @@ class CourseCategoryController extends AbstractController
     /**
      * @Route("/new", name="course_category_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    public function new(Request $request, LogService $log): Response
     {
         $this->denyAccessUnlessGranted('course_category_create');
         $courseCategory = new CourseCategory();
@@ -41,6 +42,13 @@ class CourseCategoryController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($courseCategory);
             $entityManager->flush();
+            
+            $origional = $log->changeObjectToArray($courseCategory);
+
+            $message = $log->snew($origional, "", "create", $this->getUser(), "course category");
+            if(!$message)
+            $this->addFlash("info", "Log not created");
+
 
             return $this->redirectToRoute('course_category_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -65,17 +73,22 @@ class CourseCategoryController extends AbstractController
     /**
      * @Route("/{id}/edit", name="course_category_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, CourseCategory $courseCategory): Response
+    public function edit(Request $request, CourseCategory $courseCategory, LogService $log): Response
     {
         $this->denyAccessUnlessGranted('course_category_edit');
+
+        $origional = $log->changeObjectToArray($courseCategory);
         $form = $this->createForm(CourseCategoryType::class, $courseCategory);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
-
+            $modified = $log->changeObjectToArray($courseCategory);
+            $message = $log->snew($origional, $modified, "update", $this->getUser(), "course category");
             return $this->redirectToRoute('course_category_index', [], Response::HTTP_SEE_OTHER);
         }
+
+
 
         return $this->renderForm('course_category/edit.html.twig', [
             'course_category' => $courseCategory,
@@ -86,15 +99,17 @@ class CourseCategoryController extends AbstractController
     /**
      * @Route("/{id}", name="course_category_delete", methods={"POST"})
      */
-    public function delete(Request $request, CourseCategory $courseCategory): Response
+    public function delete(Request $request, CourseCategory $courseCategory, LogService $log): Response
     {
         $this->denyAccessUnlessGranted('course_category_delete');
         if ($this->isCsrfTokenValid('delete' . $courseCategory->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
 
             try {
+                $origional = $log->changeObjectToArray($courseCategory);
                 $entityManager->remove($courseCategory);
                 $entityManager->flush();
+                $message = $log->snew($origional, "", "delete", $this->getUser(), 'course category');
             } catch (\Exception $ex) {
                 // dd($ex);
                 $message = UtilityController::getMessage($ex->getCode());

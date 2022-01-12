@@ -405,7 +405,7 @@ class StudentCourseController extends AbstractController
         }
 
         // Get results from the Repository
-        $results = $studentCourseRepository->getRequiredDTData($start, $length, $orders, $search, $columns, $instcrs);
+        $results = $studentCourseRepository->getRequiredDTData($start, $length, $orders, $search, $columns, $instcrs, $this->getUser()->getId());
         // Returned objects are of type Town
         $objects = $results["results"];
         // dd($objects);
@@ -734,7 +734,6 @@ class StudentCourseController extends AbstractController
         if ($request->isXmlHttpRequest()) {
             $result = array();
             $questions = $stud_course_repo->newCourseRequest();
-
             $returnResponse = new JsonResponse();
             $returnResponse->setJson($questions['new_requests']);
 

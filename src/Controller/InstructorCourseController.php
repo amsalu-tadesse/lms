@@ -112,9 +112,9 @@ class InstructorCourseController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $instructorCourseStatus = $entityManager->getRepository(InstructorCourseStatus::class)->find(2); //assigned but waiting
-            $instructorCourse->setStatus($instructorCourseStatus);
-            $instructorCourse->setCreatedAt(new DateTime());
-            $entityManager->persist($instructorCourse);
+            $instructorCourse1->setStatus($instructorCourseStatus);
+            $instructorCourse1->setCreatedAt(new DateTime());
+            $entityManager->persist($instructorCourse1);
             $entityManager->flush();
 
             return $this->redirectToRoute('instructor_course_index', [], Response::HTTP_SEE_OTHER);
@@ -201,14 +201,20 @@ class InstructorCourseController extends AbstractController
     /**
      * @Route("/course/diactivate/{id}", name="instructor_course_deactivate", methods={"GET","POST"})
      */
-    public function instructorCourseDeactivate(InstructorCourse $instructorCourse, InstructorCourseRepository $instructorCourseRepository, PaginatorInterface $paginator, Request $request): Response
+    public function instructorCourseDeactivate(InstructorCourse $instructorCourse, Request $request): Response
     {
         $this->denyAccessUnlessGranted('instructor_course_deactivate');
         $em = $this->getDoctrine()->getManager();
         if ($instructorCourse->getActive()) {
             $instructorCourse->setActive(false);
         } else {
-            $instructorCourse->setActive(true);
+            $em = $this->getDoctrine()->getManager();
+            $check = $em->getRepository(InstructorCourse::class)->findBy(array('course'=>$instructorCourse->getCourse()->getId(), 'active'=>1));
+            if($check){
+                $this->addFlash('danger',"This course is Active you should deactivate another course assignment before");
+            }
+            else
+                $instructorCourse->setActive(true);
         }
         $em->flush();
         return $this->redirectToRoute('instructor_course_index');
