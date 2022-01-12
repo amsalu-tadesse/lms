@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\AcademicLevel;
 use App\Form\AcademicLevelType;
+use App\Services\LogService;
 use App\Repository\AcademicLevelRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -54,7 +55,6 @@ class AcademicLevelController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($academiclevel);
             $entityManager->flush();
-
             return $this->redirectToRoute('academiclevel_index');
         }
 
@@ -74,7 +74,7 @@ class AcademicLevelController extends AbstractController
     /**
      * @Route("/new", name="academic_level_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    public function new(Request $request, LogService $log): Response
     {
         $this->denyAccessUnlessGranted('academic_level_create');
         $academicLevel = new AcademicLevel();
@@ -85,8 +85,13 @@ class AcademicLevelController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($academicLevel);
             $entityManager->flush();
-
+            $origional = $log->changeObjectToArray($academicLevel);
+            $message = $log->snew($origional, "", "create", $this->getUser(), "academic level");
+            if(!$message)
+                $this->addFlash("info", "Log not created");
+            
             return $this->redirectToRoute('academic_level_index', [], Response::HTTP_SEE_OTHER);
+                
         }
 
         return $this->renderForm('academic_level/new.html.twig', [
@@ -108,14 +113,18 @@ class AcademicLevelController extends AbstractController
     /**
      * @Route("/{id}/edit", name="academic_level_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, AcademicLevel $academicLevel): Response
+    public function edit(Request $request, AcademicLevel $academicLevel, LogService $log): Response
     {
         $this->denyAccessUnlessGranted('academic_level_edit');
+        $origional = $log->changeObjectToArray($academicLevel);
         $form = $this->createForm(AcademicLevelType::class, $academicLevel);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
+            $modified = $log->changeObjectToArray($academicLevel);
             $this->getDoctrine()->getManager()->flush();
+            $message = $log->snew($origional, $modified, "update", $this->getUser(), "academic Level");
+            if(!$message)
+                $this->addFlash("info", "Log not created");
 
             return $this->redirectToRoute('academic_level_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -129,16 +138,18 @@ class AcademicLevelController extends AbstractController
     /**
      * @Route("/{id}", name="academic_level_delete", methods={"POST"})
      */
-    public function delete(Request $request, AcademicLevel $academicLevel): Response
+    public function delete(Request $request, AcademicLevel $academicLevel, LogService $log): Response
     {
         $this->denyAccessUnlessGranted('academic_level_delete');
         if ($this->isCsrfTokenValid('delete'.$academicLevel->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
-
-
             try {
+                $origional = $log->changeObjectToArray($academicLevel);
                 $entityManager->remove($academicLevel);
                 $entityManager->flush();
+                $message = $log->snew($origional, "", "delete", $this->getUser(), "academic level");
+                if(!$message)
+                 $this->addFlash("info", "Log not created");
             } catch (\Exception $ex) {
                 // dd($ex);
                 $message = UtilityController::getMessage($ex->getCode());

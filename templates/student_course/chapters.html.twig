@@ -13,7 +13,7 @@
 			margin-left: 8%;
 		}
 
-        .disabled {
+        .disabled {directorNotification
             pointer-events:none; 
             opacity:0.6; 
         }
@@ -50,9 +50,9 @@
 								<a href="{{path('content_list',{'course':chapter.instructorCourse.id,'chapter':chapter.topic})}}">
 									<h4 class="card-title card-title-custom mb-1 text-4 font-weight-bold">{{chapter.topic}}</h4>
 								</a>
-								<p class="card-text" style="padding: 14px 0px 0px;">{% trans %}Videos{% endtrans %} : {{ chapter.total_video }}
+								{# <p class="card-text" style="padding: 14px 0px 0px;">{% trans %}Videos{% endtrans %} : {{ chapter.total_video }}
 									<ff style="margin-left:30px;">{% trans %}Text{% endtrans %} : {{ chapter.total_content - chapter.total_video }}</ff>
-								</p>
+								</p> #}
 							</div>
 							<div class="card-footer bg-color-grey text-1 text-uppercase">
 								<div class="row">

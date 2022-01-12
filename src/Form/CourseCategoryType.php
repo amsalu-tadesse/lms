@@ -13,9 +13,8 @@ class CourseCategoryType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', null, ['attr'=>['class'=>'form-control']])
+            ->add('name', null, ['attr'=>['class'=>'form-control mb-4']])
             ->add('description', null, ['attr'=>['class'=>'form-control']])
-
         ;
     }
 

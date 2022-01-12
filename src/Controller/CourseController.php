@@ -274,64 +274,66 @@ class CourseController extends AbstractController
     public function courseToPdf(CourseRepository $course_repo, ContentRepository $contentRepository, Request $request, InstructorCourseRepository $inst_course_repo)
     {
         $req = $request->request->get('coursePdfExport');
-        if($request->request->get("course_selected"))
+        if($request->request->get("course_selected")){
             $course = $course_repo->find($request->request->get("course_selected"));
-        if($course)
-        {
-            $contents = $contentRepository->getChaptersWithContentForCourse1($course->getId());
-            $instructor_info = array();
-            $total_student = $content_view = 0;
-            if($req)
+
+            if($course)
             {
-                if(in_array('stu_num',$req))
+                $contents = $contentRepository->getChaptersWithContentForCourse1($course->getId());
+                $instructor_info = array();
+                $total_student = $content_view = 0;
+                if($req)
                 {
-                    $total_student = $course_repo->findTotalActiveStudent($course->getId());
-                    if($total_student)
-                        $total_student = $total_student['total_student'];
-                    else
-                        $total_student = 0;
+                    if(in_array('stu_num',$req))
+                    {
+                        $total_student = $course_repo->findTotalActiveStudent($course->getId());
+                        if($total_student)
+                            $total_student = $total_student['total_student'];
+                        else
+                            $total_student = 0;
+                    }
+                    
+                    if(in_array('con_lis',$req))
+                    {
+                        $content_view = 1;
+                    }
+                    if(in_array('ins_inf',$req))
+                    {
+                        $instructor_info = $inst_course_repo->findBy(array('course'=> $course->getId()),array('id'=>'DESC'),1,0);
+                        if($instructor_info) $instructor_info = $instructor_info[0];
+                    }
                 }
+
+                // Configure Dompdf according to your needs
+                $pdfOptions = new Options();
+                $pdfOptions->set('defaultFont', 'Arial');
                 
-                if(in_array('con_lis',$req))
-                {
-                    $content_view = 1;
-                }
-                if(in_array('ins_inf',$req))
-                {
-                    $instructor_info = $inst_course_repo->findBy(array('course'=> $course->getId()),array('id'=>'DESC'),1,0);
-                    if($instructor_info) $instructor_info = $instructor_info[0];
-                }
+                // Instantiate Dompdf with our options
+                $dompdf = new Dompdf($pdfOptions);
+                // Retrieve the HTML generated in our twig file
+                $html = $this->renderView('report/coursePrintTemplate.html.twig', [
+                    'course' => $course,
+                    'total_student' => $total_student,
+                    'instructor_info' => $instructor_info,
+                    'content_view' =>  $content_view,
+                    'contents' => $contents
+                ]);
+            
+                // Load HTML to Dompdf
+                $dompdf->loadHtml($html);
+                
+                // (Optional) Setup the paper size and orientation 'portrait' or 'portrait'
+                $dompdf->setPaper('A4', 'portrait');
+
+                // Render the HTML as PDF
+                $dompdf->render();
+                
+                $course_name = $course->getName()."-report";
+                // Output the generated PDF to Browser (force download)
+                $dompdf->stream("$course_name", [
+                    "Attachment" => true
+                ]);
             }
-
-            // Configure Dompdf according to your needs
-            $pdfOptions = new Options();
-            $pdfOptions->set('defaultFont', 'Arial');
-            
-            // Instantiate Dompdf with our options
-            $dompdf = new Dompdf($pdfOptions);
-            // Retrieve the HTML generated in our twig file
-            $html = $this->renderView('report/coursePrintTemplate.html.twig', [
-                'course' => $course,
-                'total_student' => $total_student,
-                'instructor_info' => $instructor_info,
-                'content_view' =>  $content_view,
-                'contents' => $contents
-            ]);
-        
-            // Load HTML to Dompdf
-            $dompdf->loadHtml($html);
-            
-            // (Optional) Setup the paper size and orientation 'portrait' or 'portrait'
-            $dompdf->setPaper('A4', 'portrait');
-
-            // Render the HTML as PDF
-            $dompdf->render();
-            
-            $course_name = $course->getName()."-report";
-            // Output the generated PDF to Browser (force download)
-            $dompdf->stream("$course_name", [
-                "Attachment" => true
-            ]);
         }
 
         return $this->render('report/course.html.twig',[

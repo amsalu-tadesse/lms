@@ -61,7 +61,7 @@ class StudentCourseRepository extends ServiceEntityRepository
             ->join('i.user','u')
             ->join('ic.course', 'c')
             ->Where('s.student = :val')
-            ->andWhere('s.active = 1')
+            // ->andWhere('s.active = 1')
             ->setParameter('val', $value)
             ->getQuery()
         ;
@@ -187,7 +187,7 @@ class StudentCourseRepository extends ServiceEntityRepository
     }
 
 
-    public function getRequiredDTData($start, $length, $orders, $search, $columns, $instcrs)
+    public function getRequiredDTData($start, $length, $orders, $search, $columns, $instcrs, $id)
     {
         $searchItem = $search['value'];
         $columnNum = $orders[0]['column'];
@@ -203,10 +203,9 @@ class StudentCourseRepository extends ServiceEntityRepository
 
         // Create inner joins
         $query
-
             ->select("sc.id, concat(u.firstName,' ',u.middleName,' ',u.lastName) as name", 'sc.isAtPage as page', 'sc.active', 'sc.createdAt', 'st.id as student')
             ->innerJoin('sc.student', "st")
-            ->innerJoin('sc.instructorCourse', "ic")
+            // ->innerJoin('sc.instructorCourse', "ic")
             ->innerJoin('st.user', 'u');
         $countQuery
             ->innerJoin('stCount.student', "st")
@@ -215,18 +214,19 @@ class StudentCourseRepository extends ServiceEntityRepository
 
         //if all columns are from the same table you can use this
 
-        // $count = sizeof($columns);
-        // $flag = 0;
-
-        $searchQuery =  "concat(u.firstName,' ',u.middleName,' ',u.lastName) LIKE '%".$searchItem.'%\' ';
+        $searchQuery =  "(u.firstName LIKE '%".$searchItem.'%\' or ';
+        $searchQuery .=  "u.middleName LIKE '%".$searchItem.'%\' or ';
+        $searchQuery .=  "u.lastName LIKE '%".$searchItem.'%\' )';
+        
         $query->Where($searchQuery);
         $countQuery->Where($searchQuery);
         $countQuery->setMaxResults(10);
         //order
-        $query->andWhere("ic.id= :inst1");
+        $query->andWhere("sc.instructorCourse= :inst1");
         $query->setParameter('inst1', $instcrs);
         $countQuery->andWhere("ins.id=:inst2");
         $countQuery->setParameter('inst2', $instcrs);
+        
 
         if ($columns[$columnNum]['data'] == "name") {
             $query->orderBy("name", $orderDir);

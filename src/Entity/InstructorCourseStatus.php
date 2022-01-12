@@ -60,4 +60,9 @@ class InstructorCourseStatus
     {
         return $this->name;
     }
+
+    public function getAllFields()
+    {
+        return get_object_vars($this);
+    }
 }

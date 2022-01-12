@@ -21,4 +21,9 @@ class StudentAnswer
     {
         return $this->id;
     }
+
+    public function getAllFields()
+    {
+        return get_object_vars($this);
+    }
 }

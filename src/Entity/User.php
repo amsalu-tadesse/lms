@@ -125,12 +125,12 @@ class User implements UserInterface
      * @ORM\OneToMany(targetEntity=Log::class, mappedBy="actor")
      */
     private $logs;
-    /*
-     * @ORM\Column(type="string", length=1)
+
+    /**
+     * @ORM\Column(type="string", length=10)
      */
     private $sex;
-
-
+  
     public function __construct()
     {
         $this->instructors = new ArrayCollection();
@@ -221,12 +221,6 @@ class User implements UserInterface
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
-
-
-
-
-
-
 
     public function getUserType(): ?UserType
     {
@@ -492,6 +486,12 @@ class User implements UserInterface
             }
         }
     }
+     
+    public function getAllFields()
+    {
+        return get_object_vars($this);
+    }
+
     public function getSex(): ?string
     {
         return $this->sex;
@@ -503,7 +503,4 @@ class User implements UserInterface
 
         return $this;
     }
-
-     
-
 }

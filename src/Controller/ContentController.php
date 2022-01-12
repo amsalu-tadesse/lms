@@ -6,6 +6,7 @@ use App\Entity\Content;
 use App\Entity\InstructorCourse;
 use App\Entity\StudentChapter;
 use App\Entity\SystemSetting;
+use App\Entity\InstructorCourseChapter;
 use App\Form\ContentType;
 use App\Repository\ContentRepository;
 use App\Repository\InstructorCourseChapterRepository;
@@ -19,6 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use App\Services\LogService;
 
 /**
  * @Route("/content")
@@ -69,6 +71,7 @@ class ContentController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+          
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($content);
             $entityManager->flush();
@@ -155,7 +158,14 @@ class ContentController extends AbstractController
     {
         $em = $this->getDoctrine()->getManager();
         $contents = $contentRepository->getContentsForChapter($course, $chapter);
-
+        $final = false;
+        $chapters = $em->getRepository(InstructorCourseChapter::class)->findBy(array("instructorCourse"=>$course), array('id'=>'DESC'),1,0);
+        if($chapters){
+            if($chapters[0]->getTopic() == $chapter)
+            {
+                $final = true;
+            }
+        }
         $chap = array();
         $pages_seen = $stud_chap->getProgress($course, $chapter, $this->getUser()->getProfile()->getId());
         if ($pages_seen == null) {
@@ -181,6 +191,7 @@ class ContentController extends AbstractController
             'contents' => $contents,
             'pages_seen' => $pages_seen,
             'chapter' => $chap,
+            'final' => $final,
         ]);
     }
 
@@ -206,12 +217,19 @@ class ContentController extends AbstractController
     /**
      * @Route("/new/{id}", name="content_new", methods={"GET","POST"})
      */
-    public function new(Request $request, InstructorCourse $instructorCourse, SluggerInterface $slugger): Response
+    public function new(Request $request, InstructorCourse $instructorCourse, SluggerInterface $slugger, LogService $log): Response
     {
+        
         $this->denyAccessUnlessGranted('content_create');
         $content = new Content();
         $em = $this->getDoctrine()->getManager();
 
+        $instChapter = $em->getRepository(InstructorCourseChapter::class)->findBy(array('instructorCourse'=> $instructorCourse->getId()));
+        if(!$instChapter){
+            $this->addFlash("info", "Add chapter first");
+            return $this->redirectToRoute('content_index', ['id' => $instructorCourse->getId()], Response::HTTP_SEE_OTHER);
+        }
+        
         $uploadSize = $em->getRepository(SystemSetting::class)->findOneBy(['code' => 'upload_size'])->getValue();
         if (!$uploadSize) {
             $uploadSize = 100;
@@ -221,13 +239,10 @@ class ContentController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
-
             $brochureFile = $form->get('filename')->getData();
+
             $youtubeLink = $form->get('videoLink')->getData();
-            $brochureFile = htmlspecialchars($brochureFile);
             $youtubeLink = htmlspecialchars($youtubeLink);
-
-
 
             $resource = $form['resource']->getData();  
 
@@ -291,7 +306,12 @@ class ContentController extends AbstractController
 
             $entityManager->persist($content);
             $entityManager->flush();
+            
+            $origional = $log->changeObjectToArray($content);
 
+            $message = $log->snew($origional, "", "create", $this->getUser(), 'content');
+            if(!$message)
+            $this->addFlash("info", "Log not created");
             return $this->redirectToRoute('content_index', ['id' => $instructorCourse->getId()], Response::HTTP_SEE_OTHER);
         }
         // else{
@@ -321,11 +341,11 @@ class ContentController extends AbstractController
     /**
      * @Route("/{id}/edit", name="content_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Content $content, SluggerInterface $slugger): Response
+    public function edit(Request $request, Content $content, SluggerInterface $slugger, LogService $log): Response
     {
         $this->denyAccessUnlessGranted('content_edit');
         $em = $this->getDoctrine()->getManager();
-
+        $origional = $log->changeObjectToArray($content);
         $uploadSize = $em->getRepository(SystemSetting::class)->findOneBy(['code' => 'upload_size'])->getValue();
         if (!$uploadSize) {
             $uploadSize = 100;
@@ -386,6 +406,10 @@ class ContentController extends AbstractController
             }
 
             $this->getDoctrine()->getManager()->flush();
+            $modified = $log->changeObjectToArray($content);
+            $message = $log->snew($origional, $modified, "update", $this->getUser(), 'content');
+            // if(!$message)
+                // $this->addFlash("info", "Log not created");
             return $this->redirectToRoute('content_index', ['id'=>$content->getChapter()->getInstructorCourse()->getId()], Response::HTTP_SEE_OTHER);
         }
 
@@ -411,8 +435,10 @@ class ContentController extends AbstractController
             try {
                 $entityManager->remove($content);
                 $entityManager->flush();
+                $origional = $log->changeObjectToArray($content);
+                $message = $log->snew($origional, "", "delete", $this->getUser(), 'content');
             } catch (\Exception $ex) {
-                // dd($ex);
+                
                 $message = UtilityController::getMessage($ex->getCode());
                 $this->addFlash('danger', $message);
             }

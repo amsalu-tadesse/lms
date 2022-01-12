@@ -155,4 +155,9 @@ class QuizQuestions
     {
         return $this->question;
     }
+
+    public function getAllFields()
+    {
+        return get_object_vars($this);
+    }
 }
