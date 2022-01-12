@@ -424,7 +424,7 @@ class ContentController extends AbstractController
     /**
      * @Route("/{id}", name="content_delete", methods={"POST"})
      */
-    public function delete(Request $request, Content $content): Response
+    public function delete(Request $request, Content $content,LogService $log): Response
     {
         $this->denyAccessUnlessGranted('content_delete');
         $instid = $content->getChapter()->getInstructorCourse()->getId();
