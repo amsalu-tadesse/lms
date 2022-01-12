@@ -15,6 +15,7 @@ use CodeItNow\BarcodeBundle\Utils\QrCode;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use App\Repository\StudentCourseRepository;
+use App\Controller\LogController;
 
 class HomeController extends AbstractController
 {

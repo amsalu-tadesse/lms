@@ -142,4 +142,9 @@ class StudentQuiz
 
         return $this;
     }
+
+    public function getAllFields()
+    {
+        return get_object_vars($this);
+    }
 }

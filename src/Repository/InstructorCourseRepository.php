@@ -92,6 +92,7 @@ class InstructorCourseRepository extends ServiceEntityRepository
             ->join('i.instructor', 'inst')
             // ->join('inst.user', 'user')
             ->andWhere('inst.user = :usr')
+            ->andWhere('i.active = 1')
             ->setParameter('usr', $user)
             ->getQuery()
             ->getResult()

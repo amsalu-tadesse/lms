@@ -2,21 +2,21 @@
 {{ form_errors(form) }}
 
 <div class="row ">
-	<div class="form-group  col-md-6 col-sm-6 ">
+	<div class="form-group  col-md-4 col-sm-6 ">
 		{{form_label(form.firstName,'First Name' | trans | raw)  }}
 		{{ form_widget(form.firstName,{'attr':{'class':form_errors(form.firstName)? 'form-control is-invalid':'form-control','placeholder':" Enter first name"|trans}}) }}
 		<div class="help-block text-danger">{{form_errors(form.firstName)}}</div>
 	</div>
-	<div class="form-group col-md-6 col-sm-6 ">
-		{{form_label(form.middleName,'Last Name' | trans | raw)}}
+	<div class="form-group col-md-4 col-sm-6 ">
+		{{form_label(form.middleName,'Middle Name' | trans | raw)}}
 		{{ form_widget(form.middleName,{'attr':{'class':form_errors(form.middleName)? 'form-control is-invalid':'form-control','placeholder':" Enter middle name"|trans}}) }}
 		<div class="help-block text-danger">{{form_errors(form.middleName)}}</div>
 	</div>
-	{# <div class="form-group  col-md-4 col-sm-6 ">
+	<div class="form-group  col-md-4 col-sm-6 ">
 		{{form_label(form.lastName,'Last Name' | trans | raw)}}
 		{{ form_widget(form.lastName,{'attr':{'class':form_errors(form.lastName)? 'form-control is-invalid':'form-control','placeholder':" Enter last name"|trans}}) }}
 		<div class="help-block text-danger">{{form_errors(form.lastName)}}</div>
-	</div> #}
+	</div>
 
 </div><br>
 <div class="row">

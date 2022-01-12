@@ -43,6 +43,11 @@ class Log
      */
     private $action;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $modifiedEntity;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -104,6 +109,18 @@ class Log
     public function setAction(string $action): self
     {
         $this->action = $action;
+
+        return $this;
+    }
+
+    public function getModifiedEntity(): ?string
+    {
+        return $this->modifiedEntity;
+    }
+
+    public function setModifiedEntity(string $modifiedEntity): self
+    {
+        $this->modifiedEntity = $modifiedEntity;
 
         return $this;
     }

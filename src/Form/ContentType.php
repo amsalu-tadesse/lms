@@ -87,6 +87,7 @@ class ContentType extends AbstractType
                         'mimeTypes' => [
                             'image/*',
                             'zip',
+                            'application/zip',
                             'application/pdf',
                             'application/msword',
                             'application/vnd.ms-excel',

@@ -8,9 +8,16 @@
 {% endblock %}
 {% block breadcrumbcontent %}{% trans %}New{% endtrans %}{% endblock %}
 {% block body %}
-
-    {{ include('course_category/_form.html.twig') }}
-
-<br>
-    <a href="{{ path('course_category_index') }}" class="">{% trans %}Back to list{% endtrans %}</a>
+    <div class="card card-info">
+		<div class="card card-header">
+			<h5>Create Course Category</h5>
+		</div>
+        {{ include('course_category/_form.html.twig') }}
+        </td>
+            <td>
+                <a href="{{ path('course_category_index') }}" class="btn btn-info">{% trans %}Back to list{% endtrans %}</a>
+            </td>
+        </table>
+        <br>
+    </div>
 {% endblock %}

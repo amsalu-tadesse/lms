@@ -113,6 +113,7 @@
 		$(document).ready(function(){
             var json_str = getCookie('selected_courses_login');
             var arr = JSON.parse(json_str);
+				responsive(".main");
             cookie_length = arr.length;
             if(cookie_length > 0){
                 $("#my_course").removeClass("test");   
