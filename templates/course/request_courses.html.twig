@@ -31,9 +31,9 @@
 		<div class="row mt-2 buttons">
 			<div class="col-sm-4 col-md-2">
 				{% if is_granted("ROLE_STUDENT") %}
-					<a class="btn btn-primary btn-block mb-2" href="{{path('course_apply')}}">Apply</a>
+					<a class="btn btn-primary btn-block mb-2" href="{{path('course_apply')}}">{% trans %}Apply{% endtrans %}</a>
 				{% else %}
-					<a class="btn btn-primary btn-block mb-2" href="{{path('app_register')}}">Apply</a>
+					<a class="btn btn-primary btn-block mb-2" href="{{path('app_register')}}">{% trans %}Apply{% endtrans %}</a>
 				{% endif %}
 			</div>
 			<div class="col-sm-4 col-md-3">
@@ -48,7 +48,7 @@
     <!-- Modal content -->
     <div class="modal-content">
         <br>
-        <p>Do you want to remove all courses for your selection list?</p>
+        <p>{% trans %}Do you want to remove all courses for your selection list?{% endtrans %}</p>
         <br>
         <div class="row" style="float: right">
             <div class="col-sm-6"></div>
