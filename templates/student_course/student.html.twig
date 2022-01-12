@@ -157,7 +157,7 @@
 			course_name = $(this).attr("course-id");
 			console.log(selected_courses_login);
 			if (selected_courses_login.includes(course_name)) {
-				var msg = {% trans %}click to select{% endtrans %}
+				var msg = "{% trans %}click to select{% endtrans %}";
 				$(this).text(msg);
 				$(this).css("background-color", "#093146");
 
@@ -176,7 +176,7 @@
 					$("#my_course").addClass("test");
 
 			} else {
-				var msg2 = {% trans %}Remove from my courses{% endtrans %}
+				var msg2 = "{% trans %}Remove from my courses{% endtrans %}";
 				$(this).text(msg2);
 				$(this).css("background-color", "#F44336");
 				selected_courses_login.push(course_name);
