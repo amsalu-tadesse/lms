@@ -73,7 +73,7 @@ class QuestionAnswerController extends AbstractController
 
     /**
      * @Route("/new", name="question_answer_new", methods={"GET","POST"})
-     */
+     */ 
     public function new(Request $request, InstructorRepository $inst_repo): Response
     {
         $questionAnswer = new QuestionAnswer();
