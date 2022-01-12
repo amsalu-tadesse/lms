@@ -36,10 +36,16 @@
 {% endblock %}
 {% block body %}
 	<div class="card px-3 py-2 mt-3">
-		<div class="card-header"><strong>{{question_answer.student.user.username}}</strong><span style="float:right">{{ question_answer.createdAt ? question_answer.createdAt|date('d-m-Y') : '' }}</span></div>
-		<div class="card-body">
-			{{question_answer.question|raw}}
-		</div>
+{% if condquestion_answer.student is null %}
+this question has not been requested by a student. please remove it.
+{% else %}
+<div class="card-header"><strong>{{question_answer.student.user.username}}</strong><span style="float:right">{{ question_answer.createdAt ? question_answer.createdAt|date('d-m-Y') : '' }}</span></div>
+	<div class="card-body">
+		{{question_answer.question|raw}}
+	</div>	
+{% endif %}
+
+		
 	</div>
 
 	<br>
