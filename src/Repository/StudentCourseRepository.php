@@ -203,7 +203,7 @@ class StudentCourseRepository extends ServiceEntityRepository
 
         // Create inner joins
         $query
-            ->select("sc.id, concat(u.firstName,' ',u.middleName,' ',u.lastName) as name", 'sc.isAtPage as page', 'sc.active', 'sc.createdAt', 'st.id as student')
+            ->select("sc.id, concat(u.firstName,' ',u.middleName) as name", 'sc.isAtPage as page', 'sc.active', 'sc.createdAt', 'st.id as student')
             ->innerJoin('sc.student', "st")
             // ->innerJoin('sc.instructorCourse', "ic")
             ->innerJoin('st.user', 'u');
@@ -216,7 +216,7 @@ class StudentCourseRepository extends ServiceEntityRepository
 
         $searchQuery =  "(u.firstName LIKE '%".$searchItem.'%\' or ';
         $searchQuery .=  "u.middleName LIKE '%".$searchItem.'%\' or ';
-        $searchQuery .=  "u.lastName LIKE '%".$searchItem.'%\' )';
+        // $searchQuery .=  "u.lastName LIKE '%".$searchItem.'%\' )';
         
         $query->Where($searchQuery);
         $countQuery->Where($searchQuery);
