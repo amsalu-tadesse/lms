@@ -215,7 +215,7 @@ class StudentCourseRepository extends ServiceEntityRepository
         //if all columns are from the same table you can use this
 
         $searchQuery =  "(u.firstName LIKE '%".$searchItem.'%\' or ';
-        $searchQuery .=  "u.middleName LIKE '%".$searchItem.'%\' or ';
+        $searchQuery .=  "u.middleName LIKE '%".$searchItem.'%\' )';
         // $searchQuery .=  "u.lastName LIKE '%".$searchItem.'%\' )';
         
         $query->Where($searchQuery);
