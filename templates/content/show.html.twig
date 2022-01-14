@@ -44,13 +44,20 @@
 								<a href="{{ asset('uploads/resources/' ~ content.filename) }}">View file</a>
 							</td>
 						</tr>
-					{% endif %}
+					{% endif %} 
 
 					{% if content.videoLink %}
 
 						<tr>
 							<th>VideoLink</th>
-							<td><a href="{{ content.videoLink }}" >Youtube Link</a></td>
+							<td><a href="{{ content.videoLink }}" >VideoLink</a></td>
+						</tr>
+					{% endif %}
+					{% if content.resource %}
+
+						<tr>
+							<th>Resource</th>
+							<td><a href="{{ content.resource }}" >Resource</a></td>
 						</tr>
 					{% endif %}
 
