@@ -67,7 +67,8 @@
                 </div></center>
                 <img src="data:image/png;base64,{{student_course.qrCode}}" style="margin-left: 33px;width: 88px;margin-top:-36px;">
                 <p>
-                    <a style="color: white;font-size: 11px; margin-left: 5px;" href="#">{{student_course.qrUrl}}</a>
+                    {# <a style="color: white;font-size: 11px; margin-left: 5px;" href="#">{{student_course.qrUrl}}</a> #}
+                    <a style="color: white;font-size: 11px; margin-left: 5px;" href="#">{{student_course.qrUrl}}:8181</a>
                 </p>
             </div>
         {% else %}

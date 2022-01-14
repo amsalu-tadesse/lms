@@ -42,15 +42,17 @@ class HomeController extends AbstractController
     }
 
     /**
-     * @Route("/certificate/{student}/{id}", name="v", requirements={"id":"\d{1,6}", "student":"[A-Z]{2}\-[\d]{3,6}\-[\d]{2}"})
+     * @Route("/certificate/{student}/{id}", name="v")
     */
     public function certificate($student, $id, StudentCourseRepository $stud_course_repo)
     {
+        /*, requirements={"id":"\d{1,6}", "student":"[A-Z]{2}\-[\d]{3,6}\-[\d]{2}"}*/
+        
         $student1 = $stud_course_repo->getStudentCertificate($student, $id);
         return $this->render('certificate/show.html.twig',[
             'student_course' => $student1,
         ]);
-        //
+        
     }
 
     /**
