@@ -57,7 +57,15 @@ class LogService
       {
          if(in_array(gettype($value), $allowedDataTypes)){
             $var = "get".ucfirst($key);
-            $result[$key] = $obj->$var();
+            if(!method_exists(get_class($obj), $var))
+            // if(!$obj->$var() && $obj->$var() != NULL)
+            {
+               $var = ucfirst($key);
+            }
+            
+            // if($obj->$var() != NULL){
+               $result[$key] = $obj->$var();
+            // }
          }
       }
       return $result;

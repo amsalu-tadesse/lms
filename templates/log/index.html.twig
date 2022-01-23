@@ -1,41 +1,103 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log index{% endblock %}
-
-{% block body %}
-    <h1>Log index</h1>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Original</th>
-                <th>Modified</th>
-                <th>CreatedAt</th>
-                <th>Action</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for log in logs %}
-            <tr>
-                <td>{{ log.id }}</td>
-                <td>{{ log.original }}</td>
-                <td>{{ log.modified }}</td>
-                <td>{{ log.createdAt ? log.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ log.action }}</td>
-                <td>
-                    <a href="{{ path('log_show', {'id': log.id}) }}">show</a>
-                    <a href="{{ path('log_edit', {'id': log.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="6">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('log_new') }}">Create new</a>
+{% block title %}Log index
 {% endblock %}
+{% block breadcrumbhome %}
+	<a href="#">
+		{% trans %}Log{% endtrans %}
+	</a>
+{% endblock %}
+{% block breadcrumbcontent %}
+	{% trans %}Index{% endtrans %}
+{% endblock %}
+{% block body %}
+		<div class="card card-info">
+            <div class="card-header">
+                    <h3 class="card-title">{% trans %}Logs{% endtrans %}</h3>
+                </div>
+			<div class="col-md-12">
+                <br><br>
+				{{ form_start(searchForm,{'attr': {'role':'form'}, 'method': 'GET'}) }}
+				<div class="row">
+
+					<div class="col-sm-4">
+						<div class="form-group">
+							<label class="col-sm-12 control-label no-padding-right">{% trans %}user{% endtrans %}</label>
+							{{ form_widget(searchForm.actor  ,{'attr':{'class':'form-control'},'full_name':'actor','value':app.request.get('actor') })}}
+							{# {# <input type="text" class="form-control" name="name"/>  #}
+							<div class="help-block with-errors"></div>
+						</div>
+					</div>
+					<div class="col-sm-2">
+						<div class="form-group">
+							<label class="col-sm-12 control-label no-padding-right">{% trans %}Table{% endtrans %}</label>
+							{{ form_widget(searchForm.modifiedEntity,{'attr':{'class':'form-control'},'full_name':'modifiedEntity','value': app.request.get('modifiedEntity')}) }}
+							<div class="help-block with-errors"></div>
+						</div>
+					</div>
+					<div class="col-sm-2">
+						<div class="form-group">
+							<label class="col-sm-12 control-label no-padding-right">{% trans %}action{% endtrans %}</label>
+							{{ form_widget(searchForm.action,{'attr':{'class':'form-control'},'full_name':'action','value': app.request.get('action')}) }}
+							<div class="help-block with-errors"></div>
+						</div>
+					</div>
+					<div class="col-sm-3">
+						<div class="form-group">
+							<label class="col-sm-12 control-label no-padding-right">{% trans %}Created At{% endtrans %}</label>
+							{{ form_widget(searchForm.createdAt,{'attr':{'class':'form-control'},'full_name':'createdAt','value': app.request.get('createdAt')}) }}
+							<div class="help-block with-errors"></div>
+						</div>
+					</div>
+					<div class="col-sm-1">
+						<div class="form-group">
+							<label class="col-sm-12 control-label no-padding-right"></label>
+							<button class="btn btn-info" style="margin-top: 8px;width:100%;">
+								<i class="fas fa-search"></i>
+							</button>
+						</div>
+					</div>
+					{{ form_end(searchForm) }}
+				</div>
+				<div class="table-responsive">
+					<div class="col-md-12">
+						<div class="card">
+
+							<div class="card-body">
+								<table class="table">
+									<thead>
+										<tr>
+											<th>Actor</th>
+											<th>Table</th>
+											<th>Action</th>
+											<th>CreatedAt</th>
+											<th>actions</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for log in logs %}
+											<tr>
+												<td>{{ log.actor.firstName }}</td>
+												<td>{{ log.modifiedEntity }}</td>
+												<td>{{ log.action }}</td>
+												<td>{{ log.createdAt ? log.createdAt|date('Y-m-d') : '' }}</td>
+												<td>
+													<a href="{{ path('log_show', {'id': log.id}) }}">show</a>
+												</td>
+											</tr>
+										{% else %}
+											<tr>
+												<td colspan="6">no records found</td>
+											</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+								<div class="float-right">{{ knp_pagination_render(logs) }}</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+	{% endblock %}

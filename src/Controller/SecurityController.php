@@ -18,7 +18,7 @@ use App\Services\MailerService;
 use DateTime;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-
+use App\Services\LogService;
 use Symfony\Component\Dotenv\Dotenv;
 
 class SecurityController extends AbstractController
@@ -126,10 +126,8 @@ class SecurityController extends AbstractController
 
             $user = $entityManager->getRepository(User::class)->findOneBy(array('email' => $email));
             $user->setPassword($passwordEncoder->encodePassword($user, $form['plainPassword']->getData()));
-
             $entityManager->persist($user);
             $entityManager->flush();
-
             return $this->redirectToRoute('app_login', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -142,7 +140,7 @@ class SecurityController extends AbstractController
     /**
      * @Route("/password/change", name="change_password", methods={"GET","POST"})
      */
-    public function passwordChange(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    public function passwordChange(Request $request, UserPasswordEncoderInterface $passwordEncoder, LogService $log)
     {
         $user = new User();
         $form = $this->createForm(ForgotPasswordType::class, $user);
@@ -151,11 +149,13 @@ class SecurityController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
             $user = $this->getUser();
+            $origional = $log->changeObjectToArray($user);
             $user->setPassword($passwordEncoder->encodePassword($user, $form['plainPassword']->getData()));
             $user->setLastLogin(new DateTime());
             $entityManager->persist($user);
             $entityManager->flush();
-
+            $modified = $log->changeObjectToArray($user);
+            $message = $log->snew($origional, $modified, "update", $this->getUser(), "user");
             return $this->redirectToRoute('home');
         }
 
@@ -168,7 +168,7 @@ class SecurityController extends AbstractController
     /**
      * @Route("/change/password", name="change_password_logged_in", methods={"GET","POST"})
      */
-    public function changePassword(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    public function changePassword(Request $request, UserPasswordEncoderInterface $passwordEncoder, LogService $log)
     {
         $user = new User();
         $form = $this->createForm(PasswordChangeType::class, $user);
@@ -179,10 +179,14 @@ class SecurityController extends AbstractController
             if ($checkPass) {
                 $entityManager = $this->getDoctrine()->getManager();
                 $user = $this->getUser();
+                $origional = $log->changeObjectToArray($user);
                 $user->setPassword($passwordEncoder->encodePassword($user, $form['plainPassword']->getData()));
                 $user->setLastLogin(new DateTime());
                 $entityManager->persist($user);
                 $entityManager->flush();
+
+                $modified = $log->changeObjectToArray($user);
+                $message = $log->snew($origional, $modified, "update", $this->getUser(), "user");
             } else {
                 if ($this->isGranted('ROLE_STUDENT')) {
                     return $this->renderForm('security/change_password_logged_in_student.html.twig', [

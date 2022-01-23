@@ -24,6 +24,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Dompdf\Dompdf;
+use App\Services\LogService;
 use Dompdf\Options;
 
 
@@ -35,20 +36,24 @@ class CourseController extends AbstractController
     /**
      * @Route("/", name="course_index", methods={"GET","POST"})
      */
-    public function index(CourseRepository $courseRepository, Request $request, PaginatorInterface $paginator): Response
+    public function index(CourseRepository $courseRepository, Request $request, PaginatorInterface $paginator, LogService $log): Response
     {
         $this->denyAccessUnlessGranted('course_list');
         $em = $this->getDoctrine()->getManager();
         if ($request->request->get('edit')) {
             $id = $request->request->get('edit');
             $course = $courseRepository->findOneBy(['id' => $id]);
+            $origional = $log->changeObjectToArray($course);
+
             $form = $this->createForm(CourseType::class, $course);
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
                 //$instructorCourse = $em->getRepository(InstructorCourse::class)->findOneBy(['course'=>$course,'active'=>1]);//assumption only one inst for one active inst course.
                 $this->getDoctrine()->getManager()->flush();
+                $modified = $log->changeObjectToArray($course);
 
+                $message = $log->snew($origional, $modified, "update", $this->getUser(), "course");
                 return $this->redirectToRoute('course_index');
             }
 
@@ -82,6 +87,12 @@ class CourseController extends AbstractController
             $entityManager->persist($instructorCourse);
             $entityManager->flush();
 
+            $origional1 = $log->changeObjectToArray($instructorCourse);
+            $message1 = $log->snew($origional1, "", "create", $this->getUser(), "instuructorCourse");
+
+            $origional = $log->changeObjectToArray($course);
+            $message = $log->snew($origional, "", "create", $this->getUser(), "course");
+            
             return $this->redirectToRoute('course_index');
         }
 
@@ -101,10 +112,8 @@ class CourseController extends AbstractController
     /**
      * @Route("/detail/{id}", name="course_description")
      */
-    public function courseDetail(StudentCourseRepository $stud_course_repo, InstructorCourse $instructorCourse, InstructorCourseRepository $course_repo, InstructorCourseChapterRepository $chapter, Request $request): Response
+    public function courseDetail(StudentCourseRepository $stud_course_repo, InstructorCourse $instructorCourse, LogService $log, InstructorCourseRepository $course_repo, InstructorCourseChapterRepository $chapter, Request $request): Response
     {
-  
-
         $courses = $course_repo->findCoursesSortByCategory($instructorCourse->getId());
         $chaptersWithContent = $chapter->getChaptersWithContentForCourse($instructorCourse->getId());
 
@@ -128,6 +137,10 @@ class CourseController extends AbstractController
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($questionAnswer);
                 $em->flush();
+                
+                $origional = $log->changeObjectToArray($questionAnswer);
+                $message = $log->snew($origional, "", "create", $this->getUser(), "questionAnswer");
+
                 $qa = true;
                 $questionAnswer = new QuestionAnswer();
                 $form = $this->createForm(QuestionAnswerNewStudentType::class, $questionAnswer);
@@ -239,15 +252,18 @@ class CourseController extends AbstractController
     /**
      * @Route("/{id}", name="course_delete", methods={"DELETE"})
      */
-    public function delete(Request $request, Course $course): Response
+    public function delete(Request $request, Course $course, LogService $log): Response
     {
         $this->denyAccessUnlessGranted('course_delete');
         if ($this->isCsrfTokenValid('delete' . $course->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
 
             try {
+                $origional = $log->changeObjectToArray($course);
+
                 $entityManager->remove($course);
                 $entityManager->flush();
+                $message = $log->snew($origional, "", "delete", $this->getUser(), "course");
             } catch (\Exception $ex) {
                 // dd($ex);
                 $message = UtilityController::getMessage($ex->getCode());

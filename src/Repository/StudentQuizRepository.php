@@ -56,6 +56,7 @@ class StudentQuizRepository extends ServiceEntityRepository
             ->join('q.instructorCourseChapter', 'ch')
             ->join('ch.instructorCourse', 'ic')
             ->where('ic.id = :val1')
+            ->andWhere('sq.active = 1')
             ->andWhere('sq.student = :val')
             ->setParameter('val1', $course)
             ->setParameter('val', $student)

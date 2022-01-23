@@ -18,7 +18,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use SymfonyCasts\Bundle\ResetPassword\Controller\ResetPasswordControllerTrait;
 use SymfonyCasts\Bundle\ResetPassword\Exception\ResetPasswordExceptionInterface;
 use SymfonyCasts\Bundle\ResetPassword\ResetPasswordHelperInterface;
-
+use App\Services\LogService;
 /**
  * @Route("/reset-password")
  */
@@ -77,7 +77,7 @@ class ResetPasswordController extends AbstractController
      *
      * @Route("/reset/{token}", name="app_reset_password")
      */
-    public function reset(Request $request, UserPasswordEncoderInterface $passwordEncoder, string $token = null): Response
+    public function reset(Request $request, UserPasswordEncoderInterface $passwordEncoder, string $token = null, LogService $log): Response
     {
         if ($token) {
             // We store the token in session and remove it from the URL, to avoid the URL being
@@ -118,10 +118,15 @@ class ResetPasswordController extends AbstractController
                 $form->get('plainPassword')->getData()
             );
 
+            $origional = $log->changeObjectToArray($user);
+
             $user->setPassword($encodedPassword);
             $user->setLocale(1);
             $user->setLastLogin(new DateTime());
             $this->getDoctrine()->getManager()->flush();
+
+            // $modified = $log->changeObjectToArray($user);
+            // $message = $log->snew($origional, $modified, "update", $user, "user");
 
             // The session is cleaned up after the password has been changed.
             $this->cleanSessionAfterReset();

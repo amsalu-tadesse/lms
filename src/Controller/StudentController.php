@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use App\Services\LogService;
 
 /**
  * @Route("/studentf")
@@ -33,11 +34,13 @@ class StudentController extends AbstractController
     /**
      * @Route("/profile", name="student_profile", methods={"GET","POST"})
      */
-    public function profile(StudentRepository $studentRepository, Request $request, SluggerInterface $slugger): Response
+    public function profile(StudentRepository $studentRepository, Request $request, SluggerInterface $slugger, LogService $log): Response
     {
         $em = $this->getDoctrine()->getManager();
         $user = $em->getRepository(User::class)->find($this->getUser()->getId());
-
+       
+        $origional = $log->changeObjectToArray($user);
+        
         if($user->getProfile()->getProfileUpdated())
             $form = $this->createForm(ProfileType2::class, $user);
         else
@@ -50,9 +53,15 @@ class StudentController extends AbstractController
         {
             $em->persist($user);
             $em->flush();
+
+            $modified = $log->changeObjectToArray($user);
+            $message = $log->snew($origional, $modified, "update", $this->getUser(), "user");
+
             $image = $form['profilePicture']->getData();
             $student = $em->getRepository(Student::class)->findOneBy(['user'=>$this->getUser()->getId()]);
             
+            $origional = $log->changeObjectToArray($student);
+
             $student->setProfileUpdated(1);
             if($image)
             {
@@ -72,6 +81,8 @@ class StudentController extends AbstractController
             }
             $em->persist($student);
             $em->flush();
+            $modified = $log->changeObjectToArray($student);
+            $message = $log->snew($origional, $modified, "update", $this->getUser(), "student");
 
             return $this->redirectToRoute("student_profile");
         }
@@ -85,7 +96,7 @@ class StudentController extends AbstractController
     /**
      * @Route("/new", name="student_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    public function new(Request $request, LogService $log): Response
     {
         $student = new Student();
         $form = $this->createForm(StudentType::class, $student);
@@ -95,6 +106,9 @@ class StudentController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($student);
             $entityManager->flush();
+
+            $origional = $log->changeObjectToArray($student);
+            $message = $log->snew($origional, "", "create", $this->getUser(), "student");
 
             return $this->redirectToRoute('student_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -118,13 +132,16 @@ class StudentController extends AbstractController
     /**
      * @Route("/{id}/edit", name="student_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Student $student): Response
+    public function edit(Request $request, Student $student, LogService $log): Response
     {
+        $origional = $log->changeObjectToArray($student);
         $form = $this->createForm(StudentType::class, $student);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
+            $modified = $log->changeObjectToArray($student);
+            $message = $log->snew($origional, $modified, "update", $this->getUser(), "student");
 
             return $this->redirectToRoute('student_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -138,12 +155,14 @@ class StudentController extends AbstractController
     /**
      * @Route("/{id}", name="student_delete", methods={"POST"})
      */
-    public function delete(Request $request, Student $student): Response
+    public function delete(Request $request, Student $student, LogService $log): Response
     {
         if ($this->isCsrfTokenValid('delete'.$student->getId(), $request->request->get('_token'))) {
+            $origional = $log->changeObjectToArray($student);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($student);
             $entityManager->flush();
+            $message = $log->snew($origional, "", "delete", $this->getUser(), "student");
         }
 
         return $this->redirectToRoute('student_index', [], Response::HTTP_SEE_OTHER);

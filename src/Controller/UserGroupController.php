@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Knp\Component\Pager\PaginatorInterface;
-
+use App\Services\LogService;
 /**
  * @Route("/usergroup")
  */
@@ -24,7 +24,7 @@ class UserGroupController extends AbstractController
     /**
      * @Route("/", name="user_group_index", methods={"GET","POST"})
      */
-    public function index(UserGroupRepository $userGroupRepository, Request $request, PaginatorInterface $paginator): Response
+    public function index(UserGroupRepository $userGroupRepository, Request $request, PaginatorInterface $paginator,LogService $log): Response
     {
         $userGroup = new UserGroup();
         $searchForm = $this->createForm(UserGroupFilterType::class, $userGroup);
@@ -36,6 +36,11 @@ class UserGroupController extends AbstractController
 
             $id=$request->request->get('edit');
             $userGroup=$userGroupRepository->findOneBy(['id'=>$id]);
+
+            $origional = $log->changeObjectToArray($userGroup);
+            
+            $message = $log->snew($origional, "", "delete", $this->getUser(), "userType");
+
             $form = $this->createForm(UserGroupType::class, $userGroup);
             $form->handleRequest($request);
 
@@ -45,6 +50,8 @@ class UserGroupController extends AbstractController
                 $userGroup->setUpdatedBy($this->getUser());
                 $this->getDoctrine()->getManager()->flush();
 
+                $modified = $log->changeObjectToArray($userGroup);
+                $message = $log->snew($origional, $modified, "update", $this->getUser(), "userGroup");
                 return $this->redirectToRoute('user_group_index');
             }
             $queryBuilder=$userGroupRepository->findUserGroup($request->query->get('search'));
@@ -74,6 +81,9 @@ class UserGroupController extends AbstractController
             $entityManager->persist($userGroup);
             $entityManager->flush();
 
+            $origional = $log->changeObjectToArray($userGroup);
+            $message = $log->snew($origional, "", "create", $this->getUser(), "userGroup");
+
             return $this->redirectToRoute('user_group_index');
         }
         $queryBuilder=$userGroupRepository->findUserGroup($request->query->get('name'), $request->query->get('description'), $request->query->get('isActive'));
@@ -92,11 +102,13 @@ class UserGroupController extends AbstractController
     /**
      * @Route("/{id}/users", name="user_group_users", methods={"POST","get"})
      */
-    public function user(UserGroup $userGroup, Request $request, UserRepository $userRepository, PermissionRepository $permissionRepository)
+    public function user(UserGroup $userGroup, Request $request, UserRepository $userRepository, PermissionRepository $permissionRepository, LogService $log)
     {
         //$this->denyAccessUnlessGranted('ad_usr_t_grp');
 
         if ($request->request->get('save')) {
+            
+            $origional = $log->changeObjectToArray($userGroup);
             $users=$userRepository->findAll();
             foreach ($users as $user) {
                 $userGroup->removeUser($user);
@@ -108,6 +120,9 @@ class UserGroupController extends AbstractController
             $userGroup->setUpdatedAt(new \DateTime());
             $userGroup->setUpdatedBy($this->getUser());
             $this->getDoctrine()->getManager()->flush();
+            
+            $modified = $log->changeObjectToArray($userGroup);
+            $message = $log->snew($origional, $modified, "update", $this->getUser(), "userGroup");
         }
 
         // $em = $this->getDoctrine()->getManager();
@@ -168,21 +183,26 @@ class UserGroupController extends AbstractController
     /**
      * @Route("/{id}/activate", name="user_group_action", methods={"POST"})
      */
-    public function action(UserGroup $userGroup, Request $request)
+    public function action(UserGroup $userGroup, Request $request, LogService $log)
     {
         // $this->denyAccessUnlessGranted('edt_usr_grp');
-
+        
+        $origional = $log->changeObjectToArray($userGroup);
         $userGroup->setIsActive($request->request->get('activateUserGroup'));
         $userGroup->setUpdatedAt(new \DateTime());
         $userGroup->setUpdatedBy($this->getUser());
         $this->getDoctrine()->getManager()->flush();
+
+        $modified = $log->changeObjectToArray($userGroup);
+        $message = $log->snew($origional, $modified, "update", $this->getUser(), "userGroup");
+
         return $this->redirectToRoute('user_group_index');
     }
 
     /**
      * @Route("/{id}", name="user_group_delete", methods={"DELETE"})
      */
-    public function delete(Request $request, UserGroup $userGroup): Response
+    public function delete(Request $request, UserGroup $userGroup, LogService $log): Response
     {
         //$this->denyAccessUnlessGranted('dlt_usr_grp');
         if ($userGroup->getUsers()) {
@@ -191,11 +211,11 @@ class UserGroupController extends AbstractController
         }
         if ($this->isCsrfTokenValid('delete'.$userGroup->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
-
-
-            try {
+            try {   
+                $origional = $log->changeObjectToArray($userGroup);
                 $entityManager->remove($userGroup);
                 $entityManager->flush();
+                $message = $log->snew($origional, "", "delete", $this->getUser(), "userGroup");
             } catch (\Exception $ex) {
                 // dd($ex);
                 $message = UtilityController::getMessage($ex->getCode());
@@ -209,7 +229,7 @@ class UserGroupController extends AbstractController
     /**
     * @Route("/savegroup/{id}", name="user_group_permission1", methods={"POST","GET"})
     */
-    public function SaveUserGroupPermission(Request $request, UserGroup $userGroup)
+    public function SaveUserGroupPermission(Request $request, UserGroup $userGroup, LogService $log)
     {
         $em = $this->getDoctrine()->getManager();
         $newPermList = $request->request->get("permission");

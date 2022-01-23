@@ -23,6 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use App\Services\LogService;
 
 /**
  * @Route("/student")
@@ -261,25 +262,30 @@ class StudentCourseController extends AbstractController
     /**
      * @Route("/course/request/{id}", name="course_request_activate", methods={"GET","POST"})
      */
-    public function courseRequestActivate(StudentCourse $studentCourse, StudentCourseRepository $studentCourseRepository, PaginatorInterface $paginator, Request $request): Response
+    public function courseRequestActivate(StudentCourse $studentCourse, StudentCourseRepository $studentCourseRepository, PaginatorInterface $paginator, Request $request, LogService $log): Response
     {
         $em = $this->getDoctrine()->getManager();
-
+        $origional = $log->changeObjectToArray($studentCourse);
         $studentCourse->setStatus(1); //accepted
         $em->flush();
-
+        $modified = $log->changeObjectToArray($studentCourse);
+        $message = $log->snew($origional, $modified, "update", $this->getUser(), "studentCourse");
         return $this->redirectToRoute('course_request');
     }
 
     /**
      * @Route("/course/drequest/{id}", name="course_request_deactivate", methods={"GET","POST"})
      */
-    public function courseRequestDeactivate(StudentCourse $studentCourse, StudentCourseRepository $studentCourseRepository, PaginatorInterface $paginator, Request $request): Response
+    public function courseRequestDeactivate(StudentCourse $studentCourse, StudentCourseRepository $studentCourseRepository, PaginatorInterface $paginator, Request $request, LogService $log): Response
     {
         $em = $this->getDoctrine()->getManager();
+        $origional = $log->changeObjectToArray($studentCourse);
 
         $studentCourse->setStatus(2); //accepted
         $em->flush();
+        
+        $modified = $log->changeObjectToArray($studentCourse);
+        $message = $log->snew($origional, $modified, "update", $this->getUser(), "studentCourse");
 
         return $this->redirectToRoute('course_request');
     }
@@ -455,7 +461,7 @@ class StudentCourseController extends AbstractController
     /**
      * @Route("/apply", name="course_apply")
      */
-    public function apply(Request $request): Response
+    public function apply(Request $request, LogService $log): Response
     {
         $courses = $request->cookies->get("selected_courses_login");
         $courses = json_decode($courses, true);
@@ -471,6 +477,9 @@ class StudentCourseController extends AbstractController
             $st_course->setCreatedAt(new DateTime());
             $em->persist($st_course);
             $em->flush();
+
+            $origional = $log->changeObjectToArray($st_course);
+            $message = $log->snew($origional, "", "create", $this->getUser(), "studentCourse");
         }
         //write form data to cookie
         $response = new Response();
@@ -502,17 +511,22 @@ class StudentCourseController extends AbstractController
     /**
     * @Route("/approveMultiple", name="approve_multiple", methods={"GET","POST"})
     */
-    public function requestApproveMultiple(StudentCourseRepository $stud_cour_repo, PaginatorInterface $paginator, Request $request): Response
+    public function requestApproveMultiple(StudentCourseRepository $stud_cour_repo, PaginatorInterface $paginator, Request $request, LogService $log): Response
     {
         $ids = array();
         $ids = explode(",", $request->request->get('checked_list')[0]);
         $em = $this->getDoctrine()->getManager();
         foreach ($ids as $id) {
             $stud_course = $stud_cour_repo->find($id);
+            $origional = $log->changeObjectToArray($stud_course);
+
             if ($stud_course != null) {
                 $stud_course->setStatus(1);
                 $em->persist($stud_course);
                 $em->flush();
+
+                $modified = $log->changeObjectToArray($stud_course);
+                $message = $log->snew($origional, $modified, "update", $this->getUser(), "studentCourse");
             }
         }
         return $this->redirectToRoute("course_request");
@@ -521,7 +535,7 @@ class StudentCourseController extends AbstractController
     /**
      * @Route("/rejectMultiple", name="reject_multiple", methods={"GET","POST"})
      */
-    public function requestRejectMultiple(StudentCourseRepository $stud_cour_repo, PaginatorInterface $paginator, Request $request): Response
+    public function requestRejectMultiple(StudentCourseRepository $stud_cour_repo, PaginatorInterface $paginator, Request $request, LogService $log): Response
     {
         $ids = array();
         $ids = explode(",", $request->request->get('checked_list')[0]);
@@ -529,10 +543,15 @@ class StudentCourseController extends AbstractController
 
         foreach ($ids as $key => $value) {
             $stud_course = $stud_cour_repo->find($value);
+            $origional = $log->changeObjectToArray($stud_course);
+
             if ($stud_course != null) {
                 $stud_course->setStatus(2);
                 $em->persist($stud_course);
                 $em->flush();
+
+                $modified = $log->changeObjectToArray($stud_course);
+                $message = $log->snew($origional, $modified, "update", $this->getUser(), "studentCourse");
             }
         }
         return $this->redirectToRoute("course_request");
@@ -541,15 +560,20 @@ class StudentCourseController extends AbstractController
     /**
      * @Route("/student/course/status", name="change_student_course_status", methods={"GET"})
      */
-    public function studentCourseActivate(StudentCourseRepository $studentCourseRepository, PaginatorInterface $paginator, Request $request): Response
+    public function studentCourseActivate(StudentCourseRepository $studentCourseRepository, PaginatorInterface $paginator, Request $request, LogService $log): Response
     {
         $em = $this->getDoctrine()->getManager();
 
         $studentCourse = $studentCourseRepository->find($request->query->get("id"));
+        $origional = $log->changeObjectToArray($studentCourse);
+
         $status = $studentCourse->getActive() == false ? 1 : 0;
         $studentCourse->setActive($status); //accepted
         $em->persist($studentCourse);
         $em->flush();
+
+        $modified = $log->changeObjectToArray($studentCourse);
+        $message = $log->snew($origional, $modified, "update", $this->getUser(), "studentCourse");
 
         $returnResponse = new JsonResponse();
         $returnResponse->setJson($status);
@@ -593,14 +617,17 @@ class StudentCourseController extends AbstractController
     /**
      * @Route("/course/diactivate/{id}", name="student_course_deactivate", methods={"GET","POST"})
      */
-    public function studentCourseDeactivate(StudentCourse $studentCourse, StudentCourseRepository $studentCourseRepository, PaginatorInterface $paginator, Request $request): Response
+    public function studentCourseDeactivate(StudentCourse $studentCourse, StudentCourseRepository $studentCourseRepository, PaginatorInterface $paginator, Request $request, LogService $log): Response
     {
+        $origional = $log->changeObjectToArray($studentCourse);
         $em = $this->getDoctrine()->getManager();
         if ($studentCourse->getActive()) {
             $studentCourse->setActive(false);
         } else {
             $studentCourse->setActive(true);
         }
+        $modified = $log->changeObjectToArray($studentCourse);
+        $message = $log->snew($origional, $modified, "update", $this->getUser(), "studentCourse");
         $em->flush();
 
         $queryBuilder = $studentCourseRepository->findBy(['instructorCourse' => $studentCourse->getInstructorCourse()]);
@@ -619,7 +646,7 @@ class StudentCourseController extends AbstractController
     /**
      * @Route("/new", name="student_course_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    public function new(Request $request, LogService $log): Response
     {
         $studentCourse = new StudentCourse();
         $form = $this->createForm(StudentCourseType::class, $studentCourse);
@@ -631,6 +658,9 @@ class StudentCourseController extends AbstractController
             $studentCourse->setDirectorNotification(0);
             $entityManager->persist($studentCourse);
             $entityManager->flush();
+
+            $origional = $log->changeObjectToArray($studentCourse);
+            $message = $log->snew($origional, "", "create", $this->getUser(), "studentCourse");
 
             return $this->redirectToRoute('student_course_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -656,12 +686,14 @@ class StudentCourseController extends AbstractController
     /**
      *  @Route("/{id}/remove", name="request_delete")
      */
-    public function removeRequest(StudentCourseRepository $studentCourse, $id)
+    public function removeRequest(StudentCourseRepository $studentCourse, $id, LogService $log)
     {
         $entityManager = $this->getDoctrine()->getManager();
         $studentCourse = $entityManager->getRepository(StudentCourse::class)->find($id);
+        $origional = $log->changeObjectToArray($studentCourse);
         $entityManager->remove($studentCourse);
         $entityManager->flush();
+        $message = $log->snew($origional, "", "delete", $this->getUser(), "studentCourse");
 
         return $this->redirectToRoute("requested_courses");
     }
@@ -694,14 +726,18 @@ class StudentCourseController extends AbstractController
     /**
      * @Route("/{id}/edit", name="student_course_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, StudentCourse $studentCourse): Response
+    public function edit(Request $request, StudentCourse $studentCourse, LogService $log): Response
     {
         //dont use this section, it is not usefull.
+        $origional = $log->changeObjectToArray($studentCourse);
         $form = $this->createForm(StudentCourseType::class, $studentCourse);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
+                
+            $modified = $log->changeObjectToArray($studentCourse);
+            $message = $log->snew($origional, $modified, "update", $this->getUser(), "studentCourse");
 
             return $this->redirectToRoute('student_course_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -715,12 +751,14 @@ class StudentCourseController extends AbstractController
     /**
      * @Route("/{id}", name="student_course_delete", methods={"POST"})
      */
-    public function delete(Request $request, StudentCourse $studentCourse): Response
+    public function delete(Request $request, StudentCourse $studentCourse, LogService $log): Response
     {
         if ($this->isCsrfTokenValid('delete' . $studentCourse->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
+            $origional = $log->changeObjectToArray($studentCourse);
             $entityManager->remove($studentCourse);
             $entityManager->flush();
+            $message = $log->snew($origional, $modified, "delete", $this->getUser(), "studentCourse");
         }
 
         return $this->redirectToRoute('student_course_index', [], Response::HTTP_SEE_OTHER);

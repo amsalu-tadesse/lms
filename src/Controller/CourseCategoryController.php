@@ -45,7 +45,7 @@ class CourseCategoryController extends AbstractController
             
             $origional = $log->changeObjectToArray($courseCategory);
 
-            $message = $log->snew($origional, "", "create", $this->getUser(), "course category");
+            $message = $log->snew($origional, "", "create", $this->getUser(), "courseCategory");
             if(!$message)
             $this->addFlash("info", "Log not created");
 
@@ -84,11 +84,9 @@ class CourseCategoryController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
             $modified = $log->changeObjectToArray($courseCategory);
-            $message = $log->snew($origional, $modified, "update", $this->getUser(), "course category");
+            $message = $log->snew($origional, $modified, "update", $this->getUser(), "courseCategory");
             return $this->redirectToRoute('course_category_index', [], Response::HTTP_SEE_OTHER);
         }
-
-
 
         return $this->renderForm('course_category/edit.html.twig', [
             'course_category' => $courseCategory,
@@ -109,7 +107,7 @@ class CourseCategoryController extends AbstractController
                 $origional = $log->changeObjectToArray($courseCategory);
                 $entityManager->remove($courseCategory);
                 $entityManager->flush();
-                $message = $log->snew($origional, "", "delete", $this->getUser(), 'course category');
+                $message = $log->snew($origional, "", "delete", $this->getUser(), 'courseCategory');
             } catch (\Exception $ex) {
                 // dd($ex);
                 $message = UtilityController::getMessage($ex->getCode());

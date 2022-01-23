@@ -15,6 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use DateTime;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use App\Services\LogService;
 
 /**
  * @Route("/question/answer")
@@ -36,7 +37,15 @@ class QuestionAnswerController extends AbstractController
             $this->addFlash('warning', 'Only Instructor can use Q&A');
             return $this->redirectToRoute('home');
         }
-        $question_answer = $que_ans_repo->updateNotification(['instructor'=>$instructor->getId()]);
+        $id = preg_replace( '/[^0-9]/', '', $instructor->getId());
+        $sql = "update question_answer join instructor_course ic on ic.id=question_answer.course_id set notification = 1 where ic.instructor_id = $id";
+
+        $em = $this->getDoctrine()->getManager();
+        $stmt = $em->getConnection()->prepare($sql);
+        
+        $stmt->execute();
+
+        // $question_answer = $que_ans_repo->updateNotification(['instructor'=>$instructor->getId()]);
 
         $data = $paginator->paginate(
             $questions,
@@ -74,7 +83,7 @@ class QuestionAnswerController extends AbstractController
     /**
      * @Route("/new", name="question_answer_new", methods={"GET","POST"})
      */
-    public function new(Request $request, InstructorRepository $inst_repo): Response
+    public function new(Request $request, InstructorRepository $inst_repo, LogService $log): Response
     {
         $questionAnswer = new QuestionAnswer();
         $instObj =  $inst_repo->findOneBy(['user'=>$this->getUser()->getId()]);
@@ -96,6 +105,9 @@ class QuestionAnswerController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($questionAnswer);
             $entityManager->flush();
+
+            $origional = $log->changeObjectToArray($questionAnswer);
+            $message = $log->snew($origional, "", "create", $this->getUser(), "questionAnswer");
 
             return $this->redirectToRoute('question_answer_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -119,9 +131,14 @@ class QuestionAnswerController extends AbstractController
     /**
      * @Route("/{id}/edit", name="question_answer_edit", methods={"GET","POST", "PATCH"})
      */
-    public function edit(Request $request, QuestionAnswer $questionAnswer, SluggerInterface $slugger): Response
+    public function edit(Request $request, QuestionAnswer $questionAnswer, SluggerInterface $slugger, LogService $log, InstructorRepository $inst_repo): Response
     {
+        $instructor = $inst_repo->findOneBy(['user'=>$this->getUser()->getId()]);
+        if ($instructor->getId() != $questionAnswer->getCourse()->getInstructor()->getId()) {
+            return $this->render('/bundles/TwigBundle/Exception/error404.html.twig');
+        } 
         $form = $this->createForm(QuestionAnswerType::class, $questionAnswer);
+        $origional = $log->changeObjectToArray($questionAnswer);
         $form->handleRequest($request, false);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -156,7 +173,8 @@ class QuestionAnswerController extends AbstractController
             else
                 $questionAnswer->setAnsweredAt(new DateTime);
             $this->getDoctrine()->getManager()->flush();
-
+            $modified = $log->changeObjectToArray($questionAnswer);
+            $message = $log->snew($origional, $modified, "update", $this->getUser(), "questionAnswer");
             return $this->redirectToRoute('question_answer_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -187,12 +205,14 @@ class QuestionAnswerController extends AbstractController
     /**
      * @Route("/{id}", name="question_answer_delete", methods={"POST"})
      */
-    public function delete(Request $request, QuestionAnswer $questionAnswer): Response
+    public function delete(Request $request, QuestionAnswer $questionAnswer, LogService $log): Response
     {
         if ($this->isCsrfTokenValid('delete'.$questionAnswer->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
+            $origional = $log->changeObjectToArray($questionAnswer);
             $entityManager->remove($questionAnswer);
             $entityManager->flush();
+            $message = $log->snew($origional, "", "delete", $this->getUser(), "questionAnswer");
         }
 
         return $this->redirectToRoute('question_answer_index', [], Response::HTTP_SEE_OTHER);

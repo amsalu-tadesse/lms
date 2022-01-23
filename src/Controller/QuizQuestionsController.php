@@ -11,6 +11,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Services\LogService;
+use App\Repository\InstructorRepository;
 
 /**
  * @Route("/quiz/questions")
@@ -20,9 +22,15 @@ class QuizQuestionsController extends AbstractController
     /**
      * @Route("/{id}", name="quiz_questions_index", methods={"GET"})
      */
-    public function index(QuizQuestionsRepository $quizQuestionsRepository, Quiz $quiz): Response
+    public function index(QuizQuestionsRepository $quizQuestionsRepository, Quiz $quiz, InstructorRepository $inst_repo): Response
     {
         $this->denyAccessUnlessGranted('quiz_list');
+
+        $instructor = $inst_repo->findOneBy(['user'=>$this->getUser()->getId()]);
+        if ($instructor->getId() != $quiz->getInstructorCourseChapter()->getInstructorCourse()->getInstructor()->getId()) {
+            return $this->render('/bundles/TwigBundle/Exception/error404.html.twig');
+        } 
+
         return $this->render('quiz_questions/index.html.twig', [
             'quiz_questions' => $quizQuestionsRepository->findBy(['quiz' => $quiz]),
             'quiz' => $quiz,
@@ -32,9 +40,14 @@ class QuizQuestionsController extends AbstractController
     /**
      * @Route("/new/{id}", name="quiz_questions_new", methods={"GET","POST"})
      */
-    public function new(Request $request, Quiz $quiz): Response
+    public function new(Request $request, Quiz $quiz, LogService $log, InstructorRepository $inst_repo): Response
     {
         $this->denyAccessUnlessGranted('quiz_create');
+        $instructor = $inst_repo->findOneBy(['user'=>$this->getUser()->getId()]);
+        if ($instructor->getId() != $quiz->getInstructorCourseChapter()->getInstructorCourse()->getInstructor()->getId()) {
+            return $this->render('/bundles/TwigBundle/Exception/error404.html.twig');
+        } 
+
         $quizQuestion = new QuizQuestions();
         $form = $this->createForm(QuizQuestionsType::class, $quizQuestion);
         $form->handleRequest($request);
@@ -56,7 +69,10 @@ class QuizQuestionsController extends AbstractController
             // $quiz->setQuestion($quizQuestion);
             $entityManager->persist($quizQuestion);
             $entityManager->flush();
-
+            
+            $origional = $log->changeObjectToArray($quizQuestion);
+            $message = $log->snew($origional, "", "create", $this->getUser(), "quizQuestion");
+            
             $answer = null;
 
             foreach ($postedData as $letter => $description) {
@@ -71,6 +87,9 @@ class QuizQuestionsController extends AbstractController
                 $choice->setDescription($description);
                 $choice->setQuestion($quizQuestion);
                 $entityManager->persist($choice);
+                
+                $origional = $log->changeObjectToArray($choice);
+                $message = $log->snew($origional, "", "create", $this->getUser(), "quizChoice");
             }
 
 
@@ -110,10 +129,14 @@ class QuizQuestionsController extends AbstractController
     /**
      * @Route("/{id}/edit", name="quiz_questions_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, QuizQuestions $quizQuestion): Response
+    public function edit(Request $request, QuizQuestions $quizQuestion, LogService $log, InstructorRepository $inst_repo): Response
     {
-        
         $this->denyAccessUnlessGranted('quiz_edit');
+
+        $instructor = $inst_repo->findOneBy(['user'=>$this->getUser()->getId()]);
+        if ($instructor->getId() != $quizQuestion->getQuiz()->getInstructorCourseChapter()->getInstructorCourse()->getInstructor()->getId()) {
+            return $this->render('/bundles/TwigBundle/Exception/error404.html.twig');
+        } 
         $form = $this->createForm(QuizQuestionsType::class, $quizQuestion);
         $form->handleRequest($request);
 
@@ -163,7 +186,7 @@ class QuizQuestionsController extends AbstractController
                     $entityManager->remove($ch);
                 }
             }
-
+            
             $entityManager->flush();
 
             return $this->redirectToRoute('quiz_questions_index', ['id'=>$quizQuestion->getQuiz()->getId()], Response::HTTP_SEE_OTHER);
@@ -188,7 +211,7 @@ class QuizQuestionsController extends AbstractController
     /**
      * @Route("/delete/{id}", name="quiz_questions_delete", methods={"POST"})
      */
-    public function delete(Request $request, QuizQuestions $quizQuestion): Response
+    public function delete(Request $request, QuizQuestions $quizQuestion, LogService $log): Response
     {
         $this->denyAccessUnlessGranted('quiz_delete');
         if ($this->isCsrfTokenValid('delete' . $quizQuestion->getId(), $request->request->get('_token'))) {
@@ -196,8 +219,10 @@ class QuizQuestionsController extends AbstractController
 
 
             try {
+                $origional = $log->changeObjectToArray($quizQuestion);
                 $entityManager->remove($quizQuestion);
                 $entityManager->flush();
+                $message = $log->snew($origional, "", "delete", $this->getUser(), "quizQuestion");
             } catch (\Exception $ex) {
                 // dd($ex);
                 $message = UtilityController::getMessage($ex->getCode());

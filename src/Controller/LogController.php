@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @Route("/log")
@@ -19,10 +20,23 @@ class LogController extends AbstractController
     /**
      * @Route("/", name="log_index", methods={"GET"})
      */
-    public function index(LogRepository $logRepository): Response
+    public function index(LogRepository $logRepository, Request $request, PaginatorInterface $paginator): Response
     {
+        $this->denyAccessUnlessGranted('see_log');
+        $log = new Log();
+        $searchForm = $this->createForm(LogType::class, $log);
+        $searchForm->handleRequest($request);
+
+        $queryBuilder=$logRepository->findLog($request->query->get('actor'),$request->query->get('createdAt'),$request->query->get('action'),$request->query->get('modifiedEntity'));
+        $data=$paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page', 1),
+            50
+        );
+        
         return $this->render('log/index.html.twig', [
-            'logs' => $logRepository->findAll(),
+            'logs' => $data,
+            'searchForm' => $searchForm->createView(),
         ]);
     }
 
@@ -67,8 +81,14 @@ class LogController extends AbstractController
      */
     public function show(Log $log): Response
     {
+        $this->denyAccessUnlessGranted('see_log');
+
+        $original = json_decode($log->getOriginal(),true);
+        $modified = json_decode($log->getModified(), true);
         return $this->render('log/show.html.twig', [
             'log' => $log,
+            'original' => $original,
+            'modified' => $modified
         ]);
     }
 

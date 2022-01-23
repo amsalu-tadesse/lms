@@ -13,13 +13,9 @@ class SystemSettingType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('value' ,ChoiceType::class,[
+            ->add('value' , null,[
                 'required' => true,
                 'attr'=>['class'=>'form-control'],
-                'choices'  => [
-                    'Yes' => "1",
-                    'No' => "0",
-                ],
             ])
             ->add('description',null,[
                 'label' => 'Code Description'

@@ -350,6 +350,19 @@
 							</a>
 						{% endif %}
 					</li>
+					<li class="nav-item">
+						{% if is_granted('see_log') %}
+
+							<a href="{{ path('log_index') }}" class="nav-link">
+								<i class="far fa-circle nav-icon"></i>
+								<p>
+									{% trans %}
+									Log
+									{% endtrans %}
+								</p>
+							</a>
+						{% endif %}
+					</li>
 
 				</li>
 				<li></li>

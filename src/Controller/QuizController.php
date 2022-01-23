@@ -19,6 +19,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use CodeItNow\BarcodeBundle\Utils\QrCode;
+use App\Services\LogService;
+use App\Repository\InstructorRepository;
 
 /**
  * @Route("/quizzes")
@@ -28,9 +30,15 @@ class QuizController extends AbstractController
     /**
      * @Route("/list/{id}", name="quiz_index", methods={"GET"})
      */
-    public function index(QuizRepository $quizRepository, InstructorCourse $instructorCourse): Response
+    public function index(QuizRepository $quizRepository, InstructorCourse $instructorCourse, InstructorRepository $inst_repo): Response
     {
         $this->denyAccessUnlessGranted('quiz_list');
+
+        $instructor = $inst_repo->findOneBy(['user'=>$this->getUser()->getId()]);
+        if ($instructor->getId() != $instructorCourse->getInstructor()->getId()) {
+            return $this->render('/bundles/TwigBundle/Exception/error404.html.twig');
+        } 
+
         $chapters = $instructorCourse->getInstructorCourseChapters();
         $quizzes = array();
         foreach ($chapters as $chapter) {
@@ -47,12 +55,15 @@ class QuizController extends AbstractController
     /**
      * @Route("/new/{id}", name="quiz_new", methods={"GET","POST"})
      */
-    public function new(Request $request, InstructorCourse $instructorCourse): Response
+    public function new(Request $request, InstructorCourse $instructorCourse, LogService $log, InstructorRepository $inst_repo): Response
     {
         $this->denyAccessUnlessGranted('quiz_create');
         $quiz = new Quiz();
         // $form = $this->createForm(QuizType::class, $quiz);
-
+        $instructor = $inst_repo->findOneBy(['user'=>$this->getUser()->getId()]);
+        if ($instructor->getId() != $instructorCourse->getInstructor()->getId()) {
+            return $this->render('/bundles/TwigBundle/Exception/error404.html.twig');
+        } 
         // $quizLists =  array();
         $chapters = $instructorCourse->getInstructorCourseChapters();
         $registeredChaptersid = array();
@@ -69,7 +80,7 @@ class QuizController extends AbstractController
 
         $diff = array_diff($unregisteredChaptersid, $registeredChaptersid);
         if (!$diff) {
-            $this->addFlash('warning', 'Please add chapters firs!!');
+            $this->addFlash('warning', 'Please add chapters first!!');
             return $this->redirectToRoute('quiz_index', ['id'=>$instructorCourse->getId()]);
         }
 
@@ -92,6 +103,9 @@ class QuizController extends AbstractController
             $entityManager->persist($quiz);
             $entityManager->flush();
 
+            $origional = $log->changeObjectToArray($quiz);
+            $message = $log->snew($origional, "", "create", $this->getUser(), "quiz");
+
             return $this->redirectToRoute('quiz_index', ['id' => $instructorCourse->getId()], Response::HTTP_SEE_OTHER);
         }
 
@@ -105,7 +119,7 @@ class QuizController extends AbstractController
     /**
     * @Route("/retake/{id}", name="retake_exam", methods={"GET"})
     */
-    public function retake(QuizRepository $quizRepository, QuizQuestionsRepository $quiz_que_rep, InstructorCourseChapter $chapter, StudentCourseRepository $stud_course): Response
+    public function retake(QuizRepository $quizRepository, QuizQuestionsRepository $quiz_que_rep, InstructorCourseChapter $chapter, StudentCourseRepository $stud_course, LogService $log): Response
     {
         $check_student_course = $stud_course->findBy(array('student' => $this->getUser()->getProfile()->getId(), 'instructorCourse' => $chapter->getInstructorCourse()->getId()));
         if ($check_student_course == null) {
@@ -121,11 +135,16 @@ class QuizController extends AbstractController
             if ($size_quiz_que) {
                 $prev_quiz = $em->getRepository(StudentQuiz::class)->findBy(array('quiz'=>$quiz->getId(), 'student'=>$this->getUser()->getProfile()->getId()), array('id'=>'DESC'), 1, 0);
                 $previous_quiz = $prev_quiz[0];
-
+                
+                $origional = $log->changeObjectToArray($previous_quiz);
                 //deactivate former quiz
                 $previous_quiz->setActive(0);
                 $em->persist($previous_quiz);
                 $em->flush();
+
+                $modified = $log->changeObjectToArray($previous_quiz);
+                $message = $log->snew($origional, $modified, "update", $this->getUser(), "studentQuiz");
+
 
                 $sql = "update student_question sq ".
                        "join quiz_questions qq on sq.question_id = qq.id ".
@@ -161,6 +180,9 @@ class QuizController extends AbstractController
                 $em->persist($student_quiz);
                 $em->flush();
 
+                $origional = $log->changeObjectToArray($student_quiz);
+                $message = $log->snew($origional, "", "create", $this->getUser(), "studentQuiz");
+
                 if ($quiz->getActiveQuestions() < sizeof($quiz_que)) {
                     $question_ids = array();
                     foreach ($quiz_que as $key => $value) {
@@ -187,6 +209,8 @@ class QuizController extends AbstractController
                             $studentQuestion->setActive(1);
                             $em->persist($studentQuestion);
                             $em->flush();
+                            $origional = $log->changeObjectToArray($studentQuestion);
+                            $message = $log->snew($origional, "", "create", $this->getUser(), "studentQuestion");
                         }
                     }
                 } else {
@@ -201,6 +225,8 @@ class QuizController extends AbstractController
                         $studentQuestion->setActive(1);
                         $em->persist($studentQuestion);
                         $em->flush();
+                        $origional = $log->changeObjectToArray($studentQuestion);
+                        $message = $log->snew($origional, "", "create", $this->getUser(), "studentQuestion");
                     }
                 }
             }
@@ -211,7 +237,7 @@ class QuizController extends AbstractController
     /**
      * @Route("/quiz/{id}", name="course_quiz", requirements={"id":"\d{1,5}"})
      */
-    public function quizPage(Request $request, SystemSettingRepository $setting_repo, InstructorCourseChapter $chapter, QuizQuestionsRepository $quiz_que_rep, PaginatorInterface $paginator, StudentCourseRepository $stud_course)
+    public function quizPage(Request $request, SystemSettingRepository $setting_repo, InstructorCourseChapter $chapter, QuizQuestionsRepository $quiz_que_rep, PaginatorInterface $paginator, StudentCourseRepository $stud_course, LogService $log)
     {
         $this->get('session')->getFlashBag()->clear();
         $check_student_course = $stud_course->findBy(array('student' => $this->getUser()->getProfile()->getId(), 'instructorCourse' => $chapter->getInstructorCourse()->getId()));
@@ -262,7 +288,8 @@ class QuizController extends AbstractController
                     $student_quiz->setTrial(0);
                     $em->persist($student_quiz);
                     $em->flush();
-
+                    $origional = $log->changeObjectToArray($student_quiz);
+                    $message = $log->snew($origional, "", "create", $this->getUser(), "studentQuiz");
                     if ($quiz->getActiveQuestions() < sizeof($quiz_que)) {
                         $question_ids = array();
                         foreach ($quiz_que as $key => $value) {
@@ -289,6 +316,9 @@ class QuizController extends AbstractController
                                 $studentQuestion->setActive(1);
                                 $em->persist($studentQuestion);
                                 $em->flush();
+
+                                $origional = $log->changeObjectToArray($studentQuestion);
+                                $message = $log->snew($origional, "", "create", $this->getUser(), "studentQuestion");
                             }
                         }
                     } else {
@@ -303,6 +333,9 @@ class QuizController extends AbstractController
                             $studentQuestion->setActive(1);
                             $em->persist($studentQuestion);
                             $em->flush();
+                            
+                            $origional = $log->changeObjectToArray($studentQuestion);
+                            $message = $log->snew($origional, "", "create", $this->getUser(), "studentQuestion");
                         }
                     }
                 }
@@ -328,10 +361,13 @@ class QuizController extends AbstractController
                     if ($request->query->get('value') != null && $request->query->get('parameter') != null) {
                         $stud_que = $em->getRepository(StudentQuestion::class)->findOneBy(array('student' => $this->getUser()->getProfile()->getId(), 'id' => $request->query->getInt('parameter')));
                         if ($stud_que != null) {
+                            $origional = $log->changeObjectToArray($stud_que);
                             $stud_que->setAnswer($request->query->get('value'));
                             $stud_que->setAnsweredAt(new DateTime());
                             $em->persist($stud_que);
                             $em->flush();
+                            $modified = $log->changeObjectToArray($stud_que);
+                            $message = $log->snew($origional, $modified, "update", $this->getUser(), "studentQuestion");
                         }
                     }
 
@@ -360,6 +396,9 @@ class QuizController extends AbstractController
                                     if ($last_chapter[0]->getId() == $chapter->getId()) {
                                         $finalize_course = $stud_course->findOneBy(['student'=>$this->getUser()->getProfile()->getId(),'instructorCourse'=>$chapter->getInstructorCourse()->getId()]) ;
                                         $id = $finalize_course->getId();
+
+                                        $origional = $log->changeObjectToArray($finalize_course);
+
                                         $url = $_SERVER['SERVER_NAME']."/certificate/".$this->getUser()->getProfile()->getStudentId()."/".$id;
                                         $finalize_course->setStatus(5);
                                         $finalize_course->setCompletedAt(new DateTime);
@@ -367,15 +406,24 @@ class QuizController extends AbstractController
                                         $finalize_course->setQrCode($this->qrGenerator($url));
                                         $em->persist($finalize_course);
                                         $em->flush();
+                                        
+                                        $modified = $log->changeObjectToArray($finalize_course);
+                                        $message = $log->snew($origional, $modified, "update", $this->getUser(), "studentCourse");
                                     }
                                 }
                             }
                             else{
                                 $this->addFlash("info", "You are faile the exam");
                             }
+
+                            $origional = $log->changeObjectToArray($student_quiz);
+
                             $student_quiz->setResult($res);
                             $em->persist($student_quiz);
                             $em->flush();
+
+                            $modified = $log->changeObjectToArray($student_quiz);
+                            $message = $log->snew($origional, $modified, "update", $this->getUser(), "studentQuiz");
                         }
 
                         if ($res >= $quiz->getPassValue()) {
@@ -432,6 +480,9 @@ class QuizController extends AbstractController
                             if (array_key_exists(0, $last_chapter)) {
                                 if ($last_chapter[0]->getId() == $chapter->getId()) {
                                     $finalize_course = $stud_course->findOneBy(['student'=>$this->getUser()->getProfile()->getId(),'instructorCourse'=>$chapter->getInstructorCourse()->getId()]) ;
+                                    
+                                    $origional = $log->changeObjectToArray($finalize_course);
+
                                     $id = $finalize_course->getId();
                                     $url = $_SERVER['SERVER_NAME']."/certificate/".$this->getUser()->getProfile()->getStudentId()."/".$id;
                                     $finalize_course->setStatus(5);
@@ -440,13 +491,21 @@ class QuizController extends AbstractController
                                     $finalize_course->setQrCode($this->qrGenerator($url));
                                     $em->persist($finalize_course);
                                     $em->flush();
+
+                                    $modified = $log->changeObjectToArray($finalize_course);
+                                    $message = $log->snew($origional, $modified, "update", $this->getUser(), "studentCourse");
                                 }
                             }
                         }
-                        
+
+                        $origional = $log->changeObjectToArray($student_quiz);
+
                         $student_quiz->setResult($res);
                         $em->persist($student_quiz);
                         $em->flush();
+
+                        $modified = $log->changeObjectToArray($student_quiz);
+                        $message = $log->snew($origional, $modified, "update", $this->getUser(), "studentQuiz");
                     }
                     if ($res >= $quiz->getPassValue()) {
                         if (array_key_exists(0, $last_chapter)) {
@@ -504,9 +563,13 @@ class QuizController extends AbstractController
     /**
      * @Route("/{id}/edit", name="quiz_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Quiz $quiz): Response
+    public function edit(Request $request, Quiz $quiz, LogService $log, InstructorRepository $inst_repo): Response
     {
         $this->denyAccessUnlessGranted('quiz_edit');
+        $instructor = $inst_repo->findOneBy(['user'=>$this->getUser()->getId()]);
+        if ($instructor->getId() != $quiz->getInstructorCourseChapter()->getInstructorCourse()->getInstructor()->getId()) {
+            return $this->render('/bundles/TwigBundle/Exception/error404.html.twig');
+        } 
         $chapters = $quiz->getInstructorCourseChapter()->getInstructorCourse()->getInstructorCourseChapters();
         // unset($chapters[$quiz->getInstructorCourseChapter()]);
         $registeredChaptersid = array();
@@ -529,13 +592,15 @@ class QuizController extends AbstractController
             return $this->redirectToRoute('quiz_index', ['id'=>$quiz->getInstructorCourseChapter()->getInstructorCourse()->getId()]);
         }
 
-
+        $origional = $log->changeObjectToArray($quiz);
         $form = $this->createForm(QuizType::class, $quiz, array('unregisteredChaptersid' => $diff));
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
+            $modified = $log->changeObjectToArray($quiz);
+            $message = $log->snew($origional, $modified, "update", $this->getUser(), "quiz");
             return $this->redirectToRoute('quiz_index', ['id' => $quiz->getInstructorCourseChapter()->getInstructorCourse()->getId()], Response::HTTP_SEE_OTHER);
         }
 
@@ -548,15 +613,17 @@ class QuizController extends AbstractController
     /**
      * @Route("/delete/{id}", name="quiz_delete", methods={"POST"})
      */
-    public function delete(Request $request, Quiz $quiz): Response
+    public function delete(Request $request, Quiz $quiz, LogService $log): Response
     {
         $this->denyAccessUnlessGranted('quiz_delete');
         if ($this->isCsrfTokenValid('delete' . $quiz->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
 
             try {
+                $origional = $log->changeObjectToArray($quiz);
                 $entityManager->remove($quiz);
                 $entityManager->flush();
+                $message = $log->snew($origional, "", "delete", $this->getUser(), "quiz");
             } catch (\Exception $ex) {
                 // dd($ex);
                 $message = UtilityController::getMessage($ex->getCode());
@@ -564,6 +631,6 @@ class QuizController extends AbstractController
             }
         }
 
-        return $this->redirectToRoute('quiz_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('quiz_index', ["id"=> $quiz->getInstructorCourseChapter()->getInstructorCourse()->getId()], Response::HTTP_SEE_OTHER);
     }
 }

@@ -29,10 +29,7 @@ use Symfony\Component\Mailer\Transport;
 use Symfony\Component\Mailer\Mailer;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
-
-
-
-
+use App\Services\LogService;
 
 /**
  * @Route("/user")
@@ -49,7 +46,7 @@ class UserController extends AbstractController
     /**
      * @Route("/", name="user_index", methods={"GET","POST"})
      */
-    public function index(StudentRepository $student_repo, Request $request, UserRepository $userRepository, PaginatorInterface $paginator, UserPasswordEncoderInterface $userPasswordEncoderInterface, MailerService $mservice): Response
+    public function index(StudentRepository $student_repo, Request $request, UserRepository $userRepository, PaginatorInterface $paginator, UserPasswordEncoderInterface $userPasswordEncoderInterface, MailerService $mservice, LogService $log): Response
     {
         // $this->denyAccessUnlessGranted('ROLE_ADMIN');
         // $this->denyAccessUnlessGranted('content_edit');
@@ -62,12 +59,16 @@ class UserController extends AbstractController
         if ($request->request->get('edit')) {
             $id = $request->request->get('edit');
             $user = $userRepository->findOneBy(['id' => $id]);
+            $origional = $log->changeObjectToArray($user);
             $form = $this->createForm(userType::class, $user);
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-                // $user->setRoles([$role]);
                 $this->getDoctrine()->getManager()->flush();
+
+                $modified = $log->changeObjectToArray($user);
+                $message = $log->snew($origional, $modified, "update", $this->getUser(), "user");
+
                 return $this->redirectToRoute('user_index');
             }
 
@@ -89,6 +90,8 @@ class UserController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
 
             $user = $entityManager->getRepository(User::class)->find($request->request->get("userid"));
+            $origional = $log->changeObjectToArray($user);
+
             $form = $this->createForm(userType::class, $user);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
@@ -96,6 +99,8 @@ class UserController extends AbstractController
                 $user->setRoles([$role]);
                 $entityManager->persist($user);
                 $entityManager->flush();
+                $modified = $log->changeObjectToArray($user);
+                $message = $log->snew($origional, $modified, "update", $this->getUser(), "user");
                 return $this->redirectToRoute('user_index');
             }
         }
@@ -139,10 +144,15 @@ class UserController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
+            $origional = $log->changeObjectToArray($user);
+            $message = $log->snew($origional, "", "create", $this->getUser(), "user");
+
             if ($user->getUserType()->getId() == 3) { //instructor
                 $instructor = new Instructor();
                 $instructor->setUser($user);
                 $entityManager->persist($instructor);
+                $origional = $log->changeObjectToArray($instructor);
+                $message = $log->snew($origional, "", "create", $this->getUser(), "instructor");
             } elseif ($user->getUserType()->getId() == 4) { //student
                 $student = new Student();
                 $em = $this->getDoctrine()->getManager();
@@ -207,6 +217,9 @@ class UserController extends AbstractController
                 $student->setUser($user);
                 $student->setAcademicLevel($form['academicLevel']->getData());
                 $entityManager->persist($student);
+
+                $origional = $log->changeObjectToArray($student);
+                $message = $log->snew($origional, "", "create", $this->getUser(), "student");
             }
             $entityManager->flush();
 
@@ -267,7 +280,7 @@ class UserController extends AbstractController
      * @Route("/new", name="user_new", methods={"GET","POST"})
      */
 
-    public function new(Request $request, UserPasswordEncoderInterface $userPasswordEncoderInterface): Response
+    public function new(Request $request, UserPasswordEncoderInterface $userPasswordEncoderInterface, LogService $log): Response
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
@@ -286,6 +299,9 @@ class UserController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
+
+            $origional = $log->changeObjectToArray($user);
+            $message = $log->snew($origional, "", "create", $this->getUser(), "user");
 
             return $this->redirectToRoute('user_index');
         }
@@ -310,14 +326,16 @@ class UserController extends AbstractController
     /**
      * @Route("/{id}/edit", name="user_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, User $user): Response
+    public function edit(Request $request, User $user, LogService $log): Response
     {
         $form = $this->createForm(UserType::class, $user);
+        $origional = $log->changeObjectToArray($user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
-
+            $modified = $log->changeObjectToArray($user);
+            $message = $log->snew($origional, $modified, "update", $this->getUser(), "user");
             return $this->redirectToRoute('user_index');
         }
 
@@ -330,14 +348,16 @@ class UserController extends AbstractController
     /**
      * @Route("/{id}", name="user_delete", methods={"DELETE"})
      */
-    public function delete(Request $request, User $user): Response
+    public function delete(Request $request, User $user, LogService $log): Response
     {
         if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             try
             {
+                $origional = $log->changeObjectToArray($user);
                 $entityManager->remove($user);
                 $entityManager->flush();
+                $message = $log->snew($origional, "", "delete", $this->getUser(), "user");
             } catch (\Exception $ex) {
                 // dd($ex);
                 $message = UtilityController::getMessage($ex->getCode());

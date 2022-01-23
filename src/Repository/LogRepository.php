@@ -19,6 +19,44 @@ class LogRepository extends ServiceEntityRepository
         parent::__construct($registry, Log::class);
     }
 
+    public function findLog($name, $createdAt, $action, $table)
+    {
+        $q =  $this->createQueryBuilder('l')
+                ->join('l.actor', 'u');
+
+        // ->innerJoin('u.department','dt')
+        // if ($name !="") {
+        //     $q->Where('u.firstName LIKE :firstName')
+        //           ->setParameter('firstName', '%'.$name.'%');
+        // }
+        // if ($name !="") {
+        //     $q->andWhere('u.middleName LIKE :middleName')
+        //         ->setParameter('middleName', '%'.$name.'%');
+        // }
+
+        if ($name !="") {
+            $q->andWhere('l.actor = :actor')
+                  ->setParameter('actor', $name);
+        }
+
+        if($action != ""){
+            $q->andWhere('l.action = :action')
+            ->setParameter("action", $action);
+        }
+
+        if($table != ""){
+            $q->andWhere("l.modifiedEntity = :entity")
+            ->setParameter('entity', $table);
+        }
+
+
+
+        $q->orderBy('l.id', 'DESC')
+            ->getQuery()
+        ;
+        return $q;
+    }
+
     // /**
     //  * @return Log[] Returns an array of Log objects
     //  */

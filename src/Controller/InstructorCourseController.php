@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Services\LogService;
 
 /**
  * @Route("/instructor/course")
@@ -88,7 +89,7 @@ class InstructorCourseController extends AbstractController
     /**
      * @Route("/new", name="instructor_course_new", methods={"GET","POST"})
      */
-    function new (Request $request): Response {
+    function new (Request $request, LogService $log): Response {
         $entityManager = $this->getDoctrine()->getManager();
         $instructorCourse1 = new InstructorCourse();
         
@@ -117,6 +118,9 @@ class InstructorCourseController extends AbstractController
             $entityManager->persist($instructorCourse1);
             $entityManager->flush();
 
+            $origional = $log->changeObjectToArray($instructorCourse1);
+            $message = $log->snew($origional, "", "create", $this->getUser(), "instructorCourse");
+
             return $this->redirectToRoute('instructor_course_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -129,9 +133,12 @@ class InstructorCourseController extends AbstractController
     /**
      * @Route("/assign_instructor/{id}", name="assign_instructor", methods={"GET","POST"})
      */
-    public function assignInstructor(Request $request, InstructorCourse $instructorCourse)
+    public function assignInstructor(Request $request, InstructorCourse $instructorCourse, LogService $log)
     {
         $this->denyAccessUnlessGranted('instructor_course_assign');
+
+        $origional = $log->changeObjectToArray($instructorCourse);
+            
         $em = $this->getDoctrine()->getManager();
         $instId = $request->request->get("instructor");
         $instructor = $em->getRepository(Instructor::class)->find($instId);
@@ -139,6 +146,9 @@ class InstructorCourseController extends AbstractController
         $instructorCourseStatus = $em->getRepository(InstructorCourseStatus::class)->find(2);
         $instructorCourse->setStatus($instructorCourseStatus);
         $em->flush();
+
+        $modified = $log->changeObjectToArray($instructorCourse);
+        $message = $log->snew($origional, $modified, "update", $this->getUser(), "instructorCourse");
 
         return $this->redirectToRoute("instructor_course_index");
     }
@@ -157,15 +167,19 @@ class InstructorCourseController extends AbstractController
     /**
      * @Route("/{id}/edit", name="instructor_course_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, InstructorCourse $instructorCourse): Response
+    public function edit(Request $request, InstructorCourse $instructorCourse, LogService $log): Response
     {
         $this->denyAccessUnlessGranted('instructor_course_edit');
+
+        $origional = $log->changeObjectToArray($instructorCourse);
+
         $form = $this->createForm(InstructorCourseType::class, $instructorCourse);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
-
+            $modified = $log->changeObjectToArray($instructorCourse);
+            $message = $log->snew($origional, $modified, "update", $this->getUser(), "instructorCourse");
             return $this->redirectToRoute('instructor_course_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -178,14 +192,16 @@ class InstructorCourseController extends AbstractController
     /**
      * @Route("/{id}", name="instructor_course_delete", methods={"POST"})
      */
-    public function delete(Request $request, InstructorCourse $instructorCourse): Response
+    public function delete(Request $request, InstructorCourse $instructorCourse, LogService $log): Response
     {
         $this->denyAccessUnlessGranted('instructor_course_delete');
         if ($this->isCsrfTokenValid('delete' . $instructorCourse->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             try {
+                $origional = $log->changeObjectToArray($instructorCourse);
                 $entityManager->remove($instructorCourse);
                 $entityManager->flush();
+                $message = $log->snew($origional, "", "delete", $this->getUser(), "instructorCourse");
             } catch (\Exception $ex) {
                 dd($ex);
             }
@@ -201,9 +217,10 @@ class InstructorCourseController extends AbstractController
     /**
      * @Route("/course/diactivate/{id}", name="instructor_course_deactivate", methods={"GET","POST"})
      */
-    public function instructorCourseDeactivate(InstructorCourse $instructorCourse, Request $request): Response
+    public function instructorCourseDeactivate(InstructorCourse $instructorCourse, Request $request, LogService $log): Response
     {
         $this->denyAccessUnlessGranted('instructor_course_deactivate');
+        $origional = $log->changeObjectToArray($instructorCourse);
         $em = $this->getDoctrine()->getManager();
         if ($instructorCourse->getActive()) {
             $instructorCourse->setActive(false);
@@ -213,10 +230,14 @@ class InstructorCourseController extends AbstractController
             if($check){
                 $this->addFlash('danger',"This course is Active you should deactivate another course assignment before");
             }
-            else
+            else{
                 $instructorCourse->setActive(true);
+                $modified = $log->changeObjectToArray($instructorCourse);
+                $message = $log->snew($origional, $modified, "update", $this->getUser(), "instructorCourse");
+            }
         }
         $em->flush();
+
         return $this->redirectToRoute('instructor_course_index');
     }
 }

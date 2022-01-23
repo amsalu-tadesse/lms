@@ -42,4 +42,8 @@ class ResetPasswordRequest implements ResetPasswordRequestInterface
     {
         return $this->user;
     }
+    
+    public function getAllFields() {
+        return get_object_vars($this);
+    }
 }

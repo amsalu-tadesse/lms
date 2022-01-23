@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Services\LogService;
 
 /**
  * @Route("/systemsetting")
@@ -32,7 +33,7 @@ class SystemSettingController extends AbstractController
     /**
      * @Route("/new", name="system_setting_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    public function new(Request $request, LogService $log): Response
     {
         $this->denyAccessUnlessGranted('system_setting_new');
         $systemSetting = new SystemSetting();
@@ -43,6 +44,8 @@ class SystemSettingController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($systemSetting);
             $entityManager->flush();
+            $origional = $log->changeObjectToArray($systemSetting);
+            $message = $log->snew($origional, "", "create", $this->getUser(), "systemSetting");
 
             return $this->redirectToRoute('system_setting_index');
         }
@@ -67,9 +70,11 @@ class SystemSettingController extends AbstractController
     /**
      * @Route("/{id}/edit", name="system_setting_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, SystemSetting $systemSetting): Response
+    public function edit(Request $request, SystemSetting $systemSetting, LogService $log): Response
     {
         $this->denyAccessUnlessGranted('system_setting_edit');
+
+        $origional = $log->changeObjectToArray($systemSetting);
         $form = $this->createForm(SystemSettingType::class, $systemSetting);
         $form->handleRequest($request);
 
@@ -79,6 +84,9 @@ class SystemSettingController extends AbstractController
                 return $this->redirectToRoute('system_setting_index');
             }
             $this->getDoctrine()->getManager()->flush();
+            
+            $modified = $log->changeObjectToArray($systemSetting);
+            $message = $log->snew($origional, $modified, "update", $this->getUser(), "systemSetting");
 
             return $this->redirectToRoute('system_setting_index');
         }
@@ -92,13 +100,17 @@ class SystemSettingController extends AbstractController
     /**
      * @Route("/{id}", name="system_setting_delete", methods={"DELETE"})
      */
-    public function delete(Request $request, SystemSetting $systemSetting): Response
+    public function delete(Request $request, SystemSetting $systemSetting, LogService $log): Response
     {
         $this->denyAccessUnlessGranted('system_setting_delete');
         if ($this->isCsrfTokenValid('delete' . $systemSetting->getId(), $request->request->get('_token'))) {
+
+            $origional = $log->changeObjectToArray($systemSetting);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($systemSetting);
             $entityManager->flush();
+
+            $message = $log->snew($origional, "", "delete", $this->getUser(), "systemSetting");
         }
 
         return $this->redirectToRoute('system_setting_index');

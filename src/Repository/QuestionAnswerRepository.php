@@ -70,7 +70,7 @@ class QuestionAnswerRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('q')
             ->update()
             ->set('q.notification ', '1')
-            ->where('q.instructor = :val')
+            ->where('q.course = :val')
             ->setParameter('val', $id)
             ->getQuery()
             ->execute();

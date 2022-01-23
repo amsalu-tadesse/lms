@@ -86,7 +86,7 @@ class AcademicLevelController extends AbstractController
             $entityManager->persist($academicLevel);
             $entityManager->flush();
             $origional = $log->changeObjectToArray($academicLevel);
-            $message = $log->snew($origional, "", "create", $this->getUser(), "academic level");
+            $message = $log->snew($origional, "", "create", $this->getUser(), "academicLevel");
             if(!$message)
                 $this->addFlash("info", "Log not created");
             
@@ -122,7 +122,7 @@ class AcademicLevelController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $modified = $log->changeObjectToArray($academicLevel);
             $this->getDoctrine()->getManager()->flush();
-            $message = $log->snew($origional, $modified, "update", $this->getUser(), "academic Level");
+            $message = $log->snew($origional, $modified, "update", $this->getUser(), "academicLevel");
             if(!$message)
                 $this->addFlash("info", "Log not created");
 
@@ -147,7 +147,7 @@ class AcademicLevelController extends AbstractController
                 $origional = $log->changeObjectToArray($academicLevel);
                 $entityManager->remove($academicLevel);
                 $entityManager->flush();
-                $message = $log->snew($origional, "", "delete", $this->getUser(), "academic level");
+                $message = $log->snew($origional, "", "delete", $this->getUser(), "academicLevel");
                 if(!$message)
                  $this->addFlash("info", "Log not created");
             } catch (\Exception $ex) {

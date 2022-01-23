@@ -29,6 +29,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 use SymfonyCasts\Bundle\VerifyEmail\VerifyEmailHelperInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
+use App\Services\LogService;
 
 class RegistrationController extends AbstractController
 {
@@ -44,7 +45,7 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/register", name="app_register")
      */
-    public function register(Request $request, MailerInterface $mailer, MailerService $mservice): Response
+    public function register(Request $request, MailerInterface $mailer, MailerService $mservice, LogService $log): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -107,7 +108,7 @@ class RegistrationController extends AbstractController
      *  @Route("/verification", name="app_register_main")
      *
      */
-    public function registere(Request $request, VerificationRepository $ver_repo, StudentRepository $student_repo, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, UserAuthenticator $authenticator, MailerService $mservice): Response
+    public function registere(Request $request, VerificationRepository $ver_repo, StudentRepository $student_repo, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, UserAuthenticator $authenticator, MailerService $mservice, LogService $log): Response
     {
         $form_data = $request->cookies->get("form_data");
         $form_data = json_decode($form_data, true);
@@ -165,6 +166,10 @@ class RegistrationController extends AbstractController
 
                     $em->persist($user);
                     $em->flush();
+                    
+                    $user = $em->getRepository(User::class)->find($user->getId());
+                    // $origional = $log->changeObjectToArray($user);
+                    // $message = $log->snew($origional, "", "create", $user, "user");
 
                     $conn = $this->getDoctrine()->getManager()->getConnection();
                     $sql = "delete from verification where email = :email";
@@ -239,10 +244,12 @@ class RegistrationController extends AbstractController
                     $cookie = new Cookie('form_data', "",time());
                     $response->headers->setCookie($cookie);
                     $response->sendHeaders();
-                    
 
                     $em->persist($student);
                     $em->flush();
+
+                    // $origional = $log->changeObjectToArray($student);
+                    // $message = $log->snew($origional, "", "create", $user, "student");
 
                     $selected_courses = $request->cookies->get("selected_courses");
                     $selected_courses = json_decode($selected_courses, true);
@@ -260,6 +267,9 @@ class RegistrationController extends AbstractController
                             $st_course->setCreatedAt(new DateTime());
                             $em->persist($st_course);
                             $em->flush();
+
+                            // $origional = $log->changeObjectToArray($st_course);
+                            // $message = $log->snew($origional, "", "create", $this->$user, "studentCourse");
                         }
 
                         $cookie = new Cookie('selected_courses', "", time());

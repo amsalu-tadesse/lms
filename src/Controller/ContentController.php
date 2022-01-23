@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use App\Services\LogService;
+use App\Repository\InstructorRepository;
 
 /**
  * @Route("/content")
@@ -30,9 +31,15 @@ class ContentController extends AbstractController
     /**
      * @Route("/mycourse/{id}", name="content_index", methods={"GET"})
      */
-    public function index(ContentRepository $contentRepository, Request $request, InstructorCourse $instructorCourse, PaginatorInterface $paginator): Response
+    public function index(ContentRepository $contentRepository, Request $request, InstructorCourse $instructorCourse, PaginatorInterface $paginator, InstructorRepository $inst_repo): Response
     {
         $this->denyAccessUnlessGranted('content_list');
+
+        $instructor = $inst_repo->findOneBy(['user'=>$this->getUser()->getId()]);
+        if ($instructor->getId() != $instructorCourse->getInstructor()->getId()) {
+            return $this->render('/bundles/TwigBundle/Exception/error404.html.twig');
+        } 
+
         if ($request->request->get('edit')) {
             $id = $request->request->get('edit');
             $content = $contentRepository->findOneBy(['id' => $id]);
@@ -217,12 +224,17 @@ class ContentController extends AbstractController
     /**
      * @Route("/new/{id}", name="content_new", methods={"GET","POST"})
      */
-    public function new(Request $request, InstructorCourse $instructorCourse, SluggerInterface $slugger, LogService $log): Response
+    public function new(Request $request, InstructorCourse $instructorCourse, SluggerInterface $slugger, LogService $log, InstructorRepository $inst_repo): Response
     {
         
         $this->denyAccessUnlessGranted('content_create');
         $content = new Content();
         $em = $this->getDoctrine()->getManager();
+
+        $instructor = $inst_repo->findOneBy(['user'=>$this->getUser()->getId()]);
+        if ($instructor->getId() != $instructorCourse->getInstructor()->getId()) {
+            return $this->render('/bundles/TwigBundle/Exception/error404.html.twig');
+        } 
 
         $instChapter = $em->getRepository(InstructorCourseChapter::class)->findBy(array('instructorCourse'=> $instructorCourse->getId()));
         if(!$instChapter){
@@ -341,9 +353,13 @@ class ContentController extends AbstractController
     /**
      * @Route("/{id}/edit", name="content_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Content $content, SluggerInterface $slugger, LogService $log): Response
+    public function edit(Request $request, Content $content, SluggerInterface $slugger, LogService $log, InstructorRepository $inst_repo): Response
     {
         $this->denyAccessUnlessGranted('content_edit');
+        $instructor = $inst_repo->findOneBy(['user'=>$this->getUser()->getId()]);
+        if ($instructor->getId() != $content->getChapter()->getInstructorCourse()->getInstructor()->getId()) {
+            return $this->render('/bundles/TwigBundle/Exception/error404.html.twig');
+        } 
         $em = $this->getDoctrine()->getManager();
         $origional = $log->changeObjectToArray($content);
         $uploadSize = $em->getRepository(SystemSetting::class)->findOneBy(['code' => 'upload_size'])->getValue();
@@ -405,8 +421,8 @@ class ContentController extends AbstractController
                 $content->setFilename($newFilename);
             }
 
-            $this->getDoctrine()->getManager()->flush();
             $modified = $log->changeObjectToArray($content);
+            $this->getDoctrine()->getManager()->flush();
             $message = $log->snew($origional, $modified, "update", $this->getUser(), 'content');
             // if(!$message)
                 // $this->addFlash("info", "Log not created");
@@ -424,7 +440,7 @@ class ContentController extends AbstractController
     /**
      * @Route("/{id}", name="content_delete", methods={"POST"})
      */
-    public function delete(Request $request, Content $content): Response
+    public function delete(Request $request, Content $content,LogService $log): Response
     {
         $this->denyAccessUnlessGranted('content_delete');
         $instid = $content->getChapter()->getInstructorCourse()->getId();
@@ -434,8 +450,8 @@ class ContentController extends AbstractController
 
             try {
                 $entityManager->remove($content);
-                $entityManager->flush();
                 $origional = $log->changeObjectToArray($content);
+                $entityManager->flush();
                 $message = $log->snew($origional, "", "delete", $this->getUser(), 'content');
             } catch (\Exception $ex) {
                 

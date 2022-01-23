@@ -1,38 +1,94 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log{% endblock %}
-
-{% block body %}
-    <h1>Log</h1>
-
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ log.id }}</td>
-            </tr>
-            <tr>
-                <th>Original</th>
-                <td>{{ log.original }}</td>
-            </tr>
-            <tr>
-                <th>Modified</th>
-                <td>{{ log.modified }}</td>
-            </tr>
-            <tr>
-                <th>CreatedAt</th>
-                <td>{{ log.createdAt ? log.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Action</th>
-                <td>{{ log.action }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <a href="{{ path('log_index') }}">back to list</a>
-
-    <a href="{{ path('log_edit', {'id': log.id}) }}">edit</a>
-
-    {{ include('log/_delete_form.html.twig') }}
+{% block title %}Log
 {% endblock %}
+{% block breadcrumbhome %}
+	<a href="#">
+		{% trans %}Log{% endtrans %}
+	</a>
+{% endblock %}
+{% block breadcrumbcontent %}
+	{% trans %}Show{% endtrans %}
+{% endblock %}
+{% block body %}
+
+	<div class="card card-info">
+		<div class="card-header">
+			<h3 class="card-title">Log Detail</h3>
+		</div>
+		<div class="card-body">
+			<div class="row">
+				<div class="col-md-12">
+					<p>Actor :
+						<strong>
+							{{log.actor.firstName}}
+							{{log.actor.lastName}}
+						</strong>
+					</p>
+					<p>Action :
+						<strong>
+							{{log.action}}
+						</strong>
+					</p>
+					<p>Modified table :
+						<strong>
+							{{log.modifiedEntity}}</p>
+					</p>
+				</strong>
+			</p>
+			<p>Created At :
+				<strong>
+					{{log.createdAt|date("Y-m-d")}}</p>
+			</p>
+		</strong>
+	</p>
+</div></div><div class="row">
+<div class="col-md-5">
+
+	{% if original %}
+		<div class="card card-info">
+			<div class="card-header">
+				Original
+			</div>
+			<div class="card-body">
+				<table class="table">
+					{% for key,value in original %}
+						{% if key == "password" %}
+							{% elseif key == "id" %}
+							{% else %}
+								<tr>
+									<th>{{key}}</th>
+									<td>{{value}}</td>
+								</tr>
+						{% endif %}
+
+					{% endfor %}
+				</table>
+			</div>
+		</div>
+	{% endif %}
+</div>
+<div class="col-md-1"></div>
+<div class="col-md-5">
+	{% if modified %}
+		<div class="card card-info">
+			<div class="card-header">
+				Modified
+			</div>
+			<div class="card-body">
+				<table class="table">
+					{% for key,value in modified %}
+						{% if key == "password" %}
+							{% elseif key == "id" %}
+							{% else %}
+								<tr>
+									<th>{{key}}</th>
+									<td>{{value}}</td>
+								</tr>
+						{% endif %}
+					{% endfor %}
+				</table>
+			</div>
+		</div>
+	{% endif %}
+</div></div></div></div><a href="{{ path('log_index') }}">back to list</a>{% endblock %}
