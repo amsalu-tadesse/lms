@@ -238,7 +238,7 @@ class ContentController extends AbstractController
 
         $instChapter = $em->getRepository(InstructorCourseChapter::class)->findBy(array('instructorCourse'=> $instructorCourse->getId()));
         if(!$instChapter){
-            $this->addFlash("info", "Add chapter first");
+            $this->addFlash("danger", "Add chapter first");
             return $this->redirectToRoute('content_index', ['id' => $instructorCourse->getId()], Response::HTTP_SEE_OTHER);
         }
         

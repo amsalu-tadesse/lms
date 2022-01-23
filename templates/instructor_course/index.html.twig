@@ -82,7 +82,7 @@
 			<div class="modal-dialog modal-xl">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h4 class="modal-title">Course content summary</h4>
+						<h4 class="modal-title">{% trans %}Course content summary{% endtrans %}</h4>
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
@@ -337,14 +337,14 @@
 										</div>
 										<!-- /.modal-dialog -->
 									</div>
-									{% if is_granted('instructor_course_create') %}
+									{# {% if is_granted('instructor_course_create') %}
 
 										<a href="{{ path('instructor_course_edit', {'id': instructor_course.id}) }}" class="btn btn-warning btn-sm">
 											{% trans %}
 											Edit
 											{% endtrans %}
 										</a>
-									{% endif %}
+									{% endif %} #}
 								</td>
 							</tr>
 						{% else %}

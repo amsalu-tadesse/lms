@@ -46,7 +46,7 @@
 				<tbody>
 					{% for content in contents %}
 						<tr>
-							<td>{{ content.id }}</td>
+							<td>{{ loop.index }}</td>
 						
 							<td>{{ content.title }}</td>
 							{# <td>{{ content.content }}</td> #}

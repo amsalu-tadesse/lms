@@ -51,7 +51,7 @@ services:
     # App\Subscribers\SearchIndexer2:
     #     tags:
     #         - { name: doctrine.event_listener, event: postPersist, connection: default }
-    App\Subscribers\SearchIndexerSubscriber:
-        tags:
+    #App\Subscribers\SearchIndexerSubscriber:
+        #tags:
             # - { name: doctrine.event_subscriber, event: postUpdate }
-            - { name: doctrine.event_subscriber, event: postUpdate }
+            #- { name: doctrine.event_subscriber, event: postUpdate }

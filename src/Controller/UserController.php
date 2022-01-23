@@ -53,7 +53,7 @@ class UserController extends AbstractController
         $pageSize = 15;
 
         $user = new User();
-        $searchForm = $this->createForm(userFilterType::class, $user);
+        $searchForm = $this->createForm(UserFilterType::class, $user);
         $searchForm->handleRequest($request);
 
         if ($request->request->get('edit')) {

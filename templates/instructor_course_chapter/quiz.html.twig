@@ -34,6 +34,10 @@
 			pointer-events: all;
 			opacity: 1;
 		}
+		span{
+			color:#000 !important;
+			margin-left: 2px !important;
+		}
 	</style>
 {% endblock %}
 {% block body %}
@@ -64,7 +68,7 @@
 				<div class="card-body">
 					{% for question in quiz_ques %}
 							{% autoescape %}
-							<h5 class="py-3">{{question.question|raw}}</h5>
+							<h5 class="py-3"  >{{question.question|raw}}</h5>
 							{% endautoescape %}
 							<input type="hidden" id="parameter" value="{{question.id}}">
 							<form >

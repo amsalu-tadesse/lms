@@ -22,6 +22,7 @@ class UtilityController extends AbstractController
 
             default:
                 # code...
+                $message = "Something went wrong";
                 break;
         }
 

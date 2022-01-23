@@ -42,7 +42,7 @@
 			<div class="col-lg-4 col-sm-6">
 				<div class="card border-0 border-radius-0 mb-3" style="height: 100px" ;>
 					<div class="card-body">
-						<p>you didn't register for any courses yet</p>
+						<p>{% trans %}you didn't register for any courses yet{% endtrans %} </p>
 					</div>
 				</div>
 			</div>
@@ -82,7 +82,7 @@
 			<div class="col-lg-4 col-sm-6">
 				<div class="card border-0 border-radius-0 mb-3" style="height: 100px" ;>
 					<div class="card-body">
-						<p>you didn't register for any courses yet</p>
+				<p>{% trans %}you didn't register for any courses yet{% endtrans %} </p>
 					</div>
 				</div>
 			</div>
@@ -157,7 +157,8 @@
 			course_name = $(this).attr("course-id");
 			console.log(selected_courses_login);
 			if (selected_courses_login.includes(course_name)) {
-				$(this).text("click to select");
+				var msg = "{% trans %}click to select{% endtrans %}";
+				$(this).text(msg);
 				$(this).css("background-color", "#093146");
 
 				index = selected_courses_login.indexOf(course_name);
@@ -175,7 +176,8 @@
 					$("#my_course").addClass("test");
 
 			} else {
-				$(this).text("Remove from my Courses");
+				var msg2 = "{% trans %}Remove from my courses{% endtrans %}";
+				$(this).text(msg2);
 				$(this).css("background-color", "#F44336");
 				selected_courses_login.push(course_name);
 				$("#num").html(++total_selected);

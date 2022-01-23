@@ -24,7 +24,7 @@ class QuestionAnswerNewType extends AbstractType
             ->add('course', EntityType::class, [
                 'attr' => ['class'=>'form-control mb-4'],
                 'class' => InstructorCourse::class,
-                'required' => false,
+                'required' => true,
                 'placeholder' => "",
                 'choice_value' => 'course',
                 'query_builder' => function (EntityRepository $er) use ($inid) {
