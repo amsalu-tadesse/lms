@@ -95,33 +95,33 @@ class LogController extends AbstractController
     /**
      * @Route("/{id}/edit", name="log_edit", methods={"GET", "POST"})
      */
-    public function edit(Request $request, Log $log, EntityManagerInterface $entityManager): Response
-    {
-        $form = $this->createForm(LogType::class, $log);
-        $form->handleRequest($request);
+    // public function edit(Request $request, Log $log, EntityManagerInterface $entityManager): Response
+    // {
+    //     $form = $this->createForm(LogType::class, $log);
+    //     $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         $entityManager->flush();
 
-            return $this->redirectToRoute('log_index', [], Response::HTTP_SEE_OTHER);
-        }
+    //         return $this->redirectToRoute('log_index', [], Response::HTTP_SEE_OTHER);
+    //     }
 
-        return $this->renderForm('log/edit.html.twig', [
-            'log' => $log,
-            'form' => $form,
-        ]);
-    }
+    //     return $this->renderForm('log/edit.html.twig', [
+    //         'log' => $log,
+    //         'form' => $form,
+    //     ]);
+    // }
 
     /**
      * @Route("/{id}", name="log_delete", methods={"POST"})
      */
-    public function delete(Request $request, Log $log, EntityManagerInterface $entityManager): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$log->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($log);
-            $entityManager->flush();
-        }
+    // public function delete(Request $request, Log $log, EntityManagerInterface $entityManager): Response
+    // {
+    //     if ($this->isCsrfTokenValid('delete'.$log->getId(), $request->request->get('_token'))) {
+    //         $entityManager->remove($log);
+    //         $entityManager->flush();
+    //     }
 
-        return $this->redirectToRoute('log_index', [], Response::HTTP_SEE_OTHER);
-    }
+    //     return $this->redirectToRoute('log_index', [], Response::HTTP_SEE_OTHER);
+    // }
 }
