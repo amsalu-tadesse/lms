@@ -57,6 +57,7 @@ class RegistrationController extends AbstractController
             // if(empt)
 
             $user_valid = $em->getRepository(User::class)->findBy(array('email'=>$form['email']->getData()));
+
             if ($user_valid == null) {
                 $response = new Response();
                 $form_data = array();
@@ -82,7 +83,7 @@ class RegistrationController extends AbstractController
                 $ver->setVerificationExpiry($date);
                 $em->persist($ver);
                 $em->flush();
-
+               
                 $message = "verification code is <b>$code</b> ";
                 $sent =  $mservice->sendEmail($mailer, $message, $form_data['email'], "account verification");
 

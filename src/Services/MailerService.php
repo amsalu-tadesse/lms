@@ -16,7 +16,7 @@ use Symfony\Component\Mime\RawMessage;
 class MailerService
 {
     //public function send(RawMessage $message, Envelope $envelope = null): void;
-    public function sendEmail(MailerInterface $mailer, $message, $receiver, $payment)
+    public function sendEmail(MailerInterface $mailer, $message, $receiver, $subject)
     {
        
 
@@ -29,7 +29,7 @@ class MailerService
             //->bcc('bcc@example.com')
             //->replyTo('fabien@example.com')
             //->priority(Email::PRIORITY_HIGH)
-            ->subject('LMS '.$payment)
+            ->subject('LMS '.$subject)
             // ->text('My first for Payroll notification')
             ->html($message);
 
@@ -45,6 +45,41 @@ class MailerService
 
             return 0; //new Response('<html><body><p>Connection Problem</b></body></html>');
 //die;
+        }
+
+
+
+
+        return 1; //new Response('<html><body>Email sent successfully1</body></html>');
+    }
+
+
+
+    //public function send(RawMessage $message, Envelope $envelope = null): void;
+    public function sendMultipleEmail(MailerInterface $mailer, $message, $receivers, $subject)
+    {
+       
+   
+        $email = (new Email())
+            ->from('dawit120@gmail.com')
+            ->to(...$receivers)
+            //->cc('ferid.bedru@gmail.com','ferid2.bedru@gmail.com')
+            //->bcc('bcc@example.com')
+            //->replyTo('fabien@example.com')
+            //->priority(Email::PRIORITY_HIGH)
+            ->subject('LMS '.$subject)
+            // ->text('My first for Payroll notification')
+            ->html($message);
+
+             
+
+        try {
+             
+            // $mailer->send($email,"dawit120@gmail.com");
+             $mailer->send($email);
+           // $mailer->send($msg,$envelope);
+        } catch (Exception $e) {
+            return 0; //new Response('<html><body><p>Connection Problem</b></body></html>');
         }
 
 

@@ -24,6 +24,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use App\Services\LogService;
+use Symfony\Component\Mailer\MailerInterface;
+use App\Services\MailerService;
 
 /**
  * @Route("/student")
@@ -262,21 +264,32 @@ class StudentCourseController extends AbstractController
     /**
      * @Route("/course/request/{id}", name="course_request_activate", methods={"GET","POST"})
      */
-    public function courseRequestActivate(StudentCourse $studentCourse, StudentCourseRepository $studentCourseRepository, PaginatorInterface $paginator, Request $request, LogService $log): Response
+    public function courseRequestActivate(StudentCourse $studentCourse, StudentCourseRepository $studentCourseRepository, PaginatorInterface $paginator, Request $request, LogService $log, MailerInterface $mailer, MailerService $mservice): Response
     {
         $em = $this->getDoctrine()->getManager();
         $origional = $log->changeObjectToArray($studentCourse);
         $studentCourse->setStatus(1); //accepted
         $em->flush();
         $modified = $log->changeObjectToArray($studentCourse);
-        $message = $log->snew($origional, $modified, "update", $this->getUser(), "studentCourse");
+        $msg = $log->snew($origional, $modified, "update", $this->getUser(), "studentCourse");
+       
+       
+        $user = $studentCourse->getStudent()->getUser();
+        $email = $user->getEmail();
+        $message = "Dear $user,  <br>  <br>  Your course '".$studentCourse->getInstructorCourse()->getCourse()."' is accepted by the director. You can start learning now." ;
+        $receiver = $email;
+        $subject  = "Course acceptance notification";
+        //send notification
+        $mservice->sendEmail($mailer, $message, $receiver, $subject);
+
+
         return $this->redirectToRoute('course_request');
     }
 
     /**
      * @Route("/course/drequest/{id}", name="course_request_deactivate", methods={"GET","POST"})
      */
-    public function courseRequestDeactivate(StudentCourse $studentCourse, StudentCourseRepository $studentCourseRepository, PaginatorInterface $paginator, Request $request, LogService $log): Response
+    public function courseRequestDeactivate(StudentCourse $studentCourse, StudentCourseRepository $studentCourseRepository, PaginatorInterface $paginator, Request $request, LogService $log, MailerInterface $mailer, MailerService $mservice): Response
     {
         $em = $this->getDoctrine()->getManager();
         $origional = $log->changeObjectToArray($studentCourse);
@@ -285,7 +298,16 @@ class StudentCourseController extends AbstractController
         $em->flush();
         
         $modified = $log->changeObjectToArray($studentCourse);
-        $message = $log->snew($origional, $modified, "update", $this->getUser(), "studentCourse");
+        $log->snew($origional, $modified, "update", $this->getUser(), "studentCourse");
+
+        $user = $studentCourse->getStudent()->getUser();
+        $email = $user->getEmail();
+
+        $message = "Dear $user,  <br>  <br>  Your course '".$studentCourse->getInstructorCourse()->getCourse()."' is rejected by the director." ;
+        $receiver = $email;
+        $subject  = "Course rejection notification";
+        //send notification
+        $mservice->sendEmail($mailer, $message, $receiver, $subject);
 
         return $this->redirectToRoute('course_request');
     }
@@ -511,11 +533,12 @@ class StudentCourseController extends AbstractController
     /**
     * @Route("/approveMultiple", name="approve_multiple", methods={"GET","POST"})
     */
-    public function requestApproveMultiple(StudentCourseRepository $stud_cour_repo, PaginatorInterface $paginator, Request $request, LogService $log): Response
+    public function requestApproveMultiple(StudentCourseRepository $stud_cour_repo, PaginatorInterface $paginator, Request $request, LogService $log, MailerInterface $mailer, MailerService $mservice): Response
     {
         $ids = array();
         $ids = explode(",", $request->request->get('checked_list')[0]);
         $em = $this->getDoctrine()->getManager();
+        $receivers = array();
         foreach ($ids as $id) {
             $stud_course = $stud_cour_repo->find($id);
             $origional = $log->changeObjectToArray($stud_course);
@@ -524,23 +547,35 @@ class StudentCourseController extends AbstractController
                 $stud_course->setStatus(1);
                 $em->persist($stud_course);
                 $em->flush();
-
+                $receivers[$stud_course->getInstructorCourse()->getCourse()->getName()][] = $stud_course->getStudent()->getUser()->getEmail();
                 $modified = $log->changeObjectToArray($stud_course);
-                $message = $log->snew($origional, $modified, "update", $this->getUser(), "studentCourse");
+                $msg = $log->snew($origional, $modified, "update", $this->getUser(), "studentCourse");
             }
         }
+
+        $subject  = "Course acceptance notification";
+
+        foreach ($receivers as $course => $students) {
+
+            $message = "Dear student, <br>  <br>  Your course '".$course."' is approved by the director. You can start learning now." ;
+            $emails = $students;
+            $mservice->sendMultipleEmail($mailer, $message, $emails, $subject);
+
+        }
+
+
         return $this->redirectToRoute("course_request");
     }
 
     /**
      * @Route("/rejectMultiple", name="reject_multiple", methods={"GET","POST"})
      */
-    public function requestRejectMultiple(StudentCourseRepository $stud_cour_repo, PaginatorInterface $paginator, Request $request, LogService $log): Response
+    public function requestRejectMultiple(StudentCourseRepository $stud_cour_repo, PaginatorInterface $paginator, Request $request, LogService $log, MailerInterface $mailer, MailerService $mservice): Response
     {
         $ids = array();
         $ids = explode(",", $request->request->get('checked_list')[0]);
         $em = $this->getDoctrine()->getManager();
-
+        $receivers = array();
         foreach ($ids as $key => $value) {
             $stud_course = $stud_cour_repo->find($value);
             $origional = $log->changeObjectToArray($stud_course);
@@ -550,10 +585,23 @@ class StudentCourseController extends AbstractController
                 $em->persist($stud_course);
                 $em->flush();
 
+                $receivers[$stud_course->getInstructorCourse()->getCourse()->getName()][] = $stud_course->getStudent()->getUser()->getEmail();
+
                 $modified = $log->changeObjectToArray($stud_course);
                 $message = $log->snew($origional, $modified, "update", $this->getUser(), "studentCourse");
             }
         }
+
+        $subject  = "Course rejection notification";
+
+        foreach ($receivers as $course => $students) {
+
+            $message = "Dear student, <br>  <br>  Your course '".$course."' is rejected by the director." ;
+            $emails = $students;
+            $mservice->sendMultipleEmail($mailer, $message, $emails, $subject);
+
+        }
+
         return $this->redirectToRoute("course_request");
     }
 
