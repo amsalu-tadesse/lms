@@ -1,21 +1,36 @@
 {{ form_start(form) }}
 {{ form_errors(form)}}
 <input type="hidden" _method="PATCH">
+
+
+<div class="col-md-6 row">
+<input type="text" class="col-md-9" placeholder="paste the Youtube live link here and Go LIVE" id="golive"/> 
+<a href="#" class="col-md-3 disabled" style="color:red;" onclick="golive()" id="link">Go LIVE</a>
+
+</div>
+<hr>
 <div class="col-md-12">
+
+
 	<div class="form-group">
 		<label for="videoAnswer" class="mb-2">{% trans %}Video{% endtrans %}</label>&nbsp;&nbsp;
 		<!-- Button trigger modal -->
 		<a type="button" data-toggle="modal" onclick="startVideo()" id="recordToggle" data-target="#recorderModal" title="record video">
 			&nbsp;<i class="fas fa-video"></i>
-		</a>		
-		{{ form_widget(form.videoAnswer) }}
+		</a>
+		
+ 
+
+		{{ form_widget(form.videoAnswer,{'attr':{'class':'col-md-4'}}) }}
 
 		{% if question_answer.videoAnswer %}
 			<a href="#" data-toggle="modal" data-target="#player" id="ExistingVideoToggle" data="{{question_answer.videoAnswer}}"> see existing video </a>
 		{% endif %}	 
+
+	
 		<br>
 		<a href="#" data-toggle="modal" data-target="#player" id="playerToggle"  onclick="play()" style="display:none;">
-			See recorded video ....
+		<span class="fa fa-play"> PLAY</span>
 		</a>
 	</div>
 	<br>
@@ -25,6 +40,8 @@
 	</div>
 </div>
 <br>
+	
+
 <table>
 	<tr>
 		<td class="">
@@ -32,3 +49,4 @@
 			{{ form_end(form) }}
 		</td>
 	</tr>
+

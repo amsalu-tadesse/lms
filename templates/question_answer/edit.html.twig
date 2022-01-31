@@ -121,4 +121,30 @@
 			</div>
 		</div>
 	</div>
-</div></div>{% endblock %}{% block javascripts %}<script src="{{asset('script3.js')}}"></script>{% endblock %}
+</div></div>{% endblock %}
+ 
+
+
+{% block javascripts %}
+<script src="{{asset('script3.js')}}"></script>
+
+<script>
+function golive()
+{
+ 
+	if( $("#golive").val() )
+	{
+		$("#link").attr("href", "{{ path('golive') }}?link="+$("#golive").val());
+	}
+	else 
+	{
+		alert("Please enter the youtube live link first.");
+	}
+	
+}
+</script>
+
+
+{% endblock %}
+
+
