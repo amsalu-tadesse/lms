@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use \DateTime;
+use Symfony\Component\Mailer\MailerInterface;
+use App\Services\MailerService;
 
 /**
  * @Route("/golive")
@@ -30,16 +32,36 @@ class GoLiveController extends AbstractController
     /**
      * @Route("/new", name="go_live_new", methods={"GET", "POST"})
      */
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager,MailerInterface $mailer, MailerService $mservice): Response
     {
         $goLive = new GoLive();
-        $form = $this->createForm(GoLiveType::class, $goLive);
+        $form = $this->createForm(GoLiveType::class, $goLive, ['uid'=>$this->getUser()->getId()]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $goLive->setCreatedAt(new DateTime())
-;            $entityManager->persist($goLive);
+;           $entityManager->persist($goLive);
             $entityManager->flush();
+
+            $instructorCourse = $goLive->getInstructorCourse();
+            $studentCourses = $instructorCourse->getStudentCourses();
+            $liveDate = $form->getData()->getStartsAt();
+            $instMsg = $form->getData()->getMessage();
+
+            $deadline = date_format($liveDate,"M d, Y @ H:i:s");
+
+        $receivers = array();
+        foreach ($studentCourses as $studentCourse) {
+   
+           $receivers[] = $studentCourse->getStudent()->getUser()->getEmail();
+   
+        }
+        $course = $instructorCourse->getCourse();
+
+        $subject  = "Live streaming appointment";
+        $message = "Dear student, <br>  <br> The instructor for the course '".$course."' will be live streamed on ".$deadline. "<br><br> Message: <br>".$instMsg ;
+        $emails = $receivers;
+        $mservice->sendMultipleEmail($mailer, $message, $emails, $subject);
 
             return $this->redirectToRoute('go_live_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -65,7 +87,7 @@ class GoLiveController extends AbstractController
      */
     public function edit(Request $request, GoLive $goLive, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(GoLiveType::class, $goLive);
+        $form = $this->createForm(GoLiveType::class, $goLive, ['uid'=>$this->getUser()->getId()]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
