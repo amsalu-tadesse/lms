@@ -198,23 +198,30 @@
                                 <div class="comments">
 
 
-								
+						
 
-{# {% for golive in golives %} #}
-{% for golive in golives|filter(golive => golive.active == 1 and golive.instructorCourse == chapter.chapter.instructorCourse ) -%}
-<div class="card bg-white mt-2 question-teacher mx-3">
-<div class="card-body">
-	<p class="meta" >
-	<a style="color:blue" href="{{path('golive')}}?link={{golive.link}}" >Watch Live at {{ golive.startsAt | date('M d, Y') }} @{{ golive.startsAt | date('H:i:s') }} </a>
-	</p>
+                        {% if chapters | length > 0 %}
+                        {% set inst_crs_id = chapters[0].instructorCourse.id %}
+                        {% for golive in golives|filter(golive => golive.active == 1 and golive.instructorCourse.id == inst_crs_id) -%}
+                        <div class="card bg-white mt-2 question-teacher mx-3">
+                        <div class="card-body">
+                            <p class="meta" >
+                            <a style="color:blue" href="{{path('golive')}}?link={{golive.link}}" >Watch Live at {{ golive.startsAt | date('M d, Y') }} @{{ golive.startsAt | date('H:i:s') }} </a>
+                            </p>
+                        
+                        </div>
+                        <p class="message" >{{ golive.message }}</p>
+                        </div>
+                        
+                        {% else %}
+                            No active session 
+                        {% endfor %}
+                        {% else %}
+                        No active session 
+                         {% endif %}
+                        
 
-</div>
-<p class="message" >{{ golive.message }}</p>
-</div>
 
-{% else %}
-	No active session 
-{% endfor %}
                                    
                                   
 

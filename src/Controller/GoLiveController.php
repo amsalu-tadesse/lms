@@ -23,7 +23,7 @@ class GoLiveController extends AbstractController
     public function index(GoLiveRepository $goLiveRepository): Response
     {
         return $this->render('go_live/index.html.twig', [
-            'go_lives' => $goLiveRepository->findAll(),
+            'go_lives' => $goLiveRepository->findMyCourses($this->getUser()->getId()),
         ]);
     }
 

@@ -86,7 +86,7 @@
 			<thead>
 				<tr>
                 <th>Id</th>
-                <th>Link</th>
+                <th>Course</th>
                 <th>starts At</th>
                 <th>Message</th>
                 <th>Active</th>
@@ -97,13 +97,13 @@
                 {% for go_live in go_lives %}
 					
                     <tr>
-                    <td>{{ go_live.id }}</td>
-                    <td>{{ go_live.link }}</td>
+                    <td>{{ loop.index }}</td>
+                    <td style="width:30%">{{ go_live.instructorCourse.course }}</td>
                     <td>{{ go_live.startsAt ? go_live.startsAt|date('Y-m-d H:i:s') : '' }}</td>
-                    <td>{{ go_live.message }}</td>
+                    <td style="width:20%">{{ go_live.message }}</td>
                     <td>
                         {% if go_live.active %}
-{% trans %}YES{% endtrans %}
+                            {% trans %}YES{% endtrans %}
                         {% else %}
                     {% trans %}NO{% endtrans %}
                         {% endif %}

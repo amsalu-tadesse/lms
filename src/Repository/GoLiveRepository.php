@@ -22,19 +22,21 @@ class GoLiveRepository extends ServiceEntityRepository
     // /**
     //  * @return GoLive[] Returns an array of GoLive objects
     //  */
-    /*
-    public function findByExampleField($value)
+   
+    public function findMyCourses($userid)
     {
         return $this->createQueryBuilder('g')
-            ->andWhere('g.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('g.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        ->Join('g.instructorCourse', 'instcrs')
+        ->join('instcrs.instructor', 'inst')
+        ->join('inst.user', 'u')
+        ->andWhere('u.id = :uid')
+        ->setParameter('uid', $userid)
+        ->getQuery()
+        ->getResult()
+    ;
+
     }
-    */
+    
 
     /*
     public function findOneBySomeField($value): ?GoLive

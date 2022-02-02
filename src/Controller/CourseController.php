@@ -115,6 +115,7 @@ class CourseController extends AbstractController
      */
     public function courseDetail(StudentCourseRepository $stud_course_repo, InstructorCourse $instructorCourse, LogService $log, InstructorCourseRepository $course_repo, InstructorCourseChapterRepository $chapter, Request $request): Response
     {
+        $em = $this->getDoctrine()->getManager();
         $courses = $course_repo->findCoursesSortByCategory($instructorCourse->getId());
         $chaptersWithContent = $chapter->getChaptersWithContentForCourse($instructorCourse->getId());
 
@@ -122,6 +123,9 @@ class CourseController extends AbstractController
         $form = $this->createForm(QuestionAnswerNewStudentType::class, $questionAnswer);
         $form->handleRequest($request);
         $qa = $que_allowed = false; 
+
+        $golives = $em->getRepository(GoLive::class)->findBy(['instructorCourse'=>$instructorCourse->getId()], ['id'=>'desc']);
+
 
         if ($this->isGranted("ROLE_STUDENT")) {
         $student_course = $stud_course_repo->findBy(array('instructorCourse'=>$instructorCourse->getId(),'student'=>$this->getUser()->getProfile()->getId(), 'status'=> array("1","5"),'active'=>1));
@@ -135,7 +139,7 @@ class CourseController extends AbstractController
                 $questionAnswer->setNotification(0);
                 $questionAnswer->setIsReply(0);
                 $questionAnswer->setCourse($course_repo->find($request->request->get("val1")));
-                $em = $this->getDoctrine()->getManager();
+                
                 $em->persist($questionAnswer);
                 $em->flush();
                 
@@ -149,8 +153,7 @@ class CourseController extends AbstractController
 
             $em = $this->getDoctrine()->getManager();
             $question = $em->getRepository(QuestionAnswer::class)->findBy(['course'=>$instructorCourse->getId()], ['id'=>'desc']);
-            $golives = $em->getRepository(GoLive::class)->findBy(['instructorCourse'=>$instructorCourse->getId()], ['id'=>'desc']);
-
+             
             return $this->render('course/description_login.html.twig', [
                 'chapter' => $courses,
                 'chapters' => $chaptersWithContent,
@@ -167,6 +170,7 @@ class CourseController extends AbstractController
             'qa' => $qa,
             'que_allowed' => $que_allowed,
             'question' => [],
+            'golives' => $golives,
             'form' => $form->createView(),
             'chapters' => $chaptersWithContent,
         ]);
