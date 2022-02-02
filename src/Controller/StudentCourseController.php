@@ -512,6 +512,30 @@ class StudentCourseController extends AbstractController
         return $this->redirectToRoute("requested_courses");
     }
 
+
+    /**
+     * @Route("/live", name="golive", methods={"GET"})
+     */
+    public function goLive(Request $request): Response
+    {
+        $link = $request->query->get("link");
+        $arr = explode('/',$link);
+        if(sizeof($arr) != 4)
+        {
+            $this->addFlash("danger", "Please enter a proper link. This doesn't work. ");
+            return $this->redirectToRoute('question_answer_index');
+        }
+       
+       $arg = $arr[3];
+      
+        return $this->render('student_course/golive.html.twig', [
+            'arg' =>$arg,
+        ]);
+        
+
+        
+    }
+
     /**
      * @Route("/request", name="requested_courses", methods={"GET"})
      */
@@ -521,7 +545,7 @@ class StudentCourseController extends AbstractController
 
         $data = $paginator->paginate(
             $queryBuilder,
-            $request->query->getInt('page', 1),
+            $request->query->getInt('page', 1), 
             15
         );
 

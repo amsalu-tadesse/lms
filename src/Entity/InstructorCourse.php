@@ -77,6 +77,11 @@ class InstructorCourse
      */
     private $questionAnswers;
 
+    /**
+     * @ORM\OneToMany(targetEntity=GoLive::class, mappedBy="instructorCourse")
+     */
+    private $goLiveLinks;
+
     public function __construct()
     {
         $this->studentCourses = new ArrayCollection();
@@ -84,6 +89,7 @@ class InstructorCourse
         $this->exams = new ArrayCollection();
         $this->instructorCourseChapters = new ArrayCollection();
         $this->questionAnswers = new ArrayCollection();
+        $this->goLiveLinks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -322,5 +328,35 @@ class InstructorCourse
     public function getAllFields()
     {
         return get_object_vars($this);
+    }
+
+    /**
+     * @return Collection|GoLive[]
+     */
+    public function getGoLiveLinks(): Collection
+    {
+        return $this->goLiveLinks;
+    }
+
+    public function addGoLiveLink(GoLive $goLiveLink): self
+    {
+        if (!$this->goLiveLinks->contains($goLiveLink)) {
+            $this->goLiveLinks[] = $goLiveLink;
+            $goLiveLink->setInstructorCourse($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGoLiveLink(GoLive $goLiveLink): self
+    {
+        if ($this->goLiveLinks->removeElement($goLiveLink)) {
+            // set the owning side to null (unless already changed)
+            if ($goLiveLink->getInstructorCourse() === $this) {
+                $goLiveLink->setInstructorCourse(null);
+            }
+        }
+
+        return $this;
     }
 }

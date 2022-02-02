@@ -1,0 +1,85 @@
+{#{% extends 'base.html.twig' %}
+
+ {% block title %}GoLive{% endblock %}
+
+{% block body %}
+    <h1>GoLive</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ go_live.id }}</td>
+            </tr>
+            <tr>
+                <th>Link</th>
+                <td>{{ go_live.link }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ go_live.createdAt ? go_live.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Message</th>
+                <td>{{ go_live.message }}</td>
+            </tr>
+            <tr>
+                <th>Active</th>
+                <td>{{ go_live.active }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('go_live_index') }}">back to list</a>
+
+    <a href="{{ path('go_live_edit', {'id': go_live.id}) }}">edit</a>
+
+    {{ include('go_live/_delete_form.html.twig') }}
+{% endblock %}
+ #}
+
+
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}GoLive{% endtrans %}{% endblock %}
+{% block breadcrumbhome %}
+    <a href="{{ path('go_live_index') }} ">
+	   {% trans %}GoLive{% endtrans %} 
+	</a> 
+{% endblock %}
+{% block breadcrumbcontent %}{% trans %}Show{% endtrans %}{% endblock %}
+{% block body %}
+    <div class="card">
+    <table class="table ">
+    <tbody>
+        <tr>
+            <th>Id</th>
+            <td>{{ go_live.id }}</td>
+        </tr>
+        <tr>
+            <th>Link</th>
+            <td>{{ go_live.link }}</td>
+        </tr>
+        <tr>
+            <th>CreatedAt</th>
+            <td>{{ go_live.createdAt ? go_live.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+        </tr>
+        <tr>
+            <th>Message</th>
+            <td>{{ go_live.message }}</td>
+        </tr>
+        <tr>
+            <th>Active</th>
+            <td>{{ go_live.active }}</td>
+        </tr>
+    </tbody>
+    </table>
+    </div>
+    <table><td>
+    <a href="{{ path('go_live_index') }}" class="btn btn-success">{% trans %}Back to list{% endtrans %}</a>
+    </td><td>
+    <a href="{{ path('go_live_edit', {'id': go_live.id}) }}" class="btn btn-primary">{% trans %}Edit{% endtrans %}</a>
+    </td><td>
+    {{ include('go_live/_delete_form.html.twig') }}
+    </td></table>
+{% endblock %}

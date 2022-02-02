@@ -1,0 +1,36 @@
+{# {% extends 'base.html.twig' %}
+
+{% block title %}New GoLive{% endblock %}
+
+{% block body %}
+    <h1>Create new GoLive</h1>
+
+    {{ include('go_live/_form.html.twig') }}
+
+    <a href="{{ path('go_live_index') }}">back to list</a>
+{% endblock %} #}
+
+
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}New GoLive{% endtrans %}{% endblock %}
+{% block breadcrumbhome %}
+    <a href="{{ path('go_live_index') }} ">
+	   {% trans %}GoLive{% endtrans %} 
+	</a> 
+{% endblock %}
+{% block breadcrumbcontent %}{% trans %}New{% endtrans %}{% endblock %}
+{% block body %}
+    <div class="card card-info">
+		<div class="card card-header">
+			<h5>Create GoLive</h5>
+		</div>
+        {{ include('go_live/_form.html.twig') }}
+        </td>
+            <td>
+                <a href="{{ path('go_live_index') }}" class="btn btn-info">{% trans %}Back to list{% endtrans %}</a>
+            </td>
+        </table>
+        <br>
+    </div>
+{% endblock %}

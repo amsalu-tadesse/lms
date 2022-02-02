@@ -391,17 +391,30 @@ class ContentController extends AbstractController
                 $content->setResource($newFilename);
                 $content->setResourceNames($originalFilename);
             }
-            
-            if($youtubeLink)
+
+            /*https://youtu.be/kAj7FUGZKV8*/
+
+            /*if($youtubeLink)
             {
                 $y = explode('=',$youtubeLink);
                 if(sizeof($y) == 2)
                 {
                     $youtubeLink  ='https://www.youtube.com/embed/'.explode('=',$youtubeLink)[1];
-                    $content->setVideoLink( $youtubeLink);
+                    $content->setVideoLink($youtubeLink);
                 }
-                
+            }*/
+
+            if($youtubeLink)
+            {
+                $y = explode('/',$youtubeLink);
+                if(sizeof($y) == 4)
+                {
+                    $youtubeLink  ='https://www.youtube.com/embed/'.$y[3];
+                    $content->setVideoLink($youtubeLink);
+                }
             }
+
+
 
             if ($fileName) {
                 $originalFilename = pathinfo($fileName->getClientOriginalName(), PATHINFO_FILENAME);

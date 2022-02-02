@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Controller\UtilityController;
 use App\Entity\Course;
+use App\Entity\GoLive;
 use App\Entity\InstructorCourse;
 use App\Entity\InstructorCourseStatus;
 use App\Entity\QuestionAnswer;
@@ -148,12 +149,15 @@ class CourseController extends AbstractController
 
             $em = $this->getDoctrine()->getManager();
             $question = $em->getRepository(QuestionAnswer::class)->findBy(['course'=>$instructorCourse->getId()], ['id'=>'desc']);
+            $golives = $em->getRepository(GoLive::class)->findBy(['instructorCourse'=>$instructorCourse->getId()], ['id'=>'desc']);
+
             return $this->render('course/description_login.html.twig', [
                 'chapter' => $courses,
                 'chapters' => $chaptersWithContent,
                 'question' => $question,
                 'qa' => $qa,
                 'que_allowed' => $que_allowed,
+                'golives' => $golives,
                 'form' => $form->createView(),
             ]);
         }

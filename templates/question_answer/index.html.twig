@@ -18,6 +18,11 @@
 					<h3 class="card-title">{% trans %}Questions{% endtrans %}</h3>
 				</div>
 				<div class="col-md-6">
+					<a href="{{ path('go_live_index') }}" class="btn btn-danger btn-sm" style="float:right">
+						{% trans %}
+						    YouTube Live
+						{% endtrans %}
+					</a>
 					<a href="{{ path('question_answer_new') }}" class="btn btn-primary btn-sm" style="float:right">
 						{% trans %}
 						    Add Question

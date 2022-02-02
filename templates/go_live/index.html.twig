@@ -1,0 +1,128 @@
+{# {% extends 'base.html.twig' %}
+
+{% block title %}GoLive index{% endblock %}
+
+{% block body %}
+    <h1>GoLive index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Link</th>
+                <th>CreatedAt</th>
+                <th>Message</th>
+                <th>Active</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for go_live in go_lives %}
+            <tr>
+                <td>{{ go_live.id }}</td>
+                <td>{{ go_live.link }}</td>
+                <td>{{ go_live.createdAt ? go_live.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ go_live.message }}</td>
+                <td>{{ go_live.active }}</td>
+                <td>
+                    <a href="{{ path('go_live_show', {'id': go_live.id}) }}">show</a>
+                    <a href="{{ path('go_live_edit', {'id': go_live.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('go_live_new') }}">Create new</a>
+{% endblock %}
+ #}
+
+
+
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{% trans %}
+	Course list
+
+	{% endtrans %}
+{% endblock %}
+{% block breadcrumbhome %}
+	<a href="{{ path('go_live_index') }} ">
+		{% trans %}
+		GoLive
+		{% endtrans %}
+	</a>
+{% endblock %}
+{% block breadcrumbcontent %}
+	{% trans %}
+	Index
+	{% endtrans %}
+{% endblock %}
+{% block body %}
+
+
+<div class="card card-info">
+	<div class="card card-header">
+		<div class="row">
+			<div class="col-md-6">
+				<h3 class="card-title">{% trans %}Youtube Live Links{% endtrans %}</h3>
+			</div>
+			<div class="col-md-6">
+				<a href="{{ path('go_live_new') }}" class="btn btn-primary btn-sm" style="float:right">
+					{% trans %}
+					Add new Live link
+					{% endtrans %}
+				</a>
+			</div>
+		</div>
+	</div>
+	<div class="card card-body">
+		<table class="table">
+			<thead>
+				<tr>
+                <th>Id</th>
+                <th>Link</th>
+                <th>starts At</th>
+                <th>Message</th>
+                <th>Active</th>
+                <th>actions</th>
+            </tr>
+			</thead>
+			<tbody>
+                {% for go_live in go_lives %}
+					
+                    <tr>
+                    <td>{{ go_live.id }}</td>
+                    <td>{{ go_live.link }}</td>
+                    <td>{{ go_live.startsAt ? go_live.startsAt|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>{{ go_live.message }}</td>
+                    <td>
+                        {% if go_live.active %}
+{% trans %}YES{% endtrans %}
+                        {% else %}
+                    {% trans %}NO{% endtrans %}
+                        {% endif %}
+                    </td>
+                        <td>
+                        <a href="{{ path('go_live_show', {'id': go_live.id}) }}" class="btn btn-info btn-sm">show</a>
+                        <a href="{{ path('go_live_edit', {'id': go_live.id}) }}" class="btn btn-warning btn-sm">edit</a>
+                    </td>
+                    </tr>
+
+
+				{% else %}
+					<tr>
+						<td colspan="4">{% trans %}No records found{% endtrans %}</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+
+	</div>
+</div {% endblock %}
+

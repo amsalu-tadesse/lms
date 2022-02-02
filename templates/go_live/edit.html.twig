@@ -1,0 +1,59 @@
+{# {% extends 'base.html.twig' %}
+
+{% block title %}Edit GoLive{% endblock %}
+
+{% block body %}
+    <h1>Edit GoLive</h1>
+
+    {{ include('go_live/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('go_live_index') }}">back to list</a>
+
+    {{ include('go_live/_delete_form.html.twig') }}
+{% endblock %} #}
+
+
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{% trans %}Edit GoLIve{% endtrans %}
+{% endblock %}
+{% block stylesheets %}
+	<style></style>
+{% endblock %}
+{% block breadcrumbhome %}
+	<a href="{{ path('go_live_index') }} ">
+		{% trans %}GoLIve{% endtrans %}
+	</a>
+{% endblock %}
+{% block breadcrumbcontent %}
+	{% trans %}Edit{% endtrans %}
+{% endblock %}
+{% block body %}
+	<div class="card card-info">
+		<div class="card card-header">
+			<h5>Update Course Category</h5>
+		</div>
+		{{ include('go_live/_form.html.twig', {'button_label': 'Update' | trans | raw}) }}
+	</td>
+	<td>
+		{{ include('go_live/_delete_form.html.twig') }}
+	</td>
+    <td><a href="{{ path('go_live_index') }}" class="btn btn-info">{% trans %}Back to list{% endtrans %}</a>
+    </td>
+</table>
+<br>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+$(".startsAt").datetimepicker({
+  timepicker: false,
+  format: 'd/m/Y',
+  closeOnDateSelect: true
+}).on('dp.change', function (ev) {
+    exampleFunction() ;//your function call
+});
+</script>
+{% endblock %}

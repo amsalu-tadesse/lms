@@ -56,28 +56,7 @@ class QuestionAnswerController extends AbstractController
             'question_answers' => $data,
         ]);
     }
-    /**
-     * @Route("/live", name="golive", methods={"GET"})
-     */
-    public function goLive(Request $request): Response
-    {
-        $link = $request->query->get("link");
-        $arr = explode('/',$link);
-        if(sizeof($arr) != 4)
-        {
-            $this->addFlash("danger", "Please enter a proper link. This doesn't work. ");
-            return $this->redirectToRoute('question_answer_index');
-        }
-       
-       $arg = $arr[3];
-      
-        return $this->render('question_answer/golive.html.twig', [
-            'arg' =>$arg,
-        ]);
-        
 
-        
-    }
 
     /**
      * @Route("/load", name="question_answer_load_more", methods={"GET"})

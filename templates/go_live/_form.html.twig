@@ -1,0 +1,15 @@
+{# {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }} #}
+
+<div class="card card-body">
+{{ form_start(form) }}
+    {{ form_widget(form) }}
+    <table class="mt-2">
+    <td>
+    <button class="btn btn-primary" style="width: 110px;">{{ button_label|default('Save') }}</button>
+    </td>
+{{ form_end(form) }}
+</div>
+
