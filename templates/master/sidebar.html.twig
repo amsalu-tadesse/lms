@@ -364,6 +364,20 @@
 						{% endif %}
 					</li>
 
+					<li class="nav-item">
+						{# {% if is_granted('add_help') %} #}
+
+							<a href="{{ path('help_index') }}" class="nav-link">
+								<i class="far fa-circle nav-icon"></i>
+								<p>
+									{% trans %}
+									Help
+									{% endtrans %}
+								</p>
+							</a>
+						{# {% endif %} #}
+					</li>
+
 				</li>
 				<li></li>
 			</ul>

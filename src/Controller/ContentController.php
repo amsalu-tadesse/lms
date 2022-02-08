@@ -105,7 +105,7 @@ class ContentController extends AbstractController
      */
     public function studentview(ContentRepository $contentRepository, Request $request, PaginatorInterface $paginator): Response
     {
-        $queryBuilder = $contentRepository->findContent($request->query->get('search'));
+       /* $queryBuilder = $contentRepository->findContent($request->query->get('search'));
         $data = $paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page', 1),
@@ -115,7 +115,7 @@ class ContentController extends AbstractController
             'contents' => $data,
             // 'form' => $form->createView(),
             'edit' => false,
-        ]);
+        ]);*/
     }
 
     /**
