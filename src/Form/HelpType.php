@@ -15,7 +15,9 @@ class HelpType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $uploadSize = $options['uploadSize'];
+        $uploadSize = 100;
         $builder
+            ->add('usertype')
             ->add('label')
             ->add('description')
             ->add('attachment', FileType::class, [
@@ -25,7 +27,7 @@ class HelpType extends AbstractType
                 // every time you edit the Product details
                 'required' => false,
                 'data_class' => null,
-                'attr' => ['class'=>'form-control mb-4'],
+                // 'attr' => ['class'=>'form-control mb-4'],
 
                 // unmapped fields can't define their validation using annotations
                 // in the associated entity, so you can use the PHP constraint classes
@@ -42,6 +44,14 @@ class HelpType extends AbstractType
                             'video/SWF',
                             'application/pdf',
                             'application/x-pdf',
+                            'zip',
+                            'application/zip',
+                            'application/msword',
+                            'application/vnd.ms-excel',
+                            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                            'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                            'text/plain'
                         ],
                          'mimeTypesMessage' => 'Please upload a valid Data',
                     ])

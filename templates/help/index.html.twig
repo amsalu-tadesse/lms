@@ -72,7 +72,8 @@
 											<th>
 												#
 											</th>
-											<th>{{ knp_pagination_sortable(helps, 'Lable', 'p.label') }}</th>
+											<th>{{ knp_pagination_sortable(helps, 'Label', 'p.label') }}</th>
+											<th>{{ knp_pagination_sortable(helps, 'UserType', 'p.usertype') }}</th>
 											<th>Description</th>
 											<th>Attachment</th>
 											<th>Action</th>
@@ -86,8 +87,14 @@
 													{{ loop.index }}
 												</td>
 												<td>{{ help.label }}</td>
+												<td>{{ help.usertype }}</td>
 												<td>{{ help.description }}</td>
-                                                <td>{{ help.attachment }}</td>
+
+                                                <td>{% if help.attachment %}
+												<a href="{{ asset('uploads/helps/' ~ help.attachment) }}">View</a>
+												{% else %}
+												<a href="#">View</a>
+												{% endif %}</td>
                                                 <td>{{ help.active ? 'Yes' : 'No' }}</td>
 												<td>
 

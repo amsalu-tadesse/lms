@@ -34,20 +34,22 @@ class HelpRepository extends ServiceEntityRepository
 
         ;
     }
-    public function findForUserGroup($usergroup=null)
+    public function findAllAdminHelps()
     {
         $qb=$this->createQueryBuilder('p');
-
-        if (sizeof($usergroup)) {
-            $qb->andWhere('p.id not in ( :usergroup )')
-                ->setParameter('usergroup', $usergroup);
-        }
-
-
-
+            $qb->andWhere('p.usertype != :std')
+                ->setParameter('std', 4);
         return $qb->orderBy('p.id', 'ASC')
             ->getQuery()->getResult()
-
+        ;
+    }
+    public function findAllStudHelps()
+    {
+        $qb=$this->createQueryBuilder('p');
+            $qb->andWhere('p.usertype = :std')
+                ->setParameter('std', 4);
+        return $qb->orderBy('p.id', 'ASC')
+            ->getQuery()->getResult()
         ;
     }
 

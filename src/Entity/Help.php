@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\HelpRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -36,6 +38,13 @@ class Help
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $active;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=UserType::class, inversedBy="helps")
+     */
+    private $usertype;
+
+  
 
     public function getId(): ?int
     {
@@ -89,4 +98,18 @@ class Help
 
         return $this;
     }
+
+    public function getUsertype(): ?UserType
+    {
+        return $this->usertype;
+    }
+
+    public function setUsertype(?UserType $usertype): self
+    {
+        $this->usertype = $usertype;
+
+        return $this;
+    }
+
+    
 }

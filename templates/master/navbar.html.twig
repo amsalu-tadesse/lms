@@ -85,24 +85,24 @@
 				</i>
 
 			</a>
-			<div class="dropdown-menu dropdown-menu-sm dropdown-menu-right float-right">
-				<a href="" class="dropdown-item">
-					one
-				</a>		
-				<a href="" class="dropdown-item">
-					tow
-				</a>		
-				<a href="" class="dropdown-item">
-					three
-				</a>
-			<div class="dropdown-divider"></div>		
-				<a href="" class="dropdown-item">
-					tow
-				</a>		
-				<a href="" class="dropdown-item">
-					three
-				</a>		
-			</div>
+			 <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right float-right">
+			 
+				{% set ahelps = get_admin_helps() %}
+				{% for ahelp in ahelps %}
+				<a href="{{ asset('uploads/helps/' ~ ahelp.attachment) }}" class="dropdown-item">
+				{{ahelp.label}}
+			    </a>	
+				{% endfor %}		
+					
+			 
+			<div class="dropdown-divider">*******</div>	
+			    {% set shelps = get_stud_helps() %}	
+ 				{% for shelp in shelps %}
+				<a href="{{ asset('uploads/helps/' ~ shelp.attachment) }}" class="dropdown-item">
+				{{shelp.label}}
+				</a>	
+				{% endfor %}			
+			</div> 
 			 
 		</li>
 

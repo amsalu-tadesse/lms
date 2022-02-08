@@ -34,10 +34,18 @@ class UserType
      */
     private $users;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Help::class, mappedBy="usertype")
+     */
+    private $helps;
+
+   
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
-    }
+        $this->helps = new ArrayCollection();
+     }
 
     public function getId(): ?int
     {
@@ -108,4 +116,36 @@ class UserType
     {
         return get_object_vars($this);
     }
+
+    /**
+     * @return Collection|Help[]
+     */
+    public function getHelps(): Collection
+    {
+        return $this->helps;
+    }
+
+    public function addHelp(Help $help): self
+    {
+        if (!$this->helps->contains($help)) {
+            $this->helps[] = $help;
+            $help->setUsertype($this);
+        }
+
+        return $this;
+    }
+
+    public function removeHelp(Help $help): self
+    {
+        if ($this->helps->removeElement($help)) {
+            // set the owning side to null (unless already changed)
+            if ($help->getUsertype() === $this) {
+                $help->setUsertype(null);
+            }
+        }
+
+        return $this;
+    }
+
+    
 }

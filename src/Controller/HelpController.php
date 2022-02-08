@@ -40,8 +40,8 @@ class HelpController extends AbstractController
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-                $this->getDoctrine()->getManager()->flush();
-
+                
+ 
 
                 $resource = $form['attachment']->getData();
                 $originalFilename = pathinfo($resource->getClientOriginalName(), PATHINFO_FILENAME);
@@ -55,12 +55,13 @@ class HelpController extends AbstractController
                     );
                 } catch (FileException $e) {
                     // ... handle exception if something happens during file upload
+                    die("error on uplaoding the file");
                 }
                 $originalFilename = $resource->getClientOriginalName();
                 $help->setAttachment($newFilename);
                // $help->setResourceNames($originalFilename);
-
-
+               $em->persist($help);
+               $this->getDoctrine()->getManager()->flush();
                 return $this->redirectToRoute('help_index');
             }
 
@@ -82,6 +83,30 @@ class HelpController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
+
+
+
+                $resource = $form['attachment']->getData();
+                $originalFilename = pathinfo($resource->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$resource->guessExtension();
+                
+                try {
+                    $resource->move(
+                        $this->getParameter('uploading_directory_helps'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                    die("error on uplaoding the file");
+                }
+                $originalFilename = $resource->getClientOriginalName();
+                $help->setAttachment($newFilename);
+               // $help->setResourceNames($originalFilename);
+  
+
+
+
             $entityManager->persist($help);
             $entityManager->flush();
 
