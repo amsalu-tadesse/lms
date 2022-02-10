@@ -276,6 +276,8 @@ class UserController extends AbstractController
         }
         return $role;
     }
+
+
     /**
      * @Route("/new", name="user_new", methods={"GET","POST"})
      */
@@ -381,4 +383,5 @@ class UserController extends AbstractController
     {
         return substr(str_shuffle($str),0,$length);
     }
+    
 }
