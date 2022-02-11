@@ -37,7 +37,7 @@ class GoLiveType extends AbstractType
                 'query_builder' => function (EntityRepository $er) use ($uid) {
 
                     $res = $er->createQueryBuilder('ic')
-                             ->join('App:GoLive', 'gl', 'with', 'gl.instructorCourse=ic.id')
+                            //  ->join('App:GoLive', 'gl', 'with', 'gl.instructorCourse=ic.id')
                              ->join('ic.instructor', 'in')
                              ->join('in.user', 'u')
                              ->andWhere('u.id = :uid')
