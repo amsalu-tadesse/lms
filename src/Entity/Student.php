@@ -177,7 +177,7 @@ class Student
     /**
      * @return Collection|StudentChapter[]
      */
-    public function getStudentChapters(): Collection
+    public function Cs(): Collection
     {
         return $this->studentChapters;
     }

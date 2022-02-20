@@ -2,7 +2,7 @@ academic level: niveau académique
 Access denied: Accès refusé
 Action: Action
 Activate: Activer
-Active: Active
+Active: Actif
 add chapter : ajouter un chapitre
 add content: ajouter du contenu
 Add new: Ajouter un nouveau
@@ -237,6 +237,12 @@ Youtube Live Links: Liens en direct Youtube
 Add New Live Link: Ajouter un nouveau lien en direct
 Create GoLive: Créer GoLive
 Link: Lien
+Denying course material access: Refuser l'accès au matériel de cours
+Are you sure you want to deny course material access for the student: Êtes-vous sûr de vouloir refuser l'accès au matériel de cours pour l'étudiant
+for the course: pour le cours
+Are you sure you want to allow course material access for the student: Êtes-vous sûr de vouloir autoriser l'accès au matériel de cours pour l'étudiant
+Attended Courses: Cours suivis
+Date Registered: Date d'inscription
  
  
 

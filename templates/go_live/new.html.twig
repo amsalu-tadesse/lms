@@ -14,7 +14,6 @@
 {% extends 'base.html.twig' %}
 
 {% block stylesheets %}
-{# <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"> #}
 <link rel="stylesheet" type="text/css" href="{{asset('assets/datetimepicker-master/jquery.datetimepicker.css')}} ">
 {% endblock %}
 
@@ -41,25 +40,11 @@
 {% endblock %}
 
 {% block javascripts %}
-
-
-
 <script type="text/javascript">
     $(document).ready(function() {
         $('#go_live_startsAt').datetimepicker();
     });
 </script>
 
-
- 
-
-    
-
-
 <script src="{{asset('assets/datetimepicker-master/build/jquery.datetimepicker.full.min.js')}}"></script>
-{# <script src="{{asset('assets/datetimepicker-master/jquery.js')}}"></script>  #}
-{# <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> #}
-{# <script src="jquery.datetimepicker.js"></script> #}
-
-
 {% endblock %}

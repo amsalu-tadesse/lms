@@ -28,6 +28,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use App\Services\LogService;
 use Symfony\Component\Mailer\MailerInterface;
 use App\Services\MailerService;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @Route("/student")
@@ -392,6 +393,9 @@ class StudentCourseController extends AbstractController
 
     public function getCompletion($studentCourseId)
     {
+
+
+
         // dd($stdid,$crsid);
         $totalContents = 0;
         $readContents = 0;
@@ -399,6 +403,11 @@ class StudentCourseController extends AbstractController
 
         $em = $this->getDoctrine()->getManager();
         $studentCourse = $em->getRepository(StudentCourse::class)->find($studentCourseId);
+        if($studentCourse->getStatus() == 5)
+        {
+            return 100;
+        }
+      
 
         $chapters = $studentCourse->getInstructorCourse()->getInstructorCourseChapters();
         
@@ -448,7 +457,7 @@ class StudentCourseController extends AbstractController
     /**
      * @Route("/listProduct", name="list_student_in_course", methods={"GET","POST"})
      */
-    public function listDatatablesAction(Request $request, StudentCourseRepository $studentCourseRepository)
+    public function listDatatablesAction(TranslatorInterface $translator, Request $request, StudentCourseRepository $studentCourseRepository)
     {
        
         // Set up required variables
@@ -483,11 +492,12 @@ class StudentCourseController extends AbstractController
 
         $Response = array();
         $temp = array();
+        
          
         foreach ($objects as $key => $value) {
 
             
-            $temp["id"] = $value['id'];
+            $temp["id"] = $key + 1;
             $temp["name"] = $value["name"];
             $temp["page"] = $this->getCompletion($value['id']);
             $temp["createdAt"] = $value['createdAt']->format('Y-m-d');
@@ -496,7 +506,10 @@ class StudentCourseController extends AbstractController
 
             $temp["status"] = '<a href="#" data-toggle="modal" id="' . $value['id'] . '" onclick="changeStatus(\'' . $value['name'] . '\',' . $value['id'] . ',' . $value['active'] . ')" data-target="#modal-delete">' .
                 "<i class='fas $icon' style='color:$color'></i></a>";
-            $temp["actions"] = '<a href="/student/' . $value['student'] . '" class="btn btn-primary btn-sm">show</a>';
+
+            $show = $translator->trans('Show');
+
+            $temp["actions"] = '<a href="/student/' . $value['student'] . '" class="btn btn-primary btn-sm">'.$show .'</a>';
             $Response[] = $temp;
 
             unset($temp);

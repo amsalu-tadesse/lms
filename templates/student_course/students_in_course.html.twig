@@ -3,8 +3,6 @@
 {% block title %}
 	{% trans %}
 	StudentCourse index
-
-
 	{% endtrans %}
 {% endblock %}
 
@@ -118,8 +116,9 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h4 class="modal-title text-bold text-red">
-						Deactivating Record
+					<h4 class="modal-title text-bold text-red" id="header">
+
+						{% trans %}Denying course material access{% endtrans %}
 
 
 					</h4>
@@ -142,8 +141,6 @@
 
 					<button onclick="changeStatus1()" type="submit" id="paynow" class="btn btn-success">
 						<i class="fa fa-arrow-alt-circle-right m-1"></i>
-						Yes
-
 
 					</button>
 				</div>
@@ -165,11 +162,26 @@
 id: 0
 };
 function changeStatus(name, id, status) {
+
+
+
 if (status == 1) {;
-$(".modal-body").html("Are you sure you want to diactivate <strong> " + name + "</strong>  for the course");
-} else {
-$(".modal-body").html("Are you sure you want to activate <strong>" + name + "</strong>  for the course");
-} selected_id.id = id;
+var msg  = '{{ "Are you sure you want to deny course material access for the student" | trans }}';
+var forthe = '{{"for the course" | trans}}';
+$(".modal-body").html(msg + " <strong> " + name + "</strong> "+ forthe +" <strong> {{ instructor_course.course }} </strong> ");
+
+	$("#header").html("{% trans %}Denying course material access{% endtrans %}");
+
+
+} else 
+{
+	var msg  = '{{ "Are you sure you want to allow course material access for the student" | trans }}';
+	var forthe = '{{"for the course" | trans}}';
+	$(".modal-body").html(msg + " <strong> " + name + "</strong> "+ forthe +" <strong> {{ instructor_course.course }} </strong> ");
+		$("#header").html("{% trans %}Allowing course material access{% endtrans %}");
+} 
+
+selected_id.id = id;
 }
 
 function changeStatus1() {
@@ -195,7 +207,7 @@ error: function (data) { // console.log(data);
 }
 
 $(document).ready(function () {
-
+var x = 1;
 var instcrs = {{instructor_course.id}}
 $('#table').dataTable({
 "columns": [

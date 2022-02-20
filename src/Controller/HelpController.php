@@ -46,21 +46,25 @@ class HelpController extends AbstractController
  
 
                 $resource = $form['attachment']->getData();
-                $originalFilename = pathinfo($resource->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$resource->guessExtension();
-                
-                try {
-                    $resource->move(
-                        $this->getParameter('uploading_directory_helps'),
-                        $newFilename
-                    );
-                } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
-                    die("error on uplaoding the file");
+                if($resource)
+                {
+                    $originalFilename = pathinfo($resource->getClientOriginalName(), PATHINFO_FILENAME);
+                    $safeFilename = $slugger->slug($originalFilename);
+                    $newFilename = $safeFilename.'-'.uniqid().'.'.$resource->guessExtension();
+                    
+                    try {
+                        $resource->move(
+                            $this->getParameter('uploading_directory_helps'),
+                            $newFilename
+                        );
+                    } catch (FileException $e) {
+                        // ... handle exception if something happens during file upload
+                        die("error on uplaoding the file");
+                    }
+                    $originalFilename = $resource->getClientOriginalName();
+                    $help->setAttachment($newFilename);
                 }
-                $originalFilename = $resource->getClientOriginalName();
-                $help->setAttachment($newFilename);
+            
                // $help->setResourceNames($originalFilename);
                $em->persist($help);
                $this->getDoctrine()->getManager()->flush();
