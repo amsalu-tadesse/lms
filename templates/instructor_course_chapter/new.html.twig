@@ -1,7 +1,7 @@
 
 {% extends 'base.html.twig' %}
 
-{% block title %}New InstructorCourseChapter{% endblock %}
+{% block title %}{% trans %}New Course{% endtrans %}{% endblock %}
 
 {% block breadcrumbhome %}
     <a href="{{path('instructor_course_chapter_index',{'id':id})}}">
@@ -11,10 +11,10 @@
 	   {% trans %}Chapter{% endtrans %} 
 	</a> 
 {% endblock %}
-{% block breadcrumbcontent %}New{% endblock %}
+{% block breadcrumbcontent %} {% trans %}New{% endtrans %}{% endblock %}
 {% block body %}
 
     {{ include('instructor_course_chapter/_form.html.twig') }}
 
-    <a href="{{ path('instructor_course_chapter_index') }}">back to list</a>
+    <a href="{{ path('instructor_course_chapter_index') }}">{% trans %}Back to list{% endtrans %}</a>
 {% endblock %}

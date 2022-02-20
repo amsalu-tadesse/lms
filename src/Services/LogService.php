@@ -53,6 +53,7 @@ class LogService
       $result = array();
       $cols = $obj->getAllFields();
       $allowedDataTypes = array("integer","double","string","boolean", "NULL");
+      
       foreach($cols as $key => $value)
       {
          if(in_array(gettype($value), $allowedDataTypes)){
@@ -62,9 +63,15 @@ class LogService
             {
                $var = ucfirst($key);
             }
-            
+           
             // if($obj->$var() != NULL){
-               $result[$key] = $obj->$var();
+               try {
+                  //code...
+                  $result[$key] = $obj->$var();
+               } catch (\Throwable $th) {
+                  //throw $th;
+               }
+              
             // }
          }
       }

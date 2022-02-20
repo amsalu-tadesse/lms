@@ -45,9 +45,9 @@
 			 <table id="rep">
 				<thead>
 				  <th>#</th>
-				  <th>Chapter</th>
-				  <th>Content</th>
-				  <th>Quiz</th>
+				  <th>{% trans %}Chapter{% endtrans %}</th>
+				  <th>{% trans %}Content{% endtrans %}</th>
+				  <th>{% trans %}Quiz{% endtrans %}</th>
 				</thead>
 				
 			  </table> 
@@ -57,7 +57,7 @@
 
             </div>
             <div class="modal-footer justify-content-between">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-danger" data-dismiss="modal">{% trans %}Close{% endtrans %}</button>
               {# <button type="button" class="btn btn-primary">Save changes</button> #}
             </div>
           </div>
@@ -93,7 +93,7 @@
 						<tr>
 							<td>{{ loop.index }}</td>
 							<td>{{ instructor_course.course | capitalize}} 
-							<span data-toggle="modal" data-target="#modal-xl" class="badge badge-info" id="rpt" onclick="generateReport({{instructor_course.id}})">Report</span>
+							<span data-toggle="modal" data-target="#modal-xl" class="badge badge-info" id="rpt" onclick="generateReport({{instructor_course.id}})">{% trans %}Report{% endtrans %}</span>
 						
 
 						 

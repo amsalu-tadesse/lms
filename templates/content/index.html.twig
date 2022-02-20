@@ -36,11 +36,11 @@
 					<tr>
 						<th>Id</th>
 					
-						<th style="width:50%">Title</th>
+						<th style="width:50%">{% trans %}Title{% endtrans %}</th>
 						{# <th>Content</th> #}
 						{# <th>videoLink</th> #}
 							<th>{% trans %}Chapter{% endtrans %}</th>
-						<th>actions</th>
+						<th>{% trans %}Action{% endtrans %}</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -63,7 +63,7 @@
 						</tr>
 					{% else %}
 						<tr>
-							<td colspan="7">no records found</td>
+							<td colspan="7">{% trans %}no records found{% endtrans %}</td>
 						</tr>
 					{% endfor %}
 				</tbody>
@@ -76,7 +76,7 @@
 
 		<div class="float-right pl-5 pb-2">
 			 
-				Total result:
+				{% trans %}Total result{% endtrans %}:
 				{{ contents.getTotalItemCount }} 
 		</div>
 

@@ -32,6 +32,7 @@ Close: Fermer
 Code: Code
 Completion: Achèvement
 Content: Contenu
+Contents: Contenu
 content list: liste de contenu
 Content type: Type de contenu
 Copyright 2021: Droit d'auteur 2021
@@ -105,6 +106,7 @@ No: Non
 no  file choose: aucun fichier choisir
 No courses selected: Aucun cours sélectionné
 No records found: Aucun enregistrement trouvé
+no records found: Aucun enregistrement trouvé
 No result found for your search: Aucun résultat trouvé pour votre recherche
 Number: Numéro
 Operation successful: Opération réussie
@@ -149,6 +151,7 @@ Terms : termes
 terms and conditions: Termes et conditions
 Terms and Conditions: Termes et conditions
 Conditions: État
+Title: Titre
 title: Titre
 Topic: Sujet
 Total result: résultat total
@@ -243,6 +246,10 @@ for the course: pour le cours
 Are you sure you want to allow course material access for the student: Êtes-vous sûr de vouloir autoriser l'accès au matériel de cours pour l'étudiant
 Attended Courses: Cours suivis
 Date Registered: Date d'inscription
+Quiz: Quiz
+Sex: Sexe
+YES: Oui
+NO: Non
  
  
 
