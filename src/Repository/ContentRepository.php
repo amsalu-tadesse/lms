@@ -39,8 +39,13 @@ class ContentRepository extends ServiceEntityRepository
         ;
     }
 
+
+    //course represents instructor_course_id
     public function getContentsForChapter($course, $chapter)
     {
+       // dd($course."-----" .$chapter);
+        //$chapter = trim($chapter);
+
         return $this->createQueryBuilder('c')
             ->Join('c.chapter', 'ch')
             ->join('ch.instructorCourse', 'ic')

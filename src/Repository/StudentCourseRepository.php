@@ -205,7 +205,8 @@ class StudentCourseRepository extends ServiceEntityRepository
         $query
             ->select("sc.id, concat(u.firstName,' ',u.middleName) as name", 'sc.isAtPage as page', 'sc.active', 'sc.createdAt', 'st.id as student')
             ->innerJoin('sc.student', "st")
-            // ->innerJoin('sc.instructorCourse', "ic")
+            ->innerJoin('sc.instructorCourse', "ic")
+            // ->innerJoin('ic.course', "crs")
             ->innerJoin('st.user', 'u');
         $countQuery
             ->innerJoin('stCount.student', "st")

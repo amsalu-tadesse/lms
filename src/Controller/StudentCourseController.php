@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\InstructorCourse;
+use App\Entity\InstructorCourseChapter;
 use App\Entity\StudentCourse;
 use App\Entity\Student;
+use App\Entity\StudentChapter;
 use App\Form\Filter\RequestFilterType;
 use App\Form\StudentCourseType;
 use App\Form\StudentReportType;
@@ -339,8 +341,10 @@ class StudentCourseController extends AbstractController
         $json = "[['Student', 'Completion']";
         foreach ($queryBuilder as $studentCourse) {
             $stdid = $studentCourse->getId();
+            $instructorCourseid = $studentCourse->getInstructorCourse()->getId();
 
             $comp = $this->getCompletion($stdid);
+            
 
             if ($comp==0) {
                 $completion['0%'] ++;
@@ -363,7 +367,7 @@ class StudentCourseController extends AbstractController
             }
         }
 
-
+// dd($completion);
         foreach ($completion as $key=>$value) {
             $col =  ",['".$key."', ".$value."]";
             $col =trim(preg_replace('/\s+/', ' ', $col));
@@ -372,6 +376,7 @@ class StudentCourseController extends AbstractController
 
 
         $json .= "];";
+        // dd($json);
 
 
 
@@ -385,29 +390,58 @@ class StudentCourseController extends AbstractController
         );
     }
 
-    public function getCompletion($stdid)
+    public function getCompletion($studentCourseId)
     {
+        // dd($stdid,$crsid);
         $totalContents = 0;
         $readContents = 0;
+        $studentChapters = array();
 
         $em = $this->getDoctrine()->getManager();
-        $studentCourse = $em->getRepository(StudentCourse::class)->find($stdid);
+        $studentCourse = $em->getRepository(StudentCourse::class)->find($studentCourseId);
 
         $chapters = $studentCourse->getInstructorCourse()->getInstructorCourseChapters();
+        
         foreach ($chapters as $chapter) {
             $totalContents += sizeof($chapter->getContents());
         }
-        
-        $studentchapters = $studentCourse->getStudent()->getStudentChapters();
 
-        foreach ($studentchapters as $stdchapter) 
-        {
-            $readContents += $stdchapter->getPagesCompleted();
+
+        foreach ($chapters as $chapter) {
+            $chaptr = $em->getRepository(StudentChapter::class)->findOneBy(['student'=> $studentCourse->getStudent()->getId(), 'chapter'=>$chapter->getId()]);
+            if($chaptr)
+            {
+                $studentChapters[] = $chaptr;
+            }
+             
+
         }
-        
+
+
+
+ 
+        if(sizeof($studentChapters))
+        {
+            foreach ($studentChapters as $stdchapter) 
+            {
+                if($stdchapter)
+                {
+                    $readContents += $stdchapter->getPagesCompleted();
+                }
+                
+            }
+        }
+
+       
         $contents = $totalContents ? $totalContents:1;
         
-        $completion = \round(($readContents/$contents), 1)*100;
+        $completion = \round(($readContents/$contents), 2)*100;
+       /* if($stdid==8)
+        {
+
+         dd($readContents, '//', $contents, '=', $completion);
+        }*/
+       
         return $completion;
     }
 
@@ -416,6 +450,7 @@ class StudentCourseController extends AbstractController
      */
     public function listDatatablesAction(Request $request, StudentCourseRepository $studentCourseRepository)
     {
+       
         // Set up required variables
         $this->entityManager = $this->getDoctrine()->getManager();
 
@@ -448,9 +483,10 @@ class StudentCourseController extends AbstractController
 
         $Response = array();
         $temp = array();
+         
         foreach ($objects as $key => $value) {
 
-            // dd($this->getCompletion($value['id']));
+            
             $temp["id"] = $value['id'];
             $temp["name"] = $value["name"];
             $temp["page"] = $this->getCompletion($value['id']);
@@ -466,6 +502,8 @@ class StudentCourseController extends AbstractController
             unset($temp);
             $temp = array();
         }
+
+         
         // Construct response
         $response = '{
             "draw": ' . $draw . ',
@@ -473,6 +511,8 @@ class StudentCourseController extends AbstractController
             "recordsFiltered": ' . $filtered_objects_count . ',
             "data":' . json_encode($Response) . '  }';
 
+
+            
         // Send all this stuff back to DataTables
         $returnResponse = new JsonResponse();
         $returnResponse->setJson($response);
