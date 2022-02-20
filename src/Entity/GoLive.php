@@ -44,7 +44,7 @@ class GoLive
     private $active;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     private $startsAt;
 
@@ -115,12 +115,12 @@ class GoLive
         return $this;
     }
 
-    public function getStartsAt(): ?\DateTimeInterface
+    public function getStartsAt(): ?string
     {
         return $this->startsAt;
     }
 
-    public function setStartsAt(?\DateTimeInterface $startsAt): self
+    public function setStartsAt(?string $startsAt): self
     {
         $this->startsAt = $startsAt;
 

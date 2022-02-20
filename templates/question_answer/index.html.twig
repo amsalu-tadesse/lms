@@ -36,12 +36,12 @@
 			<thead>
 				<tr>
 					<th>Id</th>
-					<th style="width: 25%">Course</th>
-					<th style="width: 25%">Question</th>
-					<th>Text Answer</th>
-					<th>Video Answer</th>
-					<th >Created At</th>
-					<th>actions</th>
+					<th style="width: 25%">{% trans %}Course{% endtrans %}</th>
+					<th style="width: 25%">{% trans %}Question{% endtrans %}</th>
+					<th>{% trans %}Text Answer{% endtrans %}</th>
+					<th>{% trans %}Video Answer{% endtrans %}</th>
+					<th >{% trans %}Active{% endtrans %}</th>
+					<th>{% trans %}Action{% endtrans %}</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -50,17 +50,17 @@
 						<td>{{ question_answer.id }}</td>
 						<td>{{ question_answer.course.course.name}}</td>
 						<td>{{ question_answer.question|raw }}</td>
-						<td>{{ question_answer.answer != null ? 'Yes':'no' }}</td>
-						<td>{{ question_answer.videoAnswer != null ? 'Yes':'no' }}</td>
+						<td>{{ question_answer.answer != null ? 'Yes'| trans:'No' | trans }}</td>
+						<td>{{ question_answer.videoAnswer != null ? 'Yes'| trans:'No' | trans }}</td>
 						<td>{{ question_answer.createdAt ? question_answer.createdAt|date('d-m-Y') : '' }}</td>
 						<td>
 							{# <a href="{{ path('question_answer_show', {'id': question_answer.id}) }}" class="btn-sm btn btn-success">show</a> #}
-							<a href="{{ path('question_answer_edit', {'id': question_answer.id}) }}" class="btn-sm btn btn-info">Answer</a>
+							<a href="{{ path('question_answer_edit', {'id': question_answer.id}) }}" class="btn-sm btn btn-info">{% trans %}Answer{% endtrans %}</a>
 						</td>
 					</tr>
 				{% else %}
 					<tr>
-						<td colspan="7">no records found</td>
+						<td colspan="7">{% trans %}no records found{% endtrans %}</td>
 					</tr>
 				{% endfor %}
 			</tbody>

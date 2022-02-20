@@ -13,6 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use \DateTime;
 use Symfony\Component\Mailer\MailerInterface;
 use App\Services\MailerService;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
 /**
  * @Route("/golive")
@@ -47,8 +48,12 @@ class GoLiveController extends AbstractController
             $studentCourses = $instructorCourse->getStudentCourses();
             $liveDate = $form->getData()->getStartsAt();
             $instMsg = $form->getData()->getMessage();
+            $date = strtotime($liveDate);
+            $date = date('D/M/Y H:i:s', $date);
 
-            $deadline = date_format($liveDate,"M d, Y @ H:i:s");
+            // "M d, Y @ H:i:s"
+
+            $deadline = $date;//date_format($date,"M d, Y @ H:i:s");
 
         $receivers = array();
         foreach ($studentCourses as $studentCourse) {

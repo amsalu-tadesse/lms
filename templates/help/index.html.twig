@@ -48,7 +48,7 @@
 					<div class="col-md-12">
 						<div class="card ">
 							<div class="card-header">
-								<h3 class="card-title">help List</h3>
+								<h3 class="card-title">{% trans %}Help List{% endtrans %}</h3>
 								<div class="card-tools">
 								
 									<form class="form-inline ml-3" >
@@ -68,15 +68,17 @@
  
 								<table class="table table-hover">
 									<thead>
+										{% set label = 'Label' | trans %}
+										{% set utype = 'User Type' | trans %}
 										<tr>
 											<th>
 												#
 											</th>
-											<th>{{ knp_pagination_sortable(helps, 'Label', 'p.label') }}</th>
-											<th>{{ knp_pagination_sortable(helps, 'UserType', 'p.usertype') }}</th>
+											<th>{{ knp_pagination_sortable(helps, label | trans, 'p.label' | trans) }}</th>
+											<th>{{ knp_pagination_sortable(helps, utype, 'p.usertype') }}</th>
 											<th>{% trans %}Description{% endtrans %}</th>
-											<th>{% trans %} Attachment {% endtrans %}</th>
-											<th>{% trans %} Action {% endtrans %}</th>
+											<th>{% trans %}Attachment{% endtrans %}</th>
+											<th>{% trans %}Actions{% endtrans %}</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -91,11 +93,11 @@
 												<td>{{ help.description }}</td>
 
                                                 <td>{% if help.attachment %}
-												<a href="{{ asset('uploads/helps/' ~ help.attachment) }}">View</a>
+												<a href="{{ asset('uploads/helps/' ~ help.attachment) }}">{% trans %}View{% endtrans %}</a>
 												{% else %}
 												<a href="#">View</a>
 												{% endif %}</td>
-                                                <td>{{ help.active ? 'Yes' : 'No' }}</td>
+                                                <td>{{ help.active ? 'Yes' | trans : 'No' | trans }}</td>
 												<td>
 
 													<form class="d-inline" method="post">

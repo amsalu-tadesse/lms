@@ -19,8 +19,10 @@
 	{% trans %}Edit GoLIve{% endtrans %}
 {% endblock %}
 {% block stylesheets %}
-	<style></style>
+<link rel="stylesheet" type="text/css" href="{{asset('assets/datetimepicker-master/jquery.datetimepicker.css')}} ">
 {% endblock %}
+
+
 {% block breadcrumbhome %}
 	<a href="{{ path('go_live_index') }} ">
 		{% trans %}GoLIve{% endtrans %}
@@ -56,4 +58,15 @@ $(".startsAt").datetimepicker({
     exampleFunction() ;//your function call
 });
 </script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#go_live_startsAt').datetimepicker();
+});
+</script>
+
+
+<script src="{{asset('assets/datetimepicker-master/build/jquery.datetimepicker.full.min.js')}}"></script>
+
 {% endblock %}
+

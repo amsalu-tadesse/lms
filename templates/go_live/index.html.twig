@@ -75,7 +75,7 @@
 			<div class="col-md-6">
 				<a href="{{ path('go_live_new') }}" class="btn btn-primary btn-sm" style="float:right">
 					{% trans %}
-					Add new Live link
+					Add New Live Link
 					{% endtrans %}
 				</a>
 			</div>
@@ -85,12 +85,12 @@
 		<table class="table">
 			<thead>
 				<tr>
-                <th>Id</th>
-                <th>Course</th>
-                <th>starts At</th>
-                <th>Message</th>
-                <th>Active</th>
-                <th>actions</th>
+                <th>#</th>
+                <th>{% trans %}Course{% endtrans %}</th>
+                <th>{% trans %}Starts At{% endtrans %}</th>
+                <th>{% trans %}Message{% endtrans %}</th>
+                <th>{% trans %}Active{% endtrans %}</th>
+                <th>{% trans %}Action{% endtrans %}</th>
             </tr>
 			</thead>
 			<tbody>
@@ -109,8 +109,8 @@
                         {% endif %}
                     </td>
                         <td>
-                        <a href="{{ path('go_live_show', {'id': go_live.id}) }}" class="btn btn-info btn-sm">show</a>
-                        <a href="{{ path('go_live_edit', {'id': go_live.id}) }}" class="btn btn-warning btn-sm">edit</a>
+                        <a href="{{ path('go_live_show', {'id': go_live.id}) }}" class="btn btn-info btn-sm">{% trans %}Show{% endtrans %}</a>
+                        <a href="{{ path('go_live_edit', {'id': go_live.id}) }}" class="btn btn-warning btn-sm">{% trans %}Edit{% endtrans %}</a>
                     </td>
                     </tr>
 

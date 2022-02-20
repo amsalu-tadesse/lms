@@ -10,10 +10,10 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Doctrine\ORM\EntityRepository;
 use App\Entity\InstructorCourse;
+use PHPUnit\Framework\Test;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-
-
-
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType as TypeDateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class GoLiveType extends AbstractType
 {
@@ -30,6 +30,7 @@ class GoLiveType extends AbstractType
 
             ->add('instructorCourse', EntityType::class, [
                 'required' => true,
+                'label'=>'Course',
                 'class' => InstructorCourse::class,
                 'attr' => ['class'=>'form-control mb-4'],
                 // 'placeholder' => "",
@@ -45,9 +46,10 @@ class GoLiveType extends AbstractType
                     return $res;
                 },
             ])
+            ->add('startsAt', TextType::class, ['attr'=>['class'=>'form-control mb-4','placeholder'=>'Enter the live link here ...']]);
 
-            ->add('startsAt', DateType::class, ['attr'=>['class'=>'startsAt form-control  mb-4']])
-        ;
+           // ->add('startsAt', null, ['label'=>'Starts At','attr'=>['class'=>'startsAt form-control  mb-4']])
+        // ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

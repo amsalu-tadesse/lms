@@ -13,6 +13,11 @@
 
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+{# <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"> #}
+<link rel="stylesheet" type="text/css" href="{{asset('assets/datetimepicker-master/jquery.datetimepicker.css')}} ">
+{% endblock %}
+
 {% block title %}{% trans %}New GoLive{% endtrans %}{% endblock %}
 {% block breadcrumbhome %}
     <a href="{{ path('go_live_index') }} ">
@@ -23,7 +28,7 @@
 {% block body %}
     <div class="card card-info">
 		<div class="card card-header">
-			<h5>Create GoLive</h5>
+			<h5>{% trans %}Create GoLive{% endtrans %}</h5>
 		</div>
         {{ include('go_live/_form.html.twig') }}
         </td>
@@ -33,4 +38,28 @@
         </table>
         <br>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+
+
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#go_live_startsAt').datetimepicker();
+    });
+</script>
+
+
+ 
+
+    
+
+
+<script src="{{asset('assets/datetimepicker-master/build/jquery.datetimepicker.full.min.js')}}"></script>
+{# <script src="{{asset('assets/datetimepicker-master/jquery.js')}}"></script>  #}
+{# <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> #}
+{# <script src="jquery.datetimepicker.js"></script> #}
+
+
 {% endblock %}

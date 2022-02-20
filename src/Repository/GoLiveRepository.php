@@ -31,6 +31,7 @@ class GoLiveRepository extends ServiceEntityRepository
         ->join('inst.user', 'u')
         ->andWhere('u.id = :uid')
         ->setParameter('uid', $userid)
+        ->orderBy('g.id','desc')
         ->getQuery()
         ->getResult()
     ;

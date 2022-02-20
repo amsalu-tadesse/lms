@@ -93,6 +93,7 @@ logout: Se déconnecter
 Main Story: histoire principale
 Manage: Gérer
 Messages: Messages
+Message: Un message
 Middle Name: Deuxième nom
 Modify: Modifier
 Module: Module
@@ -172,6 +173,7 @@ view File: Voir la fiche
 Wait: Patienter
 Year: Année
 Yes: Oui
+Answer: Répondre
 Date of Completion: Date d'achèvemen
 Student List: liste des étudiants
 you do not select any course: vous ne sélectionnez aucun cours
@@ -223,6 +225,18 @@ Course content summary: Résumé du contenu du cours
 Help: Aider
 Label: étiqueter
 Attachment: Attachment
+Help List: liste d'aide
+Questions: Des questions
+Video Answer: Réponse vidéo
+Text Answer: Réponse textuelle
+Question: Question
+YouTube Live: YouTube en direct
+Index: Indice
+Starts At: Commence à
+Youtube Live Links: Liens en direct Youtube
+Add New Live Link: Ajouter un nouveau lien en direct
+Create GoLive: Créer GoLive
+Link: Lien
  
  
 
