@@ -15,14 +15,14 @@
 {% block body %}
 	<div class="card card-info">
 		<div class="card card-header">
-			<h5>Content</h5>
+			<h5>{% trans %}Content{% endtrans %}</h5>
 
 		</div>
 		<div class="card card-body">
 			<table class="table">
 				<tbody>
 					<tr>
-						<th>Id</th>
+						<th>#</th>
 						<td>{{ content.id }}</td>
 					</tr>
 					<tr>
@@ -30,18 +30,18 @@
 						<td>{{ content.chapter }}</td>
 					</tr>
 					<tr>
-						<th>Title</th>
+						<th>{% trans %}Title{% endtrans %}</th>
 						<td>{{ content.title }}</td>
 					</tr>
 					<tr>
-						<th>Content</th>
+						<th>{% trans %}Content{% endtrans %}</th>
 						<td>{{ content.content | raw}}</td>
 					</tr>
 					{% if content.filename %}
 						<tr>
-							<th>File</th>
+							<th>{% trans %}File{% endtrans %}</th>
 							<td>
-								<a href="{{ asset('uploads/resources/' ~ content.filename) }}">View file</a>
+								<a href="{{ asset('uploads/videos/' ~ content.filename) }}">{% trans %}View file{% endtrans %}</a>
 							</td>
 						</tr>
 					{% endif %} 
@@ -49,14 +49,14 @@
 					{% if content.videoLink %}
 
 						<tr>
-							<th>VideoLink</th>
-							<td><a href="{{ content.videoLink }}" >VideoLink</a></td>
+							<th>{% trans %}VideoLink{% endtrans %}</th>
+							<td><a href="{{ content.videoLink }}" >{% trans %}VideoLink{% endtrans %}</a></td>
 						</tr>
 					{% endif %}
 					{% if content.resource %}
 
 						<tr>
-							<th>Resource</th>
+							<th>{% trans %}Resource{% endtrans %}</th>
 							
 						<td><a href="{{ asset('uploads/resources/' ~ content.resource) }}">Resource</a></td>
 						</tr>
