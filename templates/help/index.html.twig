@@ -65,7 +65,7 @@
 							</div>
 							<div class="card-body">
 
-
+ 
 								<table class="table table-hover">
 									<thead>
 										<tr>
@@ -74,9 +74,9 @@
 											</th>
 											<th>{{ knp_pagination_sortable(helps, 'Label', 'p.label') }}</th>
 											<th>{{ knp_pagination_sortable(helps, 'UserType', 'p.usertype') }}</th>
-											<th>Description</th>
-											<th>Attachment</th>
-											<th>Action</th>
+											<th>{% trans %}Description{% endtrans %}</th>
+											<th>{% trans %} Attachment {% endtrans %}</th>
+											<th>{% trans %} Action {% endtrans %}</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -121,7 +121,7 @@
 											</tr>
 										{% else %}
 											<tr>
-												<td colspan="5">no records found</td>
+												<td colspan="5">{% trans %}no records found {% endtrans %} </td>
 											</tr>
 										{% endfor %}
 									</tbody>

@@ -54,7 +54,7 @@ Credit: Crédit
 date applied: date d'application
 Deactivate: Désactiver
 Delete: Supprimez
-Description: la description
+Description: La description
 Disabled: Desactivé
 Download: Télécharger
 Duration : Durée
@@ -159,6 +159,7 @@ User Group List: Liste des groupes d'utilisateurs
 User groups: Groupe d'utilisateurs
 User settings: Paramètres utilisateur
 User Type: Type d'utilisateur
+UserType: Type d'utilisateur
 User Type List: Liste des types d'utilisateurs
 User Types: Types d'utilisateurs
 Username: Nom d'utilisateur
@@ -219,6 +220,9 @@ you didn't register for any courses yet: vous ne vous êtes encore inscrit à au
 Do you want to remove all courses for your selection list?: Voulez-vous supprimer tous les cours de votre liste de sélection ?
 Apply: Appliquer
 Course content summary: Résumé du contenu du cours
+Help: Aider
+Label: étiqueter
+Attachment: Attachment
  
  
 

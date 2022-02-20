@@ -25,6 +25,8 @@ class HelpController extends AbstractController
      */
     public function index(HelpRepository $helpRepository, SluggerInterface $slugger, Request $request, PaginatorInterface $paginator): Response
     {
+ 
+        $this->denyAccessUnlessGranted('help');
 
         $em = $this->getDoctrine()->getManager();
         $uploadSize = $em->getRepository(SystemSetting::class)->findOneBy(['code' => 'upload_size'])->getValue();
@@ -131,6 +133,8 @@ class HelpController extends AbstractController
      */
     public function delete(Request $request, Help $help): Response
     {
+        $this->denyAccessUnlessGranted('help');
+
         if ($this->isCsrfTokenValid('delete'.$help->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($help);
