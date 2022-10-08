@@ -1,4 +1,4 @@
-<img src="public/uploads/lms.png" >
+<img src="public/images/readme.png" >
  
 
 ## LMS
